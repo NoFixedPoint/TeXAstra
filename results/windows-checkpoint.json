@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "checks": 655,
+  "arenaMiB": 128,
+  "farInvalidatedCheckpoints": 96,
+  "farRestoreSamples": 20,
+  "farRestoreAndFirstReadP50Ms": 18.9542,
+  "farRestoreAndFirstReadP95Ms": 23.6255,
+  "farRestoreAndFirstReadMaxMs": 24.8656,
+  "capture1MiBP95Ms": 0.6488,
+  "warmRestore64KiBp50Ms": 0.7219,
+  "warmRestore64KiBp95Ms": 0.8925,
+  "fullReplay128MiBMs": 105.386,
+  "materializedPages": 501348,
+  "compilerIntegrated": false,
+  "endToEndLatencyMeasured": false,
+  "faultIsolation": {
+    "foreign-thread": "access violation propagated",
+    "unrelated": "access violation propagated",
+    "execute": "access violation propagated"
+  },
+  "platform": "Windows-10-10.0.19045-SP0",
+  "architecture": "AMD64",
+  "cpu": "13th Gen Intel(R) Core(TM) i9-13900K",
+  "msvc": "14.36.32532",
+  "windowsSDK": "10.0.22000.0",
+  "dependentDLLs": [
+    "KERNEL32.dll"
+  ],
+  "executableSha256": "ec4e06cd4d2ad7fa298a5a623e5ed191768d45389f3ec6ab2cddb092df248574",
+  "sourceSha256": {
+    "native/windows/check_checkpoint.cpp": "1722ab5f5ca3f729ceb14b009cc7125b3379c982c414e7a6224c493ffa9cd8e5",
+    "native/windows/checkpoint_arena.hpp": "735cf974e9b8b909f099b36aafb7ab0344936f848d0f6c60e2ddc228f55f7e15"
+  }
+}

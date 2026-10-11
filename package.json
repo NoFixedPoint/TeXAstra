@@ -99,6 +99,7 @@
     }
   },
   "scripts": {
+    "check:windows-checkpoint": "python scripts/check_windows_checkpoint.py",
     "demo": "node native/demo.js",
     "build:cpp": "python scripts/build_cpp.py",
     "check:cpp": "python scripts/check_cpp.py",
