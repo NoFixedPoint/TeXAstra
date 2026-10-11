@@ -12,6 +12,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime')
 parser.add_argument('--project',type=Path)
 parser.add_argument('--main',default='main.tex')
+parser.add_argument('--output',default='external-projects.json')
 args=parser.parse_args()
 report={'checks':[]}
 def check(name,ok,**details):
@@ -22,10 +23,10 @@ def linux(p):
     p=p.resolve()
     return '/mnt/'+p.drive[0].lower()+p.as_posix()[2:] if os.name=='nt' else str(p)
 class Client:
-    def __init__(self,project,main,compiler='xelatex',sync=True,checkpoint='fork'):
+    def __init__(self,project,main,compiler='xelatex',sync=True,checkpoint='fork',mode='full'):
         prefix=['wsl','-d','Ubuntu-22.04','--exec'] if os.name=='nt' else []
         self.p=subprocess.Popen(prefix+[linux(args.runtime/'bakoma-backend'),'--project',linux(project),
-            '--assets',linux(ROOT/'prototype'),'--main',main,'--compiler',compiler,'--checkpoint',checkpoint]+(['--sync'] if sync else []),
+            '--assets',linux(ROOT/'prototype'),'--main',main,'--preview-mode',mode,'--compiler',compiler,'--checkpoint',checkpoint]+(['--sync'] if sync else []),
             stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8')
         self.q=queue.Queue()
         def read():
@@ -90,7 +91,7 @@ try:
         check('VS Code protocol applies initial unsaved buffers','StartupOverlay' in text(frame) and frame['clientId']==1)
     check('fixture source tree untouched',before==manifest(project))
     for checkpoint in ['fork','internal']:
-        with Client(ROOT/'corpus','main.tex','lualatex',checkpoint=checkpoint) as client:
+        with Client(ROOT/'corpus','main.tex','lualatex',checkpoint=checkpoint,mode='auto') as client:
             initial=require(client.request(type='start',page=0))
             check(checkpoint+' corpus retains source mapping',bool(initial['regionRows']) and initial['outputMode']!='full-build')
             file='pages/page-100.tex'
@@ -106,4 +107,4 @@ try:
             check('user project last page renders',last['page']==initial['pageCount']-1 and len(last['image'])>100)
         check('user project source tree untouched',before==manifest(args.project),files=len(before))
 finally:
-    (ROOT/'results/external-projects.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+    (ROOT/'results'/args.output).write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')

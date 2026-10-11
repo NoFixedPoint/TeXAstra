@@ -8,6 +8,7 @@ from prototype.converge import full_build
 from prototype.engine import render_page
 parser=argparse.ArgumentParser()
 parser.add_argument('--checkpoint',choices=['internal','fork'],default='internal')
+parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime')
 args=parser.parse_args()
 os.environ['BAKO_CHECKPOINT_MODE']=args.checkpoint
 
@@ -26,7 +27,7 @@ def expand(frame):
 def sample(frame):return {k:v for k,v in frame.items() if k.endswith('Ms') or k in ['outputMode','resourceRefresh','resumedFrom']}
 
 try:
-    with Client() as client:
+    with Client(runtime=args.runtime.resolve()) as client:
         initial=client.request(type='start',page=0);assert initial['ok'],initial
         session=Path('//wsl.localhost/Ubuntu-22.04')/initial['session'].lstrip('/') if sys.platform=='win32' else Path(initial['session'])
         reference,directory,metadata=full_build(ROOT/'corpus',instrument=True);assert reference['ok'],reference

@@ -27,11 +27,15 @@ class Sources {
         int slot = 0;
     };
     std::map<std::string, File> files;
+    std::unordered_map<int, File *> slots;
     File *current = nullptr;
     std::string filename;
     std::u32string text;
     std::vector<int> lines, columns;
     size_t i = 0;
+    bool general = false;
+    std::string reset = bako::reset;
+    int origin_offset = 0;
     const std::set<std::string> symbols =
         words("alpha beta gamma delta epsilon theta lambda mu pi sigma phi omega Gamma Delta Theta "
               "Lambda Pi Sigma Phi Omega sum prod int infty partial nabla times cdot pm mp leq geq "
@@ -59,8 +63,8 @@ class Sources {
     std::string mark(size_t a, size_t b, const std::string &kind = "token") {
         Span s;
         s.id = current->slot * 1000000 + int(current->spans.size());
-        s.start = a;
-        s.end = b;
+        s.start = origin_offset + a;
+        s.end = origin_offset + b;
         s.line = lines[a];
         s.column = columns[a];
         s.endLine = lines[b];
@@ -69,7 +73,8 @@ class Sources {
         s.text = slice(a, b);
         s.kind = kind;
         current->spans.push_back(std::move(s));
-        return "\\bakoattr=" + std::to_string(current->spans.back().id) + " ";
+        auto id = std::to_string(current->spans.back().id);
+        return general ? "\\bakoSet{" + id + "}" : "\\bakoattr=" + id + " ";
     }
     std::string whitespace() {
         size_t a = i;
@@ -130,7 +135,26 @@ class Sources {
     std::string command(bool math) {
         size_t a = i;
         auto cmd = control();
+        const auto control_end = i;
         auto name = cmd.substr(1);
+        if (general && words("' ` ^ ~ = . u v H c k b d r").count(name)) {
+            whitespace();
+            if (i < text.size() && text[i] == '{') group();
+            else if (i < text.size()) { if (text[i]=='\\') control(); else ++i; }
+            return mark(a, i, "macro-origin") + slice(a, i) + reset;
+        }
+        if (general && (name == "(" || name == "[" || name == ")" || name == "]"))
+            return reset + cmd;
+        if (general && name=="cdots") {
+            auto saved=i; whitespace();
+            if (i<text.size() && std::u32string(U"),.;:]!?").find(text[i])!=std::u32string::npos) {
+                ++i;
+                // amsmath peeks at the following delimiter to choose spacing.
+                // Preserve that lookahead as one generated-content origin.
+                return mark(a,i,"macro-origin")+slice(a,i)+reset;
+            }
+            i=saved;
+        }
         if (symbols.count(name)) {
             return mark(a, i) + cmd + " " + reset;
         }
@@ -146,12 +170,22 @@ class Sources {
             }
             return reset + cmd + option + argument(true) + reset;
         }
-        if (text_args.count(name) || math_args.count(name)) {
+        const bool live_math_arg = general && words("widetilde widehat dot ddot dddot ddddot breve check acute grave mathnormal mathfrak mathscr boldsymbol underbrace overbrace").count(name);
+        if (text_args.count(name) || math_args.count(name) || live_math_arg) {
             if (i < text.size() && text[i] == '*') {
                 cmd += '*';
                 ++i;
             }
-            return reset + cmd + argument(math_args.count(name)) + reset;
+            std::string option;
+            if (general && i<text.size() && text[i]=='[') option=group('[',']');
+            auto arg=argument(math_args.count(name) || live_math_arg);
+            if (general && text_args.count(name) && i<text.size() && (text[i]==',' || text[i]=='.')) {
+                // LaTeX's italic-correction lookahead must see the punctuation,
+                // not a provenance setter. The argument group restores this ID.
+                auto punctuation=mark(i,i+1);auto raw=rune(text[i++]);
+                return punctuation+cmd+option+arg+raw+reset;
+            }
+            return reset + cmd + option + arg + reset;
         }
         if (words("left right big Big bigl bigr Bigl Bigr").count(name)) {
             whitespace();
@@ -178,13 +212,14 @@ class Sources {
             return mark(a, i, "macro-origin") + slice(a, i) + reset;
         }
         if (raw_args.count(name)) {
+            if (general && i < text.size() && text[i] == '*') ++i;
             for (int n = 0; n < raw_args.at(name); ++n) {
                 whitespace();
                 group();
             }
             auto raw = slice(a, i);
             if (name == "begin" && i < text.size() && text[i] == '[' &&
-                raw.find("{tikzpicture}") != std::string::npos) {
+                (general || raw.find("{tikzpicture}") != std::string::npos)) {
                 raw += group('[', ']');
             }
             return reset + raw;
@@ -198,6 +233,13 @@ class Sources {
              {"command", name},
              {"reason", "unknown command: arguments are not instrumented"}});
         size_t end = i;
+        if (general && i < text.size() && text[i]=='$') {
+            auto closing=text.find('$',i+1);
+            if (closing!=std::u32string::npos) {
+                i=closing+1;
+                return mark(a,i,"macro-origin")+slice(a,i);
+            }
+        }
         while (true) {
             whitespace();
             if (i < text.size() && (text[i] == '{' || text[i] == '[')) {
@@ -208,6 +250,23 @@ class Sources {
                 i = end;
                 break;
             }
+        }
+        if (general) {
+            auto result = mark(a,i,"macro-origin") + slice(a,i);
+            if (i == control_end) {
+                // Preserve TeX's skip-blanks state after a control word. The
+                // inserted setter would otherwise turn its delimiter into glue.
+                bool newline = false;
+                while (i < text.size() && space(text[i])) {
+                    if (text[i]=='\n') {
+                        if (newline) { ++i; return result + " " + reset + "\\par\n"; }
+                        newline=true;
+                    }
+                    ++i;
+                }
+                result += " ";
+            }
+            return result + reset;
         }
         return reset + slice(a, i) + " " + reset;
     }
@@ -257,6 +316,35 @@ class Sources {
                 out += tikz();
                 continue;
             }
+            if (general && at(U"\\begin{")) {
+                auto close = text.find('}', i + 7);
+                if (close != std::u32string::npos) {
+                    auto environment = slice(i + 7, close);
+                    if (!words("math displaymath equation equation* align align* gather gather* multline multline* itemize enumerate center quote quotation flushleft flushright appendices subappendices abstract proof theorem lemma proposition corollary remark definition").count(environment)) {
+                        // Unknown environments can contain non-text grammars (table
+                        // preambles, verbatim, graphics). Keep their contents intact.
+                        auto ending = U"\\end{" + unicode(environment) + U"}";
+                        auto opening = U"\\begin{" + unicode(environment) + U"}";
+                        size_t end = close + 1; int depth = 1;
+                        while (depth && end < text.size()) {
+                            auto next_end = text.find(ending, end), next_begin = text.find(opening, end);
+                            if (next_end == std::u32string::npos) { end = text.size(); break; }
+                            if (next_begin < next_end) { ++depth; end = next_begin + opening.size(); }
+                            else { --depth; end = next_end + ending.size(); }
+                        }
+                        size_t begin = i; i = end;
+                        out += mark(begin, end, "macro-origin") + slice(begin, end) + reset;
+                        continue;
+                    }
+                    if (words("math displaymath equation equation* align align* gather gather* multline multline*").count(environment)) math = true;
+                }
+            }
+            if (general && (at(U"\\(") || at(U"\\["))) math = true;
+            if (general && (at(U"\\)") || at(U"\\]"))) math = false;
+            if (general && at(U"\\end{")) {
+                auto close=text.find('}',i+5);
+                if (close!=std::u32string::npos && words("math displaymath equation equation* align align* gather gather* multline multline*").count(slice(i+5,close))) math=false;
+            }
             if (at(U"\\begin{align")) {
                 math = true;
             }
@@ -279,11 +367,16 @@ class Sources {
             ++i;
             if (c == '$') {
                 math = !math;
-                out += reset + "$" + reset;
+                if (general && i<text.size() && text[i]=='$') { ++i; out += reset+"$$"+(math?reset:""); }
+                else out += reset + "$" + reset;
             } else if (c == '{') {
                 out += "{" + sequence(math, '}') + "}";
             } else if ((c == '_' || c == '^') && math) {
                 out += rune(c) + argument(true);
+            } else if (general && c == '\'' && math) {
+                size_t first=i-1;
+                while(i<text.size() && text[i]=='\'') ++i;
+                out += mark(first,i) + slice(first,i) + reset;
             } else if (space(c) || c == '&' || c == '}') {
                 out += rune(c);
             } else if (c == '~') {
@@ -296,12 +389,19 @@ class Sources {
     }
 
   public:
-    std::string instrument(const std::string &source, const std::string &file) {
-        auto it = files.find(file);
+    std::string instrument(const std::string &source, const std::string &file,
+                           const std::string &key = "", int base_offset = 0,
+                           int base_line = 0, int base_column = 0, bool live = false) {
+        general = live;
+        reset = live ? "\\bakoSet{0}" : bako::reset;
+        origin_offset = base_offset;
+        auto identity = key.empty() ? file : key;
+        auto it = files.find(identity);
         if (it == files.end()) {
             File f;
             f.slot = files.size() + 1;
-            it = files.emplace(file, std::move(f)).first;
+            it = files.emplace(identity, std::move(f)).first;
+            slots[it->second.slot] = &it->second;
         }
         current = &it->second;
         current->source = source;
@@ -312,7 +412,7 @@ class Sources {
         i = 0;
         lines.resize(text.size() + 1);
         columns.resize(text.size() + 1);
-        int line = 0, column = 0;
+        int line = base_line, column = base_column;
         for (size_t n = 0; n <= text.size(); ++n) {
             lines[n] = line;
             columns[n] = column;
@@ -325,17 +425,18 @@ class Sources {
                 }
             }
         }
+        if (general && std::regex_search(source, std::regex(R"(\\(def|gdef|edef|xdef|newcommand|renewcommand|catcode|verb)\b)"))) {
+            i = text.size();
+            return mark(0, i, "macro-origin") + source + reset;
+        }
         return sequence(false);
     }
     const Span *find(int id) const {
         int slot = id / 1000000, offset = id % 1000000;
-        for (const auto &pair : files) {
-            auto &f = pair.second;
-            if (f.slot == slot) {
-                return offset < int(f.spans.size()) ? &f.spans[offset] : nullptr;
-            }
-        }
-        return nullptr;
+        auto found=slots.find(slot);
+        if (found==slots.end()) return nullptr;
+        const auto &f=*found->second;
+        return offset < int(f.spans.size()) ? &f.spans[offset] : nullptr;
     }
     Json warnings() const {
         Json out = Json::array();

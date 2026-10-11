@@ -46,6 +46,9 @@ inline void trace_text(fz_context *ctx, fz_device *dev, const fz_text *text, fz_
         }
         for (int i = 0; i < span->len; ++i) {
             auto item = span->items[i];
+            // MuPDF adds gid=-1 entries for extra Unicode characters in one
+            // ligature. Provenance records physical glyphs, not those entries.
+            if (item.gid < 0) continue;
             double advance =
                 item.gid >= 0 ? fz_advance_glyph(ctx, span->font, item.gid, span->wmode) * size : 0;
             auto origin = fz_transform_point(fz_make_point(item.x, item.y), ctm);
@@ -184,6 +187,22 @@ class Renderer {
     int pages() const {
         return doc ? pdf_count_pages(ctx, doc) : 0;
     }
+    Json layout() {
+        Json result=Json::array();
+        fz_page *page=nullptr;
+        fz_var(page);
+        fz_try(ctx) {
+            for (int n=0;n<pages();++n) {
+                page=reinterpret_cast<fz_page *>(pdf_load_page(ctx,doc,n));
+                auto bounds=fz_bound_page(ctx,page);
+                result.push_back(Json::array({bounds.x1-bounds.x0,bounds.y1-bounds.y0}));
+                fz_drop_page(ctx,page);page=nullptr;
+            }
+        }
+        fz_always(ctx) { fz_drop_page(ctx,page); }
+        fz_catch(ctx) { throw std::runtime_error(fz_caught_message(ctx)); }
+        return result;
+    }
     void seed(const fs::path &path, std::set<std::string> resources) {
         pdf_document *replacement = nullptr;
         fz_var(replacement);
@@ -271,11 +290,13 @@ class Renderer {
         fz_pixmap *pix = nullptr;
         fz_stext_page *text = nullptr;
         fz_device *device = nullptr;
+        pdf_processor *processor = nullptr;
         fz_var(page);
         fz_var(display);
         fz_var(pix);
         fz_var(text);
         fz_var(device);
+        fz_var(processor);
         std::vector<fz_rect> boxes;
         Json characters = Json::array(), regions = Json::array(), warnings = sources.warnings();
         fz_rect bounds = {};
@@ -301,6 +322,23 @@ class Renderer {
             fz_close_device(ctx, device);
             fz_drop_device(ctx, device);
             device = nullptr;
+            if (source_sync && ids.size()!=boxes.size()) {
+                // Imported PDF figures contain glyphs without TeX provenance.
+                // Trace the page operators while excluding form XObjects; do
+                // not shift every later source ID by the figure's glyph count.
+                boxes.clear();
+                auto trace = fz_new_derived_device(ctx, TraceDevice);
+                device = &trace->super; trace->boxes=&boxes;
+                device->fill_text=trace_fill; device->stroke_text=trace_stroke; device->ignore_text=trace_text;
+                fz_matrix transform; fz_rect media;
+                auto pdfpage=reinterpret_cast<pdf_page *>(page);
+                pdf_page_transform(ctx,pdfpage,&media,&transform);
+                processor=pdf_new_run_processor(ctx,doc,device,transform,-1,"View",nullptr,nullptr,nullptr,nullptr,nullptr);
+                processor->op_Do_form=[](fz_context *,pdf_processor *,const char *,pdf_obj *){};
+                pdf_process_contents(ctx,processor,doc,pdf_page_resources(ctx,pdfpage),pdf_page_contents(ctx,pdfpage),nullptr,nullptr);
+                pdf_close_processor(ctx,processor);pdf_drop_processor(ctx,processor);processor=nullptr;
+                fz_close_device(ctx,device);fz_drop_device(ctx,device);device=nullptr;
+            }
             if (ids.size() == boxes.size()) {
                 for (size_t i = 0; i < ids.size(); ++i) {
                     if (auto span = sources.find(ids[i])) {
@@ -337,6 +375,7 @@ class Renderer {
             timings["png"] = elapsed(extracted);
         }
         fz_always(ctx) {
+            pdf_drop_processor(ctx, processor);
             fz_drop_device(ctx, device);
             fz_drop_stext_page(ctx, text);
             fz_drop_pixmap(ctx, pix);

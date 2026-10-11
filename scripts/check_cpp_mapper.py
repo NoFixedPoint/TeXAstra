@@ -1,11 +1,12 @@
 """Differentially check the C++ mapper against the established Python reference."""
-import json,os,subprocess,sys
+import argparse,json,os,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from prototype.instrument import Instrumenter
 def linux(path):return '/mnt/'+path.drive[0].lower()+path.as_posix()[2:] if os.name=='nt' else str(path)
 prefix=['wsl','-d','Ubuntu-22.04','--exec'] if os.name=='nt' else []
-p=subprocess.Popen(prefix+[linux(ROOT/'native/runtime/bakoma-backend'),'--instrument'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8')
+parser=argparse.ArgumentParser();parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime');args=parser.parse_args()
+p=subprocess.Popen(prefix+[linux(args.runtime.resolve()/'bakoma-backend'),'--instrument'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8')
 mapper=Instrumenter();count=0
 cases=[(f.relative_to(ROOT/'corpus').as_posix(),f.read_text(encoding='utf-8')) for f in sorted((ROOT/'corpus/pages').glob('*.tex'))]
 cases.extend([

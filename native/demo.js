@@ -4,15 +4,18 @@ const {launch}=require('./launch');
 const {spawn}=require('child_process');
 const root=path.resolve(__dirname,'..');
 let port=8765,project=path.join(root,'corpus'),engine='cpp',checkpoint=process.env.BAKO_CHECKPOINT_MODE||'fork';
+const options={};
 for(let i=2;i<process.argv.length;i++){
   if(process.argv[i]==='--port')port=Number(process.argv[++i]);
   else if(process.argv[i]==='--project')project=path.resolve(process.argv[++i]);
   else if(process.argv[i]==='--engine')engine=process.argv[++i];
   else if(process.argv[i]==='--checkpoint')checkpoint=process.argv[++i];
+  else if(process.argv[i]==='--main')options.main=process.argv[++i];
+  else if(process.argv[i]==='--runtime')options.runtime=path.resolve(process.argv[++i]);
   else throw new Error('Unknown argument '+process.argv[i]);
 }
 if(!['cpp','stream'].includes(engine))throw new Error('Use cpp or stream for the comparison');
-const backend=engine==='cpp'?launch(root,project,checkpoint):spawn(process.env.BAKOMA_PYTHON||'python',['-u','-m','prototype.bridge','--project',project,'--engine','stream'],{cwd:root,windowsHide:true});
+const backend=engine==='cpp'?launch(root,project,checkpoint,options):spawn(process.env.BAKOMA_PYTHON||'python',['-u','-m','prototype.bridge','--project',project,'--engine','stream'],{cwd:root,windowsHide:true});
 const messages=[],waiting=new Set(),overlays=new Map();
 let event=0,revision=0,closed=false;
 function output(res,status,data,kind='application/json'){
@@ -36,7 +39,7 @@ const server=http.createServer(async(req,res)=>{
     if(req.headers.origin&&!allowed.map(host=>'http://'+host).includes(req.headers.origin))return output(res,403,{});
     const url=new URL(req.url,'http://localhost');
     if(req.method==='GET'){
-      if(url.pathname==='/bootstrap')return output(res,200,{event});
+      if(url.pathname==='/bootstrap')return output(res,200,{event,sourceFile:options.main||'pages/page-001.tex'});
       if(url.pathname==='/events'){
         const after=Number(url.searchParams.get('after')||0),data=messages.filter(m=>m.event>after);
         if(data.length)return output(res,200,data);

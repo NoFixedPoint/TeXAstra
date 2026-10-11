@@ -105,7 +105,7 @@ static int publish(lua_State *L) {
 
 static int checkpoint(lua_State *L) {
   int index=(int)luaL_checkinteger(L,1);
-  if(index>limit) {lua_pushinteger(L,limit);return 1;}
+  if(index>limit && !getenv("BAKO_LIVE_DOCUMENT")) {lua_pushinteger(L,limit);return 1;}
   fflush(NULL);
   if(bako_internal_checkpoint){limit=bako_internal_checkpoint(index);lua_pushinteger(L,limit);return 1;}
   char session_path[4096];if(!getcwd(session_path,sizeof(session_path)))return luaL_error(L,"Cannot resolve checkpoint session directory");

@@ -1,8 +1,12 @@
 #pragma once
 #include "renderer.hpp"
+#include "cache.hpp"
+#include "document.hpp"
+#include <functional>
 extern char **environ;
 
 namespace bako {
+struct RebuildRequired : std::runtime_error { using std::runtime_error::runtime_error; };
 struct ProjectOptions {
     std::string main = "main.tex", mode = "auto", compiler = "lualatex";
 };
@@ -11,6 +15,9 @@ class Engine {
     ProjectOptions options;
     bool full = false;
     bool full_ready = false;
+    bool live = false;
+    std::unique_ptr<LiveDocument> document;
+    std::unique_ptr<BuildCache> cache;
     Fd listener;
     pid_t process = -1;
     std::map<int, PageBuffer> buffers;
@@ -88,7 +95,7 @@ class Engine {
         std::vector<std::string> env;
         for (char **e = environ; *e; ++e) {
             if (full && starts(*e, "openout_any=")) continue;
-            if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=")) {
+            if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=") && !starts(*e, "BAKO_LIVE_DOCUMENT=")) {
                 if (internal && !prime &&
                     (starts(*e, "LD_PRELOAD=") || starts(*e, "LD_BIND_NOW=") ||
                      starts(*e, "MALLOC_MMAP_MAX_=") || starts(*e, "MALLOC_TRIM_THRESHOLD_=") ||
@@ -99,6 +106,7 @@ class Engine {
             }
         }
         env.emplace_back("BAKO_PAGE_STREAM=1");
+        if (live) env.emplace_back("BAKO_LIVE_DOCUMENT=1");
         if (full) env.emplace_back("openout_any=p");
         if (internal && !prime && !full) {
             env.emplace_back("LD_PRELOAD=" + (runtime / "bako_internal.so").string());
@@ -119,7 +127,7 @@ class Engine {
             ? std::vector<std::string>{options.compiler, "-no-shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-file-line-error", "./" + options.main}
             : std::vector<std::string>{"lualatex", "--shell-escape", "-interaction=nonstopmode",
-                                       "-halt-on-error", "main.tex"};
+                                       "-halt-on-error", "-recorder", "main.tex"};
         std::vector<char *> argv;
         for (auto &argument : arguments) argv.push_back(argument.data());
         argv.push_back(nullptr);
@@ -242,11 +250,13 @@ class Engine {
             if (fs::exists(directory / "failed.json")) {
                 throw std::runtime_error("TeX compilation failed: " + error_log());
             }
-            if (stream) {
-                auto value = receive();
-                if (!value.is_null()) {
-                    return value;
-                }
+            auto value = receive();
+            if (!value.is_null()) {
+                if (stream) return value;
+                // Resource refresh can ship more pages before final export.
+                // Drain and resume each publisher instead of waiting on a
+                // compiler suspended at its next paragraph boundary.
+                kill(active(), SIGCONT);
             }
             if (fs::exists(directory / "completed.json")) {
                 try {
@@ -409,17 +419,19 @@ class Engine {
                 replace_all(data, "\r\n", "\n");
                 replace_all(data, "\r", "\n");
             }
-            if (!full && file.extension() == ".tex" && name != "main.tex") {
+            if (!full && !live && file.extension() == ".tex" && name != "main.tex") {
                 data = sources.instrument(data, name) + reset;
             }
-            write(directory / file, data);
+            if (cache) {
+                if (file != fs::path(options.main).stem().string()+".pdf") cache->put(name, data);
+            } else write(directory / file, data);
         }
         // Unsaved, newly created project files may not exist on disk yet.
         for (const auto &[name, data] : overlays) {
             auto target = inside(directory, name);
-            if (full) {
+            if (full || live) {
                 fs::create_directories(target.parent_path());
-                write(target, data);
+                if (cache) cache->put(name, data); else write(target, data);
             }
         }
         if (full) return;
@@ -428,6 +440,37 @@ class Engine {
         }
         fs::copy_file(runtime / "bako_snapshot.so", directory / "bako_snapshot.so",
                       fs::copy_options::overwrite_existing);
+        if (live) {
+            auto source = overlays.count(options.main) ? overlays.at(options.main) : read(project / options.main);
+            if (!overlays.count(options.main)) { replace_all(source,"\r\n","\n"); replace_all(source,"\r","\n"); }
+            document = std::make_unique<LiveDocument>(source);
+            std::set<std::string> instrumented;
+            std::function<void(const std::string &)> include_sources;
+            include_sources = [&](const std::string &body) {
+                // Literal body inputs share TeX's project-relative lookup.
+                // Preamble inputs remain untouched: the attribute is defined
+                // only after package loading, immediately before the body.
+                static const std::regex input(R"(\\(?:input|include)\s*\{([^}]+)\})");
+                for (auto it=std::sregex_iterator(body.begin(),body.end(),input);it!=std::sregex_iterator();++it) {
+                    fs::path relative=(*it)[1].str();
+                    if (relative.extension().empty()) relative += ".tex";
+                    auto name=relative.generic_string();
+                    if (name==options.main || !instrumented.insert(name).second) continue;
+                    auto file=inside(directory,name);
+                    if (!fs::is_regular_file(file)) continue;
+                    auto original=read(file);
+                    auto rewritten=sources.instrument(original,name,name,0,0,0,true);
+                    if (rewritten.empty() || rewritten.back()!='\n') rewritten+='\n';
+                    write(file,"\\directlua{bako_push_source()}%\n"+rewritten+"\\directlua{bako_pop_source()}%\n");
+                    include_sources(original);
+                }
+            };
+            for (const auto &block : document->blocks) include_sources(block.source);
+            document->generate(directory, options.main, sources);
+            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(runtime / "bakoma-backend"));
+            cache->finish_inputs();
+            return;
+        }
         auto root = read(directory / "main.tex");
         std::string warm = R"TEX(\begingroup\setbox0=\vbox{\hsize=\textwidth
 {\Large\bfseries Acceptance}\par English 中文排版
@@ -516,6 +559,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
 
   public:
     fs::path directory;
+    unsigned generation = 0;
     Sources sources;
     Renderer renderer;
     std::atomic<bool> *cancel = nullptr;
@@ -532,17 +576,27 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (!words("auto full incremental").count(options.mode) ||
             !words("lualatex xelatex pdflatex").count(options.compiler))
             throw std::runtime_error("Invalid preview mode or LaTeX compiler");
-        full = options.mode == "full" || (options.mode == "auto" && (!fixture || options.compiler != "lualatex"));
-        if (!full && (!fixture || options.compiler != "lualatex"))
-            throw std::runtime_error("Incremental preview requires the LuaLaTeX acceptance corpus. Use full mode for other projects.");
+        full = options.mode == "full";
+        live = !full && !fixture;
+        if (!full) options.compiler = "lualatex";
         internal = getenv("BAKO_CHECKPOINT_MODE") &&
                    std::string(getenv("BAKO_CHECKPOINT_MODE")) == "internal";
-        char name[] = "/tmp/bakoma-cpp-XXXXXX";
-        auto path = mkdtemp(name);
-        if (!path) {
-            throw std::runtime_error("Cannot create session");
+        if (live) {
+            cache = std::make_unique<BuildCache>(project, options.main+":live", options.compiler);
+            directory = cache->directory;
+            // Persistent files are data, not evidence that old PIDs still belong
+            // to us. Remove stale checkpoint markers without signalling them.
+            for (const auto &entry : fs::directory_iterator(directory)) {
+                auto name = entry.path().filename().string();
+                if (starts(name,"cp-") || name=="active.pid" || name=="pages.sock" || name=="internal.sock" ||
+                    name=="completed.json" || name=="failed.json") fs::remove(entry.path());
+            }
+        } else {
+            char name[] = "/tmp/bakoma-cpp-XXXXXX";
+            auto path = mkdtemp(name);
+            if (!path) throw std::runtime_error("Cannot create session");
+            directory = path;
         }
-        directory = path;
         try {
             prepare(overlays);
             listener = Fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
@@ -579,6 +633,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
     Json start(int page = 0) {
         if (full) return full_start(page);
         auto started = Clock::now();
+        const bool reuse = cache && cache->reusable(directory / "main.pdf", "lualatex");
+        if (cache) cache->invalidate();
+        if (!reuse) {
         process = spawn(true);
         auto start = Clock::now();
         int status = 0;
@@ -603,6 +660,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (!WIFEXITED(status) || WEXITSTATUS(status)) {
             throw std::runtime_error("Initial TeX compilation failed: " + error_log());
         }
+        }
         Json result;
         converged = false;
         for (int attempt = 0; attempt < 3; ++attempt) {
@@ -625,10 +683,43 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         frame["provisional"] = false;
         frame["pipelineMs"] = elapsed(started);
         frame["session"] = directory.string();
+        if (live) {
+            frame["compilationMode"] = "live";
+            frame["cacheReused"] = reuse;
+            frame["sourceSync"] = "token-and-macro-origin";
+            cache->save("main", "lualatex", converged);
+        }
         return frame;
     }
     Json edit(const std::string &file, const std::string &source, int page) {
         if (full) return update_files({{file, source}}, page);
+        if (live) {
+            if (file != options.main) throw RebuildRequired("Included-file edit requires rebuilding compiler checkpoints");
+            if (source == document->original) return navigate(page);
+            auto next = std::make_unique<LiveDocument>(source);
+            int changed = document->first_change(*next);
+            if (changed < 0) throw RebuildRequired("Preamble or document structure changed");
+            int checkpoint = 0;
+            for (const auto &entry : fs::directory_iterator(directory)) {
+                auto name = entry.path().filename().string();
+                if (starts(name,"cp-") && entry.path().extension()==".meta") {
+                    int block=0, shipped=0; std::istringstream(read(entry.path())) >> block >> shipped;
+                    int index = std::stoi(name.substr(3));
+                    if (block <= changed && fs::exists(directory / page_name(index,"cp-", internal?".snap":".pid"))) checkpoint=std::max(checkpoint,index);
+                }
+            }
+            if (!checkpoint) throw RebuildRequired("No retained checkpoint before the changed paragraph");
+            auto started = Clock::now();
+            cache->invalidate(); cache->put(file,source);
+            next->generate(directory, file, sources);
+            document = std::move(next);
+            available.erase(available.lower_bound(checkpoint-1), available.end());
+            auto result = resume(checkpoint, std::max(page,checkpoint-1));
+            converged = false;
+            result["pipelineMs"] = elapsed(started); result["ok"] = true; result["provisional"] = true;
+            result["compilationMode"] = "live"; result["sourceSync"] = "token-and-macro-origin";
+            return result;
+        }
         converged = false;
         auto started = Clock::now();
         std::smatch match;
@@ -684,6 +775,39 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         return result;
     }
     bool full_build() const { return full; }
+    bool live_document() const { return live; }
+    Json layout() { return renderer.layout(); }
+    Json forward(const std::string &file, int line, int column, int preferred_page = 0) {
+        if (full) return nullptr;
+        std::vector<int> candidates;
+        for (const auto &[page, ids] : page_ids) candidates.push_back(page);
+        std::stable_sort(candidates.begin(),candidates.end(),[&](int a,int b){return std::abs(a-preferred_page)<std::abs(b-preferred_page);});
+        // Headings can also occur in a contents page or running header. Keep
+        // navigation near the user's viewport when a token has several outputs.
+        for (int page : candidates) {
+            const auto &ids=page_ids.at(page);
+            if (!available.count(page)) continue;
+            int best = -1, length = 2147483647;
+            for (int id : ids) if (auto span = sources.find(id)) {
+                if (span->file==file && line>=span->line && line<=span->endLine &&
+                    (line>span->line || column>=span->column) &&
+                    (line<span->endLine || column<span->endColumn) && span->end-span->start < length) {
+                    best=id; length=span->end-span->start;
+                }
+            }
+            if (best >= 0) {
+                auto frame = navigate(page);
+                for (const auto &row : frame.at("regionRows")) if (row.at(0)==best) {
+                    Json result = Json::object();
+                    const auto &fields=frame.at("regionFields");
+                    for (size_t i=0;i<fields.size();++i) result[fields[i].get<std::string>()]=row[i];
+                    result["page"]=page;
+                    return result;
+                }
+            }
+        }
+        return nullptr;
+    }
     Json update_files(const std::map<std::string, std::string> &overlays, int page) {
         if (!full) throw std::runtime_error("Batch updates require full-build mode");
         for (const auto &[file, source] : overlays) {

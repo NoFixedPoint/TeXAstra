@@ -2,6 +2,13 @@
 -- Source identifiers come from the explicitly limited source instrumenter.
 local aid=luatexbase.new_attribute('bako_source')
 tex.sprint('\\attributedef\\bakoattr='..aid..' ')
+-- A brace-delimited setter does not consume source whitespace following it.
+tex.sprint('\\protected\\def\\bakoSet#1{\\bakoattr=#1\\relax}')
+local source_stack={}
+function bako_push_source() source_stack[#source_stack+1]=tex.getattribute(aid) end
+function bako_pop_source()
+  tex.setattribute(aid,table.remove(source_stack))
+end
 local glyph, hlist, vlist = node.id('glyph'), node.id('hlist'), node.id('vlist')
 local page_number=0
 local geometry=nil
@@ -47,6 +54,10 @@ local function annotate(head)
       end
     elseif (n.id == hlist or n.id == vlist) and n.head then
       n.head=annotate(n.head)
+    elseif n.id==node.id('glue') and n.leader then
+      -- Leaders (for example contents-page dots) ship the same box repeatedly.
+      -- Record their glyphs on each actual output, just like ordinary boxes.
+      annotate(n.leader)
     elseif n.id==node.id('disc') then
       if n.pre then n.pre=annotate(n.pre) end
       if n.post then n.post=annotate(n.post) end

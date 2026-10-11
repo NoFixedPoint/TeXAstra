@@ -1376,170 +1376,170 @@
   "samples": [
     {
       "case": "text-last",
-      "compileMs": 78.977809,
+      "compileMs": 69.892682,
       "compilerStagesMs": {
-        "fork": 15.783,
-        "replaceChild": 0.015,
-        "restore": 0.971,
-        "shipoutAndPublish": 12.426,
-        "typeset": 49.14
+        "fork": 11.212,
+        "replaceChild": 0.012,
+        "restore": 1.008,
+        "shipoutAndPublish": 12.379,
+        "typeset": 44.435
       },
-      "mapMs": 0.56,
+      "mapMs": 0.8916,
       "outputMode": "page-stream",
-      "pipelineMs": 96.007311,
-      "prepareMs": 0.613,
-      "renderMs": 13.808002,
+      "pipelineMs": 86.824977,
+      "prepareMs": 0.566999,
+      "renderMs": 13.938796,
       "renderStagesMs": {
-        "displayList": 0.6478,
-        "origins": 1.741,
-        "png": 9.778302,
-        "raster": 1.0554,
-        "text": 0.4925
+        "displayList": 0.4193,
+        "origins": 0.929899,
+        "png": 11.226197,
+        "raster": 0.7367,
+        "text": 0.5055
       },
       "resumedFrom": 100
     },
     {
       "case": "math-middle",
-      "compileMs": 72.685167,
+      "compileMs": 85.356378,
       "compilerStagesMs": {
-        "fork": 11.035,
-        "replaceChild": 0.02,
-        "restore": 1.487,
-        "shipoutAndPublish": 8.347,
-        "typeset": 43.146
+        "fork": 21.275,
+        "replaceChild": 0.025,
+        "restore": 1.078,
+        "shipoutAndPublish": 11.273,
+        "typeset": 47.509
       },
-      "mapMs": 0.491975,
+      "mapMs": 0.6762,
       "outputMode": "page-stream",
-      "pipelineMs": 88.646168,
-      "prepareMs": 2.06195,
-      "renderMs": 12.252076,
+      "pipelineMs": 107.799872,
+      "prepareMs": 6.220098,
+      "renderMs": 14.231496,
       "renderStagesMs": {
-        "displayList": 0.387016,
-        "origins": 1.229158,
-        "png": 9.153193,
-        "raster": 0.975791,
-        "text": 0.449442
+        "displayList": 0.553299,
+        "origins": 1.0552,
+        "png": 10.825197,
+        "raster": 0.9287,
+        "text": 0.5935
       },
       "resumedFrom": 50
     },
     {
       "case": "rotated-TikZ",
-      "compileMs": 71.160587,
+      "compileMs": 59.513009,
       "compilerStagesMs": {
-        "fork": 12.68,
-        "replaceChild": 0.01,
-        "restore": 0.782,
-        "shipoutAndPublish": 9.486,
-        "typeset": 47.487
+        "fork": 7.711,
+        "replaceChild": 0.009,
+        "restore": 1.197,
+        "shipoutAndPublish": 8.143,
+        "typeset": 41.878
       },
-      "mapMs": 0.6165,
+      "mapMs": 0.55275,
       "outputMode": "page-stream",
-      "pipelineMs": 88.544884,
-      "prepareMs": 0.5377,
-      "renderMs": 14.454997,
+      "pipelineMs": 73.491072,
+      "prepareMs": 0.364467,
+      "renderMs": 11.906488,
       "renderStagesMs": {
-        "displayList": 0.506799,
-        "origins": 1.5786,
-        "png": 10.826398,
-        "raster": 0.9305,
-        "text": 0.5573
+        "displayList": 0.391874,
+        "origins": 0.970475,
+        "png": 9.146864,
+        "raster": 0.829858,
+        "text": 0.464566
       },
       "resumedFrom": 50
     },
     {
       "case": "colored-TikZ",
-      "compileMs": 60.371988,
+      "compileMs": 61.974297,
       "compilerStagesMs": {
-        "fork": 8.613,
-        "replaceChild": 0.01,
-        "restore": 0.892,
-        "shipoutAndPublish": 7.479,
-        "typeset": 42.883
+        "fork": 9.466,
+        "replaceChild": 0.014,
+        "restore": 0.577,
+        "shipoutAndPublish": 8.157,
+        "typeset": 42.865
       },
-      "mapMs": 0.6453,
+      "mapMs": 0.7221,
       "outputMode": "page-stream",
-      "pipelineMs": 75.422086,
-      "prepareMs": 0.4546,
-      "renderMs": 11.991198,
+      "pipelineMs": 78.565996,
+      "prepareMs": 0.603,
+      "renderMs": 13.787799,
       "renderStagesMs": {
-        "displayList": 0.5249,
-        "origins": 1.486,
-        "png": 8.526499,
-        "raster": 0.7982,
-        "text": 0.581999
+        "displayList": 0.4167,
+        "origins": 0.9411,
+        "png": 10.9794,
+        "raster": 0.819899,
+        "text": 0.5013
       },
       "resumedFrom": 50
     },
     {
       "case": "new-Chinese-glyph",
-      "compileMs": 67.123399,
+      "compileMs": 64.742296,
       "compilerStagesMs": {
-        "fork": 10.001,
-        "replaceChild": 0.017,
-        "restore": 0.758,
-        "shipoutAndPublish": 9.81,
-        "typeset": 45.979
+        "fork": 8.439,
+        "replaceChild": 0.005,
+        "restore": 0.837,
+        "shipoutAndPublish": 8.312,
+        "typeset": 46.383
       },
-      "mapMs": 0.6175,
+      "mapMs": 0.6133,
       "outputMode": "resource-seed",
-      "pipelineMs": 154.267798,
-      "prepareMs": 0.4828,
-      "renderMs": 18.2485,
+      "pipelineMs": 147.876191,
+      "prepareMs": 0.5053,
+      "renderMs": 16.907399,
       "renderStagesMs": {
-        "displayList": 3.0398,
-        "origins": 1.3314,
-        "png": 11.0966,
-        "raster": 2.1198,
-        "text": 0.5562
+        "displayList": 2.918,
+        "origins": 0.9194,
+        "png": 10.336099,
+        "raster": 2.0868,
+        "text": 0.5551
       },
       "resourceRefresh": "New font or glyph requires a resource refresh",
       "resumedFrom": 50
     },
     {
       "case": "same-new-glyph-cached",
-      "compileMs": 61.116799,
+      "compileMs": 55.244082,
       "compilerStagesMs": {
-        "fork": 7.322,
-        "replaceChild": 0.01,
-        "restore": 0.572,
-        "shipoutAndPublish": 9.501,
-        "typeset": 42.81
+        "fork": 8.08,
+        "replaceChild": 0.023,
+        "restore": 0.803,
+        "shipoutAndPublish": 8.362,
+        "typeset": 37.464
       },
-      "mapMs": 0.6099,
+      "mapMs": 0.607475,
       "outputMode": "page-stream",
-      "pipelineMs": 78.787799,
-      "prepareMs": 0.467,
-      "renderMs": 15.1111,
+      "pipelineMs": 70.594208,
+      "prepareMs": 0.536158,
+      "renderMs": 12.935994,
       "renderStagesMs": {
-        "displayList": 0.4088,
-        "origins": 1.1863,
-        "png": 11.9412,
-        "raster": 0.916,
-        "text": 0.582
+        "displayList": 0.407458,
+        "origins": 0.896225,
+        "png": 10.01357,
+        "raster": 0.985233,
+        "text": 0.526625
       },
       "resumedFrom": 50
     },
     {
       "case": "reflow-first",
-      "compileMs": 105.767283,
+      "compileMs": 112.241247,
       "compilerStagesMs": {
-        "fork": 6.149,
-        "replaceChild": 0.007,
-        "restore": 0.748,
-        "shipoutAndPublish": 4.708,
-        "typeset": 93.115
+        "fork": 12.845,
+        "replaceChild": 0.022,
+        "restore": 0.48,
+        "shipoutAndPublish": 4.965,
+        "typeset": 81.851
       },
-      "mapMs": 1.537525,
+      "mapMs": 2.012599,
       "outputMode": "page-stream",
-      "pipelineMs": 138.018936,
-      "prepareMs": 2.190284,
-      "renderMs": 26.250603,
+      "pipelineMs": 142.985632,
+      "prepareMs": 9.369595,
+      "renderMs": 17.091792,
       "renderStagesMs": {
-        "displayList": 1.0686,
-        "origins": 3.3304,
-        "png": 17.164001,
-        "raster": 1.858201,
-        "text": 2.3906
+        "displayList": 0.7885,
+        "origins": 2.082099,
+        "png": 11.145494,
+        "raster": 1.578199,
+        "text": 1.2456
       },
       "resumedFrom": 1
     }

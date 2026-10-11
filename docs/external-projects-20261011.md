@@ -1,5 +1,8 @@
 # External LaTeX projects — version 0.0.7
 
+Historical report. Version 0.0.8 replaces the command's compatibility-only mode
+with [own live compilation and continuous scrolling](live-projects-20261011.md).
+
 The extension previously discarded the configured main filename, always compiled
 `main.tex`, and injected corpus-specific fonts, math and TikZ warm-up code. As a
 result, pointing it at another folder was insufficient for normal documents.

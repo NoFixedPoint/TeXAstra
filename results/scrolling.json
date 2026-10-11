@@ -1,0 +1,87 @@
+{
+  "checks": [
+    {
+      "name": "all page placeholders exist",
+      "ok": true
+    },
+    {
+      "name": "wheel/scroll loads middle pages",
+      "ok": true
+    },
+    {
+      "name": "scroll queries preserve source revision",
+      "ok": true
+    },
+    {
+      "name": "decoded pages are bounded",
+      "ok": true
+    },
+    {
+      "name": "forward navigation fetches and scrolls to unloaded page",
+      "ok": true
+    },
+    {
+      "name": "reverse navigation selects exact source token",
+      "ok": true
+    },
+    {
+      "name": "unsaved edit updates live output",
+      "ok": true
+    },
+    {
+      "name": "convergence preserves scrolled viewport",
+      "ok": true
+    },
+    {
+      "name": "included-file edit stays in live compilation",
+      "ok": true
+    },
+    {
+      "name": "compile error retains a stale image",
+      "ok": true
+    },
+    {
+      "name": "recovers from invalid source",
+      "ok": true
+    },
+    {
+      "name": "no browser errors",
+      "ok": true
+    }
+  ],
+  "edit": {
+    "type": "paint",
+    "revision": 2,
+    "clientId": 10,
+    "page": 1,
+    "generation": 2,
+    "pipelineMs": 428.202742,
+    "visibleMs": 489,
+    "stale": false,
+    "at": 1791704440770,
+    "compileMs": 91.868831,
+    "compilerStagesMs": {
+      "fork": 3.372,
+      "replaceChild": 0.017,
+      "restore": 0.862,
+      "shipoutAndPublish": 47.65,
+      "typeset": 38.965
+    },
+    "snapshot": {
+      "mode": "fork",
+      "pid": 179935
+    },
+    "renderMs": 12.028604,
+    "renderStagesMs": {
+      "displayList": 2.220101,
+      "origins": 0.365,
+      "png": 7.982902,
+      "raster": 1.165401,
+      "text": 0.2337
+    },
+    "requestToPayloadMs": 438.60824601352215,
+    "resumedFrom": 1,
+    "outputMode": "resource-seed",
+    "compilationMode": "live"
+  }
+}

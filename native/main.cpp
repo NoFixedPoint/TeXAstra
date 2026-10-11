@@ -15,6 +15,7 @@ class Preview {
     std::deque<Json> queue;
     std::atomic<bool> stopping{false}, cancel_build{false};
     std::atomic<unsigned> latest{0};
+    std::atomic<unsigned> generation{0};
     std::unique_ptr<Engine> engine, candidate;
     std::map<std::string, std::string> overlays, candidate_sources;
     std::thread builder;
@@ -34,6 +35,8 @@ class Preview {
         result["clientId"] = request.value("clientId", 0);
         result["sentAt"] = converged ? Json(nullptr) : request.value("sentAt", Json(nullptr));
         result["isStale"] = request.at("revision").get<unsigned>() != latest.load();
+        result["purpose"] = request.at("type");
+        result["requestId"] = request.value("requestId", Json(nullptr));
         if (converged) {
             result["phase"] = "converged";
             result["provisional"] = false;
@@ -56,6 +59,9 @@ class Preview {
                 auto result = ready->start(request.value("page", 0));
                 std::lock_guard<std::mutex> lock(mutex);
                 if (!cancel_build && !stopping && latest == revision) {
+                    ready->generation=++generation;
+                    result["generation"]=ready->generation;
+                    result["pageSizes"]=ready->layout();
                     candidate = std::move(ready);
                     candidate_sources = snapshot;
                     frame(std::move(result), request, true);
@@ -90,13 +96,14 @@ class Preview {
                     if (kind == "close") {
                         break;
                     }
-                    auto revision = ++latest;
+                    const bool mutation = kind=="start" || kind=="edit";
+                    auto revision = mutation ? ++latest : latest.load();
                     request["revision"] = revision;
-                    cancel_build = true;
+                    if (mutation) cancel_build = true;
                     request["submittedMs"] =
                         std::chrono::duration<double, std::milli>(Clock::now().time_since_epoch())
                             .count();
-                    emit({{"type", "status"},
+                    if (mutation) emit({{"type", "status"},
                           {"state", "building"},
                           {"revision", revision},
                           {"clientId", request.value("clientId", 0)}});
@@ -140,12 +147,37 @@ class Preview {
                     continue;
                 }
             }
-            auto request = requests.back();
-            previous = request;
-            last_action = Clock::now();
+            // Coalesce edits, but do not discard independent viewport or sync
+            // requests. Rendering a page is not a new source revision.
+            auto selected=requests.begin();
+            bool mutation=false;
+            for (auto it=requests.begin();it!=requests.end();++it) {
+                if (it->at("type")=="edit" || it->at("type")=="start") { selected=it; mutation=true; }
+            }
+            auto request = *selected;
+            {
+                std::lock_guard<std::mutex> lock(mutex);
+                for (auto it=requests.rbegin();it!=requests.rend();++it) {
+                    if (it->at("type")!="edit" && it->at("type")!="start" && &*it!=&*selected) queue.push_front(*it);
+                }
+            }
+            if (mutation) { previous = request; last_action = Clock::now(); }
             int page = std::max(0, request.value("page", 0));
             std::set<std::string> edits;
             try {
+                if (!mutation) {
+                    if (!engine || request.at("revision").get<unsigned>() != latest ||
+                        (request.contains("generation") && request.at("generation").get<unsigned>() != engine->generation)) {
+                        emit({{"type","discard"},{"requestId",request.value("requestId",Json(nullptr))}});
+                        continue;
+                    }
+                    if (request.at("type")=="sync-forward") {
+                        emit({{"type","sync"},{"revisionId",request.at("revision")},{"generation",engine->generation},
+                              {"requestId",request.value("requestId",Json(nullptr))},
+                              {"location",engine->forward(request.at("file"),request.at("line"),request.at("column"),page)}});
+                        continue;
+                    }
+                }
                 for (auto &r : requests) {
                     if (r.at("type") == "start" && r.contains("overlays")) {
                         for (const auto &[file, source] : r.at("overlays").items()) {
@@ -161,6 +193,7 @@ class Preview {
                         edits.insert(file);
                     }
                 }
+                if (request.at("type")=="start") engine.reset();
                 bool rebuild = !engine || edits.size() > 1 || (engine->full_build() && !edits.empty());
                 for (const auto &file : edits) {
                     if (!std::regex_match(file, std::regex(R"(pages/page-\d{3}\.tex)"))) {
@@ -168,7 +201,14 @@ class Preview {
                     }
                 }
                 Json result;
-                if (engine && engine->full_build() && !edits.empty()) {
+                if (engine && engine->live_document() && edits.size() == 1) {
+                    try { result = engine->edit(*edits.begin(), overlays.at(*edits.begin()), page); }
+                    catch (const RebuildRequired &) {
+                        engine.reset();
+                        engine = std::make_unique<Engine>(project, assets, runtime, overlays, &stopping, options);
+                        result = engine->start(page);
+                    }
+                } else if (engine && engine->full_build() && !edits.empty()) {
                     result = engine->update_files(overlays, page);
                 } else if (rebuild) {
                     engine.reset();
@@ -184,9 +224,18 @@ class Preview {
                     std::chrono::duration<double, std::milli>(Clock::now().time_since_epoch())
                         .count() -
                     request.at("submittedMs").get<double>();
-                needs_convergence = !engine->full_build() && result.value("provisional", false);
+                if (mutation) {
+                    engine->generation=++generation;
+                    result["pageSizes"]=engine->layout();
+                    needs_convergence = !engine->full_build() && result.value("provisional", false);
+                }
+                result["generation"]=engine->generation;
                 frame(std::move(result), request);
             } catch (const std::exception &e) {
+                if (!mutation) {
+                    emit({{"type","query-error"},{"requestId",request.value("requestId",Json(nullptr))},{"error",e.what()}});
+                    continue;
+                }
                 needs_convergence = false;
                 if (request.at("revision").get<unsigned>() == latest) {
                     emit({{"type", "status"},
@@ -275,6 +324,8 @@ int main(int argc, char **argv) {
                         inside(project, file);
                         overlays[file] = request.at("source").get<std::string>();
                         result = engine->edit(file, overlays.at(file), page);
+                    } else if (kind == "sync-forward") {
+                        result = {{"ok",true},{"location",engine->forward(request.at("file"),request.at("line"),request.at("column"),page)}};
                     } else {
                         result = engine->navigate(page);
                     }

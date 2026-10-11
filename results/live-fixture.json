@@ -1,0 +1,198 @@
+{
+  "checks": [
+    {
+      "name": "page count equals plain LuaLaTeX",
+      "ok": true,
+      "pages": 12
+    },
+    {
+      "name": "page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 1 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 2 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 3 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 4 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 5 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 6 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 7 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 8 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 8 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 9 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 9 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 10 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 10 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 11 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 11 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 12 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 12 source spans",
+      "ok": true
+    },
+    {
+      "name": "all pages match plain LuaLaTeX",
+      "ok": true
+    },
+    {
+      "name": "body pages have source mappings",
+      "ok": true,
+      "unmapped": []
+    },
+    {
+      "name": "middle-page token exists",
+      "ok": true
+    },
+    {
+      "name": "forward token location",
+      "ok": true
+    },
+    {
+      "name": "edit 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edit 1 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "edit 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edit 2 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "edit 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edit 3 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "cache reused on reopen",
+      "ok": true
+    },
+    {
+      "name": "original project unchanged",
+      "ok": true,
+      "files": 3
+    }
+  ],
+  "edits": [
+    {
+      "pipelineMs": 41.822843,
+      "compileMs": 25.362065,
+      "resumedFrom": 6,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 2.021,
+        "replaceChild": 12.864,
+        "restore": 0.304,
+        "shipoutAndPublish": 4.253,
+        "typeset": 5.296
+      }
+    },
+    {
+      "pipelineMs": 47.565584,
+      "compileMs": 31.792156,
+      "resumedFrom": 6,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 4.226,
+        "replaceChild": 15.807,
+        "restore": 0.594,
+        "shipoutAndPublish": 5.394,
+        "typeset": 5.039
+      }
+    },
+    {
+      "pipelineMs": 36.578342,
+      "compileMs": 22.021237,
+      "resumedFrom": 6,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 2.757,
+        "replaceChild": 10.731,
+        "restore": 0.414,
+        "shipoutAndPublish": 3.596,
+        "typeset": 4.114
+      }
+    }
+  ],
+  "startupMs": 1530.1818,
+  "unmappedPages": []
+}

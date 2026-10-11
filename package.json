@@ -2,7 +2,7 @@
   "name": "bakoma-revived-prototype",
   "displayName": "BaKoMa Revived \u2014 Feasibility Prototype",
   "description": "Experimental live LaTeX preview with token provenance and a LuaTeX checkpoint backend.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publisher": "local-prototype",
   "engines": {
     "vscode": "^1.85.0"
@@ -32,7 +32,8 @@
         "bakoma.python": {
           "type": "string",
           "default": "python",
-          "description": "Python interpreter with PyMuPDF installed."
+          "description": "Retained for legacy comparison tools. Open Experimental Preview always uses the C++ backend.",
+          "deprecationMessage": "Retained for legacy comparison tools. Open Experimental Preview always uses the C++ backend."
         },
         "bakoma.checkpointMode": {
           "type": "string",
@@ -52,7 +53,8 @@
             "native"
           ],
           "default": "cpp",
-          "description": "cpp runs source mapping, compiler control and rendering in C++ (Ubuntu-22.04 WSL on Windows); stream is the Python comparison; snapshot finalizes PDF per edit; native uses full LuaLaTeX builds."
+          "description": "Open Experimental Preview always uses C++ and the live LuaHBTeX compiler.",
+          "deprecationMessage": "Open Experimental Preview always uses C++ and the live LuaHBTeX compiler."
         },
         "bakoma.mainFile": {
           "type": "string",
@@ -67,7 +69,8 @@
             "incremental"
           ],
           "default": "auto",
-          "description": "Auto retains incremental checkpoints for the supplied corpus and uses ordinary full builds for other projects. Full builds do not provide source navigation."
+          "description": "Open Experimental Preview always starts live compilation, regardless of this legacy setting.",
+          "deprecationMessage": "Open Experimental Preview always starts live compilation, regardless of this legacy setting."
         },
         "bakoma.latexCompiler": {
           "type": "string",
@@ -78,7 +81,8 @@
             "pdflatex"
           ],
           "default": "auto",
-          "description": "Compiler in Ubuntu-22.04 WSL on Windows. Auto reads % !TEX program, otherwise uses lualatex. Incremental mode requires lualatex."
+          "description": "Open Experimental Preview uses its own LuaHBTeX compiler, regardless of prior compiler settings or magic comments.",
+          "deprecationMessage": "Open Experimental Preview uses its own LuaHBTeX compiler, regardless of prior compiler settings or magic comments."
         }
       }
     }

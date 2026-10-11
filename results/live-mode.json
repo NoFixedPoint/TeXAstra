@@ -1,0 +1,793 @@
+{
+  "checks": [
+    {
+      "name": "page count equals plain LuaLaTeX",
+      "ok": true,
+      "pages": 85
+    },
+    {
+      "name": "page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 1 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 2 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 3 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 4 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 5 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 6 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 7 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 8 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 8 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 9 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 9 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 10 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 10 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 11 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 11 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 12 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 12 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 13 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 13 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 14 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 14 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 15 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 15 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 16 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 16 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 17 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 17 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 18 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 18 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 19 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 19 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 20 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 20 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 21 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 21 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 22 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 22 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 23 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 23 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 24 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 24 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 25 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 25 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 26 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 26 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 27 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 27 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 28 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 28 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 29 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 29 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 30 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 30 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 31 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 31 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 32 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 32 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 33 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 33 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 34 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 34 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 35 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 35 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 36 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 36 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 37 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 37 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 38 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 38 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 39 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 39 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 40 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 40 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 41 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 41 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 42 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 42 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 43 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 43 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 44 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 44 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 45 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 45 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 46 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 46 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 47 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 47 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 48 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 48 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 49 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 49 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 50 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 50 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 51 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 51 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 52 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 52 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 53 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 53 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 54 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 54 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 55 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 55 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 56 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 56 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 57 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 57 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 58 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 58 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 59 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 59 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 60 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 60 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 61 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 61 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 62 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 62 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 63 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 63 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 64 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 64 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 65 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 65 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 66 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 66 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 67 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 67 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 68 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 68 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 69 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 69 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 70 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 70 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 71 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 71 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 72 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 72 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 73 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 73 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 74 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 74 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 75 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 75 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 76 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 76 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 77 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 77 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 78 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 78 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 79 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 79 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 80 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 80 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 81 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 81 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 82 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 82 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 83 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 83 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 84 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 84 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 85 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 85 source spans",
+      "ok": true
+    },
+    {
+      "name": "all pages match plain LuaLaTeX",
+      "ok": true
+    },
+    {
+      "name": "body pages have source mappings",
+      "ok": true,
+      "unmapped": []
+    },
+    {
+      "name": "middle-page token exists",
+      "ok": true
+    },
+    {
+      "name": "forward token location",
+      "ok": true
+    },
+    {
+      "name": "forward navigation prefers the visible occurrence",
+      "ok": true
+    },
+    {
+      "name": "edit 1 exact pixels",
+      "ok": true,
+      "page": 43,
+      "expectedPage": 43
+    },
+    {
+      "name": "edit 1 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "edit 2 exact pixels",
+      "ok": true,
+      "page": 43,
+      "expectedPage": 43
+    },
+    {
+      "name": "edit 2 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "edit 3 exact pixels",
+      "ok": true,
+      "page": 43,
+      "expectedPage": 43
+    },
+    {
+      "name": "edit 3 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "cache reused on reopen",
+      "ok": true
+    },
+    {
+      "name": "original project unchanged",
+      "ok": true,
+      "files": 653
+    }
+  ],
+  "edits": [
+    {
+      "pipelineMs": 181.309647,
+      "compileMs": 69.636103,
+      "resumedFrom": 43,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 6.732,
+        "replaceChild": 0.013,
+        "restore": 18.935,
+        "shipoutAndPublish": 7.815,
+        "typeset": 35.187
+      }
+    },
+    {
+      "pipelineMs": 165.298869,
+      "compileMs": 62.640613,
+      "resumedFrom": 43,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 6.352,
+        "replaceChild": 0.008,
+        "restore": 15.088,
+        "shipoutAndPublish": 6.532,
+        "typeset": 34.029
+      }
+    },
+    {
+      "pipelineMs": 161.368875,
+      "compileMs": 58.780018,
+      "resumedFrom": 43,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 5.271,
+        "replaceChild": 0.011,
+        "restore": 13.229,
+        "shipoutAndPublish": 7.556,
+        "typeset": 31.987
+      }
+    }
+  ],
+  "startupMs": 8539.130678,
+  "unmappedPages": [],
+  "targetPage": 43
+}
