@@ -24,6 +24,9 @@ def regions(frame):
     # and exact argument/ordinary-token ranges in the differential oracle.
     result=[]
     for r in frame['regions']:
+        # The legacy oracle has glyphs only. Rule navigation is independently
+        # checked against engine expressions in check_source_mapping.py.
+        if r['kind']=='rule-origin':continue
         end=r['end']
         if r['kind']=='macro-origin':
             command=re.match(r'\\[A-Za-z]+',r['text'])

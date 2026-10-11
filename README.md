@@ -1,8 +1,10 @@
 # BaKoMa revived — feasibility prototype
 
-This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The latest local 13-page browser benchmark is below 150 ms p95 in all four tested scenarios.** This does not establish performance for arbitrary projects or the real VS Code host. The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
+This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The latest local 13-page browser benchmark measures 91–158 ms p95; typing bursts and new-font edits exceed the 150 ms target.** This does not establish performance for arbitrary projects or the real VS Code host. The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Version **0.0.14** refreshes supported fonts and glyph subsets without finishing the document. A disposable fork of the paused engine exports a font-only bundle, and the retained renderer imports it for the affected page. Graphics and unsupported font resources keep the complete-PDF fallback. See [the implementation and validation](docs/font-resources-20261011.md).
+Version **0.0.15** keeps source-navigation failures local to individual output nodes. Fraction bars, radical bars, overlines and underlines navigate to their source commands; rotated rules retain their shape for click testing. Clicking unmapped content explains why no verified source location is available. See [the implementation and validation](docs/source-mapping-20261011.md).
+
+Version 0.0.14 refreshes supported fonts and glyph subsets without finishing the document. A disposable fork of the paused engine exports a font-only bundle, and the retained renderer imports it for the affected page. Graphics and unsupported font resources keep the complete-PDF fallback. See [the implementation and validation](docs/font-resources-20261011.md).
 
 Version 0.0.13 adds a repeatable browser latency benchmark and separates backend queueing, compilation, resource refresh, delivery, image decoding, text-layer updates, and paint scheduling. Nearby-page prefetch waits briefly during editing so it does not compete with the next keystroke. See [the measurements and validation](docs/preview-latency-20261011.md).
 
@@ -44,7 +46,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.14.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.15.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -63,7 +65,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 ## What the experiments establish
 
 - `scripts/generate_corpus.py` creates a deterministic 100-page, multi-file Chinese/English, math, macro, and TikZ corpus, plus edit scenarios.
-- `engine/` adds token origins to LuaHBTeX; `native/source.hpp` indexes unchanged source text and translates engine spans into editor positions. `prototype/provenance.lua` records glyph origins in actual output order. The renderer pairs these IDs with its glyph trace, including TikZ transforms; a glyph-count mismatch disables navigation for that page.
+- `engine/` adds token origins to LuaHBTeX; `native/source.hpp` indexes unchanged source text and translates engine spans into editor positions. `prototype/provenance.lua` marks glyphs and rules without changing text positioning. `native/mapping.hpp` checks each marked output node independently; a mismatch leaves other regions navigable.
 - `prototype/snapshot.c` retains compiler processes at checkpoints; edits fork from the preceding checkpoint and resume typesetting.
 - The service keeps a visibly stale preview on invalid input and disables navigation from stale output. During sustained typing it displays completed intermediate revisions, labels them stale, and coalesces queued edits. Complete builds run after an idle interval to converge references and downstream layout and supply a fresh set of reusable checkpoints.
 - A separately built TeXpresso checkout is used for comparison; it is not a dependency of the LuaTeX prototype.
@@ -71,7 +73,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 ## Important limits of the proof
 
 - General projects retain at most one checkpoint per shipped page, between completed TeX commands in outer vertical mode. Long paragraphs, boxes, and macro arguments read ahead of their output can require earlier replay. Preamble dependencies and coalesced edits to multiple files still rebuild the session. The supplied comparison corpus retains explicit page-file checkpoints. Source origins currently support up to 2,146 registered files, each smaller than one million Unicode characters; root documents are now indexed as whole files too.
-- Root body text and project `.tex` inputs get engine token origins. Macro arguments retain their token locations; generated macro content falls back to the calling command token. Non-glyph constructs such as fraction rules are not selectable. Existing bibliography output can be copied, but automatic bibliography/index tools are not implemented.
+- Root body text and project `.tex` inputs get engine token origins. Macro arguments retain their token locations; generated macro content falls back to the calling command token. Math rules with retained origins are clickable but do not add text to copied selections. Existing bibliography output can be copied, but automatic bibliography/index tools are not implemented.
 - The compiler provenance and checkpoint patches are experimental. Arbitrary Lua-generated nodes, transformed input buffers, external token manipulation, and file reads performed directly by external Lua modules are outside the validated cases.
 - Fork checkpoints require Linux/WSL. Native Windows and macOS checkpoint implementations are unavailable.
 - Ordinary page payloads pass through in-memory drawing commands, PNG, and JSON. Complete PDFs remain necessary for resource seeding and background convergence. Supported new fonts/glyphs use font-only bundles; Type 3 fonts, custom font attributes, external graphics, changed page dimensions, and new physical pages can require a complete resource export. TeX still writes auxiliary files, logs, source copies, and metadata inside the session; the complete workflow is not filesystem-free.
@@ -86,6 +88,8 @@ python scripts/check_live_syntax.py
 python scripts/check_included_edits.py
 python scripts/check_engine_checkpoints.py
 python scripts/check_font_resources.py
+python scripts/check_source_mapping.py
+python scripts/check_mapping_browser.py
 python scripts/check_cpp.py
 python scripts/live_fixture.py
 python scripts/check_live_mode.py --project .work/scroll-case --main paper.tex --output live-fixture.json

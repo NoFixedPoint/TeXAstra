@@ -6,6 +6,7 @@
 #include <zlib.h>
 #include <cmath>
 #include <cfloat>
+#include "mapping.hpp"
 
 namespace bako {
 inline Json rectangle(fz_rect r) {
@@ -26,10 +27,10 @@ struct FontResourceMiss : ResourceMiss { using ResourceMiss::ResourceMiss; };
 // src/extra.i (AGPL-3.0); see THIRD_PARTY.md. No Python objects are constructed.
 struct TraceDevice {
     fz_device super;
-    std::vector<fz_rect> *boxes;
+    MappingTrace *mapping;
 };
 inline void trace_text(fz_context *ctx, fz_device *dev, const fz_text *text, fz_matrix ctm) {
-    auto &boxes = *reinterpret_cast<TraceDevice *>(dev)->boxes;
+    auto &mapping = *reinterpret_cast<TraceDevice *>(dev)->mapping;
     for (auto span = text->head; span; span = span->next) {
         auto mat = fz_concat(span->trm, ctm);
         auto direction = fz_transform_vector(fz_make_point(1, 0), mat);
@@ -59,7 +60,7 @@ inline void trace_text(fz_context *ctx, fz_device *dev, const fz_text *text, fz_
                         (mat.b != 0 && mat.b == -mat.c);
             auto box = fz_make_rect(origin.x, flip ? origin.y + bottom : origin.y - top,
                                     origin.x + advance, flip ? origin.y + top : origin.y - bottom);
-            boxes.push_back(fz_transform_rect(box, around));
+            mapping.draw(fz_transform_rect(box, around));
         }
     }
 }
@@ -70,6 +71,16 @@ inline void trace_fill(fz_context *c, fz_device *d, const fz_text *t, fz_matrix 
 inline void trace_stroke(fz_context *c, fz_device *d, const fz_text *t, const fz_stroke_state *,
                          fz_matrix m, fz_colorspace *, const float *, float, fz_color_params) {
     trace_text(c, d, t, m);
+}
+inline void trace_rule_fill(fz_context *c, fz_device *d, const fz_path *path, int,
+                            fz_matrix m, fz_colorspace *, const float *, float, fz_color_params) {
+    auto quad=fz_transform_quad(fz_quad_from_rect(fz_bound_path(c,path,nullptr,fz_identity)),m);
+    reinterpret_cast<TraceDevice *>(d)->mapping->draw(fz_rect_from_quad(quad),true,quad);
+}
+inline void trace_rule_stroke(fz_context *c, fz_device *d, const fz_path *path, const fz_stroke_state *stroke,
+                              fz_matrix m, fz_colorspace *, const float *, float, fz_color_params) {
+    auto quad=fz_transform_quad(fz_quad_from_rect(fz_bound_path(c,path,stroke,fz_identity)),m);
+    reinterpret_cast<TraceDevice *>(d)->mapping->draw(fz_rect_from_quad(quad),true,quad);
 }
 inline fz_rect selection_box(fz_context *ctx, fz_stext_line *line, fz_stext_char *ch) {
     auto quad = ch->quad;
@@ -343,6 +354,7 @@ class Renderer {
         }
     }
     Json render(int number, const Sources &sources, const std::vector<int> &ids, bool source_sync = true) {
+        (void)ids; // sidecar IDs are retained for forward-page lookup only
         auto started = Clock::now();
         number = std::clamp(number, 0, pages() - 1);
         fz_var(number);
@@ -358,7 +370,8 @@ class Renderer {
         fz_var(text);
         fz_var(device);
         fz_var(processor);
-        std::vector<fz_rect> boxes;
+        MappingTrace mapping;
+        Json unmapped = Json::array();
         Json characters = Json::array(), regions = Json::array(), warnings = sources.warnings();
         fz_rect bounds = {};
         Json timings;
@@ -373,44 +386,49 @@ class Renderer {
                                                   fz_device_rgb(ctx), 0);
             auto raster = Clock::now();
             timings["raster"] = elapsed(listed);
-            auto trace = fz_new_derived_device(ctx, TraceDevice);
-            device = &trace->super;
-            trace->boxes = &boxes;
-            device->fill_text = trace_fill;
-            device->stroke_text = trace_stroke;
-            device->ignore_text = trace_text;
-            fz_run_display_list(ctx, display, device, fz_identity, fz_infinite_rect, nullptr);
-            fz_close_device(ctx, device);
-            fz_drop_device(ctx, device);
-            device = nullptr;
-            if (source_sync && ids.size()!=boxes.size()) {
-                // Imported PDF figures contain glyphs without TeX provenance.
-                // Trace the page operators while excluding form XObjects; do
-                // not shift every later source ID by the figure's glyph count.
-                boxes.clear();
+            if (source_sync) {
                 auto trace = fz_new_derived_device(ctx, TraceDevice);
-                device = &trace->super; trace->boxes=&boxes;
+                device = &trace->super; trace->mapping=&mapping;
                 device->fill_text=trace_fill; device->stroke_text=trace_stroke; device->ignore_text=trace_text;
+                device->fill_path=trace_rule_fill; device->stroke_path=trace_rule_stroke;
                 fz_matrix transform; fz_rect media;
                 auto pdfpage=reinterpret_cast<pdf_page *>(page);
                 pdf_page_transform(ctx,pdfpage,&media,&transform);
                 processor=pdf_new_run_processor(ctx,doc,device,transform,-1,"View",nullptr,nullptr,nullptr,nullptr,nullptr);
-                processor->op_Do_form=[](fz_context *,pdf_processor *,const char *,pdf_obj *){};
+                bind_mapping(processor,mapping);
                 pdf_process_contents(ctx,processor,doc,pdf_page_resources(ctx,pdfpage),pdf_page_contents(ctx,pdfpage),nullptr,nullptr);
                 pdf_close_processor(ctx,processor);pdf_drop_processor(ctx,processor);processor=nullptr;
                 fz_close_device(ctx,device);fz_drop_device(ctx,device);device=nullptr;
-            }
-            if (ids.size() == boxes.size()) {
-                for (size_t i = 0; i < ids.size(); ++i) {
-                    if (auto span = sources.find(ids[i])) {
-                        regions.push_back(span->row(rectangle(boxes[i])));
+                active_mapping=nullptr;
+                // Unclosed scopes are not trusted, even if their counts match.
+                if (!mapping.scopes.empty()) {
+                    for (size_t i=mapping.scopes.front().start;i<mapping.draws.size();++i) {
+                        mapping.draws[i].source=0; mapping.draws[i].issue="unclosed-source-scope";
                     }
                 }
-            } else if (source_sync) {
-                warnings.push_back({{"reason", "Tagged glyph/renderer sequence mismatch; "
-                                               "navigation disabled for this page."},
-                                    {"tags", ids.size()},
-                                    {"glyphs", boxes.size()}});
+                std::map<std::string,int> issues;
+                for (const auto &draw : mapping.draws) {
+                    if (fz_is_empty_rect(fz_intersect_rect(draw.rect,bounds))) continue;
+                    const auto *span=draw.issue ? nullptr : sources.find(draw.source);
+                    if (span) {
+                        auto row=span->row(rectangle(draw.rect));
+                        if (draw.rule) {
+                            row[10]="rule-origin";
+                            auto q=draw.quad;
+                            row.push_back(Json::array({q.ul.x,q.ul.y,q.ur.x,q.ur.y,q.lr.x,q.lr.y,q.ll.x,q.ll.y}));
+                        } else row.push_back(nullptr);
+                        regions.push_back(std::move(row));
+                    } else {
+                        const char *issue=draw.issue ? draw.issue : "unknown-source";
+                        unmapped.push_back({{"rect",rectangle(draw.rect)},{"reason",issue}});
+                        ++issues[issue];
+                    }
+                }
+                for (const auto &[issue,count] : issues) {
+                    if (issue=="glyph-count-mismatch" || issue=="unclosed-source-scope" || issue=="unknown-source")
+                        warnings.push_back({{"code",issue},{"regions",count},
+                            {"reason","Some output has no verified source mapping; other regions remain navigable."}});
+                }
             }
             auto origins = Clock::now();
             timings["origins"] = elapsed(raster);
@@ -442,6 +460,7 @@ class Renderer {
             fz_drop_pixmap(ctx, pix);
             fz_drop_display_list(ctx, display);
             fz_drop_page(ctx, page);
+            active_mapping=nullptr;
         }
         fz_catch(ctx) {
             throw std::runtime_error(fz_caught_message(ctx));
@@ -452,9 +471,10 @@ class Renderer {
                 {"height", bounds.y1 - bounds.y0},
                 {"image", std::move(image)},
                 {"regionFields", Json::array({"id", "rect", "file", "start", "end", "line",
-                                              "column", "endLine", "endColumn", "text", "kind"})},
+                                              "column", "endLine", "endColumn", "text", "kind", "quad"})},
                 {"regionRows", std::move(regions)},
                 {"characterRows", std::move(characters)},
+                {"unmappedRegions", std::move(unmapped)},
                 {"warnings", std::move(warnings)},
                 {"renderStagesMs", timings},
                 {"renderMs", elapsed(started)}};

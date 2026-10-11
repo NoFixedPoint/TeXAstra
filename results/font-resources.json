@@ -336,261 +336,261 @@
   "edits": [
     {
       "name": "new OpenType font",
-      "compileMs": 24.392402,
+      "compileMs": 38.968099,
       "compilerStagesMs": {
-        "fork": 3.377,
-        "replaceChild": 0.008,
-        "restore": 0.336,
-        "shipoutAndPublish": 3.717,
-        "typeset": 15.348
+        "fork": 2.575,
+        "replaceChild": 0.006,
+        "restore": 0.66,
+        "shipoutAndPublish": 7.618,
+        "typeset": 26.028
       },
-      "fontRefreshMs": 30.744602,
+      "fontRefreshMs": 41.052299,
       "fontResourceBytes": 31637,
       "outputMode": "page-stream",
-      "pipelineMs": 73.487906,
-      "prepareMs": 0.6766,
-      "renderMs": 11.921501,
+      "pipelineMs": 108.502498,
+      "prepareMs": 0.5885,
+      "renderMs": 15.6704,
       "renderStagesMs": {
-        "displayList": 1.380601,
-        "origins": 0.7309,
-        "png": 8.2098,
-        "raster": 1.0962,
-        "text": 0.4582
+        "displayList": 3.0671,
+        "origins": 2.5899,
+        "png": 7.8716,
+        "raster": 1.3587,
+        "text": 0.6083
       }
     },
     {
       "name": "new glyph in imported subset",
-      "compileMs": 21.609302,
+      "compileMs": 35.105308,
       "compilerStagesMs": {
-        "fork": 2.492,
-        "replaceChild": 0.006,
-        "restore": 0.253,
-        "shipoutAndPublish": 3.749,
-        "typeset": 14.688
+        "fork": 2.415,
+        "replaceChild": 0.004,
+        "restore": 0.774,
+        "shipoutAndPublish": 6.596,
+        "typeset": 23.624
       },
-      "fontRefreshMs": 29.367302,
+      "fontRefreshMs": 36.840375,
       "fontResourceBytes": 31682,
       "outputMode": "page-stream",
-      "pipelineMs": 66.716506,
-      "prepareMs": 0.5511,
-      "renderMs": 10.268901,
+      "pipelineMs": 96.787532,
+      "prepareMs": 0.50325,
+      "renderMs": 13.4046,
       "renderStagesMs": {
-        "displayList": 1.2883,
-        "origins": 0.6922,
-        "png": 6.710801,
-        "raster": 1.0906,
-        "text": 0.4459
+        "displayList": 2.806375,
+        "origins": 2.517991,
+        "png": 6.106467,
+        "raster": 1.217059,
+        "text": 0.593908
       }
     },
     {
       "name": "reuse imported glyphs",
-      "compileMs": 21.343602,
+      "compileMs": 34.51415,
       "compilerStagesMs": {
-        "fork": 2.572,
-        "replaceChild": 0.007,
-        "restore": 0.267,
-        "shipoutAndPublish": 3.633,
-        "typeset": 14.406
+        "fork": 2.57,
+        "replaceChild": 0.006,
+        "restore": 0.58,
+        "shipoutAndPublish": 6.579,
+        "typeset": 22.963
       },
       "outputMode": "page-stream",
-      "pipelineMs": 36.083003,
-      "prepareMs": 0.5204,
-      "renderMs": 8.928201,
+      "pipelineMs": 60.03195,
+      "prepareMs": 0.455033,
+      "renderMs": 12.486833,
       "renderStagesMs": {
-        "displayList": 0.3052,
-        "origins": 0.5647,
-        "png": 7.151501,
-        "raster": 0.4597,
-        "text": 0.3864
+        "displayList": 1.925092,
+        "origins": 2.4805,
+        "png": 6.620625,
+        "raster": 0.7469,
+        "text": 0.561641
       }
     },
     {
       "name": "rollback to different font",
-      "compileMs": 22.374602,
+      "compileMs": 36.2054,
       "compilerStagesMs": {
-        "fork": 2.721,
-        "replaceChild": 0.008,
-        "restore": 0.268,
-        "shipoutAndPublish": 3.94,
-        "typeset": 14.92
+        "fork": 2.197,
+        "replaceChild": 0.007,
+        "restore": 0.509,
+        "shipoutAndPublish": 7.08,
+        "typeset": 24.468
       },
-      "fontRefreshMs": 31.240203,
+      "fontRefreshMs": 38.672149,
       "fontResourceBytes": 31412,
       "outputMode": "page-stream",
-      "pipelineMs": 69.338905,
-      "prepareMs": 0.5342,
-      "renderMs": 10.1195,
+      "pipelineMs": 99.901266,
+      "prepareMs": 0.503341,
+      "renderMs": 13.428799,
       "renderStagesMs": {
-        "displayList": 1.3125,
-        "origins": 0.6497,
-        "png": 6.5973,
-        "raster": 1.0824,
-        "text": 0.4394
+        "displayList": 2.81325,
+        "origins": 2.3298,
+        "png": 6.402275,
+        "raster": 1.172141,
+        "text": 0.577959
       }
     },
     {
       "name": "TrueType and new Unicode glyphs",
-      "compileMs": 27.567202,
+      "compileMs": 47.207508,
       "compilerStagesMs": {
-        "fork": 2.686,
-        "replaceChild": 0.008,
-        "restore": 0.3,
-        "shipoutAndPublish": 3.522,
-        "typeset": 20.35
+        "fork": 2.527,
+        "replaceChild": 0.006,
+        "restore": 0.538,
+        "shipoutAndPublish": 9.784,
+        "typeset": 30.779
       },
-      "fontRefreshMs": 29.244103,
+      "fontRefreshMs": 40.14945,
       "fontResourceBytes": 62115,
       "outputMode": "page-stream",
-      "pipelineMs": 73.069906,
-      "prepareMs": 0.5564,
-      "renderMs": 10.238,
+      "pipelineMs": 112.63184,
+      "prepareMs": 0.478042,
+      "renderMs": 13.676116,
       "renderStagesMs": {
-        "displayList": 1.3384,
-        "origins": 0.656,
-        "png": 6.7213,
-        "raster": 1.0329,
-        "text": 0.4444
+        "displayList": 2.79235,
+        "origins": 2.882091,
+        "png": 6.037166,
+        "raster": 1.235666,
+        "text": 0.6039
       }
     },
     {
       "name": "Type1 font",
-      "compileMs": 15.038801,
+      "compileMs": 26.667941,
       "compilerStagesMs": {
-        "fork": 2.54,
-        "replaceChild": 0.005,
-        "restore": 0.292,
-        "shipoutAndPublish": 3.309,
-        "typeset": 8.499
+        "fork": 3.403,
+        "replaceChild": 0.007,
+        "restore": 0.671,
+        "shipoutAndPublish": 10.042,
+        "typeset": 10.147
       },
-      "fontRefreshMs": 24.517702,
+      "fontRefreshMs": 30.985258,
       "fontResourceBytes": 32043,
       "outputMode": "page-stream",
-      "pipelineMs": 55.351005,
-      "prepareMs": 0.5045,
-      "renderMs": 10.633601,
+      "pipelineMs": 83.017916,
+      "prepareMs": 0.505908,
+      "renderMs": 13.3287,
       "renderStagesMs": {
-        "displayList": 1.1527,
-        "origins": 0.6373,
-        "png": 7.288101,
-        "raster": 1.0955,
-        "text": 0.4244
+        "displayList": 2.741108,
+        "origins": 2.4563,
+        "png": 6.07145,
+        "raster": 1.342367,
+        "text": 0.548258
       }
     },
     {
       "name": "font size aliases",
-      "compileMs": 36.187503,
+      "compileMs": 70.959533,
       "compilerStagesMs": {
-        "fork": 3.237,
-        "replaceChild": 0.007,
-        "restore": 0.333,
+        "fork": 2.246,
+        "replaceChild": 0.006,
+        "restore": 0.495,
         "shipoutAndPublish": 4.504,
-        "typeset": 27.624
+        "typeset": 63.175
       },
-      "fontRefreshMs": 43.529404,
+      "fontRefreshMs": 44.7788,
       "fontResourceBytes": 34128,
       "outputMode": "page-stream",
-      "pipelineMs": 96.605408,
-      "prepareMs": 0.6369,
-      "renderMs": 10.6744,
+      "pipelineMs": 141.849949,
+      "prepareMs": 0.53955,
+      "renderMs": 14.37865,
       "renderStagesMs": {
-        "displayList": 1.461,
-        "origins": 0.6721,
-        "png": 6.8529,
-        "raster": 1.1636,
-        "text": 0.4621
+        "displayList": 3.242158,
+        "origins": 2.534767,
+        "png": 6.507874,
+        "raster": 1.339341,
+        "text": 0.584467
       }
     },
     {
       "name": "earlier rollback with later font",
-      "compileMs": 271.885923,
+      "compileMs": 262.728947,
       "compilerStagesMs": {
-        "fork": 3.021,
-        "replaceChild": 246.319,
-        "restore": 0.294,
-        "shipoutAndPublish": 4.276,
-        "typeset": 15.045
+        "fork": 2.203,
+        "replaceChild": 203.225,
+        "restore": 1.049,
+        "shipoutAndPublish": 7.36,
+        "typeset": 24.528
       },
       "outputMode": "page-stream",
-      "pipelineMs": 287.336325,
-      "prepareMs": 0.9254,
-      "renderMs": 9.078101,
+      "pipelineMs": 289.14783,
+      "prepareMs": 0.797225,
+      "renderMs": 11.967633,
       "renderStagesMs": {
-        "displayList": 0.3157,
-        "origins": 0.6506,
-        "png": 6.924401,
-        "raster": 0.6836,
-        "text": 0.4331
+        "displayList": 1.874033,
+        "origins": 2.440167,
+        "png": 6.16715,
+        "raster": 0.801075,
+        "text": 0.565308
       }
     },
     {
       "name": "recovery after font import",
-      "compileMs": 29.040902,
+      "compileMs": 56.415974,
       "compilerStagesMs": {
-        "fork": 4.035,
-        "replaceChild": 0.013,
-        "restore": 0.493,
-        "shipoutAndPublish": 4.154,
-        "typeset": 17.487
+        "fork": 3.201,
+        "replaceChild": 0.006,
+        "restore": 0.592,
+        "shipoutAndPublish": 7.192,
+        "typeset": 24.288
       },
       "outputMode": "page-stream",
-      "pipelineMs": 44.551304,
-      "prepareMs": 0.6777,
-      "renderMs": 9.100801,
+      "pipelineMs": 82.272299,
+      "prepareMs": 0.501784,
+      "renderMs": 12.064067,
       "renderStagesMs": {
-        "displayList": 0.3345,
-        "origins": 0.6628,
-        "png": 6.9831,
-        "raster": 0.6235,
-        "text": 0.434601
+        "displayList": 1.92885,
+        "origins": 2.417433,
+        "png": 6.443158,
+        "raster": 0.59345,
+        "text": 0.56045
       }
     },
     {
       "name": "unsupported font attributes fallback",
-      "compileMs": 265.473322,
+      "compileMs": 242.628464,
       "compilerStagesMs": {
-        "fork": 2.72,
-        "replaceChild": 246.147,
-        "restore": 0.284,
-        "shipoutAndPublish": 3.528,
-        "typeset": 8.797
+        "fork": 2.45,
+        "replaceChild": 206.801,
+        "restore": 0.604,
+        "shipoutAndPublish": 7.928,
+        "typeset": 9.747
       },
       "outputMode": "resource-seed",
-      "pipelineMs": 358.033031,
-      "prepareMs": 0.963701,
-      "renderMs": 10.744901,
+      "pipelineMs": 388.841472,
+      "prepareMs": 0.785859,
+      "renderMs": 14.105667,
       "renderStagesMs": {
-        "displayList": 1.3383,
-        "origins": 0.6647,
-        "png": 6.983701,
-        "raster": 1.2359,
-        "text": 0.4592
+        "displayList": 2.897309,
+        "origins": 2.474909,
+        "png": 6.73695,
+        "raster": 1.273341,
+        "text": 0.573283
       },
       "resourceRefresh": "Font export is unsupported for this page",
-      "resourceRefreshMs": 56.547305
+      "resourceRefreshMs": 100.013924
     },
     {
       "name": "external graphics fallback",
-      "compileMs": 17.745101,
+      "compileMs": 35.42385,
       "compilerStagesMs": {
-        "fork": 3.068,
-        "replaceChild": 0.013,
-        "restore": 0.305,
-        "shipoutAndPublish": 3.29,
-        "typeset": 8.349
+        "fork": 2.072,
+        "replaceChild": 0.006,
+        "restore": 0.568,
+        "shipoutAndPublish": 8.221,
+        "typeset": 10.109
       },
       "outputMode": "resource-seed",
-      "pipelineMs": 90.044608,
-      "prepareMs": 0.6911,
-      "renderMs": 10.852301,
+      "pipelineMs": 148.811116,
+      "prepareMs": 0.541383,
+      "renderMs": 14.813975,
       "renderStagesMs": {
-        "displayList": 1.31,
-        "origins": 0.7003,
-        "png": 7.1014,
-        "raster": 1.1797,
-        "text": 0.470701
+        "displayList": 3.461975,
+        "origins": 2.378567,
+        "png": 6.802492,
+        "raster": 1.4003,
+        "text": 0.571083
       },
       "resourceRefresh": "External graphics resource requires a refresh",
-      "resourceRefreshMs": 56.236205
+      "resourceRefreshMs": 92.293024
     }
   ]
 }

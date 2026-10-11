@@ -1,0 +1,132 @@
+{
+  "checks": [
+    {
+      "name": "complex math provides rule targets",
+      "ok": true
+    },
+    {
+      "name": "complex math rule 1 click selects expression",
+      "ok": true
+    },
+    {
+      "name": "complex math rule 2 click selects expression",
+      "ok": true
+    },
+    {
+      "name": "complex math rule 3 click selects expression",
+      "ok": true
+    },
+    {
+      "name": "complex math rule 4 click selects expression",
+      "ok": true
+    },
+    {
+      "name": "complex math rule 5 click selects expression",
+      "ok": true
+    },
+    {
+      "name": "complex math rule remains outside selectable text",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules provides rule targets",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules rule 1 click selects expression",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules rule remains outside selectable text",
+      "ok": true
+    },
+    {
+      "name": "rotated rule uses its quadrilateral for hit testing",
+      "ok": true
+    },
+    {
+      "name": "rotated rule does not steal numerator clicks",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers provides rule targets",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers rule 1 click selects expression",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers rule remains outside selectable text",
+      "ok": true
+    },
+    {
+      "name": "localized count click explains missing navigation",
+      "ok": true
+    },
+    {
+      "name": "localized count click does not navigate elsewhere",
+      "ok": true
+    },
+    {
+      "name": "localized count nearby text still navigates",
+      "ok": true
+    },
+    {
+      "name": "localized unknown click explains missing navigation",
+      "ok": true
+    },
+    {
+      "name": "localized unknown click does not navigate elsewhere",
+      "ok": true
+    },
+    {
+      "name": "localized unknown nearby text still navigates",
+      "ok": true
+    },
+    {
+      "name": "localized untagged click explains missing navigation",
+      "ok": true
+    },
+    {
+      "name": "localized untagged click does not navigate elsewhere",
+      "ok": true
+    },
+    {
+      "name": "localized untagged nearby text still navigates",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin click explains missing navigation",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin click does not navigate elsewhere",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin nearby text still navigates",
+      "ok": true
+    },
+    {
+      "name": "imported PDF click explains missing navigation",
+      "ok": true
+    },
+    {
+      "name": "imported PDF click does not navigate elsewhere",
+      "ok": true
+    },
+    {
+      "name": "imported PDF nearby text still navigates",
+      "ok": true
+    },
+    {
+      "name": "stale mapping cannot navigate",
+      "ok": true
+    },
+    {
+      "name": "no browser errors",
+      "ok": true
+    }
+  ]
+}

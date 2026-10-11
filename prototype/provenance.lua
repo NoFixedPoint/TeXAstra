@@ -31,7 +31,9 @@ local glyph, hlist, vlist = node.id('glyph'), node.id('hlist'), node.id('vlist')
 local page_number=0
 local geometry=nil
 local records={}
+local rule_records={}
 local mode=os.getenv('BAKO_GEOMETRY') or 'sidecar'
+local source_markers=os.getenv('BAKO_SOURCE_MARKERS')=='1'
 -- TeX virtual characters can draw several physical glyphs (for example a
 -- Palatino ffi made from f + fi). Missing characters draw none. The renderer
 -- trace follows those physical draws, not the number of TeX glyph nodes.
@@ -68,6 +70,14 @@ local function glyph_count(id,char)
   if counts[char]==nil then counts[char]=physical_count(font.getfont(id),char,0) end
   return counts[char]
 end
+local function mark(head,n,source,kind,count)
+  -- Private engine mode preserves both Tm and cumulative TJ rounding.
+  local first=node.new('whatsit','pdf_literal');first.mode=6
+  first.data=string.format('/BakoSource << /V 1 /ID %d /N %d /Kind /%s >> BDC',source,count,kind)
+  local last=node.new('whatsit','pdf_literal');last.mode=6;last.data='EMC'
+  head=node.insert_before(head,n,first);head=node.insert_after(head,n,last)
+  return head
+end
 function bako_record(source,width,height,depth)
   if mode=='sidecar' then geometry:write(source,'\n');return end
   local x,y=pdf.getpos()
@@ -78,6 +88,8 @@ local function annotate(head)
   for n in node.traverse(head) do
     if n.id == glyph then
       local source=node.has_attribute(n,aid) or 0
+      if source<0 then source=0 end
+      if source_markers then head=mark(head,n,source,'Glyph',glyph_count(n.font,n.char)) end
       if mode=='sidecar' then
         local late=node.new('whatsit','late_lua')
         -- Execute a closure at actual shipout; avoid parsing Lua source and
@@ -106,6 +118,14 @@ local function annotate(head)
         head=node.insert_before(head,n,a)
         end
       end
+    elseif source_markers and n.id==node.id('rule') and n.subtype~=1 and n.subtype~=2 then
+      -- Image/form rules have no TeX expression provenance. Ordinary rules,
+      -- including math fraction/overbar rules, inherit the engine attribute.
+      local source=node.has_attribute(n,aid) or 0
+      if source>0 then
+        head=mark(head,n,source,'Rule',0)
+        rule_records[#rule_records+1]=source
+      end
     elseif (n.id == hlist or n.id == vlist) and n.head then
       n.head=annotate(n.head)
     elseif n.id==node.id('glue') and n.leader then
@@ -122,7 +142,7 @@ local function annotate(head)
 end
 luatexbase.add_to_callback('pre_shipout_filter',function(box)
   page_number=page_number+1
-  if mode~='tagged' then geometry=assert(io.open(string.format('geometry-%03d.jsonl',page_number),'w'));records={} end
+  if mode~='tagged' then geometry=assert(io.open(string.format('geometry-%03d.jsonl',page_number),'w'));records={};rule_records={} end
   annotate(box)
   return true
 end,'bako.provenance')
@@ -136,6 +156,9 @@ luatexbase.add_to_callback('finish_pdfpage',function()
         if id>0 and not seen[id] then
           seen[id]=true;out:write(id,' ',origins.source_length(id),'\n')
         end
+      end
+      for _,id in ipairs(rule_records) do
+        if not seen[id] then seen[id]=true;out:write(id,' ',origins.source_length(id),'\n') end
       end
       out:close()
     end

@@ -54,6 +54,7 @@ def run(args):
         'targetMs': 150, 'samples': [], 'bursts': [], 'checks': [],
         'sourceSha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [ROOT/'webview/viewer.js', ROOT/'native/main.cpp', ROOT/'native/renderer.hpp',
+                                   ROOT/'native/mapping.hpp', ROOT/'prototype/provenance.lua',
                                    ROOT/'native/compiler.hpp', ROOT/'prototype/snapshot.c', ROOT/'engine/resources.c',
                                    ROOT/'native/runtime/bako_snapshot.so',
                                    ROOT/'native/runtime/bakoma-backend', ROOT/'native/runtime/bakoma-luahbtex']}}

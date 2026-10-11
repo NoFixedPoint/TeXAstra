@@ -88,12 +88,13 @@ class Engine {
         std::vector<std::string> env;
         for (char **e = environ; *e; ++e) {
             if (full && starts(*e, "openout_any=")) continue;
-            if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_FONT_STREAM=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=") && !starts(*e, "BAKO_LIVE_DOCUMENT=")) {
+            if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_FONT_STREAM=") && !starts(*e, "BAKO_SOURCE_MARKERS=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=") && !starts(*e, "BAKO_LIVE_DOCUMENT=")) {
                 env.emplace_back(*e);
             }
         }
         env.emplace_back("BAKO_PAGE_STREAM=1");
         env.emplace_back("BAKO_FONT_STREAM=1");
+        env.emplace_back("BAKO_SOURCE_MARKERS=1");
         // A relocatable engine must find the installed distro's TeX trees.
         if (!getenv("TEXMFCNF")) env.emplace_back("TEXMFCNF=/etc/texmf/web2c:/usr/local/share/texmf/web2c:/usr/share/texlive/texmf-dist/web2c");
         if (live) env.emplace_back("BAKO_LIVE_DOCUMENT=1");
@@ -132,6 +133,11 @@ class Engine {
         while (in >> n) {
             out.push_back(n);
         }
+        // Rules have origins but no glyph entry in the legacy sidecar.
+        // Include their IDs in the page index used by forward navigation.
+        std::ifstream origins(directory / page_name(page+1,"origins-",".txt"));
+        int length;
+        while (origins >> n >> length) out.push_back(n);
         return out;
     }
     static std::string commands(const std::string &raw) {

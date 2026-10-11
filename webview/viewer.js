@@ -47,11 +47,44 @@ function createPage(index,width,height){
   element.addEventListener('click',e=>{
     if(stale||!item.frame||item.frame.generation!==generation||!pointer||Math.hypot(e.clientX-pointer[0],e.clientY-pointer[1])>4)return;
     const bounds=element.getBoundingClientRect(),x=(e.clientX-bounds.left)/bounds.width*item.width,y=(e.clientY-bounds.top)/bounds.height*item.height;
-    const hits=item.frame.regions.filter(r=>x>=r.rect[0]-1&&x<=r.rect[2]+1&&y>=r.rect[1]-1&&y<=r.rect[3]+1);
-    hits.sort((a,b)=>(a.rect[2]-a.rect[0])*(a.rect[3]-a.rect[1])-(b.rect[2]-b.rect[0])*(b.rect[3]-b.rect[1]));
-    if(hits.length){showRegion({...hits[0],page:index},false);loadSource(hits[0].file,hits[0]);}
+    const hits=item.frame.regions.filter(r=>regionHit(r,x,y));
+    hits.sort((a,b)=>regionArea(a)-regionArea(b));
+    // A precise unmapped hit takes precedence over a neighboring glyph's
+    // one-point click tolerance. Never redirect an unknown glyph to its neighbor.
+    const unknown=(item.frame.unmappedRegions||[]).find(r=>x>=r.rect[0]&&x<=r.rect[2]&&y>=r.rect[1]&&y<=r.rect[3]);
+    if(unknown){
+      for(const other of pages.values()){other.caret.style.display='none';other.highlight.style.display='none';}
+      $('location').textContent=mappingReason(unknown.reason);return;
+    }
+    // Thin rules need the same click tolerance as text at normal zoom.
+    const hit=hits[0];
+    if(hit){showRegion({...hit,page:index},false);loadSource(hit.file,hit);}
   });
   pages.set(index,item);return item;
+}
+function regionArea(r){
+  if(!r.quad)return (r.rect[2]-r.rect[0])*(r.rect[3]-r.rect[1]);
+  const q=r.quad;return Math.abs((q[2]-q[0])*(q[7]-q[1])-(q[3]-q[1])*(q[6]-q[0]));
+}
+function regionHit(r,x,y){
+  if(x<r.rect[0]-1||x>r.rect[2]+1||y<r.rect[1]-1||y>r.rect[3]+1)return false;
+  if(!r.quad)return true;
+  const q=r.quad;let positive=false,negative=false,near=false;
+  for(let i=0;i<8;i+=2){
+    const j=(i+2)%8,dx=q[j]-q[i],dy=q[j+1]-q[i+1],cross=dx*(y-q[i+1])-dy*(x-q[i]);
+    positive ||= cross>0;negative ||= cross<0;
+    const t=Math.max(0,Math.min(1,((x-q[i])*dx+(y-q[i+1])*dy)/(dx*dx+dy*dy||1)));
+    near ||= Math.hypot(x-q[i]-t*dx,y-q[i+1]-t*dy)<=1;
+  }
+  return near||!(positive&&negative);
+}
+function mappingReason(reason){
+  return ({'external-content':'This content comes from an imported PDF and has no TeX source location.',
+    'missing-origin':'The compiler did not retain a source location for this generated content.',
+    'untagged-content':'This output has no source marker; its source location is unknown.',
+    'glyph-count-mismatch':'This output differs from its source marker. Navigation is unavailable here.',
+    'unclosed-source-scope':'This output has an incomplete source marker. Navigation is unavailable here.',
+    'unknown-source':'The source location for this output is no longer available.'})[reason]||'No verified source location is available here.';
 }
 function setLayout(message){
   for(let index=0;index<message.pageCount;index++){

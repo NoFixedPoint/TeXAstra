@@ -1,0 +1,672 @@
+{
+  "checks": [
+    {
+      "name": "nested reordered macros exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested reordered macros exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "nested reordered macros correct source slices",
+      "ok": true
+    },
+    {
+      "name": "nested reordered macros suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "nested reordered macros token J",
+      "ok": true
+    },
+    {
+      "name": "nested reordered macros forward J",
+      "ok": true
+    },
+    {
+      "name": "nested reordered macros token Q",
+      "ok": true
+    },
+    {
+      "name": "nested reordered macros forward Q",
+      "ok": true
+    },
+    {
+      "name": "nested reordered macros no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "ligatures exact pixels",
+      "ok": true
+    },
+    {
+      "name": "ligatures exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "ligatures correct source slices",
+      "ok": true
+    },
+    {
+      "name": "ligatures suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "ligatures token o",
+      "ok": true
+    },
+    {
+      "name": "ligatures forward o",
+      "ok": true
+    },
+    {
+      "name": "ligatures token e",
+      "ok": true
+    },
+    {
+      "name": "ligatures forward e",
+      "ok": true
+    },
+    {
+      "name": "ligatures no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "ffi ligature keeps its leading token",
+      "ok": true
+    },
+    {
+      "name": "virtual font ligatures exact pixels",
+      "ok": true
+    },
+    {
+      "name": "virtual font ligatures exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "virtual font ligatures correct source slices",
+      "ok": true
+    },
+    {
+      "name": "virtual font ligatures suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "virtual font ligatures token o",
+      "ok": true
+    },
+    {
+      "name": "virtual font ligatures forward o",
+      "ok": true
+    },
+    {
+      "name": "virtual font ligatures no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "virtual ligature maps multiple physical glyphs to one token",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen exact pixels",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen correct source slices",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen token \\-",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen forward \\-",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen token h",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen forward h",
+      "ok": true
+    },
+    {
+      "name": "discretionary hyphen no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "automatic hyphenation exact pixels",
+      "ok": true
+    },
+    {
+      "name": "automatic hyphenation exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "automatic hyphenation correct source slices",
+      "ok": true
+    },
+    {
+      "name": "automatic hyphenation suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "automatic hyphenation token e",
+      "ok": true
+    },
+    {
+      "name": "automatic hyphenation forward e",
+      "ok": true
+    },
+    {
+      "name": "automatic hyphenation no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "automatic hyphenation fixture actually breaks words",
+      "ok": true
+    },
+    {
+      "name": "complex math exact pixels",
+      "ok": true
+    },
+    {
+      "name": "complex math exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "complex math correct source slices",
+      "ok": true
+    },
+    {
+      "name": "complex math suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "complex math token J",
+      "ok": true
+    },
+    {
+      "name": "complex math forward J",
+      "ok": true
+    },
+    {
+      "name": "complex math token Q",
+      "ok": true
+    },
+    {
+      "name": "complex math forward Q",
+      "ok": true
+    },
+    {
+      "name": "complex math token \\frac",
+      "ok": true
+    },
+    {
+      "name": "complex math forward \\frac",
+      "ok": true
+    },
+    {
+      "name": "complex math token \\overline",
+      "ok": true
+    },
+    {
+      "name": "complex math forward \\overline",
+      "ok": true
+    },
+    {
+      "name": "complex math token \\underline",
+      "ok": true
+    },
+    {
+      "name": "complex math forward \\underline",
+      "ok": true
+    },
+    {
+      "name": "complex math rule \\frac",
+      "ok": true
+    },
+    {
+      "name": "complex math rule \\sqrt",
+      "ok": true
+    },
+    {
+      "name": "complex math rule \\overline",
+      "ok": true
+    },
+    {
+      "name": "complex math rule \\underline",
+      "ok": true
+    },
+    {
+      "name": "complex math no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "generated fraction exact pixels",
+      "ok": true
+    },
+    {
+      "name": "generated fraction exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "generated fraction correct source slices",
+      "ok": true
+    },
+    {
+      "name": "generated fraction suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "generated fraction token \\fraction",
+      "ok": true
+    },
+    {
+      "name": "generated fraction forward \\fraction",
+      "ok": true
+    },
+    {
+      "name": "generated fraction rule \\fraction",
+      "ok": true
+    },
+    {
+      "name": "generated fraction no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules exact pixels",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules correct source slices",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules token J",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules forward J",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules token Q",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules forward Q",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules rule \\frac",
+      "ok": true
+    },
+    {
+      "name": "transformed text and rules no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "imported PDF exact pixels",
+      "ok": true
+    },
+    {
+      "name": "imported PDF exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "imported PDF correct source slices",
+      "ok": true
+    },
+    {
+      "name": "imported PDF suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "imported PDF token J",
+      "ok": true
+    },
+    {
+      "name": "imported PDF forward J",
+      "ok": true
+    },
+    {
+      "name": "imported PDF no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "imported PDF diagnoses its own glyphs",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin exact pixels",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin correct source slices",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin token J",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin forward J",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin token Q",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin forward Q",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph without origin no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "Lua glyph explains missing origin at its position",
+      "ok": true
+    },
+    {
+      "name": "localized count exact pixels",
+      "ok": true
+    },
+    {
+      "name": "localized count exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "localized count correct source slices",
+      "ok": true
+    },
+    {
+      "name": "localized count suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "localized count token J",
+      "ok": true
+    },
+    {
+      "name": "localized count forward J",
+      "ok": true
+    },
+    {
+      "name": "localized count token Q",
+      "ok": true
+    },
+    {
+      "name": "localized count forward Q",
+      "ok": true
+    },
+    {
+      "name": "count diagnostic",
+      "ok": true
+    },
+    {
+      "name": "count corrupted glyph excluded",
+      "ok": true
+    },
+    {
+      "name": "count neighboring glyph preserved",
+      "ok": true
+    },
+    {
+      "name": "count warning is local",
+      "ok": true
+    },
+    {
+      "name": "localized unknown exact pixels",
+      "ok": true
+    },
+    {
+      "name": "localized unknown exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "localized unknown correct source slices",
+      "ok": true
+    },
+    {
+      "name": "localized unknown suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "localized unknown token J",
+      "ok": true
+    },
+    {
+      "name": "localized unknown forward J",
+      "ok": true
+    },
+    {
+      "name": "localized unknown token Q",
+      "ok": true
+    },
+    {
+      "name": "localized unknown forward Q",
+      "ok": true
+    },
+    {
+      "name": "unknown diagnostic",
+      "ok": true
+    },
+    {
+      "name": "unknown corrupted glyph excluded",
+      "ok": true
+    },
+    {
+      "name": "unknown neighboring glyph preserved",
+      "ok": true
+    },
+    {
+      "name": "unknown warning is local",
+      "ok": true
+    },
+    {
+      "name": "localized missing exact pixels",
+      "ok": true
+    },
+    {
+      "name": "localized missing exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "localized missing correct source slices",
+      "ok": true
+    },
+    {
+      "name": "localized missing suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "localized missing token J",
+      "ok": true
+    },
+    {
+      "name": "localized missing forward J",
+      "ok": true
+    },
+    {
+      "name": "localized missing token Q",
+      "ok": true
+    },
+    {
+      "name": "localized missing forward Q",
+      "ok": true
+    },
+    {
+      "name": "missing diagnostic",
+      "ok": true
+    },
+    {
+      "name": "missing corrupted glyph excluded",
+      "ok": true
+    },
+    {
+      "name": "missing neighboring glyph preserved",
+      "ok": true
+    },
+    {
+      "name": "localized untagged exact pixels",
+      "ok": true
+    },
+    {
+      "name": "localized untagged exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "localized untagged correct source slices",
+      "ok": true
+    },
+    {
+      "name": "localized untagged suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "localized untagged token J",
+      "ok": true
+    },
+    {
+      "name": "localized untagged forward J",
+      "ok": true
+    },
+    {
+      "name": "localized untagged token Q",
+      "ok": true
+    },
+    {
+      "name": "localized untagged forward Q",
+      "ok": true
+    },
+    {
+      "name": "untagged diagnostic",
+      "ok": true
+    },
+    {
+      "name": "untagged corrupted glyph excluded",
+      "ok": true
+    },
+    {
+      "name": "untagged neighboring glyph preserved",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers exact pixels",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers exact selectable text",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers correct source slices",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers suffix remains navigable",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers token J",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers forward J",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers token Q",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers forward Q",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers token \\frac",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers forward \\frac",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers rule \\frac",
+      "ok": true
+    },
+    {
+      "name": "rollback after faulty markers no mapping warnings",
+      "ok": true
+    },
+    {
+      "name": "rollback reused checkpoint",
+      "ok": true
+    },
+    {
+      "name": "rollback clears fault diagnostics",
+      "ok": true
+    },
+    {
+      "name": "earlier rollback exact pixels and rules",
+      "ok": true
+    },
+    {
+      "name": "earlier rollback offsets refreshed",
+      "ok": true
+    },
+    {
+      "name": "page 1 navigation after rollback",
+      "ok": true
+    },
+    {
+      "name": "page 2 navigation after rollback",
+      "ok": true
+    },
+    {
+      "name": "page 4 navigation after rollback",
+      "ok": true
+    },
+    {
+      "name": "page 5 navigation after rollback",
+      "ok": true
+    },
+    {
+      "name": "page 3 navigation after rollback",
+      "ok": true
+    },
+    {
+      "name": "project sources untouched",
+      "ok": true
+    }
+  ]
+}

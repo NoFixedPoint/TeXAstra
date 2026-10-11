@@ -50,6 +50,29 @@ def apply(source):
     edit('tex/texnodes.c','    subtype(n) = (quarterword) j;\n    return n;','    subtype(n) = (quarterword) j;\n    if (nodetype_has_attributes(i) && bako_attribute >= 0 && bako_origin > 0) set_attribute(n,bako_attribute,bako_origin);\n    return n;')
     edit('tex/texnodes.c','    build_attribute_list(n);\n    /*tex No need','    build_attribute_list(n);\n    if (bako_attribute >= 0 && bako_origin > 0) set_attribute(n,bako_attribute,bako_origin);\n    /*tex No need')
     edit('tex/texmath.c','    type(p) = math_char_node;\n    math_character(p) = mval.character_value;','    type(p) = math_char_node;\n    if (bako_attribute >= 0 && bako_origin > 0) set_attribute(p,bako_attribute,bako_origin);\n    math_character(p) = mval.character_value;')
+    # The overbar inherits ordinary attributes from its nucleus; its source
+    # origin belongs to the overline command, not the argument's first token.
+    edit('tex/mlist.c','    subtype(p) = math_over_list;',
+         '    if (bako_attribute >= 0) {\n'
+         '        int origin = has_attribute(q, bako_attribute, UNUSED_ATTRIBUTE);\n'
+         '        for (pointer r = list_ptr(p); r != null; r = vlink(r))\n'
+         '            if (type(r) == rule_node && origin > 0) set_attribute(r, bako_attribute, origin);\n'
+         '    }\n'
+         '    subtype(p) = math_over_list;')
+    # Private Lua literal mode 6: insert source scopes without resetting Tm or
+    # the engine's cumulative TJ rounding. Closing/reopening the PDF array is
+    # transparent to the renderer's text advance and to LuaTeX's position state.
+    edit('pdf/pdfliteral.c','    } else if (t == lua_refid_literal) {\n        switch (pdf_literal_mode(p)) {',
+         '    } else if (t == lua_refid_literal) {\n'
+         '        if (pdf_literal_mode(p) == 6) {\n'
+         '            if (is_charmode(ps)) end_charmode(pdf);\n'
+         '            int array = is_chararraymode(ps);\n'
+         '            if (array) pdf_puts(pdf, "]TJ\\n");\n'
+         '            lua_pdf_literal(pdf, pdf_literal_data(p), 0);\n'
+         '            if (array) pdf_out(pdf, \'[\');\n'
+         '            return;\n'
+         '        }\n'
+         '        switch (pdf_literal_mode(p)) {')
     p=base/'tex/textoken.c';s=p.read_text()
     if '#include "origins.c"' not in s:p.write_text(s+'\n#include "origins.c"\n')
     p=base/'pdf/pdfgen.c';s=p.read_text()
