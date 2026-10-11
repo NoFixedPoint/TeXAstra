@@ -19,6 +19,7 @@ class Engine {
     std::unique_ptr<BuildCache> cache;
     std::set<fs::path> known_inputs;
     Fd listener;
+    Fd resource_channel;
     pid_t process = -1;
     std::map<int, PageBuffer> buffers;
     std::map<int, std::vector<int>> page_ids;
@@ -87,11 +88,12 @@ class Engine {
         std::vector<std::string> env;
         for (char **e = environ; *e; ++e) {
             if (full && starts(*e, "openout_any=")) continue;
-            if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=") && !starts(*e, "BAKO_LIVE_DOCUMENT=")) {
+            if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_FONT_STREAM=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=") && !starts(*e, "BAKO_LIVE_DOCUMENT=")) {
                 env.emplace_back(*e);
             }
         }
         env.emplace_back("BAKO_PAGE_STREAM=1");
+        env.emplace_back("BAKO_FONT_STREAM=1");
         // A relocatable engine must find the installed distro's TeX trees.
         if (!getenv("TEXMFCNF")) env.emplace_back("TEXMFCNF=/etc/texmf/web2c:/usr/local/share/texmf/web2c:/usr/share/texlive/texmf-dist/web2c");
         if (live) env.emplace_back("BAKO_LIVE_DOCUMENT=1");
@@ -219,6 +221,7 @@ class Engine {
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
+        resource_channel = std::move(client);
         return {{"streamed", true},
                 {"snapshot", metadata.value("snapshot", Json::object())},
                 {"compilerStagesMs", metadata.value("compilerStagesMs", Json::object())}};
@@ -238,6 +241,7 @@ class Engine {
                 // Resource refresh can ship more pages before final export.
                 // Drain and resume each publisher instead of waiting on a
                 // compiler suspended at its next paragraph boundary.
+                resource_channel = Fd();
                 kill(active(), SIGCONT);
             }
             if (fs::exists(directory / "completed.json")) {
@@ -305,8 +309,17 @@ class Engine {
         auto buffer = buffers.find(page);
         if (result.value("streamed", false) && buffer != buffers.end()) {
             try {
-                renderer.update(buffer->second);
+                try { renderer.update(buffer->second); }
+                catch (const FontResourceMiss &) {
+                    auto started = Clock::now();
+                    const auto bytes = request_fonts(buffer->second);
+                    renderer.import_fonts(buffer->second, bytes);
+                    renderer.update(buffer->second);
+                    result["fontRefreshMs"] = elapsed(started);
+                    result["fontResourceBytes"] = bytes.size();
+                }
             } catch (const ResourceMiss &e) {
+                resource_channel = Fd();
                 kill(active(), SIGCONT);
                 result["resourceRefresh"] = e.what();
                 return finish(page, std::move(result));
@@ -329,6 +342,45 @@ class Engine {
         frame.update(result);
         frame["outputMode"] = "resource-seed";
         return frame;
+    }
+    std::string request_fonts(const PageBuffer &buffer) {
+        if (resource_channel.value < 0) throw ResourceMiss("Font resource channel unavailable");
+        std::string command = "fonts";
+        std::set<int> requested;
+        static const std::regex font_id(R"(^F([1-9]\d*)[^\s/]*$)");
+        for (const auto &name : Renderer::font_names(buffer)) {
+            std::smatch match;
+            if (!std::regex_match(name, match, font_id)) throw ResourceMiss("Unsupported font resource name");
+            requested.insert(std::stoi(match[1]));
+        }
+        if (requested.empty() || requested.size() > 256) throw ResourceMiss("Unsupported font resource count");
+        for (int id : requested) command += " " + std::to_string(id);
+        command += "\n";
+        std::string bytes;
+        try {
+            // The exporter child has a ten-second deadline; allow its parent
+            // time to report failure and park before resuming the fallback.
+            timeval timeout = {15, 0};
+            setsockopt(resource_channel.value, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+            send_all(resource_channel.value, command);
+            kill(active(), SIGCONT);
+            std::string header;
+            while (header.size() < 32) {
+                auto c = receive_exact(resource_channel.value, 1);
+                if (c == "\n") break;
+                header += c;
+            }
+            size_t size = std::stoull(header);
+            if (size > 32 * 1024 * 1024) throw ResourceMiss("Invalid font resource size");
+            bytes = receive_exact(resource_channel.value, size);
+            auto started = Clock::now();
+            while (state(active()) != 'T') {
+                if (elapsed(started) > 1000) throw ResourceMiss("Font publisher did not suspend");
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+        } catch (const std::exception &e) { throw ResourceMiss(std::string("Font export failed: ") + e.what()); }
+        if (bytes.empty()) throw ResourceMiss("Font export is unsupported for this page");
+        return bytes;
     }
     Json resume(int input, int page) {
         auto started = Clock::now();
@@ -468,7 +520,7 @@ class Engine {
                   "\\AtBeginDocument{\\directlua{dofile('provenance.lua');dofile('snapshot.lua');bako_live_begin()}}%\n"
                   "\\AtEndDocument{\\directlua{bako_live_end()}}%\n"
                   "\\input{\\detokenize{" + options.main + "}}%\n");
-            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex"));
+            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex") + read(runtime / "bako_snapshot.so"));
             cache->finish_inputs();
             return;
         }

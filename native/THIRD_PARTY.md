@@ -3,7 +3,7 @@
 - LuaHBTeX 1.14, the LuaTeX team, GPL-2.0-or-later. The renamed
   `runtime/bakoma-luahbtex` is built from the pinned Ubuntu TeX Live source and
   security patches listed in `scripts/build_engine.py`, with the metadata patch
-  in `engine/patch.py` and `engine/origins.c`. Both complete source archives and
+  in `engine/patch.py`, `engine/origins.c`, and `engine/resources.c`. Both complete source archives and
   `LuaHBTeX-COPYING` accompany the runtime. This is a modified engine. Its source
   includes the licenses/notices for Lua, FontForge, MPLib and bundled libraries.
   System HarfBuzz, Graphite2, zziplib, libpng and zlib remain dynamically linked.

@@ -19,6 +19,7 @@ struct PageBuffer {
 struct ResourceMiss : std::runtime_error {
     using std::runtime_error::runtime_error;
 };
+struct FontResourceMiss : ResourceMiss { using ResourceMiss::ResourceMiss; };
 
 // Preserve the established PyMuPDF 1.26.7 texttrace geometry convention.
 // The font-normalized geometry and quad correction follow that project's
@@ -122,6 +123,7 @@ class Renderer {
     pdf_document *doc = nullptr;
     libdeflate_compressor *compressor = nullptr;
     std::set<std::string> coverage;
+    std::map<int, std::set<std::string>> page_coverage;
     static void integer(std::string &s, uint32_t n) {
         for (int shift : {24, 16, 8, 0}) {
             s += char(n >> shift);
@@ -205,10 +207,17 @@ class Renderer {
     }
     void seed(const fs::path &path, std::set<std::string> resources) {
         pdf_document *replacement = nullptr;
-        fz_var(replacement);
+        fz_buffer *bytes = nullptr;
+        fz_stream *stream = nullptr;
+        fz_var(replacement); fz_var(bytes); fz_var(stream);
         fz_try(ctx) {
-            replacement = pdf_open_document(ctx, path.c_str());
+            // MuPDF reads objects lazily. An early compiler checkpoint may
+            // rewrite the output file, so retain an immutable resource seed.
+            bytes = fz_read_file(ctx, path.c_str());
+            stream = fz_open_buffer(ctx, bytes);
+            replacement = pdf_open_document_with_stream(ctx, stream);
         }
+        fz_always(ctx) { fz_drop_stream(ctx, stream); fz_drop_buffer(ctx, bytes); }
         fz_catch(ctx) {
             throw std::runtime_error(fz_caught_message(ctx));
         }
@@ -217,13 +226,60 @@ class Renderer {
         }
         doc = replacement;
         coverage = std::move(resources);
+        page_coverage.clear();
+    }
+    static std::set<std::string> font_names(const PageBuffer &buffer) {
+        static const std::regex names(R"(/([^\s/]+)\s+[-+.\d]+\s+Tf\b)");
+        std::set<std::string> result;
+        for (auto it = std::sregex_iterator(buffer.commands.begin(), buffer.commands.end(), names);
+             it != std::sregex_iterator(); ++it) result.insert((*it)[1]);
+        return result;
+    }
+    void import_fonts(const PageBuffer &buffer, const std::string &bytes) {
+        const int number = buffer.metadata.at("page");
+        const auto names = font_names(buffer);
+        if (names.empty()) throw ResourceMiss("No supported font names in page commands");
+        pdf_document *bundle = nullptr;
+        fz_stream *stream = nullptr;
+        pdf_graft_map *map = nullptr;
+        pdf_obj *resources = nullptr, *fonts = nullptr, *imported = nullptr;
+        fz_var(bundle); fz_var(stream); fz_var(map); fz_var(resources); fz_var(fonts); fz_var(imported);
+        bool failed = false;
+        fz_var(failed);
+        fz_try(ctx) {
+            stream = fz_open_memory(ctx, reinterpret_cast<const unsigned char *>(bytes.data()), bytes.size());
+            bundle = pdf_open_document_with_stream(ctx, stream);
+            auto incoming = pdf_dict_gets(ctx, pdf_dict_get(ctx, pdf_trailer(ctx, bundle), PDF_NAME(Root)), "BakoFonts");
+            for (const auto &name : names) {
+                auto font = pdf_dict_gets(ctx, incoming, name.c_str());
+                if (!pdf_name_eq(ctx, pdf_dict_get(ctx, font, PDF_NAME(Type)), PDF_NAME(Font)))
+                    fz_throw(ctx, FZ_ERROR_FORMAT, "Missing font in resource bundle");
+            }
+            auto object = pdf_lookup_page_obj(ctx, doc, number);
+            // Page dictionaries may share inherited resources. Only this page
+            // gets the new subset; other pages keep their known font versions.
+            resources = pdf_copy_dict(ctx, pdf_dict_get_inheritable(ctx, object, PDF_NAME(Resources)));
+            fonts = pdf_new_dict(ctx, doc, static_cast<int>(names.size()));
+            map = pdf_new_graft_map(ctx, doc);
+            for (const auto &name : names) {
+                imported = pdf_graft_mapped_object(ctx, map, pdf_dict_gets(ctx, incoming, name.c_str()));
+                pdf_dict_puts(ctx, fonts, name.c_str(), imported);
+                pdf_drop_obj(ctx, imported); imported = nullptr;
+            }
+            pdf_dict_put(ctx, resources, PDF_NAME(Font), fonts);
+            pdf_dict_put(ctx, object, PDF_NAME(Resources), resources);
+        }
+        fz_always(ctx) {
+            pdf_drop_obj(ctx, imported); pdf_drop_obj(ctx, fonts); pdf_drop_obj(ctx, resources);
+            pdf_drop_graft_map(ctx, map); pdf_drop_document(ctx, bundle); fz_drop_stream(ctx, stream);
+        }
+        fz_catch(ctx) { failed = true; }
+        if (failed) throw ResourceMiss("Font resource bundle could not be imported");
+        std::set<std::string> known;
+        for (const auto &value : buffer.metadata.at("coverage")) known.insert(value.get<std::string>());
+        page_coverage[number] = std::move(known);
     }
     void update(const PageBuffer &buffer) {
-        for (const auto &value : buffer.metadata.at("coverage")) {
-            if (!coverage.count(value.get<std::string>())) {
-                throw ResourceMiss("New font or glyph requires a resource refresh");
-            }
-        }
         int page = buffer.metadata.at("page");
         if (page >= pages()) {
             throw ResourceMiss("New physical page requires a resource refresh");
@@ -231,6 +287,11 @@ class Renderer {
         static const std::regex external(R"(/[^\s/]+\s+(Do|gs|sh|CS|cs)\b|\b(SCN|scn)\b)");
         if (std::regex_search(buffer.commands, external)) {
             throw ResourceMiss("External graphics resource requires a refresh");
+        }
+        const auto &known = page_coverage.count(page) ? page_coverage.at(page) : coverage;
+        for (const auto &value : buffer.metadata.at("coverage")) {
+            if (!known.count(value.get<std::string>()))
+                throw FontResourceMiss("New font or glyph requires a resource refresh");
         }
         bool missing = false, bad_size = false, bad_stream = false;
         fz_try(ctx) {
@@ -272,7 +333,7 @@ class Renderer {
             throw std::runtime_error(fz_caught_message(ctx));
         }
         if (missing) {
-            throw ResourceMiss("Page font dictionary changed");
+            throw FontResourceMiss("Page font dictionary changed");
         }
         if (bad_size) {
             throw ResourceMiss("Changed page dimensions");

@@ -53,7 +53,9 @@ def run(args):
         'burstEdits': args.burst_edits, 'burstIntervalMs': args.interval_ms,
         'targetMs': 150, 'samples': [], 'bursts': [], 'checks': [],
         'sourceSha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-                         for p in [ROOT/'webview/viewer.js', ROOT/'native/main.cpp',
+                         for p in [ROOT/'webview/viewer.js', ROOT/'native/main.cpp', ROOT/'native/renderer.hpp',
+                                   ROOT/'native/compiler.hpp', ROOT/'prototype/snapshot.c', ROOT/'engine/resources.c',
+                                   ROOT/'native/runtime/bako_snapshot.so',
                                    ROOT/'native/runtime/bakoma-backend', ROOT/'native/runtime/bakoma-luahbtex']}}
     output = ROOT/'results'/args.output
     log = (project/'server.log').open('w', encoding='utf-8')
@@ -165,7 +167,7 @@ def run(args):
                 select('chapter.tex', 'Marker060')
                 source = sources['chapter.tex'].replace('\\textbf{Marker060}', '\\texttt{Marker909}')
                 sample = wait_paint(edit(source, 'Marker909'))
-                assert sample.get('outputMode') != 'page-stream', sample
+                assert sample.get('outputMode') == 'page-stream' and sample.get('fontResourceBytes', 0) > 0, sample
                 record('new-font', sample, 'Marker909')
 
             assert not errors, errors
@@ -180,7 +182,7 @@ def run(args):
             result = summary([s['visibleMs'] for s in samples])
             result['passes150ms'] = result['p95Ms'] < 150
             result['stages'] = {key: summary([s[key] for s in samples if s.get(key) is not None])
-                                for key in ['pipelineMs', 'queueMs', 'requestToPayloadMs', 'deliveryMs', 'compileMs', 'renderMs', 'resourceRefreshMs']
+                                for key in ['pipelineMs', 'queueMs', 'requestToPayloadMs', 'deliveryMs', 'compileMs', 'renderMs', 'resourceRefreshMs', 'fontRefreshMs']
                                 if any(s.get(key) is not None for s in samples)}
             result['browserStages'] = {key: summary([s['browserStagesMs'][key] for s in samples])
                                        for key in ['prepare', 'decode', 'install', 'paintWait']}

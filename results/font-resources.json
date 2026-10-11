@@ -1,0 +1,596 @@
+{
+  "checks": [
+    {
+      "name": "fixture has a long suffix beyond edited page",
+      "ok": true
+    },
+    {
+      "name": "new OpenType font exact pixels",
+      "ok": true
+    },
+    {
+      "name": "new OpenType font exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "new OpenType font source spans",
+      "ok": true
+    },
+    {
+      "name": "new OpenType font output path",
+      "ok": true
+    },
+    {
+      "name": "new OpenType font seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "new OpenType font document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "new OpenType font font bundle used",
+      "ok": true
+    },
+    {
+      "name": "font import preserves earlier page pixels and spans",
+      "ok": true
+    },
+    {
+      "name": "new glyph in imported subset exact pixels",
+      "ok": true
+    },
+    {
+      "name": "new glyph in imported subset exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "new glyph in imported subset source spans",
+      "ok": true
+    },
+    {
+      "name": "new glyph in imported subset output path",
+      "ok": true
+    },
+    {
+      "name": "new glyph in imported subset seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "new glyph in imported subset document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "new glyph in imported subset font bundle used",
+      "ok": true
+    },
+    {
+      "name": "reuse imported glyphs exact pixels",
+      "ok": true
+    },
+    {
+      "name": "reuse imported glyphs exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "reuse imported glyphs source spans",
+      "ok": true
+    },
+    {
+      "name": "reuse imported glyphs output path",
+      "ok": true
+    },
+    {
+      "name": "reuse imported glyphs seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "reuse imported glyphs document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "known glyphs need no second bundle",
+      "ok": true
+    },
+    {
+      "name": "rollback to different font exact pixels",
+      "ok": true
+    },
+    {
+      "name": "rollback to different font exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "rollback to different font source spans",
+      "ok": true
+    },
+    {
+      "name": "rollback to different font output path",
+      "ok": true
+    },
+    {
+      "name": "rollback to different font seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "rollback to different font document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "rollback to different font font bundle used",
+      "ok": true
+    },
+    {
+      "name": "TrueType and new Unicode glyphs exact pixels",
+      "ok": true
+    },
+    {
+      "name": "TrueType and new Unicode glyphs exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "TrueType and new Unicode glyphs source spans",
+      "ok": true
+    },
+    {
+      "name": "TrueType and new Unicode glyphs output path",
+      "ok": true
+    },
+    {
+      "name": "TrueType and new Unicode glyphs seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "TrueType and new Unicode glyphs document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "TrueType and new Unicode glyphs font bundle used",
+      "ok": true
+    },
+    {
+      "name": "Type1 font exact pixels",
+      "ok": true
+    },
+    {
+      "name": "Type1 font exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "Type1 font source spans",
+      "ok": true
+    },
+    {
+      "name": "Type1 font output path",
+      "ok": true
+    },
+    {
+      "name": "Type1 font seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "Type1 font document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "Type1 font font bundle used",
+      "ok": true
+    },
+    {
+      "name": "font size aliases exact pixels",
+      "ok": true
+    },
+    {
+      "name": "font size aliases exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "font size aliases source spans",
+      "ok": true
+    },
+    {
+      "name": "font size aliases output path",
+      "ok": true
+    },
+    {
+      "name": "font size aliases seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "font size aliases document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "font size aliases font bundle used",
+      "ok": true
+    },
+    {
+      "name": "earlier rollback with later font exact pixels",
+      "ok": true
+    },
+    {
+      "name": "earlier rollback with later font exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "earlier rollback with later font source spans",
+      "ok": true
+    },
+    {
+      "name": "earlier rollback with later font output path",
+      "ok": true
+    },
+    {
+      "name": "earlier rollback with later font document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "earlier edited page remains exact",
+      "ok": true
+    },
+    {
+      "name": "suffix page 10 pixels after font imports",
+      "ok": true
+    },
+    {
+      "name": "suffix page 11 pixels after font imports",
+      "ok": true
+    },
+    {
+      "name": "suffix page 12 pixels after font imports",
+      "ok": true
+    },
+    {
+      "name": "invalid source still reports error",
+      "ok": true
+    },
+    {
+      "name": "recovery after font import exact pixels",
+      "ok": true
+    },
+    {
+      "name": "recovery after font import exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "recovery after font import source spans",
+      "ok": true
+    },
+    {
+      "name": "recovery after font import output path",
+      "ok": true
+    },
+    {
+      "name": "recovery after font import document still unfinished",
+      "ok": true
+    },
+    {
+      "name": "unsupported font attributes fallback exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unsupported font attributes fallback exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "unsupported font attributes fallback source spans",
+      "ok": true
+    },
+    {
+      "name": "unsupported font attributes fallback output path",
+      "ok": true
+    },
+    {
+      "name": "rejected font bundle resumes normal finalization",
+      "ok": true
+    },
+    {
+      "name": "external graphics fallback exact pixels",
+      "ok": true
+    },
+    {
+      "name": "external graphics fallback exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "external graphics fallback source spans",
+      "ok": true
+    },
+    {
+      "name": "external graphics fallback output path",
+      "ok": true
+    },
+    {
+      "name": "original source and asset files untouched",
+      "ok": true
+    },
+    {
+      "name": "later buffered page imports new font",
+      "ok": true
+    },
+    {
+      "name": "earlier buffered page gets its own font dictionary",
+      "ok": true
+    },
+    {
+      "name": "font imports preserve page 1",
+      "ok": true
+    },
+    {
+      "name": "font imports preserve page 3",
+      "ok": true
+    },
+    {
+      "name": "font imports preserve page 4",
+      "ok": true
+    },
+    {
+      "name": "font imports preserve page 6",
+      "ok": true
+    },
+    {
+      "name": "font imports preserve page 2",
+      "ok": true
+    }
+  ],
+  "edits": [
+    {
+      "name": "new OpenType font",
+      "compileMs": 24.392402,
+      "compilerStagesMs": {
+        "fork": 3.377,
+        "replaceChild": 0.008,
+        "restore": 0.336,
+        "shipoutAndPublish": 3.717,
+        "typeset": 15.348
+      },
+      "fontRefreshMs": 30.744602,
+      "fontResourceBytes": 31637,
+      "outputMode": "page-stream",
+      "pipelineMs": 73.487906,
+      "prepareMs": 0.6766,
+      "renderMs": 11.921501,
+      "renderStagesMs": {
+        "displayList": 1.380601,
+        "origins": 0.7309,
+        "png": 8.2098,
+        "raster": 1.0962,
+        "text": 0.4582
+      }
+    },
+    {
+      "name": "new glyph in imported subset",
+      "compileMs": 21.609302,
+      "compilerStagesMs": {
+        "fork": 2.492,
+        "replaceChild": 0.006,
+        "restore": 0.253,
+        "shipoutAndPublish": 3.749,
+        "typeset": 14.688
+      },
+      "fontRefreshMs": 29.367302,
+      "fontResourceBytes": 31682,
+      "outputMode": "page-stream",
+      "pipelineMs": 66.716506,
+      "prepareMs": 0.5511,
+      "renderMs": 10.268901,
+      "renderStagesMs": {
+        "displayList": 1.2883,
+        "origins": 0.6922,
+        "png": 6.710801,
+        "raster": 1.0906,
+        "text": 0.4459
+      }
+    },
+    {
+      "name": "reuse imported glyphs",
+      "compileMs": 21.343602,
+      "compilerStagesMs": {
+        "fork": 2.572,
+        "replaceChild": 0.007,
+        "restore": 0.267,
+        "shipoutAndPublish": 3.633,
+        "typeset": 14.406
+      },
+      "outputMode": "page-stream",
+      "pipelineMs": 36.083003,
+      "prepareMs": 0.5204,
+      "renderMs": 8.928201,
+      "renderStagesMs": {
+        "displayList": 0.3052,
+        "origins": 0.5647,
+        "png": 7.151501,
+        "raster": 0.4597,
+        "text": 0.3864
+      }
+    },
+    {
+      "name": "rollback to different font",
+      "compileMs": 22.374602,
+      "compilerStagesMs": {
+        "fork": 2.721,
+        "replaceChild": 0.008,
+        "restore": 0.268,
+        "shipoutAndPublish": 3.94,
+        "typeset": 14.92
+      },
+      "fontRefreshMs": 31.240203,
+      "fontResourceBytes": 31412,
+      "outputMode": "page-stream",
+      "pipelineMs": 69.338905,
+      "prepareMs": 0.5342,
+      "renderMs": 10.1195,
+      "renderStagesMs": {
+        "displayList": 1.3125,
+        "origins": 0.6497,
+        "png": 6.5973,
+        "raster": 1.0824,
+        "text": 0.4394
+      }
+    },
+    {
+      "name": "TrueType and new Unicode glyphs",
+      "compileMs": 27.567202,
+      "compilerStagesMs": {
+        "fork": 2.686,
+        "replaceChild": 0.008,
+        "restore": 0.3,
+        "shipoutAndPublish": 3.522,
+        "typeset": 20.35
+      },
+      "fontRefreshMs": 29.244103,
+      "fontResourceBytes": 62115,
+      "outputMode": "page-stream",
+      "pipelineMs": 73.069906,
+      "prepareMs": 0.5564,
+      "renderMs": 10.238,
+      "renderStagesMs": {
+        "displayList": 1.3384,
+        "origins": 0.656,
+        "png": 6.7213,
+        "raster": 1.0329,
+        "text": 0.4444
+      }
+    },
+    {
+      "name": "Type1 font",
+      "compileMs": 15.038801,
+      "compilerStagesMs": {
+        "fork": 2.54,
+        "replaceChild": 0.005,
+        "restore": 0.292,
+        "shipoutAndPublish": 3.309,
+        "typeset": 8.499
+      },
+      "fontRefreshMs": 24.517702,
+      "fontResourceBytes": 32043,
+      "outputMode": "page-stream",
+      "pipelineMs": 55.351005,
+      "prepareMs": 0.5045,
+      "renderMs": 10.633601,
+      "renderStagesMs": {
+        "displayList": 1.1527,
+        "origins": 0.6373,
+        "png": 7.288101,
+        "raster": 1.0955,
+        "text": 0.4244
+      }
+    },
+    {
+      "name": "font size aliases",
+      "compileMs": 36.187503,
+      "compilerStagesMs": {
+        "fork": 3.237,
+        "replaceChild": 0.007,
+        "restore": 0.333,
+        "shipoutAndPublish": 4.504,
+        "typeset": 27.624
+      },
+      "fontRefreshMs": 43.529404,
+      "fontResourceBytes": 34128,
+      "outputMode": "page-stream",
+      "pipelineMs": 96.605408,
+      "prepareMs": 0.6369,
+      "renderMs": 10.6744,
+      "renderStagesMs": {
+        "displayList": 1.461,
+        "origins": 0.6721,
+        "png": 6.8529,
+        "raster": 1.1636,
+        "text": 0.4621
+      }
+    },
+    {
+      "name": "earlier rollback with later font",
+      "compileMs": 271.885923,
+      "compilerStagesMs": {
+        "fork": 3.021,
+        "replaceChild": 246.319,
+        "restore": 0.294,
+        "shipoutAndPublish": 4.276,
+        "typeset": 15.045
+      },
+      "outputMode": "page-stream",
+      "pipelineMs": 287.336325,
+      "prepareMs": 0.9254,
+      "renderMs": 9.078101,
+      "renderStagesMs": {
+        "displayList": 0.3157,
+        "origins": 0.6506,
+        "png": 6.924401,
+        "raster": 0.6836,
+        "text": 0.4331
+      }
+    },
+    {
+      "name": "recovery after font import",
+      "compileMs": 29.040902,
+      "compilerStagesMs": {
+        "fork": 4.035,
+        "replaceChild": 0.013,
+        "restore": 0.493,
+        "shipoutAndPublish": 4.154,
+        "typeset": 17.487
+      },
+      "outputMode": "page-stream",
+      "pipelineMs": 44.551304,
+      "prepareMs": 0.6777,
+      "renderMs": 9.100801,
+      "renderStagesMs": {
+        "displayList": 0.3345,
+        "origins": 0.6628,
+        "png": 6.9831,
+        "raster": 0.6235,
+        "text": 0.434601
+      }
+    },
+    {
+      "name": "unsupported font attributes fallback",
+      "compileMs": 265.473322,
+      "compilerStagesMs": {
+        "fork": 2.72,
+        "replaceChild": 246.147,
+        "restore": 0.284,
+        "shipoutAndPublish": 3.528,
+        "typeset": 8.797
+      },
+      "outputMode": "resource-seed",
+      "pipelineMs": 358.033031,
+      "prepareMs": 0.963701,
+      "renderMs": 10.744901,
+      "renderStagesMs": {
+        "displayList": 1.3383,
+        "origins": 0.6647,
+        "png": 6.983701,
+        "raster": 1.2359,
+        "text": 0.4592
+      },
+      "resourceRefresh": "Font export is unsupported for this page",
+      "resourceRefreshMs": 56.547305
+    },
+    {
+      "name": "external graphics fallback",
+      "compileMs": 17.745101,
+      "compilerStagesMs": {
+        "fork": 3.068,
+        "replaceChild": 0.013,
+        "restore": 0.305,
+        "shipoutAndPublish": 3.29,
+        "typeset": 8.349
+      },
+      "outputMode": "resource-seed",
+      "pipelineMs": 90.044608,
+      "prepareMs": 0.6911,
+      "renderMs": 10.852301,
+      "renderStagesMs": {
+        "displayList": 1.31,
+        "origins": 0.7003,
+        "png": 7.1014,
+        "raster": 1.1797,
+        "text": 0.470701
+      },
+      "resourceRefresh": "External graphics resource requires a refresh",
+      "resourceRefreshMs": 56.236205
+    }
+  ]
+}

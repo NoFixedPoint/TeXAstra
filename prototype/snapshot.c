@@ -41,6 +41,7 @@ extern void bako_source_register(const char*,int) __attribute__((weak));
 extern int bako_source_length(int) __attribute__((weak));
 extern void bako_sources_refresh(void) __attribute__((weak));
 extern void bako_set_boundary(void (*)(void)) __attribute__((weak));
+extern int bako_write_font_bundle(FILE*,const int*,int) __attribute__((weak));
 static lua_State *boundary_lua;
 static void engine_boundary(void) {
   int top=lua_gettop(boundary_lua);
@@ -123,17 +124,73 @@ static int export_pdf(lua_State *L) {
 static int send_all(int fd,const char *data,size_t size) {
   while(size){ssize_t n=send(fd,data,size,MSG_NOSIGNAL);if(n<0&&errno==EINTR)continue;if(n<=0)return -1;data+=n;size-=n;}return 0;
 }
+static void font_bundle(int channel,const int *fonts,int count) {
+  int fd=memfd_create("bako-font-bundle",MFD_CLOEXEC),status=0;
+  if(fd<0){send_all(channel,"0\n",2);return;}
+  fflush(NULL);
+  pid_t child=fork();
+  if(child==0) {
+    alarm(10);
+    /* Font loading may write log/recorder data. Do not advance the parent's
+     * shared descriptors or change its unfinished PDF. */
+    int sink=open("/dev/null",O_WRONLY);
+    if(sink<0)_exit(1);
+    for(int n=0;n<256;n++) {
+      if(n==fd||n==sink||n==channel)continue;
+      int flags=fcntl(n,F_GETFL);struct stat st;
+      if(flags>=0&&(flags&O_ACCMODE)!=O_RDONLY&&!fstat(n,&st)&&
+         (n==1||n==2||S_ISREG(st.st_mode)))dup2(sink,n);
+    }
+    if(sink>=0)close(sink);
+    FILE *out=fdopen(fd,"wb");
+    _exit(out&&bako_write_font_bundle&&bako_write_font_bundle(out,fonts,count)?0:1);
+  }
+  pid_t reaped=-1;
+  if(child>0)do {reaped=waitpid(child,&status,0);} while(reaped<0&&errno==EINTR);
+  struct stat st;
+  if(child<0||reaped!=child||!WIFEXITED(status)||WEXITSTATUS(status)||fstat(fd,&st)||st.st_size<=0||st.st_size>32*1024*1024) {
+    send_all(channel,"0\n",2);close(fd);return;
+  }
+  char header[64],data[65536];int n=snprintf(header,sizeof(header),"%lld\n",(long long)st.st_size);
+  if(!send_all(channel,header,n))for(off_t pos=0;pos<st.st_size;) {
+    ssize_t got=pread(fd,data,sizeof(data),pos);
+    if(got<=0||send_all(channel,data,got))break;
+    pos+=got;
+  }
+  close(fd);
+}
 static int publish(lua_State *L) {
   size_t metadata_size,data_size;
   const char *metadata=luaL_checklstring(L,1,&metadata_size),*data=luaL_checklstring(L,2,&data_size);
   int fd=socket(AF_UNIX,SOCK_STREAM,0);struct sockaddr_un a={.sun_family=AF_UNIX};strcpy(a.sun_path,"pages.sock");
   if(fd<0||connect(fd,(struct sockaddr*)&a,sizeof(a))){if(fd>=0)close(fd);return luaL_error(L,"Page transport unavailable");}
   char header[80];int n=snprintf(header,sizeof(header),"%zu %zu\n",metadata_size,data_size);
-  int failed=send_all(fd,header,n)||send_all(fd,metadata,metadata_size)||send_all(fd,data,data_size);close(fd);
-  if(failed)return luaL_error(L,"Page transport failed");
+  int failed=send_all(fd,header,n)||send_all(fd,metadata,metadata_size)||send_all(fd,data,data_size);
+  if(failed){close(fd);return luaL_error(L,"Page transport failed");}
   /* Retain the unfinished output. A resource miss can continue to PDF export;
    * the next edit instead restores the preceding compiler checkpoint. */
-  raise(SIGSTOP);return 0;
+  if(getenv("BAKO_FONT_STREAM")) {
+    /* Demand-driven replies share this publisher's channel, so resources
+     * cannot accidentally come from a different checkpoint or revision. */
+    while(1) {
+      raise(SIGSTOP);
+      char command[4096];size_t used=0;
+      while(used+1<sizeof(command)) {
+        ssize_t got=recv(fd,command+used,1,0);
+        if(got<=0)break;
+        if(command[used++]=='\n')break;
+      }
+      command[used]=0;
+      if(strncmp(command,"fonts ",6))break;
+      int fonts[256],count=0;char *p=command+6,*end;
+      while(*p&&*p!='\n'&&count<256) {
+        long value=strtol(p,&end,10);if(end==p||value<=0||value>1000000){count=0;break;}
+        fonts[count++]=(int)value;p=end;while(*p==' ')++p;
+      }
+      if(count)font_bundle(fd,fonts,count);else send_all(fd,"0\n",2);
+    }
+  } else {close(fd);fd=-1;raise(SIGSTOP);}
+  if(fd>=0)close(fd);return 0;
 }
 
 static int checkpoint(lua_State *L) {

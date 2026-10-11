@@ -55,7 +55,7 @@ try:
             ('math-middle','pages/page-050.tex','x+x+y=','x+x+z=',49,'page-stream'),
             ('rotated-TikZ','pages/page-050.tex','[rotate=15]','[rotate=45]',49,'page-stream'),
             ('colored-TikZ','pages/page-050.tex',r'\draw (0,0)',r'\draw[red] (0,0)',49,'page-stream'),
-            ('new-Chinese-glyph','pages/page-050.tex','中文排版','汉文排版',49,'resource-seed'),
+            ('new-Chinese-glyph','pages/page-050.tex','中文排版','汉文排版',49,'page-stream'),
             ('same-new-glyph-cached','pages/page-050.tex','word: alpha.','word: omega.',49,'page-stream'),
             ('reflow-first','pages/page-001.tex','word: alpha.','word: '+'expanded phrase '*200+'.',0,'page-stream'),
         ]:

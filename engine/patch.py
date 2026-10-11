@@ -5,7 +5,7 @@ import shutil,re
 def apply(source):
     base=Path(source)/'texk/web2c/luatexdir'
     own=Path(__file__).resolve().parent
-    for name in ['origins.h','origins.c']:
+    for name in ['origins.h','origins.c','resources.c']:
         if not (base/name).exists() or (base/name).read_bytes()!=(own/name).read_bytes():shutil.copyfile(own/name,base/name)
     def edit(name,old,new,count=1):
         p=base/name;s=p.read_text()
@@ -52,6 +52,8 @@ def apply(source):
     edit('tex/texmath.c','    type(p) = math_char_node;\n    math_character(p) = mval.character_value;','    type(p) = math_char_node;\n    if (bako_attribute >= 0 && bako_origin > 0) set_attribute(p,bako_attribute,bako_origin);\n    math_character(p) = mval.character_value;')
     p=base/'tex/textoken.c';s=p.read_text()
     if '#include "origins.c"' not in s:p.write_text(s+'\n#include "origins.c"\n')
+    p=base/'pdf/pdfgen.c';s=p.read_text()
+    if '#include "../resources.c"' not in s:p.write_text(s+'\n#include "../resources.c"\n')
 
 if __name__=='__main__':
     import sys

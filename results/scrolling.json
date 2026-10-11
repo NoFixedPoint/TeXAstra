@@ -56,48 +56,49 @@
   "edit": {
     "type": "paint",
     "revision": 2,
-    "clientId": 10,
+    "clientId": 8,
     "page": 1,
     "generation": 2,
     "purpose": "edit",
     "phase": "preview",
-    "pipelineMs": 403.196289,
-    "visibleMs": 460.19999998807907,
+    "pipelineMs": 110.970609,
+    "visibleMs": 154.40000000596046,
     "stale": false,
-    "at": 1791722657390,
+    "at": 1791724089767,
     "browserStagesMs": {
-      "prepare": 0.4000000059604645,
-      "decode": 5.200000002980232,
-      "install": 1.7999999970197678,
-      "paintWait": 17.599999994039536
+      "prepare": 0.30000001192092896,
+      "decode": 2.8999999910593033,
+      "install": 1.2000000029802322,
+      "paintWait": 28.900000005960464
     },
-    "deliveryMs": 12.608601987361908,
-    "compileMs": 126.034859,
-    "prepareMs": 1.926001,
+    "deliveryMs": 6.82719099521637,
+    "compileMs": 64.652406,
+    "prepareMs": 0.8565,
     "compilerStagesMs": {
-      "fork": 6.32,
-      "replaceChild": 0.018,
-      "restore": 0.713,
-      "shipoutAndPublish": 65.225,
-      "typeset": 52.35
+      "fork": 1.812,
+      "replaceChild": 0.012,
+      "restore": 0.433,
+      "shipoutAndPublish": 38.641,
+      "typeset": 23.345
     },
     "snapshot": {
       "mode": "fork",
-      "pid": 434702
+      "pid": 451927
     },
-    "renderMs": 13.853206,
+    "renderMs": 9.7123,
     "renderStagesMs": {
-      "displayList": 2.519101,
-      "origins": 0.250001,
-      "png": 9.611504,
-      "raster": 1.2055,
-      "text": 0.2024
+      "displayList": 1.632,
+      "origins": 0.1744,
+      "png": 6.8823,
+      "raster": 0.8842,
+      "text": 0.1144
     },
-    "resourceRefreshMs": 253.80182,
-    "queueMs": 0.7635000050067902,
-    "requestToPayloadMs": 422.59139800071716,
+    "fontRefreshMs": 32.737303,
+    "fontResourceBytes": 72636,
+    "queueMs": 0.1421000063419342,
+    "requestToPayloadMs": 114.27280899882317,
     "resumedFrom": 1,
-    "outputMode": "resource-seed",
+    "outputMode": "page-stream",
     "compilationMode": "live"
   }
 }

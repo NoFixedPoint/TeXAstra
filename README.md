@@ -1,8 +1,10 @@
 # BaKoMa revived — feasibility prototype
 
-This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The 150 ms latency target has not been met.** The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
+This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The latest local 13-page browser benchmark is below 150 ms p95 in all four tested scenarios.** This does not establish performance for arbitrary projects or the real VS Code host. The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Version **0.0.13** adds a repeatable browser latency benchmark and separates backend queueing, compilation, resource refresh, delivery, image decoding, text-layer updates, and paint scheduling. Nearby-page prefetch waits briefly during editing so it does not compete with the next keystroke. See [the measurements and validation](docs/preview-latency-20261011.md).
+Version **0.0.14** refreshes supported fonts and glyph subsets without finishing the document. A disposable fork of the paused engine exports a font-only bundle, and the retained renderer imports it for the affected page. Graphics and unsupported font resources keep the complete-PDF fallback. See [the implementation and validation](docs/font-resources-20261011.md).
+
+Version 0.0.13 adds a repeatable browser latency benchmark and separates backend queueing, compilation, resource refresh, delivery, image decoding, text-layer updates, and paint scheduling. Nearby-page prefetch waits briefly during editing so it does not compete with the next keystroke. See [the measurements and validation](docs/preview-latency-20261011.md).
 
 Version 0.0.12 places checkpoints at safe points in the TeX engine, including inside long included chapters. Input read positions determine which compiler state can be reused after an edit. The handwritten root paragraph splitter and its 2,048-block limit have been removed. See [the implementation and validation](docs/engine-checkpoints-20261011.md).
 
@@ -16,7 +18,7 @@ Internal differential snapshots have been removed to reduce maintenance. Fork ch
 
 The shipping architecture is to bundle our preview engine and supporting runtime while using the user's existing LaTeX distribution for packages, classes, fonts, and supporting tools. Package installation and updates remain with that distribution's manager. Today the supported integration is TeX Live inside Ubuntu-22.04 WSL on Windows; distribution discovery, compatibility diagnostics, and environment reporting remain future work. See [the package ownership decision](docs/adr/0007-external-latex-distribution.md).
 
-The [BaKoMa binary investigation](docs/bakoma-binary-pipeline.md) motivated separating live page output from document finalization. Ordinary edits now send page drawing commands to the retained renderer without finalizing, transporting, or reopening a PDF. Complete PDFs still seed fonts/resources at startup, during convergence, and when an edit needs new resources. This is a page-buffer implementation using LuaTeX's PDF drawing language, not a DVI engine.
+The [BaKoMa binary investigation](docs/bakoma-binary-pipeline.md) motivated separating live page output from document finalization. Ordinary edits now send page drawing commands to the retained renderer without finalizing, transporting, or reopening a document PDF. New supported fonts and glyphs arrive in a small font-only PDF bundle. Complete document PDFs still seed resources at startup, during convergence, and for unsupported resource changes. This is a page-buffer implementation using LuaTeX's PDF drawing language, not a DVI engine.
 
 ## Run the interactive demo
 
@@ -42,7 +44,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.13.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.14.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -72,7 +74,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 - Root body text and project `.tex` inputs get engine token origins. Macro arguments retain their token locations; generated macro content falls back to the calling command token. Non-glyph constructs such as fraction rules are not selectable. Existing bibliography output can be copied, but automatic bibliography/index tools are not implemented.
 - The compiler provenance and checkpoint patches are experimental. Arbitrary Lua-generated nodes, transformed input buffers, external token manipulation, and file reads performed directly by external Lua modules are outside the validated cases.
 - Fork checkpoints require Linux/WSL. Native Windows and macOS checkpoint implementations are unavailable.
-- Ordinary page payloads pass through in-memory drawing commands, PNG, and JSON. Complete PDFs remain necessary for resource seeding and background convergence. New fonts/glyphs or unsupported graphics resources trigger a refresh. TeX still writes auxiliary files, logs, source copies, and metadata inside the session; the complete workflow is not filesystem-free.
+- Ordinary page payloads pass through in-memory drawing commands, PNG, and JSON. Complete PDFs remain necessary for resource seeding and background convergence. Supported new fonts/glyphs use font-only bundles; Type 3 fonts, custom font attributes, external graphics, changed page dimensions, and new physical pages can require a complete resource export. TeX still writes auxiliary files, logs, source copies, and metadata inside the session; the complete workflow is not filesystem-free.
 - Source navigation uses rendered glyph IDs and physical pages, including pages outside the loaded viewport. Imported PDF figure text has no TeX-token provenance; body text and captions remain navigable.
 
 ## Reproduce the checks
@@ -83,6 +85,7 @@ python scripts/check_token_origins.py
 python scripts/check_live_syntax.py
 python scripts/check_included_edits.py
 python scripts/check_engine_checkpoints.py
+python scripts/check_font_resources.py
 python scripts/check_cpp.py
 python scripts/live_fixture.py
 python scripts/check_live_mode.py --project .work/scroll-case --main paper.tex --output live-fixture.json
