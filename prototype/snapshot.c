@@ -30,14 +30,6 @@ extern void lua_pushlstring(lua_State*,const char*,size_t);
  * is used. The page-stream adapter checks the engine before loading this code. */
 extern void *static_pdf;
 extern void pdf_flush(void*);
-extern int bako_internal_checkpoint(int) __attribute__((weak));
-extern void bako_internal_park(void) __attribute__((weak));
-extern int bako_internal_pending(void) __attribute__((weak));
-extern int bako_internal_live(void) __attribute__((weak));
-extern int bako_internal_pdf(void) __attribute__((weak));
-extern long bako_internal_request(void) __attribute__((weak));
-extern long bako_internal_restored(void) __attribute__((weak));
-extern long bako_internal_stat(int) __attribute__((weak));
 
 struct saved_fd { int fd,flags; off_t pos; char path[4096]; };
 static int limit=100;
@@ -47,22 +39,20 @@ static int memory_pdf=-1;
 static long long request_us=0,fork_start_us=0,fork_us=0,restore_us=0;
 static long long clock_us(void){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);return (long long)t.tv_sec*1000000+t.tv_nsec/1000;}
 static int timings(lua_State *L){
-  if(bako_internal_request){long start=bako_internal_request();lua_pushinteger(L,start);lua_pushinteger(L,start);lua_pushinteger(L,bako_internal_restored());lua_pushinteger(L,start);return 4;}
   lua_pushinteger(L,request_us);lua_pushinteger(L,fork_us);lua_pushinteger(L,restore_us);lua_pushinteger(L,fork_start_us);return 4;
 }
 static int now(lua_State *L){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);lua_pushinteger(L,(lua_Integer)t.tv_sec*1000000+t.tv_nsec/1000);return 1;}
-static int is_live(lua_State *L){lua_pushinteger(L,bako_internal_live?bako_internal_live():live);return 1;}
-static int park(lua_State *L){(void)L;if(bako_internal_park)bako_internal_park();return 0;}
+static int is_live(lua_State *L){lua_pushinteger(L,live);return 1;}
+static int park(lua_State *L){(void)L;return 0;}
 static int stats(lua_State *L){
   char buffer[512];
-  if(bako_internal_stat)snprintf(buffer,sizeof(buffer),"{\"mode\":\"internal\",\"pid\":%d,\"snapshots\":%ld,\"undoBytes\":%ld,\"shadowBytes\":%ld,\"restoredDirtyPages\":%ld,\"restoredUndoBytes\":%ld,\"scanUs\":%ld,\"undoUs\":%ld,\"filesUs\":%ld,\"captureUs\":%ld}",getpid(),bako_internal_stat(0),bako_internal_stat(1),bako_internal_stat(2),bako_internal_stat(3),bako_internal_stat(4),bako_internal_stat(5),bako_internal_stat(6),bako_internal_stat(7),bako_internal_stat(8));
-  else snprintf(buffer,sizeof(buffer),"{\"mode\":\"fork\",\"pid\":%d}",getpid());
+  snprintf(buffer,sizeof(buffer),"{\"mode\":\"fork\",\"pid\":%d}",getpid());
   lua_pushlstring(L,buffer,strlen(buffer));return 1;
 }
 
 static int page_bytes(lua_State *L) {
   pdf_flush(static_pdf);fflush(NULL);
-  int memory=bako_internal_pdf?bako_internal_pdf():memory_pdf;
+  int memory=memory_pdf;
   int fd=memory>=0?dup(memory):open("main.pdf",O_RDONLY);struct stat st;
   if(fd<0||fstat(fd,&st))return luaL_error(L,"Cannot read page command buffer");
   off_t size=st.st_size-capture_offset;
@@ -80,7 +70,7 @@ static int copy_prefix(int from,int to,off_t size) {
   }return 0;
 }
 static int export_pdf(lua_State *L) {
-  int memory=bako_internal_pdf?bako_internal_pdf():memory_pdf;
+  int memory=memory_pdf;
   if(memory<0)return 0;
   fflush(NULL);struct stat st;if(fstat(memory,&st))return luaL_error(L,"Missing in-memory PDF output");
   int out=open("main.pdf.tmp",O_WRONLY|O_CREAT|O_TRUNC,0600);
@@ -100,14 +90,13 @@ static int publish(lua_State *L) {
   if(failed)return luaL_error(L,"Page transport failed");
   /* Retain the unfinished output. A resource miss can continue to PDF export;
    * the next edit instead restores the preceding compiler checkpoint. */
-  raise(SIGSTOP);if(bako_internal_pending)bako_internal_pending();return 0;
+  raise(SIGSTOP);return 0;
 }
 
 static int checkpoint(lua_State *L) {
   int index=(int)luaL_checkinteger(L,1);
   if(index>limit && !getenv("BAKO_LIVE_DOCUMENT")) {lua_pushinteger(L,limit);return 1;}
   fflush(NULL);
-  if(bako_internal_checkpoint){limit=bako_internal_checkpoint(index);lua_pushinteger(L,limit);return 1;}
   char session_path[4096];if(!getcwd(session_path,sizeof(session_path)))return luaL_error(L,"Cannot resolve checkpoint session directory");
   struct saved_fd saved[256]; int count=0;
   for(int fd=3;fd<256;fd++) {

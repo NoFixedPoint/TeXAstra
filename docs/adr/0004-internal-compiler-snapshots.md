@@ -1,5 +1,7 @@
 # Differential snapshots inside the retained compiler
 
+**Historical record: this mode has been removed. Fork checkpoints are the only supported implementation.**
+
 Version 0.0.6 adds an alternative to the fork-per-checkpoint mechanism: a C++
 snapshot runtime loaded into the pinned Linux LuaHBTeX process. The compiler
 keeps one PID while edits restore an earlier state and resume execution. The

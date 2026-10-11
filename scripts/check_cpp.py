@@ -7,7 +7,7 @@ from cpp_client import Client,ROOT
 from prototype.converge import full_build
 from prototype.engine import render_page
 parser=argparse.ArgumentParser()
-parser.add_argument('--checkpoint',choices=['internal','fork'],default='internal')
+parser.add_argument('--checkpoint',choices=['fork'],default='fork')
 parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime')
 args=parser.parse_args()
 os.environ['BAKO_CHECKPOINT_MODE']=args.checkpoint
@@ -69,6 +69,6 @@ try:
         expected=render_page(directory,1,metadata=metadata)
         check('adjacent reflow pixels',adjacent['ok'] and pixels(adjacent)==pixels(expected))
 finally:
-    output='internal-correctness.json' if os.environ.get('BAKO_CHECKPOINT_MODE','internal')=='internal' else 'cpp-correctness.json'
+    output='cpp-correctness.json'
     (ROOT/'results'/output).write_text(json.dumps(report,indent=2),encoding='utf-8')
 print('Passed',len(report['checks']),'C++ differential checks')

@@ -6,7 +6,7 @@ Version **0.0.9** fixes live compilation of conditional blocks and unbraced math
 
 Version 0.0.8 made **Open Experimental Preview** start a live LuaHBTeX session for ordinary projects, regardless of older PDFs, compiler comments or legacy preview settings. It added paragraph-boundary checkpoints, token/macro-origin navigation, reusable build files in the user's cache, and continuous scrolling with nearby pages loaded on demand. The original project receives no generated build files. See [live-project validation and limitations](docs/live-projects-20261011.md).
 
-Version 0.0.6 adds experimental **internal differential compiler snapshots**: one retained compiler process restores its TeX/Lua memory, continuation, and file state from undo records, without forking per checkpoint or edit. The comparison measured 137.5 ms median versus 155 ms for fork checkpoints, but p95 regressed to 325 ms versus 185 ms on large backward rollbacks. **Fork remains the default; internal snapshots are opt-in.** Source mapping, compiler control, page-buffer reception, and rendering remain in C++; Python is only a build/test tool. Read the [internal snapshot report](docs/internal-snapshots-20261011.md) and [architecture decision](docs/adr/0004-internal-compiler-snapshots.md) for validation and the Linux-specific memory contract. Earlier work is recorded in the [C++ report](docs/cpp-backend-20261011.md) and [feasibility report](docs/feasibility-20261010.md).
+Internal differential snapshots have been removed to reduce maintenance. Fork checkpoints are the only supported implementation. The [historical snapshot report](docs/internal-snapshots-20261011.md) records why that experiment was retired.
 
 The [BaKoMa binary investigation](docs/bakoma-binary-pipeline.md) motivated separating live page output from document finalization. Ordinary edits now send page drawing commands to the retained renderer without finalizing, transporting, or reopening a PDF. Complete PDFs still seed fonts/resources at startup, during convergence, and when an edit needs new resources. This is a page-buffer implementation using LuaTeX's PDF drawing language, not a DVI engine.
 
@@ -25,7 +25,7 @@ The default `cpp` backend requires Linux LuaHBTeX **1.14**, CTeX, TikZ, Fandol f
 
 For the Python comparison, install `requirements.txt` and run `node native/demo.js --engine stream`. Use `python -m prototype.demo --engine snapshot` to compare with finalized-PDF output on every edit. `python -m prototype.demo` also launches the C++ demo by default.
 
-For the C++ process-checkpoint comparison, run `node native/demo.js --checkpoint fork`. Omitting the option also selects `fork`. Internal snapshots require Linux `/proc` soft-dirty tracking and a single-threaded compiler. They reserve virtual address space for the shadow/journal and can retain substantial memory on a 100-page document; this is still a bounded feasibility backend.
+The C++ backend uses fork checkpoints. The former internal snapshot mode and its VS Code setting have been removed; saved extension settings no longer select it.
 
 For the slower native full-build comparison, run `python -m prototype.demo --engine native`. This needs LuaLaTeX and the same packages on the local PATH. Native full builds do not demonstrate incremental compilation.
 
@@ -33,7 +33,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.9.vsix --force`, reload VS Code, and run the same preview command. Set `bakoma.checkpointMode` to `internal` to try internal snapshots on the corpus; `fork` remains the default. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.9.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -53,7 +53,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 
 - `scripts/generate_corpus.py` creates a deterministic 100-page, multi-file Chinese/English, math, macro, and TikZ corpus, plus edit scenarios.
 - `native/source.hpp` instruments an explicitly limited LaTeX subset with source-span identifiers; `prototype/instrument.py` remains its independent reference. `prototype/provenance.lua` retains those identifiers on final glyph nodes and records them in actual glyph-output order during shipout. The renderer pairs this sidecar with its glyph trace, including TikZ transforms; a glyph-count mismatch disables navigation for that page. These are explicit identifiers, not repeated-word matching or line-only SyncTeX.
-- `native/internal_snapshot.cpp` stores changed-memory undo records before each corpus page-file input. Edits invalidate later checkpoints, restore C/Lua/TeX state and earlier output prefixes, and resume in the same compiler process. Later input can be processed on demand. `prototype/snapshot.c` supplies the Lua bridge and retains the fork comparison.
+- `prototype/snapshot.c` retains compiler processes at checkpoints; edits fork from the preceding checkpoint and resume typesetting.
 - The service keeps a visibly stale preview on invalid input and disables navigation from stale output. During sustained typing it displays completed intermediate revisions, labels them stale, and coalesces queued edits. Complete builds run after an idle interval to converge references and downstream layout and supply a fresh set of reusable checkpoints.
 - A separately built TeXpresso checkout is used for comparison; it is not a dependency of the LuaTeX prototype.
 
@@ -62,7 +62,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 - General projects use safe paragraph boundaries and retain at most one checkpoint per shipped page; the supplied corpus retains explicit page-file boundaries. Long paragraphs and opaque environments can require more replay. Preamble and included-file edits rebuild the session. The root needs explicit `\begin{document}` and `\end{document}`; the current driver allows 2048 paragraph blocks.
 - Root body text and literal body inputs are instrumented. Supported text/math get token mappings; opaque macro arguments and environments get invocation ranges. Arbitrary catcodes, generated input and document classes remain outside the proof. Non-glyph constructs such as fraction rules are not selectable source tokens. Existing bibliography output can be copied, but automatic bibliography/index tools are not implemented.
 - Source instrumentation is a research technique, not a complete parser or engine-level provenance implementation. Rendering equivalence and source mapping are validated on the supplied fixtures; they must not be generalized to arbitrary LaTeX.
-- Internal snapshots use Linux memory/descriptor state and an x86-64 continuation, including the pinned compiler's allocator state. They are not a portable TeX-object serializer. **Native Windows checkpointing is unimplemented.** macOS checkpointing has not been established either. Native modules that alter mappings, additional compiler threads, and arbitrary external I/O are outside the snapshot contract. The fork comparison and native full-build fallback remain available.
+- Fork checkpoints require Linux/WSL. Native Windows and macOS checkpoint implementations are unavailable.
 - Ordinary page payloads pass through in-memory drawing commands, PNG, and JSON. Complete PDFs remain necessary for resource seeding and background convergence. New fonts/glyphs or unsupported graphics resources trigger a refresh. TeX still writes auxiliary files, logs, source copies, and metadata inside the session; the complete workflow is not filesystem-free.
 - Source navigation uses rendered glyph IDs and physical pages, including pages outside the currently loaded viewport. Imported PDF figure text has no TeX-token provenance; body text and captions on those pages remain navigable. Unrecognized macro/environment syntax uses an invocation range where possible. This bounded source instrumenter is not a general TeX parser.
 
@@ -76,7 +76,6 @@ python scripts/check_cpp.py
 python scripts/live_fixture.py
 python scripts/check_live_mode.py --project .work/scroll-case --main paper.tex --output live-fixture.json
 node scripts/check_extension_live.js
-python scripts/check_internal_snapshot.py
 # Earlier Python reference backend checks:
 python scripts/check_mapping.py 100
 python scripts/check_snapshot.py

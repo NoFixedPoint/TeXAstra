@@ -51,8 +51,6 @@ def main():
     except PermissionError:raise SystemExit('Close running C++ previews, then rebuild. Windows is holding the existing executable open; it has not been overwritten.')
     subprocess.run(prefix+['gcc','-O2','-fPIC','-shared',linux(ROOT/'prototype/snapshot.c'),'-o',linux(RUNTIME/'bako_snapshot.so.new')],check=True)
     os.replace(RUNTIME/'bako_snapshot.so.new',RUNTIME/'bako_snapshot.so')
-    subprocess.run(prefix+['g++','-std=c++17','-O2','-g','-fPIC','-shared','-fno-builtin','-fno-stack-protector','-Wl,-z,now',linux(ROOT/'native/internal_snapshot.cpp'),'-o',linux(RUNTIME/'bako_internal.so.new')],check=True)
-    os.replace(RUNTIME/'bako_internal.so.new',RUNTIME/'bako_internal.so')
     print('Built',RUNTIME/'bakoma-backend',flush=True)
 
 if __name__=='__main__':main()

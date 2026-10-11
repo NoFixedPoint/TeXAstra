@@ -90,7 +90,7 @@ try:
             if frame.get('type')=='frame':break
         check('VS Code protocol applies initial unsaved buffers','StartupOverlay' in text(frame) and frame['clientId']==1)
     check('fixture source tree untouched',before==manifest(project))
-    for checkpoint in ['fork','internal']:
+    for checkpoint in ['fork']:
         with Client(ROOT/'corpus','main.tex','lualatex',checkpoint=checkpoint,mode='auto') as client:
             initial=require(client.request(type='start',page=0))
             check(checkpoint+' corpus retains source mapping',bool(initial['regionRows']) and initial['outputMode']!='full-build')

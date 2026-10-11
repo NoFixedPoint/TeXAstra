@@ -35,15 +35,6 @@
           "description": "Retained for legacy comparison tools. Open Experimental Preview always uses the C++ backend.",
           "deprecationMessage": "Retained for legacy comparison tools. Open Experimental Preview always uses the C++ backend."
         },
-        "bakoma.checkpointMode": {
-          "type": "string",
-          "enum": [
-            "fork",
-            "internal"
-          ],
-          "default": "fork",
-          "description": "C++ compiler checkpoints: fork (default) or experimental internal undo snapshots. Internal snapshots improve warm edits but currently have slower large backward rollbacks."
-        },
         "bakoma.engine": {
           "type": "string",
           "enum": [
@@ -92,7 +83,6 @@
     "build:cpp": "python scripts/build_cpp.py",
     "check:cpp": "python scripts/check_cpp.py",
     "check:cpp-mapper": "python scripts/check_cpp_mapper.py",
-    "check:internal": "python scripts/check_internal_snapshot.py",
     "demo:native": "python -m prototype.demo --engine native",
     "corpus": "python scripts/generate_corpus.py",
     "check:mapping": "python scripts/check_mapping.py 100",

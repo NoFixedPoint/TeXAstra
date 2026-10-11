@@ -1,5 +1,7 @@
 # Internal compiler snapshots — prototype 0.0.6
 
+**Historical record: this mode has been removed. Fork checkpoints are the only supported implementation.**
+
 The new C++ snapshot runtime retains one LuaHBTeX process and restores its
 compiler memory, Lua state, execution continuation, file positions, and output
 prefixes from in-memory undo records. It does not fork at checkpoint capture or

@@ -291,8 +291,8 @@ int main(int argc, char **argv) {
             args.count("--checkpoint")
                 ? args.at("--checkpoint")
                 : (getenv("BAKO_CHECKPOINT_MODE") ? getenv("BAKO_CHECKPOINT_MODE") : "fork");
-        if (checkpoint != "internal" && checkpoint != "fork") {
-            throw std::runtime_error("Use --checkpoint internal or fork");
+        if (checkpoint != "fork") {
+            throw std::runtime_error("Internal snapshots were removed; use --checkpoint fork");
         }
         setenv("BAKO_CHECKPOINT_MODE", checkpoint.c_str(), 1);
         fs::path project = fs::canonical(args.at("--project")),

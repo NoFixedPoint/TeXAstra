@@ -8,7 +8,7 @@ const child=new EventEmitter();child.stdin=new PassThrough();child.stdout=new Pa
 let input='';child.stdin.on('data',c=>input+=c);
 const web={cspSource:'test',asWebviewUri:u=>u.fsPath,postMessage:m=>{webMessages.push(m);},onDidReceiveMessage:f=>{receiver=f;}};
 const panel={webview:web,onDidDispose:f=>{disposed=f;},reveal(){},dispose(){disposed?.();}};
-const config={mainFile:'paper.tex',engine:'native',previewMode:'full',latexCompiler:'xelatex'};
+const config={checkpointMode:'internal',mainFile:'paper.tex',engine:'native',previewMode:'full',latexCompiler:'xelatex'};
 const vscode={
   Uri:{joinPath:(base,...s)=>({fsPath:path.join(base.fsPath,...s)})},ViewColumn:{Beside:2,One:1},
   commands:{registerCommand:(name,f)=>{command=f;}},

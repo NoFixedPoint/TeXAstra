@@ -26,7 +26,6 @@ class Engine {
     std::string seed_pdf;
     unsigned revision = 0;
     bool converged = false;
-    bool internal = false;
     int log_fd = -1;
     static void kill_pid(pid_t pid) {
         if (pid > 0) {
@@ -50,16 +49,9 @@ class Engine {
         }
     }
     void cleanup_after(int index) {
-        if (!internal) {
-            kill_pid(active());
-        }
+        kill_pid(active());
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
-            if (internal && starts(name, "cp-") && entry.path().extension() == ".snap") {
-                if (std::stoi(name.substr(3)) > index) {
-                    fs::remove(entry.path());
-                }
-            }
             if (starts(name, "cp-") && entry.path().extension() == ".pid") {
                 int n = std::stoi(name.substr(3));
                 if (n > index) {
@@ -96,25 +88,12 @@ class Engine {
         for (char **e = environ; *e; ++e) {
             if (full && starts(*e, "openout_any=")) continue;
             if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=") && !starts(*e, "BAKO_LIVE_DOCUMENT=")) {
-                if (internal && !prime &&
-                    (starts(*e, "LD_PRELOAD=") || starts(*e, "LD_BIND_NOW=") ||
-                     starts(*e, "MALLOC_MMAP_MAX_=") || starts(*e, "MALLOC_TRIM_THRESHOLD_=") ||
-                     starts(*e, "MALLOC_TOP_PAD_="))) {
-                    continue;
-                }
                 env.emplace_back(*e);
             }
         }
         env.emplace_back("BAKO_PAGE_STREAM=1");
         if (live) env.emplace_back("BAKO_LIVE_DOCUMENT=1");
         if (full) env.emplace_back("openout_any=p");
-        if (internal && !prime && !full) {
-            env.emplace_back("LD_PRELOAD=" + (runtime / "bako_internal.so").string());
-            env.emplace_back("MALLOC_MMAP_MAX_=0");
-            env.emplace_back("MALLOC_TRIM_THRESHOLD_=-1");
-            env.emplace_back("MALLOC_TOP_PAD_=536870912");
-            env.emplace_back("LD_BIND_NOW=1");
-        }
         if (prime) {
             env.emplace_back("BAKO_SNAPSHOT_DISABLE=1");
         }
@@ -351,7 +330,7 @@ class Engine {
         int index = 0;
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
-            if (starts(name, "cp-") && entry.path().extension() == (internal ? ".snap" : ".pid")) {
+            if (starts(name, "cp-") && entry.path().extension() == ".pid") {
                 int n = std::stoi(name.substr(3));
                 if (n <= input) {
                     index = std::max(index, n);
@@ -371,7 +350,7 @@ class Engine {
         sockaddr_un address = {};
         address.sun_family = AF_UNIX;
         auto path =
-            (directory / (internal ? "internal.sock" : page_name(index, "cp-", ".sock"))).string();
+            (directory / page_name(index, "cp-", ".sock")).string();
         if (path.size() >= sizeof(address.sun_path)) {
             throw std::runtime_error("Checkpoint socket path too long");
         }
@@ -380,10 +359,7 @@ class Engine {
             throw std::runtime_error("Cannot connect to checkpoint");
         }
         send_all(fd.value,
-                 (internal ? std::to_string(index) + " " : "") + std::to_string(page + 1));
-        if (internal) {
-            kill(active(), SIGCONT);
-        }
+                 std::to_string(page + 1));
         auto resumed = Clock::now();
         auto result = wait_done(true);
         result["compileMs"] = elapsed(resumed);
@@ -579,8 +555,6 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         full = options.mode == "full";
         live = !full && !fixture;
         if (!full) options.compiler = "lualatex";
-        internal = getenv("BAKO_CHECKPOINT_MODE") &&
-                   std::string(getenv("BAKO_CHECKPOINT_MODE")) == "internal";
         if (live) {
             cache = std::make_unique<BuildCache>(project, options.main+":live", options.compiler);
             directory = cache->directory;
@@ -705,7 +679,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
                 if (starts(name,"cp-") && entry.path().extension()==".meta") {
                     int block=0, shipped=0; std::istringstream(read(entry.path())) >> block >> shipped;
                     int index = std::stoi(name.substr(3));
-                    if (block <= changed && fs::exists(directory / page_name(index,"cp-", internal?".snap":".pid"))) checkpoint=std::max(checkpoint,index);
+                    if (block <= changed && fs::exists(directory / page_name(index,"cp-", ".pid"))) checkpoint=std::max(checkpoint,index);
                 }
             }
             if (!checkpoint) throw RebuildRequired("No retained checkpoint before the changed paragraph");

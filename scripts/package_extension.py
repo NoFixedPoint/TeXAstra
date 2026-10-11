@@ -15,7 +15,7 @@ for name in set(files):
     if not source.is_file():continue
     target=stage/name;target.parent.mkdir(parents=True,exist_ok=True)
     shutil.copyfile(source,target)
-shutil.copytree(args.runtime.resolve(),stage/'native/runtime',ignore=shutil.ignore_patterns('*.new'))
+shutil.copytree(args.runtime.resolve(),stage/'native/runtime',ignore=shutil.ignore_patterns('*.new','bako_internal.so'))
 artifact=ROOT/'artifacts'/f'bakoma-revived-prototype-{version}.vsix'
 subprocess.run([shutil.which('npx.cmd') or shutil.which('npx'),'--yes','@vscode/vsce','package',
     '--allow-missing-repository','--no-rewrite-relative-links','--skip-license','--out',str(artifact)],cwd=stage,check=True)
