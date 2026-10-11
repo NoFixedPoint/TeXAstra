@@ -36,6 +36,9 @@ static int limit=100;
 static int live=0;
 static off_t capture_offset=0;
 static int memory_pdf=-1;
+static long long request_us=0,fork_start_us=0,fork_us=0,restore_us=0;
+static long long clock_us(void){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);return (long long)t.tv_sec*1000000+t.tv_nsec/1000;}
+static int timings(lua_State *L){lua_pushinteger(L,request_us);lua_pushinteger(L,fork_us);lua_pushinteger(L,restore_us);lua_pushinteger(L,fork_start_us);return 4;}
 static int now(lua_State *L){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);lua_pushinteger(L,(lua_Integer)t.tv_sec*1000000+t.tv_nsec/1000);return 1;}
 static int is_live(lua_State *L){lua_pushinteger(L,live);return 1;}
 
@@ -111,6 +114,7 @@ static int checkpoint(lua_State *L) {
   FILE *pidfile=fopen(pidpath,"w");if(pidfile){fprintf(pidfile,"%d",getpid());fclose(pidfile);}
   pid_t child=-1;int first=1;
   for(;;) {
+    pid_t retired=-1;
     if(!first) {
       int client=accept(server,NULL,NULL);
       if(client<0){if(errno==EINTR)continue;_exit(2);}
@@ -119,14 +123,20 @@ static int checkpoint(lua_State *L) {
       int requested=atoi(buffer);
       if(requested<1||requested>10000){close(client);continue;}
       limit=requested;
+      request_us=clock_us();
       live=1;
-      if(child>0){kill(child,SIGTERM);kill(child,SIGCONT);while(waitpid(child,NULL,0)<0&&errno==EINTR){}}
+      /* A discarded child must never run against the restored output files.
+       * SIGKILL also terminates a SIGSTOPped publisher. Reap after forking so
+       * freeing its page tables overlaps the next typesetting operation. */
+      if(child>0){kill(child,SIGKILL);retired=child;}
       close(client);
     }
     first=0;
+    fork_start_us=clock_us();
     child=fork();
     if(child<0)_exit(3);
     if(child==0) {
+      fork_us=clock_us();
       close(server);
       if(memory_pdf>=0){close(memory_pdf);memory_pdf=-1;}
       /* Reopen file descriptions so sibling checkpoints do not share offsets.
@@ -171,13 +181,16 @@ static int checkpoint(lua_State *L) {
         if(fresh!=s->fd)close(fresh);
       }
       FILE *active=fopen("active.pid.tmp","w");if(active){fprintf(active,"%d",getpid());fclose(active);rename("active.pid.tmp","active.pid");}
+      restore_us=clock_us();
       lua_pushinteger(L,limit);return 1;
     }
+    if(retired>0)while(waitpid(retired,NULL,0)<0&&errno==EINTR){}
   }
 }
 
 int luaopen_bako_snapshot(lua_State *L) {
   lua_createtable(L,0,5);lua_pushcclosure(L,checkpoint,0);lua_setfield(L,-2,"checkpoint");lua_pushcclosure(L,now,0);lua_setfield(L,-2,"now");
   lua_pushcclosure(L,is_live,0);lua_setfield(L,-2,"is_live");lua_pushcclosure(L,page_bytes,0);lua_setfield(L,-2,"page_bytes");lua_pushcclosure(L,publish,0);lua_setfield(L,-2,"publish");
-  lua_pushcclosure(L,export_pdf,0);lua_setfield(L,-2,"export_pdf");return 1;
+  lua_pushcclosure(L,export_pdf,0);lua_setfield(L,-2,"export_pdf");
+  lua_pushcclosure(L,timings,0);lua_setfield(L,-2,"timings");return 1;
 }

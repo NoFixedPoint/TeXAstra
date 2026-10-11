@@ -2,6 +2,8 @@
 *.py text eol=lf
 *.lua text eol=lf
 *.c text eol=lf
+*.cpp text eol=lf
+*.hpp text eol=lf
 *.js text eol=lf
 *.sh text eol=lf
 *.png binary

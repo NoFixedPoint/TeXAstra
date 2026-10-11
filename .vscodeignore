@@ -6,3 +6,5 @@ artifacts/**
 corpus/**
 **/__pycache__/**
 *.vsix
+native/runtime/*.new
+native/runtime/libmupdfcpp*

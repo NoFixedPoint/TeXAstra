@@ -42,7 +42,9 @@ class PageRenderer:
         streams=p.get_contents()
         if len(streams)!=1:raise ResourceMiss('Expected one page drawing stream')
         self.document.update_stream(streams[0],content,compress=False)
-        self.document.reload_page(p)
+        # Only the stream changes; page resources and geometry were validated
+        # above. A fresh display list reads the new stream. reload_page() also
+        # clears MuPDF's global store, discarding the retained font/glyph cache.
 
     def render(self,directory,page,metadata,ids,page_count=None):
         return render_page(directory,page,metadata=metadata,glyph_ids=ids,

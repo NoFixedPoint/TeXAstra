@@ -1,5 +1,5 @@
 """Local-only interactive demonstration. Never writes edits to source files."""
-import argparse,json,mimetypes,threading,time
+import argparse,json,mimetypes,threading,time,subprocess
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse,parse_qs
@@ -9,7 +9,10 @@ from .protocol import wire_message
 from collections import deque
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--port',type=int,default=8765);parser.add_argument('--engine',choices=['stream','snapshot','native'],default='stream');parser.add_argument('--project',default=str(ROOT/'corpus'));args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--port',type=int,default=8765);parser.add_argument('--engine',choices=['cpp','stream','snapshot','native'],default='cpp');parser.add_argument('--project',default=str(ROOT/'corpus'));args=parser.parse_args()
+    if args.engine=='cpp':
+        subprocess.run(['node',str(ROOT/'native/demo.js'),'--port',str(args.port),'--project',str(Path(args.project).resolve())],check=True)
+        return
     messages=deque(maxlen=32);event_id=0;lock=threading.Condition();project=Path(args.project).resolve()
     def emit(message):
         nonlocal event_id

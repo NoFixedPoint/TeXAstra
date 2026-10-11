@@ -1,0 +1,363 @@
+#pragma once
+#include "source.hpp"
+#include <mupdf/fitz.h>
+#include <mupdf/pdf.h>
+#include <libdeflate.h>
+#include <zlib.h>
+#include <cmath>
+#include <cfloat>
+
+namespace bako {
+inline Json rectangle(fz_rect r) {
+    return Json::array({r.x0, r.y0, r.x1, r.y1});
+}
+struct PageBuffer {
+    Json metadata;
+    std::string commands;
+    std::vector<int> ids;
+};
+struct ResourceMiss : std::runtime_error {
+    using std::runtime_error::runtime_error;
+};
+
+// Preserve the established PyMuPDF 1.26.7 texttrace geometry convention.
+// The font-normalized geometry and quad correction follow that project's
+// src/extra.i (AGPL-3.0); see THIRD_PARTY.md. No Python objects are constructed.
+struct TraceDevice {
+    fz_device super;
+    std::vector<fz_rect> *boxes;
+};
+inline void trace_text(fz_context *ctx, fz_device *dev, const fz_text *text, fz_matrix ctm) {
+    auto &boxes = *reinterpret_cast<TraceDevice *>(dev)->boxes;
+    for (auto span = text->head; span; span = span->next) {
+        auto mat = fz_concat(span->trm, ctm);
+        auto direction = fz_transform_vector(fz_make_point(1, 0), mat);
+        double size = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+        direction = fz_normalize_vector(direction);
+        double asc = fz_font_ascender(ctx, span->font), dsc = fz_font_descender(ctx, span->font);
+        if (asc < 1e-3) {
+            asc = .9;
+            dsc = -.1;
+        }
+        double top = asc * size / (asc - dsc), bottom = dsc * size / (asc - dsc);
+        auto rotation = fz_make_matrix(direction.x, direction.y, -direction.y, direction.x, 0, 0);
+        if (direction.x == -1) {
+            rotation.d = 1;
+        }
+        for (int i = 0; i < span->len; ++i) {
+            auto item = span->items[i];
+            double advance =
+                item.gid >= 0 ? fz_advance_glyph(ctx, span->font, item.gid, span->wmode) * size : 0;
+            auto origin = fz_transform_point(fz_make_point(item.x, item.y), ctm);
+            auto around = fz_concat(fz_concat(fz_translate(-origin.x, -origin.y), rotation),
+                                    fz_translate(origin.x, origin.y));
+            bool flip = (mat.d > 0 && (direction.x == 1 || direction.x == -1)) ||
+                        (mat.b != 0 && mat.b == -mat.c);
+            auto box = fz_make_rect(origin.x, flip ? origin.y + bottom : origin.y - top,
+                                    origin.x + advance, flip ? origin.y + top : origin.y - bottom);
+            boxes.push_back(fz_transform_rect(box, around));
+        }
+    }
+}
+inline void trace_fill(fz_context *c, fz_device *d, const fz_text *t, fz_matrix m, fz_colorspace *,
+                       const float *, float, fz_color_params) {
+    trace_text(c, d, t, m);
+}
+inline void trace_stroke(fz_context *c, fz_device *d, const fz_text *t, const fz_stroke_state *,
+                         fz_matrix m, fz_colorspace *, const float *, float, fz_color_params) {
+    trace_text(c, d, t, m);
+}
+inline fz_rect selection_box(fz_context *ctx, fz_stext_line *line, fz_stext_char *ch) {
+    auto quad = ch->quad;
+    float asc = fz_font_ascender(ctx, ch->font), dsc = fz_font_descender(ctx, ch->font),
+          difference = asc - dsc + FLT_EPSILON;
+    if (!line->wmode && difference < 1) {
+        if (asc < 1e-3) {
+            asc = .9f;
+            dsc = -.1f;
+            difference = 1;
+        }
+        asc /= difference;
+        dsc /= difference;
+        difference = asc - dsc;
+        asc = asc * ch->size / difference;
+        dsc = dsc * ch->size / difference;
+        auto unrotate = fz_make_matrix(line->dir.x, -line->dir.y, line->dir.y, line->dir.x, 0, 0);
+        auto rotate = fz_make_matrix(line->dir.x, line->dir.y, -line->dir.y, line->dir.x, 0, 0);
+        if (line->dir.x == -1) {
+            unrotate.d = 1;
+            rotate.d = 1;
+        }
+        quad = fz_transform_quad(
+            fz_transform_quad(quad, fz_translate(-ch->origin.x, -ch->origin.y)), unrotate);
+        bool flip = line->dir.x == 1 && quad.ul.y > 0;
+        quad.ul.y = quad.ur.y = flip ? asc : -asc;
+        quad.ll.y = quad.lr.y = flip ? dsc : -dsc;
+        if (quad.ll.x < 0) {
+            quad.ll.x = quad.ul.x = 0;
+        }
+        if (quad.lr.x - quad.ll.x < FLT_EPSILON) {
+            auto glyph = fz_encode_character(ctx, ch->font, ch->c);
+            if (glyph) {
+                quad.lr.x =
+                    quad.ll.x + fz_advance_glyph(ctx, ch->font, glyph, line->wmode) * ch->size;
+                quad.ur.x = quad.lr.x;
+            }
+        }
+        quad = fz_transform_quad(fz_transform_quad(quad, rotate),
+                                 fz_translate(ch->origin.x, ch->origin.y));
+    }
+    auto box = fz_rect_from_quad(quad);
+    if (line->wmode && box.y1 < box.y0 + ch->size) {
+        box.y0 = box.y1 - ch->size;
+    }
+    return box;
+}
+
+class Renderer {
+    fz_context *ctx = nullptr;
+    pdf_document *doc = nullptr;
+    libdeflate_compressor *compressor = nullptr;
+    std::set<std::string> coverage;
+    static void integer(std::string &s, uint32_t n) {
+        for (int shift : {24, 16, 8, 0}) {
+            s += char(n >> shift);
+        }
+    }
+    static void chunk(std::string &s, const char *type, const std::string &data) {
+        integer(s, data.size());
+        size_t start = s.size();
+        s.append(type, 4);
+        s += data;
+        integer(s, crc32(0, reinterpret_cast<const Bytef *>(s.data() + start), 4 + data.size()));
+    }
+    std::string png(fz_pixmap *pix) {
+        int width = fz_pixmap_width(ctx, pix), height = fz_pixmap_height(ctx, pix),
+            stride = fz_pixmap_stride(ctx, pix);
+        auto pixels = fz_pixmap_samples(ctx, pix);
+        size_t row = size_t(width) * 3;
+        std::string rows((row + 1) * height, '\0');
+        for (int y = 0; y < height; ++y) {
+            std::memcpy(rows.data() + y * (row + 1) + 1, pixels + y * stride, row);
+        }
+        std::string compressed(libdeflate_zlib_compress_bound(compressor, rows.size()), '\0');
+        auto size = libdeflate_zlib_compress(compressor, rows.data(), rows.size(),
+                                             compressed.data(), compressed.size());
+        if (!size) {
+            throw std::runtime_error("PNG compression failed");
+        }
+        compressed.resize(size);
+        std::string out = "\x89PNG\r\n\x1a\n", header;
+        integer(header, width);
+        integer(header, height);
+        header.append("\x08\x02\0\0\0", 5);
+        chunk(out, "IHDR", header);
+        chunk(out, "IDAT", compressed);
+        chunk(out, "IEND", "");
+        return out;
+    }
+
+  public:
+    Renderer() {
+        ctx = fz_new_context(nullptr, nullptr, FZ_STORE_DEFAULT);
+        if (!ctx) {
+            throw std::runtime_error("Cannot create MuPDF context");
+        }
+        compressor = libdeflate_alloc_compressor(1);
+        if (!compressor) {
+            throw std::runtime_error("Cannot create PNG compressor");
+        }
+    }
+    Renderer(const Renderer &) = delete;
+    Renderer &operator=(const Renderer &) = delete;
+    ~Renderer() {
+        if (doc) {
+            pdf_drop_document(ctx, doc);
+        }
+        if (compressor) {
+            libdeflate_free_compressor(compressor);
+        }
+        if (ctx) {
+            fz_drop_context(ctx);
+        }
+    }
+    int pages() const {
+        return doc ? pdf_count_pages(ctx, doc) : 0;
+    }
+    void seed(const fs::path &path, std::set<std::string> resources) {
+        pdf_document *replacement = nullptr;
+        fz_var(replacement);
+        fz_try(ctx) {
+            replacement = pdf_open_document(ctx, path.c_str());
+        }
+        fz_catch(ctx) {
+            throw std::runtime_error(fz_caught_message(ctx));
+        }
+        if (doc) {
+            pdf_drop_document(ctx, doc);
+        }
+        doc = replacement;
+        coverage = std::move(resources);
+    }
+    void update(const PageBuffer &buffer) {
+        for (const auto &value : buffer.metadata.at("coverage")) {
+            if (!coverage.count(value.get<std::string>())) {
+                throw ResourceMiss("New font or glyph requires a resource refresh");
+            }
+        }
+        int page = buffer.metadata.at("page");
+        if (page >= pages()) {
+            throw ResourceMiss("New physical page requires a resource refresh");
+        }
+        static const std::regex external(R"(/[^\s/]+\s+(Do|gs|sh|CS|cs)\b|\b(SCN|scn)\b)");
+        if (std::regex_search(buffer.commands, external)) {
+            throw ResourceMiss("External graphics resource requires a refresh");
+        }
+        bool missing = false, bad_size = false, bad_stream = false;
+        fz_try(ctx) {
+            auto object = pdf_lookup_page_obj(ctx, doc, page);
+            fz_rect bounds;
+            fz_matrix transform;
+            pdf_page_obj_transform(ctx, object, &bounds, &transform);
+            bounds = fz_transform_rect(bounds, transform);
+            bad_size =
+                std::abs((bounds.x1 - bounds.x0) - buffer.metadata.at("width").get<double>()) >
+                    .01 ||
+                std::abs((bounds.y1 - bounds.y0) - buffer.metadata.at("height").get<double>()) >
+                    .01;
+            auto fonts = pdf_dict_get(
+                ctx, pdf_dict_get_inheritable(ctx, object, PDF_NAME(Resources)), PDF_NAME(Font));
+            static const std::regex font_names(R"(/([^\s/]+)\s+[-+.\d]+\s+Tf\b)");
+            for (auto it = std::sregex_iterator(buffer.commands.begin(), buffer.commands.end(),
+                                                font_names);
+                 it != std::sregex_iterator(); ++it) {
+                if (!pdf_dict_gets(ctx, fonts, (*it)[1].str().c_str())) {
+                    missing = true;
+                }
+            }
+            auto content = pdf_dict_get(ctx, object, PDF_NAME(Contents));
+            if (pdf_is_array(ctx, content)) {
+                bad_stream = pdf_array_len(ctx, content) != 1;
+                content = pdf_array_get(ctx, content, 0);
+            }
+            bad_stream = bad_stream || !pdf_is_stream(ctx, content);
+            if (!missing && !bad_size && !bad_stream) {
+                auto bytes = fz_new_buffer_from_copied_data(
+                    ctx, reinterpret_cast<const unsigned char *>(buffer.commands.data()),
+                    buffer.commands.size());
+                pdf_update_stream(ctx, doc, content, bytes, 0);
+                fz_drop_buffer(ctx, bytes);
+            }
+        }
+        fz_catch(ctx) {
+            throw std::runtime_error(fz_caught_message(ctx));
+        }
+        if (missing) {
+            throw ResourceMiss("Page font dictionary changed");
+        }
+        if (bad_size) {
+            throw ResourceMiss("Changed page dimensions");
+        }
+        if (bad_stream) {
+            throw ResourceMiss("Expected one page stream");
+        }
+    }
+    Json render(int number, const Sources &sources, const std::vector<int> &ids) {
+        auto started = Clock::now();
+        number = std::clamp(number, 0, pages() - 1);
+        fz_var(number);
+        fz_page *page = nullptr;
+        fz_display_list *display = nullptr;
+        fz_pixmap *pix = nullptr;
+        fz_stext_page *text = nullptr;
+        fz_device *device = nullptr;
+        fz_var(page);
+        fz_var(display);
+        fz_var(pix);
+        fz_var(text);
+        fz_var(device);
+        std::vector<fz_rect> boxes;
+        Json characters = Json::array(), regions = Json::array(), warnings = sources.warnings();
+        fz_rect bounds = {};
+        Json timings;
+        std::string image;
+        fz_try(ctx) {
+            page = reinterpret_cast<fz_page *>(pdf_load_page(ctx, doc, number));
+            bounds = fz_bound_page(ctx, page);
+            display = fz_new_display_list_from_page_contents(ctx, page);
+            auto listed = Clock::now();
+            timings["displayList"] = elapsed(started);
+            pix = fz_new_pixmap_from_display_list(ctx, display, fz_scale(1.4f, 1.4f),
+                                                  fz_device_rgb(ctx), 0);
+            auto raster = Clock::now();
+            timings["raster"] = elapsed(listed);
+            auto trace = fz_new_derived_device(ctx, TraceDevice);
+            device = &trace->super;
+            trace->boxes = &boxes;
+            device->fill_text = trace_fill;
+            device->stroke_text = trace_stroke;
+            device->ignore_text = trace_text;
+            fz_run_display_list(ctx, display, device, fz_identity, fz_infinite_rect, nullptr);
+            fz_close_device(ctx, device);
+            fz_drop_device(ctx, device);
+            device = nullptr;
+            if (ids.size() == boxes.size()) {
+                for (size_t i = 0; i < ids.size(); ++i) {
+                    if (auto span = sources.find(ids[i])) {
+                        regions.push_back(span->row(rectangle(boxes[i])));
+                    }
+                }
+            } else {
+                warnings.push_back({{"reason", "Tagged glyph/renderer sequence mismatch; "
+                                               "navigation disabled for this page."},
+                                    {"tags", ids.size()},
+                                    {"glyphs", boxes.size()}});
+            }
+            auto origins = Clock::now();
+            timings["origins"] = elapsed(raster);
+            fz_stext_options options = {};
+            options.flags = 199; // same RAWDICT extraction flags as the reference renderer
+            text = fz_new_stext_page_from_display_list(ctx, display, &options);
+            for (auto block = text->first_block; block; block = block->next) {
+                if (block->type == FZ_STEXT_BLOCK_TEXT) {
+                    for (auto line = block->u.t.first_line; line; line = line->next) {
+                        for (auto ch = line->first_char; ch; ch = ch->next) {
+                            auto box = selection_box(ctx, line, ch);
+                            if (fz_is_empty_rect(fz_intersect_rect(box, bounds))) {
+                                continue;
+                            }
+                            characters.push_back(Json::array({rune(ch->c), rectangle(box)}));
+                        }
+                    }
+                }
+            }
+            auto extracted = Clock::now();
+            timings["text"] = elapsed(origins);
+            image = "data:image/png;base64," + base64(png(pix));
+            timings["png"] = elapsed(extracted);
+        }
+        fz_always(ctx) {
+            fz_drop_device(ctx, device);
+            fz_drop_stext_page(ctx, text);
+            fz_drop_pixmap(ctx, pix);
+            fz_drop_display_list(ctx, display);
+            fz_drop_page(ctx, page);
+        }
+        fz_catch(ctx) {
+            throw std::runtime_error(fz_caught_message(ctx));
+        }
+        return {{"page", number},
+                {"pageCount", pages()},
+                {"width", bounds.x1 - bounds.x0},
+                {"height", bounds.y1 - bounds.y0},
+                {"image", std::move(image)},
+                {"regionFields", Json::array({"id", "rect", "file", "start", "end", "line",
+                                              "column", "endLine", "endColumn", "text", "kind"})},
+                {"regionRows", std::move(regions)},
+                {"characterRows", std::move(characters)},
+                {"warnings", std::move(warnings)},
+                {"renderStagesMs", timings},
+                {"renderMs", elapsed(started)}};
+    }
+};
+} // namespace bako

@@ -9,6 +9,10 @@ import subprocess
 import time
 import struct
 import zlib
+try:
+    from zlib_ng import zlib_ng as preview_zlib
+except ImportError:
+    preview_zlib=zlib
 import fitz
 from .instrument import Instrumenter, RESET
 
@@ -23,7 +27,7 @@ def preview_png(pixmap):
     def chunk(kind,data):
         return struct.pack('>I',len(data))+kind+data+struct.pack('>I',zlib.crc32(kind+data))
     return (b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',pixmap.width,pixmap.height,8,2,0,0,0))
-            +chunk(b'IDAT',zlib.compress(rows,1))+chunk(b'IEND',b''))
+            +chunk(b'IDAT',preview_zlib.compress(rows,1))+chunk(b'IEND',b''))
 
 def prepare(project, destination, overlays=None, instrument=True, page_limit=None):
     project=Path(project).resolve(); destination=Path(destination).resolve()
@@ -76,7 +80,11 @@ def render_page(directory,page=0,scale=1.4,metadata=None,pdf_bytes=None,glyph_id
     from contextlib import nullcontext
     with (nullcontext(document) if document is not None else fitz.open(stream=pdf_bytes or (directory/'main.pdf').read_bytes(),filetype='pdf')) as doc:
         page=max(0,min(page,len(doc)-1)); p=doc[page]
-        image=p.get_pixmap(matrix=fitz.Matrix(scale,scale),alpha=False,annots=False)
+        opened=time.perf_counter()
+        display=p.get_displaylist(annots=False)
+        listed=time.perf_counter()
+        image=display.get_pixmap(matrix=fitz.Matrix(scale,scale),alpha=False)
+        rasterized=time.perf_counter()
         regions=[]
         transform=p.transformation_matrix
         stream=b'\n'.join(doc.xref_stream(xref) for xref in p.get_contents())
@@ -108,14 +116,21 @@ def render_page(directory,page=0,scale=1.4,metadata=None,pdf_bytes=None,glyph_id
                 rectangle=fitz.Rect([float(n) for n in re.findall(r'[-+]?\d*\.?\d+',raw)])*transform
                 regions.append(dict(id=int(identifier),rect=list(rectangle),**span))
         # This layer supplies selection text, not source provenance.
+        mapped=time.perf_counter()
         chars=[]
-        for block in p.get_text('rawdict')['blocks']:
+        textpage=fitz.TextPage(display.get_textpage(flags=fitz.TEXTFLAGS_RAWDICT))
+        for block in textpage.extractRAWDICT()['blocks']:
             for line in block.get('lines',[]):
                 for span in line['spans']:
                     chars.extend(dict(text=c['c'],rect=list(c['bbox'])) for c in span['chars'])
+        extracted=time.perf_counter()
+        encoded='data:image/png;base64,'+base64.b64encode(preview_png(image)).decode()
+        encoded_at=time.perf_counter()
         result=dict(page=page,pageCount=page_count or len(doc),width=p.rect.width,height=p.rect.height,
-                    image='data:image/png;base64,'+base64.b64encode(preview_png(image)).decode(),
+                    image=encoded,
                     regions=regions,characters=chars,revision=metadata['revision'],warnings=metadata['warnings']+mapping_warnings,
+                    renderStagesMs=dict(open=(opened-start)*1000,displayList=(listed-opened)*1000,raster=(rasterized-listed)*1000,
+                        origins=(mapped-rasterized)*1000,text=(extracted-mapped)*1000,png=(encoded_at-extracted)*1000),
                     renderMs=(time.perf_counter()-start)*1000)
     return result
 

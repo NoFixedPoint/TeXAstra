@@ -22,7 +22,10 @@ function activate(context){
     const nonce=require('crypto').randomBytes(16).toString('hex');
     html=html.replace('<script src=',`<script nonce="${nonce}" src=`);
     html=html.replace('<meta charset="utf-8">',`<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src ${web.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">`);
-    backend=spawn(config.get('python'),['-u','-m','prototype.bridge','--project',project,'--engine',config.get('engine')],{cwd:context.extensionPath,windowsHide:true});
+    try{
+      if(config.get('engine')==='cpp')backend=require('../native/launch').launch(context.extensionPath,project);
+      else backend=spawn(config.get('python'),['-u','-m','prototype.bridge','--project',project,'--engine',config.get('engine')],{cwd:context.extensionPath,windowsHide:true});
+    }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));panel.dispose();panel=null;return;}
     backend.stderr.on('data',chunk=>output.append(chunk.toString()));
     backend.on('error',error=>{output.appendLine(String(error));web.postMessage({type:'status',state:'error',error:String(error)});});
     readline.createInterface({input:backend.stdout}).on('line',line=>{

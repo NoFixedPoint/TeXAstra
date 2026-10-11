@@ -7,7 +7,7 @@ commands unmapped. A modified engine is required for arbitrary TeX semantics.
 import bisect
 import re
 
-RESET = r'\attribute\bakoattr=0 '
+RESET = r'\bakoattr=0 '
 SYMBOLS = set('alpha beta gamma delta epsilon theta lambda mu pi sigma phi omega Gamma Delta Theta Lambda Pi Sigma Phi Omega sum prod int infty partial nabla times cdot pm mp leq geq neq in notin subset supset approx to rightarrow leftarrow ldots cdots sin cos tan log ln exp lim'.split())
 TEXT_ARGS=set('section subsection subsubsection paragraph textbf textit emph textrm textsf texttt text operatorname'.split())
 MATH_ARGS=set('mathrm mathbf mathit mathsf mathtt mathcal mathbb overline underline hat bar vec tilde'.split())
@@ -41,7 +41,7 @@ class Instrumenter:
         endcolumn=len(self.text[self.lines[endline]:end].encode('utf-16-le'))//2
         self.spans[identifier]=dict(file=self.file,start=start,end=end,line=line,column=column,
                                    endLine=endline,endColumn=endcolumn,text=self.text[start:end],kind=kind)
-        return rf'\attribute\bakoattr={identifier} '
+        return rf'\bakoattr={identifier} '
 
     def _raw_group(self,opener='{',closer='}'):
         start=self.i

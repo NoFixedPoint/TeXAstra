@@ -1,0 +1,497 @@
+{
+  "samples": [
+    {
+      "engineMs": 82.94415001000743,
+      "compilerStagesMs": {
+        "replaceChild": 0.013,
+        "fork": 18.677,
+        "restore": 1.029,
+        "typeset": 47.868,
+        "shipoutAndPublish": 11.221
+      },
+      "prepareMs": 1.3967010017950088,
+      "compileMs": 81.54294900305104,
+      "renderStagesMs": {
+        "open": 0.0720999960321933,
+        "displayList": 0.4776999994646758,
+        "raster": 1.5628000110154971,
+        "origins": 2.6560999976936728,
+        "text": 2.059999998891726,
+        "png": 7.211799995275214
+      },
+      "renderMs": 14.152899995679036,
+      "mapMs": 6.2716999964322895,
+      "roundtripMs": 84.64679999451619,
+      "pipelineMs": 106.91000000224449,
+      "gcMs": 0.8068999886745587,
+      "page": 100
+    },
+    {
+      "engineMs": 80.0348490010947,
+      "compilerStagesMs": {
+        "replaceChild": 0.018,
+        "fork": 17.06,
+        "restore": 1.021,
+        "typeset": 46.591,
+        "shipoutAndPublish": 11.587
+      },
+      "prepareMs": 1.1482009867904708,
+      "compileMs": 78.88004800770432,
+      "renderStagesMs": {
+        "open": 0.060399994254112244,
+        "displayList": 0.42379999649710953,
+        "raster": 1.356399996438995,
+        "origins": 3.049000006285496,
+        "text": 2.514699997846037,
+        "png": 6.910099997185171
+      },
+      "renderMs": 14.385199989192188,
+      "mapMs": 5.898599993088283,
+      "roundtripMs": 81.89240000501741,
+      "pipelineMs": 103.57269999803975,
+      "gcMs": 1.079499998013489,
+      "page": 100
+    },
+    {
+      "engineMs": 81.20224499725737,
+      "compilerStagesMs": {
+        "replaceChild": 0.021,
+        "fork": 14.61,
+        "restore": 0.803,
+        "typeset": 49.674,
+        "shipoutAndPublish": 13.321
+      },
+      "prepareMs": 1.751200994476676,
+      "compileMs": 79.4444440107327,
+      "renderStagesMs": {
+        "open": 0.09610000415705144,
+        "displayList": 0.5477999948197976,
+        "raster": 1.3534000026993454,
+        "origins": 2.9177999967942014,
+        "text": 25.096099998336285,
+        "png": 7.955700013553724
+      },
+      "renderMs": 38.08240000216756,
+      "mapMs": 6.08200000715442,
+      "roundtripMs": 82.78199999767821,
+      "pipelineMs": 128.93639999674633,
+      "gcMs": 23.28630001284182,
+      "page": 100
+    },
+    {
+      "engineMs": 80.38074499927461,
+      "compilerStagesMs": {
+        "replaceChild": 0.014,
+        "fork": 17.44,
+        "restore": 1.65,
+        "typeset": 47.975,
+        "shipoutAndPublish": 9.907
+      },
+      "prepareMs": 1.417701001628302,
+      "compileMs": 78.95794400246814,
+      "renderStagesMs": {
+        "open": 0.10150000161956996,
+        "displayList": 0.6020000000717118,
+        "raster": 1.7833000019891188,
+        "origins": 3.7444000045070425,
+        "text": 1.9315999961690977,
+        "png": 7.496100006392226
+      },
+      "renderMs": 15.738800007966347,
+      "mapMs": 5.851499998243526,
+      "roundtripMs": 81.74190000863746,
+      "pipelineMs": 104.87740000826307,
+      "gcMs": 1.1340000201016665,
+      "page": 100
+    },
+    {
+      "engineMs": 95.65095299331006,
+      "compilerStagesMs": {
+        "replaceChild": 0.034,
+        "fork": 15.461,
+        "restore": 1.018,
+        "typeset": 51.904,
+        "shipoutAndPublish": 22.618
+      },
+      "prepareMs": 1.581100994371809,
+      "compileMs": 94.0516519913217,
+      "renderStagesMs": {
+        "open": 0.12460000289138407,
+        "displayList": 0.7389999955194071,
+        "raster": 2.727800005231984,
+        "origins": 5.506599991349503,
+        "text": 3.213600008166395,
+        "png": 13.852599993697368
+      },
+      "renderMs": 26.41089999815449,
+      "mapMs": 5.902300006709993,
+      "roundtripMs": 98.15819999494124,
+      "pipelineMs": 133.43889999669045,
+      "gcMs": 1.6671999474056065,
+      "page": 100
+    },
+    {
+      "engineMs": 118.40636598935816,
+      "compilerStagesMs": {
+        "replaceChild": 0.035,
+        "fork": 32.804,
+        "restore": 2.722,
+        "typeset": 63.463,
+        "shipoutAndPublish": 14.256
+      },
+      "prepareMs": 2.215400993009098,
+      "compileMs": 116.18006500066258,
+      "renderStagesMs": {
+        "open": 0.19869999960064888,
+        "displayList": 0.7129000005079433,
+        "raster": 1.755699995555915,
+        "origins": 3.984499999205582,
+        "text": 2.3345000081462786,
+        "png": 8.833399988361634
+      },
+      "renderMs": 17.98170000256505,
+      "mapMs": 9.11939999787137,
+      "roundtripMs": 121.43569999898318,
+      "pipelineMs": 151.35909999662545,
+      "gcMs": 1.760699989972636,
+      "page": 100
+    },
+    {
+      "engineMs": 85.90714700403623,
+      "compilerStagesMs": {
+        "replaceChild": 0.004,
+        "fork": 13.891,
+        "restore": 1.877,
+        "typeset": 55.118,
+        "shipoutAndPublish": 8.13
+      },
+      "prepareMs": 4.519602007349022,
+      "compileMs": 81.37954499397893,
+      "renderStagesMs": {
+        "open": 0.12579999747686088,
+        "displayList": 0.5601000011665747,
+        "raster": 1.3018000026931986,
+        "origins": 3.919399998267181,
+        "text": 2.0440000080270693,
+        "png": 6.8866999936290085
+      },
+      "renderMs": 14.99090000288561,
+      "mapMs": 5.989600002067164,
+      "roundtripMs": 87.91040000505745,
+      "pipelineMs": 110.73850000684615,
+      "gcMs": 1.6168999718502164,
+      "page": 50
+    },
+    {
+      "engineMs": 58.04563200217672,
+      "compilerStagesMs": {
+        "replaceChild": 0.011,
+        "fork": 9.149,
+        "restore": 0.731,
+        "typeset": 38.788,
+        "shipoutAndPublish": 7.141
+      },
+      "prepareMs": 1.165401001344435,
+      "compileMs": 56.870930988225155,
+      "renderStagesMs": {
+        "open": 0.08110000635497272,
+        "displayList": 0.4731999943032861,
+        "raster": 1.430500007700175,
+        "origins": 3.2063999969977885,
+        "text": 2.3037000064505264,
+        "png": 7.491799988201819
+      },
+      "renderMs": 15.112799999769777,
+      "mapMs": 5.406800002674572,
+      "roundtripMs": 59.63109999720473,
+      "pipelineMs": 82.61779999884311,
+      "gcMs": 1.1337000614730641,
+      "page": 50
+    },
+    {
+      "engineMs": 64.42753599549178,
+      "compilerStagesMs": {
+        "replaceChild": 0.058,
+        "fork": 10.676,
+        "restore": 0.712,
+        "typeset": 39.353,
+        "shipoutAndPublish": 9.313
+      },
+      "prepareMs": 1.3982009986648336,
+      "compileMs": 63.020734989549965,
+      "renderStagesMs": {
+        "open": 0.0678000069456175,
+        "displayList": 0.49279999802820385,
+        "raster": 1.3686000020243227,
+        "origins": 3.5459999926388264,
+        "text": 2.287000010255724,
+        "png": 7.051599997794256
+      },
+      "renderMs": 14.894600011757575,
+      "mapMs": 5.60490001225844,
+      "roundtripMs": 66.38569998904131,
+      "pipelineMs": 88.25100000831299,
+      "gcMs": 1.1034000053768978,
+      "page": 50
+    },
+    {
+      "engineMs": 64.79483599832747,
+      "compilerStagesMs": {
+        "replaceChild": 0.053,
+        "fork": 11.488,
+        "restore": 0.674,
+        "typeset": 40.504,
+        "shipoutAndPublish": 8.887
+      },
+      "prepareMs": 1.2574009888339788,
+      "compileMs": 63.53283500357065,
+      "renderStagesMs": {
+        "open": 0.11920000542886555,
+        "displayList": 0.5698999884771183,
+        "raster": 1.233900009538047,
+        "origins": 26.33100000093691,
+        "text": 2.1311000018613413,
+        "png": 6.896399994730018
+      },
+      "renderMs": 37.357799999881536,
+      "mapMs": 5.211199997575022,
+      "roundtripMs": 66.61100000201259,
+      "pipelineMs": 111.02389999723528,
+      "gcMs": 24.403100018389523,
+      "page": 50
+    },
+    {
+      "engineMs": 62.41863399918657,
+      "compilerStagesMs": {
+        "replaceChild": 0.013,
+        "fork": 9.413,
+        "restore": 0.502,
+        "typeset": 41.235,
+        "shipoutAndPublish": 7.672
+      },
+      "prepareMs": 1.1937999952351674,
+      "compileMs": 61.22003399650566,
+      "renderStagesMs": {
+        "open": 0.056899996707215905,
+        "displayList": 0.4523000097833574,
+        "raster": 1.356399996438995,
+        "origins": 2.9778000025544316,
+        "text": 2.509400001144968,
+        "png": 7.410399994114414
+      },
+      "renderMs": 14.84800000616815,
+      "mapMs": 5.350999999791384,
+      "roundtripMs": 64.7054000000935,
+      "pipelineMs": 86.21690000290982,
+      "gcMs": 1.2336000218056142,
+      "page": 50
+    },
+    {
+      "engineMs": 62.010833993554115,
+      "compilerStagesMs": {
+        "replaceChild": 0.012,
+        "fork": 8.968,
+        "restore": 0.678,
+        "typeset": 39.473,
+        "shipoutAndPublish": 8.831
+      },
+      "prepareMs": 1.2272009917069227,
+      "compileMs": 60.77843300590757,
+      "renderStagesMs": {
+        "open": 0.10649999603629112,
+        "displayList": 0.5021999968448654,
+        "raster": 1.7550000047776848,
+        "origins": 2.805700001772493,
+        "text": 2.4228999973274767,
+        "png": 7.5050000014016405
+      },
+      "renderMs": 15.18279999436345,
+      "mapMs": 5.864299993845634,
+      "roundtripMs": 63.773500005481765,
+      "pipelineMs": 86.50560000387486,
+      "gcMs": 1.3197000225773081,
+      "page": 50
+    },
+    {
+      "engineMs": 75.6634420104092,
+      "compilerStagesMs": {
+        "replaceChild": 0.038,
+        "fork": 10.518,
+        "restore": 0.516,
+        "typeset": 43.0,
+        "shipoutAndPublish": 7.002
+      },
+      "prepareMs": 9.381005002069287,
+      "compileMs": 66.27493699488696,
+      "renderStagesMs": {
+        "open": 0.0585000088904053,
+        "displayList": 0.45619999582413584,
+        "raster": 1.5745999990031123,
+        "origins": 3.750400006538257,
+        "text": 2.5408999936189502,
+        "png": 9.603800004697405
+      },
+      "renderMs": 18.069200013997033,
+      "mapMs": 5.767199996626005,
+      "roundtripMs": 77.80050000292249,
+      "pipelineMs": 102.95839999162126,
+      "gcMs": 1.6499999910593033,
+      "page": 1
+    },
+    {
+      "engineMs": 59.20703300216701,
+      "compilerStagesMs": {
+        "replaceChild": 0.046,
+        "fork": 7.698,
+        "restore": 0.457,
+        "typeset": 41.556,
+        "shipoutAndPublish": 6.341
+      },
+      "prepareMs": 1.0817009897436947,
+      "compileMs": 58.1191320088692,
+      "renderStagesMs": {
+        "open": 0.055899989092722535,
+        "displayList": 0.4344000044511631,
+        "raster": 1.4761000056751072,
+        "origins": 2.9670999938389286,
+        "text": 2.2533000010298565,
+        "png": 8.259299997007474
+      },
+      "renderMs": 15.595499993651174,
+      "mapMs": 6.359199993312359,
+      "roundtripMs": 61.30090000806376,
+      "pipelineMs": 84.79899998928886,
+      "gcMs": 1.064599971869029,
+      "page": 1
+    },
+    {
+      "engineMs": 83.06854600959923,
+      "compilerStagesMs": {
+        "replaceChild": 0.027,
+        "fork": 14.705,
+        "restore": 0.862,
+        "typeset": 54.555,
+        "shipoutAndPublish": 9.715
+      },
+      "prepareMs": 1.392200996633619,
+      "compileMs": 81.66004500526469,
+      "renderStagesMs": {
+        "open": 0.16480000340379775,
+        "displayList": 1.0565999982645735,
+        "raster": 2.4985000054584816,
+        "origins": 4.940099999657832,
+        "text": 4.65299999632407,
+        "png": 12.744899999233894
+      },
+      "renderMs": 26.23860001040157,
+      "mapMs": 6.749499996658415,
+      "roundtripMs": 86.46890000090934,
+      "pipelineMs": 122.62819999887142,
+      "gcMs": 1.9370999507373199,
+      "page": 1
+    },
+    {
+      "engineMs": 76.29584199457895,
+      "compilerStagesMs": {
+        "replaceChild": 0.036,
+        "fork": 13.401,
+        "restore": 0.633,
+        "typeset": 48.829,
+        "shipoutAndPublish": 7.662
+      },
+      "prepareMs": 2.4651010025991127,
+      "compileMs": 73.82554099604022,
+      "renderStagesMs": {
+        "open": 0.11239999730605632,
+        "displayList": 0.593100005062297,
+        "raster": 1.7619999998714775,
+        "origins": 4.528599994955584,
+        "text": 40.716399991652,
+        "png": 9.086200007004663
+      },
+      "renderMs": 56.95479999121744,
+      "mapMs": 6.884100002935156,
+      "roundtripMs": 78.86219999636523,
+      "pipelineMs": 145.2449000062188,
+      "gcMs": 39.10979998181574,
+      "page": 1
+    },
+    {
+      "engineMs": 57.664231993840076,
+      "compilerStagesMs": {
+        "replaceChild": 0.014,
+        "fork": 7.27,
+        "restore": 0.437,
+        "typeset": 40.112,
+        "shipoutAndPublish": 6.158
+      },
+      "prepareMs": 0.8242009935202077,
+      "compileMs": 56.835531009710394,
+      "renderStagesMs": {
+        "open": 0.07080000068526715,
+        "displayList": 0.6113999988883734,
+        "raster": 1.3787000061711296,
+        "origins": 2.9810999985784292,
+        "text": 2.573099991423078,
+        "png": 7.608100000652485
+      },
+      "renderMs": 15.365500003099442,
+      "mapMs": 6.057000005966984,
+      "roundtripMs": 59.288699994795024,
+      "pipelineMs": 82.15060000657104,
+      "gcMs": 1.0959000355796888,
+      "page": 1
+    },
+    {
+      "engineMs": 57.99233198922593,
+      "compilerStagesMs": {
+        "replaceChild": 0.017,
+        "fork": 7.493,
+        "restore": 0.322,
+        "typeset": 40.886,
+        "shipoutAndPublish": 6.768
+      },
+      "prepareMs": 0.8737009920878336,
+      "compileMs": 57.11133099975996,
+      "renderStagesMs": {
+        "open": 0.07789999654050916,
+        "displayList": 0.559899999643676,
+        "raster": 1.4879000082146376,
+        "origins": 3.2644999882904813,
+        "text": 3.285900005721487,
+        "png": 7.737499996437691
+      },
+      "renderMs": 16.48669999849517,
+      "mapMs": 6.0908000014023855,
+      "roundtripMs": 59.50709999888204,
+      "pipelineMs": 83.59270000073593,
+      "gcMs": 1.4410000148927793,
+      "page": 1
+    }
+  ],
+  "means": {
+    "engineMs": 74.78418633238309,
+    "compilerStagesMs": {
+      "replaceChild": 0.025777777777777778,
+      "fork": 13.373444444444445,
+      "restore": 0.9246666666666666,
+      "typeset": 46.160222222222224,
+      "shipoutAndPublish": 9.807222222222222
+    },
+    "prepareMs": 2.0161012184366376,
+    "compileMs": 72.76034066712276,
+    "renderStagesMs": {
+      "open": 0.09727777796797454,
+      "displayList": 0.570294443201015,
+      "raster": 1.6201888922498457,
+      "origins": 4.837583331714591,
+      "text": 5.937288889577354,
+      "png": 8.36341110940945
+    },
+    "renderMs": 21.54717222341181,
+    "mapMs": 6.136727778034078,
+    "roundtripMs": 76.8279111111446,
+    "pipelineMs": 106.43455555610772,
+    "gcMs": 5.935744444690903
+  }
+}

@@ -74,3 +74,21 @@ median/p95 with finalized PDF versus 193.5/253 ms with page commands. Exact pixe
 and source regions are checked against full builds. The 150 ms target, general
 rollback, and native Windows/macOS checkpointing remain unproved. See the
 [implementation report](docs/page-stream-20261010.md).
+
+Prototype 0.0.4 addresses compiler/page output and rendering further. It retains
+MuPDF font/glyph caches across content changes, shares display-list work, uses a
+faster lossless PNG compressor, deduplicates per-page glyph coverage, and overlaps
+discarded-child teardown with compilation. The latest comparison measured
+187.5/272 ms median/p95 before versus 155.5/251 ms after. All 39 stream assertions,
+7 renderer checks, and 15 browser checks passed. Engine-managed state deltas,
+fine source-position rollback, native compiler/viewer integration, and the 150 ms
+p95 gate remain unfinished. See [the compiler/render report](docs/compiler-render-20261010.md).
+
+The user then authorized switching to C++. Prototype 0.0.5 moves source
+instrumentation, compiler coordination, direct page-buffer reception, retained
+MuPDF rendering, and glyph geometry into one persistent C++ process. The default
+interactive path no longer uses Python. The same-transport browser comparison
+measured 189/279 ms median/p95 for Python and 154.5/206 ms for C++. The underlying
+LuaHBTeX compiler and POSIX checkpoint model remain; engine-managed state deltas,
+arbitrary rollback, and native Windows checkpointing are not implemented by this
+migration. See [the C++ report](docs/cpp-backend-20261011.md).

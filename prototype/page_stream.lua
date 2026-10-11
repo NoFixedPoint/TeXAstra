@@ -10,7 +10,9 @@ function M.setup(snapshot)
   local page=0
   local pending=nil
   local coverage={}
+  local seen_glyphs={}
   local font_keys={}
+  local shipout_us=0
   local function key(id)
     if not font_keys[id] then
       local f=font.getfont(id)
@@ -20,13 +22,17 @@ function M.setup(snapshot)
   end
   -- This set is captured by the real glyph-output callbacks in provenance.lua.
   function bako_stream_glyph(id,char)
+    local seen=seen_glyphs[id]
+    if not seen then seen={};seen_glyphs[id]=seen end
+    if seen[char] then return end
+    seen[char]=true
     local f=font.getfont(id)
     local c=f.characters[char] or {}
     local value=table.concat({key(id),char,c.index or -1,c.tounicode or ''},'|')
     coverage[value]=true
   end
   luatexbase.add_to_callback('pre_shipout_filter',function(box)
-    page=page+1;bako_stream_page_count=page;coverage={};return true
+    page=page+1;bako_stream_page_count=page;coverage={};seen_glyphs={};shipout_us=snapshot.now();return true
   end,'bako.stream_begin')
   luatexbase.add_to_callback('finish_pdfpage',function(shippingout)
     -- XForms use the same callback. They are resource objects, not pages.
@@ -55,7 +61,10 @@ function M.setup(snapshot)
       blocks[#blocks+1]=item[2]
     end
     pending=nil
-    snapshot.publish('{"pages":['..table.concat(records,',')..']}',table.concat(blocks))
+    local request_us,fork_us,restore_us,fork_start_us=snapshot.timings()
+    local stages=string.format('"compilerStagesMs":{"replaceChild":%.3f,"fork":%.3f,"restore":%.3f,"typeset":%.3f,"shipoutAndPublish":%.3f},',
+      (fork_start_us-request_us)/1000,(fork_us-fork_start_us)/1000,(restore_us-fork_us)/1000,(shipout_us-restore_us)/1000,(snapshot.now()-shipout_us)/1000)
+    snapshot.publish('{'..stages..'"pages":['..table.concat(records,',')..']}',table.concat(blocks))
   end
 end
 return M

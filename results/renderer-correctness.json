@@ -1,0 +1,32 @@
+{
+  "checks": [
+    {
+      "shift": 0,
+      "ok": true
+    },
+    {
+      "shift": 7,
+      "ok": true
+    },
+    {
+      "shift": -3,
+      "ok": true
+    },
+    {
+      "shift": 0,
+      "ok": true
+    },
+    {
+      "shift": 11,
+      "ok": true
+    },
+    {
+      "codec": "zlib_ng.zlib_ng",
+      "ok": true
+    },
+    {
+      "codec": "zlib",
+      "ok": true
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 -- Instrument final glyphs after TeX has performed shaping and math layout.
 -- Source identifiers come from the explicitly limited source instrumenter.
 local aid=luatexbase.new_attribute('bako_source')
-tex.sprint('\\chardef\\bakoattr='..aid..' ')
+tex.sprint('\\attributedef\\bakoattr='..aid..' ')
 local glyph, hlist, vlist = node.id('glyph'), node.id('hlist'), node.id('vlist')
 local page_number=0
 local geometry=nil

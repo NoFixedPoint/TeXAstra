@@ -23,10 +23,13 @@ with SnapshotEngine(output='stream') as engine:
     with fitz.open(stream=(directory/'main.pdf').read_bytes(),filetype='pdf') as ref:
         equal=[engine.renderer.document[i].get_pixmap(annots=False).samples==ref[i].get_pixmap(annots=False).samples for i in range(len(ref))]
         check('all 100 initial pages match uninstrumented full build',len(equal)==100 and all(equal),pages=sum(equal))
+        selections=[fitz.TextPage(p.get_displaylist(annots=False).get_textpage(flags=fitz.TEXTFLAGS_RAWDICT)).extractRAWDICT()==p.get_text('rawdict') for p in engine.renderer.document]
+        check('shared display list preserves selection text and geometry on all pages',len(selections)==100 and all(selections))
     for name,file,before,after,page,mode in [
         ('text-last','pages/page-100.tex','word: alpha.','word: omega.',99,'page-stream'),
         ('math-middle','pages/page-050.tex','x+x+y=','x+x+z=',49,'page-stream'),
         ('rotated-TikZ','pages/page-050.tex','[rotate=15]','[rotate=45]',49,'page-stream'),
+        ('colored-TikZ','pages/page-050.tex',r'\draw (0,0)',r'\draw[red] (0,0)',49,'page-stream'),
         ('new-Chinese-glyph','pages/page-050.tex','中文排版','汉文排版',49,'resource-seed'),
         ('same-new-glyph-cached','pages/page-050.tex','word: alpha.','word: omega.',49,'page-stream'),
         ('reflow-first','pages/page-001.tex','word: alpha.','word: '+'expanded phrase '*200+'.',0,'page-stream'),

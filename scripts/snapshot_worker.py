@@ -68,7 +68,7 @@ def receive_pages():
         if Path(f'/proc/{pid}/stat').read_text().rsplit(') ',1)[1].startswith('T'):break
         time.sleep(.001)
     else:raise RuntimeError('Page sender did not suspend')
-    return dict(streamed=True,complete=False)
+    return dict(streamed=True,complete=False,compilerStagesMs=metadata.get('compilerStagesMs',{}))
 
 def wait_done(timeout=90,allow_stream=False):
     start=time.monotonic()
