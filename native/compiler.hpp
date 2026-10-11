@@ -292,8 +292,10 @@ class Engine {
         }
     }
     Json finish(int page, Json result) {
+        auto started = Clock::now();
         auto seed_result = wait_done(false);
         seed(seed_result);
+        result["resourceRefreshMs"] = elapsed(started);
         auto frame = renderer.render(page, sources, page_ids[page]);
         frame.update(result);
         frame["outputMode"] = "resource-seed";

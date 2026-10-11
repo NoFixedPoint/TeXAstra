@@ -1,0 +1,44 @@
+{
+  "checks": [
+    {
+      "name": "neighbor loading waits during edit activity",
+      "ok": true
+    },
+    {
+      "name": "paint includes backend and browser stages",
+      "ok": true
+    },
+    {
+      "name": "delivery residual accounts for the measured total",
+      "ok": true
+    },
+    {
+      "name": "explicit navigation bypasses the quiet interval",
+      "ok": true
+    },
+    {
+      "name": "neighbor loading resumes after the quiet interval",
+      "ok": true
+    },
+    {
+      "name": "revision superseded during paint is excluded from latency",
+      "ok": true
+    },
+    {
+      "name": "idle convergence is excluded from edit latency",
+      "ok": true
+    },
+    {
+      "name": "no browser errors",
+      "ok": true
+    },
+    {
+      "name": "demo delivers newer events without waiting for older paint",
+      "ok": true
+    },
+    {
+      "name": "demo event dispatch has no browser errors",
+      "ok": true
+    }
+  ]
+}

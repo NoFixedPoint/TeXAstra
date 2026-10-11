@@ -12,7 +12,7 @@ function activate(context){
       latestMutation=clientId;currentFrame=null;
       panel?.webview.postMessage({type:'status',state:'building',clientId});
     }
-    backend.stdin.write(JSON.stringify({...message,clientId,sentAt:Date.now()})+'\n');
+    backend.stdin.write(JSON.stringify({...message,clientId,sentAt:message.sentAt??Date.now()})+'\n');
   }};
   context.subscriptions.push(output,vscode.commands.registerCommand('bakoma.openPreview',async()=>{
     if(!vscode.workspace.isTrusted)return;
@@ -79,11 +79,12 @@ function activate(context){
     });
     panel.onDidDispose(()=>{stop();panel=null;});web.html=html;
   }),vscode.workspace.onDidChangeTextDocument(event=>{
+    const sentAt=Date.now();
     if(!panel||!event.contentChanges.length)return;
     const relative=path.relative(project,event.document.uri.fsPath).replaceAll('\\','/');
     if(event.document.uri.scheme!=='file'||!contains(project,event.document.uri.fsPath)||! /\.(tex|sty|cls|bib|bst|csv|dat|txt|lua)$/i.test(relative))return;
     currentFrame=null;
-    send({type:'edit',file:relative,source:event.document.getText(),page:visiblePage});
+    send({type:'edit',file:relative,source:event.document.getText(),page:visiblePage,sentAt});
   }),vscode.window.onDidChangeTextEditorSelection(event=>{
     if(!panel)return;
     const relative=path.relative(project,event.textEditor.document.uri.fsPath).replaceAll('\\','/');

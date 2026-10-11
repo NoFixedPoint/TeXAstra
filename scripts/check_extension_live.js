@@ -31,8 +31,12 @@ Module._load=function(request,parent,...rest){
   let sent=input.trim().split('\n').map(JSON.parse);
   assert.equal(sent[0].overlays['paper.tex'],document.getText());
   assert(web.html.includes('id="pages"'));
-  change({document,contentChanges:[{text:'x'}]});
+  const now=Date.now,getText=document.getText;let clock=1000;
+  Date.now=()=>clock;document.getText=()=>{clock+=50;return getText();};
+  try{change({document,contentChanges:[{text:'x'}]});}
+  finally{Date.now=now;document.getText=getText;}
   sent=input.trim().split('\n').map(JSON.parse);assert.equal(sent[1].type,'edit');assert.equal(sent[1].source,document.getText());
+  assert.equal(sent[1].sentAt,1000,'Latency begins before reading the editor buffer');
   assert.equal(webMessages.at(-1).state,'building');
   child.stdout.write(JSON.stringify({type:'frame',clientId:1,generation:1,revisionId:1,isStale:false})+'\n');
   await new Promise(r=>setImmediate(r));assert.equal(webMessages.at(-1).isStale,true);
@@ -40,5 +44,5 @@ Module._load=function(request,parent,...rest){
   await new Promise(r=>setImmediate(r));assert(outputLines.includes('Incomplete \\iffalse'));
   assert.equal(webMessages.at(-1).state,'error');
   disposed();Module._load=original;
-  const result={checks:6,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
+  const result={checks:7,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(e=>{Module._load=original;console.error(e);process.exitCode=1;});

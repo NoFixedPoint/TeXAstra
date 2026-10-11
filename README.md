@@ -2,7 +2,9 @@
 
 This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The 150 ms latency target has not been met.** The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Version **0.0.12** places checkpoints at safe points in the TeX engine, including inside long included chapters. Input read positions determine which compiler state can be reused after an edit. The handwritten root paragraph splitter and its 2,048-block limit have been removed. See [the implementation and validation](docs/engine-checkpoints-20261011.md).
+Version **0.0.13** adds a repeatable browser latency benchmark and separates backend queueing, compilation, resource refresh, delivery, image decoding, text-layer updates, and paint scheduling. Nearby-page prefetch waits briefly during editing so it does not compete with the next keystroke. See [the measurements and validation](docs/preview-latency-20261011.md).
+
+Version 0.0.12 places checkpoints at safe points in the TeX engine, including inside long included chapters. Input read positions determine which compiler state can be reused after an edit. The handwritten root paragraph splitter and its 2,048-block limit have been removed. See [the implementation and validation](docs/engine-checkpoints-20261011.md).
 
 Version 0.0.11 introduced checkpoint reuse for included `.tex` edits using their earliest affected root block. Preamble dependencies still rebuild safely. See [the earlier implementation and validation](docs/included-edits-20261011.md).
 
@@ -40,7 +42,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.12.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.13.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -85,6 +87,10 @@ python scripts/check_cpp.py
 python scripts/live_fixture.py
 python scripts/check_live_mode.py --project .work/scroll-case --main paper.tex --output live-fixture.json
 node scripts/check_extension_live.js
+python scripts/check_viewer_latency.py
+# Self-contained browser benchmark; starts and closes its own demo server:
+python scripts/benchmark_preview.py --repeats 20
+# Add --assert-target to fail unless every scenario's p95 is below 150 ms.
 # Earlier Python reference backend checks:
 python scripts/check_mapping.py 100
 python scripts/check_snapshot.py

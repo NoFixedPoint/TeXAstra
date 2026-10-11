@@ -1,18 +1,27 @@
 /* The same scrolling view runs in VS Code and the local browser demo. */
 const vscode=typeof acquireVsCodeApi==='function'?acquireVsCodeApi():null;
 const $=id=>document.getElementById(id),pages=new Map(),pendingPages=new Map();
+const inputTimes=new Map();
 let frame=null,page=0,file='pages/page-001.tex',stale=true,after=0;
 let latestRequest=0,latestClient=0,clientSerial=0,generation=0,requestSerial=0;
 let pendingSelection=null,pendingHighlight=null,scrollScheduled=false,lastSyncRequest=null,documentCount=0;
+let prefetchAfter=0,prefetchTimer=null;
 window.paintHistory=[];
 if(vscode)document.body.classList.add('embedded');
-function send(message){
+function send(message,inputAt=performance.now()){
   message.clientId=++clientSerial;message.sentAt=Date.now();message.requestId=message.requestId||`view-${++requestSerial}`;
+  if(message.type==='edit'||message.type==='start'){
+    inputTimes.set(message.clientId,inputAt);
+    if(inputTimes.size>256)inputTimes.delete(inputTimes.keys().next().value);
+  }
   if(message.type==='edit'||message.type==='start')latestClient=message.clientId;
   if(vscode){vscode.postMessage(message);return Promise.resolve();}
   return fetch('/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(message)});
 }
-function markStale(){stale=true;document.body.classList.add('stale');for(const p of pages.values()){p.caret.style.display='none';p.highlight.style.display='none';}}
+function markStale(){
+  stale=true;prefetchAfter=performance.now()+200;clearTimeout(prefetchTimer);
+  document.body.classList.add('stale');for(const p of pages.values()){p.caret.style.display='none';p.highlight.style.display='none';}
+}
 async function loadSource(name,selection){
   if(vscode){vscode.postMessage({type:'navigate',...selection,generation,revisionId:latestRequest});return;}
   const response=await fetch('/source?file='+encodeURIComponent(name));if(!response.ok)return;
@@ -71,7 +80,11 @@ function scheduleVisible(){
     page=closest;frame=pages.get(page)?.frame||frame;$('page').value=page+1;
     if(vscode)vscode.postMessage({type:'viewport',page,generation});
     wanted.sort((a,b)=>Math.abs(a-page)-Math.abs(b-page));
-    for(const index of wanted){if(pendingPages.size>=2)break;requestPage(index);}
+    const defer=performance.now()<prefetchAfter;
+    if(defer){clearTimeout(prefetchTimer);prefetchTimer=setTimeout(scheduleVisible,prefetchAfter-performance.now());}
+    // A page query can replay TeX. Keep speculative neighbors out of the edit
+    // queue while typing; explicit navigation and the current page stay immediate.
+    for(const index of wanted){if(pendingPages.size>=2)break;if(!defer||index===page)requestPage(index);}
     for(const [index,item] of pages)if(Math.abs(index-page)>4&&item.frame&&index!==pendingHighlight?.page){
       item.image.removeAttribute('src');item.layer.replaceChildren();item.previous=[];item.frame=null;
       item.label.style.display='block';item.element.classList.add('outdated');
@@ -104,6 +117,7 @@ function forward(location){
   lastSyncRequest=`sync-${++requestSerial}`;send({type:'sync-forward',...location,page,generation,requestId:lastSyncRequest});
 }
 async function receive(message){
+  const receivedAt=performance.now();
   if(message.type==='forward'){forward(message);return;}
   if(message.type==='status'){
     latestRequest=Math.max(latestRequest,message.revision||0);latestClient=Math.max(latestClient,message.clientId||0);markStale();pendingPages.clear();
@@ -128,7 +142,9 @@ async function receive(message){
   }
   if(!query||message.pageCount!==documentCount)setLayout(message);
   const item=pages.get(message.page);if(!item)return;
+  const decodeAt=performance.now();
   const own=++item.sequence,image=new Image();image.src=message.image;await image.decode();if(own!==item.sequence||message.generation!==generation)return;
+  const decodedAt=performance.now();
   item.frame=message;item.image.src=image.src;item.label.style.display='none';item.element.classList.remove('outdated');
   const width=item.element.clientWidth,existing=Array.from(item.layer.children),fragment=document.createDocumentFragment();
   for(let i=0;i<message.characters.length;i++){
@@ -145,11 +161,17 @@ async function receive(message){
     $('status').textContent=stale?'Updating · showing an earlier revision':message.provisional?'Live preview · updating later pages':'Live preview ready';
     $('error').textContent=message.warnings?.length?JSON.stringify(message.warnings.slice(0,20),null,2):'';
   }
+  const installedAt=performance.now();
   await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
-  const visibleMs=message.sentAt&&!stale?Date.now()-message.sentAt:null;
+  const paintedAt=performance.now();
+  const paintStale=stale||message.isStale||message.revisionId<latestRequest||message.clientId<latestClient||message.generation!==generation||own!==item.sequence;
+  const inputAt=inputTimes.get(message.clientId);
+  const visibleMs=message.sentAt&&!paintStale?(inputAt!==undefined?paintedAt-inputAt:Date.now()-message.sentAt):null;
   if(!query)$('timing').textContent=`${Math.round(message.pipelineMs)} ms pipeline${visibleMs?` · ${visibleMs} ms to display`:''}`;
-  const stages=Object.fromEntries(['compileMs','compilerStagesMs','snapshot','mapMs','renderMs','renderStagesMs','requestToPayloadMs','resumedFrom','outputMode','compilationMode','cacheReused'].filter(k=>message[k]!==undefined).map(k=>[k,message[k]]));
-  const measured={type:'paint',revision:message.revisionId,clientId:message.clientId,page:message.page+1,generation,pipelineMs:message.pipelineMs,visibleMs,stale,at:Date.now(),...stages};
+  const stages=Object.fromEntries(['compileMs','prepareMs','compilerStagesMs','snapshot','mapMs','renderMs','renderStagesMs','resourceRefreshMs','queueMs','requestToPayloadMs','resumedFrom','outputMode','compilationMode','cacheReused'].filter(k=>message[k]!==undefined).map(k=>[k,message[k]]));
+  const browserStagesMs={prepare:decodeAt-receivedAt,decode:decodedAt-decodeAt,install:installedAt-decodedAt,paintWait:paintedAt-installedAt};
+  const deliveryMs=visibleMs===null||message.requestToPayloadMs===undefined?null:visibleMs-(paintedAt-receivedAt)-message.requestToPayloadMs;
+  const measured={type:'paint',revision:message.revisionId,clientId:message.clientId,page:message.page+1,generation:message.generation,purpose:message.purpose,phase:message.phase||'preview',pipelineMs:message.pipelineMs,visibleMs,stale:paintStale,at:Date.now(),browserStagesMs,deliveryMs,...stages};
   if(!query){window.lastPaint=measured;window.paintHistory.push(measured);if(vscode)vscode.postMessage(measured);else fetch('/paint',{method:'POST',body:JSON.stringify(measured)});}
   if(pendingHighlight?.page===message.page&&!stale)showRegion(pendingHighlight);
   if(pendingSelection&&!stale){const location=pendingSelection;pendingSelection=null;forward(location);}scheduleVisible();
@@ -159,7 +181,7 @@ function navigate(target){
   const r=item.element.getBoundingClientRect(),v=$('scroll').getBoundingClientRect();$('scroll').scrollTop+=r.top-v.top;
   page=index;$('page').value=page+1;requestPage(page);scheduleVisible();
 }
-$('source').addEventListener('input',()=>{const lines=$('source').value.slice(0,$('source').selectionStart).split('\n');pendingSelection={file,line:lines.length-1,column:lines.at(-1).length};markStale();send({type:'edit',file,source:$('source').value,page});});
+$('source').addEventListener('input',()=>{const inputAt=performance.now(),lines=$('source').value.slice(0,$('source').selectionStart).split('\n');pendingSelection={file,line:lines.length-1,column:lines.at(-1).length};markStale();send({type:'edit',file,source:$('source').value,page},inputAt);});
 $('source').addEventListener('click',()=>{const lines=$('source').value.slice(0,$('source').selectionStart).split('\n');forward({file,line:lines.length-1,column:lines.at(-1).length});});
 $('scroll').addEventListener('scroll',scheduleVisible,{passive:true});window.addEventListener('resize',()=>{
   for(const item of pages.values())if(item.frame){
@@ -174,6 +196,8 @@ window.previewState=()=>({page,generation,stale,count:documentCount,loaded:[...p
 if(vscode){window.addEventListener('message',event=>receive(event.data));vscode.postMessage({type:'ready'});}
 else (async()=>{
   const bootstrap=await(await fetch('/bootstrap')).json();after=bootstrap.event;file=bootstrap.sourceFile||file;await loadSource(file);send({type:'start',page:0});
-  while(true){try{const events=await(await fetch('/events?after='+after)).json();for(const event of events){after=event.event;await receive(event);}if(!events.length)await new Promise(resolve=>setTimeout(resolve,25));}
+  // Match VS Code's event delivery: decoding/painting an earlier payload must
+  // not delay newer revisions or statuses. receive guards generation/sequence.
+  while(true){try{const events=await(await fetch('/events?after='+after)).json();for(const event of events){after=event.event;receive(event).catch(error=>{$('error').textContent='Preview update failed: '+error;});}if(!events.length)await new Promise(resolve=>setTimeout(resolve,25));}
     catch(error){$('error').textContent='Preview connection interrupted: '+error;await new Promise(resolve=>setTimeout(resolve,500));}}
 })();

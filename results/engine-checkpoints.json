@@ -290,50 +290,50 @@
     {
       "name": "late chapter token",
       "resumedFrom": 10,
-      "pipelineMs": 34.626609,
-      "compileMs": 15.053804,
+      "pipelineMs": 49.192826,
+      "compileMs": 25.867326,
       "outputMode": "page-stream"
     },
     {
       "name": "late chapter insertion",
       "resumedFrom": 10,
-      "pipelineMs": 102.472028,
-      "compileMs": 18.235705,
+      "pipelineMs": 97.097187,
+      "compileMs": 16.622193,
       "outputMode": "resource-seed"
     },
     {
       "name": "late chapter new paragraphs",
       "resumedFrom": 10,
-      "pipelineMs": 142.217439,
-      "compileMs": 16.066604,
+      "pipelineMs": 95.778104,
+      "compileMs": 16.864376,
       "outputMode": "resource-seed"
     },
     {
       "name": "late chapter second edit",
       "resumedFrom": 10,
-      "pipelineMs": 34.856809,
-      "compileMs": 16.339204,
+      "pipelineMs": 31.535076,
+      "compileMs": 16.280092,
       "outputMode": "page-stream"
     },
     {
       "name": "late included error recovery",
       "resumedFrom": 10,
-      "pipelineMs": 34.878409,
-      "compileMs": 16.751605,
+      "pipelineMs": 35.257311,
+      "compileMs": 17.222905,
       "outputMode": "page-stream"
     },
     {
       "name": "append after observed EOF",
       "resumedFrom": 10,
-      "pipelineMs": 57.711016,
-      "compileMs": 44.414112,
+      "pipelineMs": 57.668501,
+      "compileMs": 43.728301,
       "outputMode": "page-stream"
     },
     {
       "name": "root suffix retains chapter edits",
       "resumedFrom": 13,
-      "pipelineMs": 67.870418,
-      "compileMs": 11.654503,
+      "pipelineMs": 58.677502,
+      "compileMs": 7.1133,
       "outputMode": "resource-seed"
     }
   ]

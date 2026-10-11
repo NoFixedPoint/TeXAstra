@@ -155,6 +155,9 @@ class Preview {
                 if (it->at("type")=="edit" || it->at("type")=="start") { selected=it; mutation=true; }
             }
             auto request = *selected;
+            const double queue_ms =
+                std::chrono::duration<double, std::milli>(Clock::now().time_since_epoch()).count() -
+                request.at("submittedMs").get<double>();
             {
                 std::lock_guard<std::mutex> lock(mutex);
                 for (auto it=requests.rbegin();it!=requests.rend();++it) {
@@ -224,6 +227,7 @@ class Preview {
                     std::chrono::duration<double, std::milli>(Clock::now().time_since_epoch())
                         .count() -
                     request.at("submittedMs").get<double>();
+                result["queueMs"] = queue_ms;
                 if (mutation) {
                     engine->generation=++generation;
                     result["pageSizes"]=engine->layout();
