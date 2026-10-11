@@ -119,8 +119,14 @@
       "ok": true
     },
     {
-      "name": "edit 1 exact pixels",
+      "name": "forward navigation prefers the visible occurrence",
       "ok": true
+    },
+    {
+      "name": "edit 1 exact pixels",
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
     },
     {
       "name": "edit 1 retained checkpoint",
@@ -128,7 +134,9 @@
     },
     {
       "name": "edit 2 exact pixels",
-      "ok": true
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
     },
     {
       "name": "edit 2 retained checkpoint",
@@ -136,7 +144,9 @@
     },
     {
       "name": "edit 3 exact pixels",
-      "ok": true
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
     },
     {
       "name": "edit 3 retained checkpoint",
@@ -154,45 +164,46 @@
   ],
   "edits": [
     {
-      "pipelineMs": 41.822843,
-      "compileMs": 25.362065,
+      "pipelineMs": 38.83889,
+      "compileMs": 24.688093,
       "resumedFrom": 6,
       "outputMode": "page-stream",
       "compilerStagesMs": {
-        "fork": 2.021,
-        "replaceChild": 12.864,
-        "restore": 0.304,
-        "shipoutAndPublish": 4.253,
-        "typeset": 5.296
+        "fork": 2.839,
+        "replaceChild": 12.194,
+        "restore": 0.392,
+        "shipoutAndPublish": 3.991,
+        "typeset": 4.697
       }
     },
     {
-      "pipelineMs": 47.565584,
-      "compileMs": 31.792156,
+      "pipelineMs": 34.86309,
+      "compileMs": 20.516494,
       "resumedFrom": 6,
       "outputMode": "page-stream",
       "compilerStagesMs": {
-        "fork": 4.226,
-        "replaceChild": 15.807,
-        "restore": 0.594,
-        "shipoutAndPublish": 5.394,
-        "typeset": 5.039
+        "fork": 1.863,
+        "replaceChild": 10.72,
+        "restore": 0.264,
+        "shipoutAndPublish": 3.715,
+        "typeset": 3.556
       }
     },
     {
-      "pipelineMs": 36.578342,
-      "compileMs": 22.021237,
+      "pipelineMs": 40.169589,
+      "compileMs": 25.824693,
       "resumedFrom": 6,
       "outputMode": "page-stream",
       "compilerStagesMs": {
-        "fork": 2.757,
-        "replaceChild": 10.731,
-        "restore": 0.414,
-        "shipoutAndPublish": 3.596,
-        "typeset": 4.114
+        "fork": 3.568,
+        "replaceChild": 12.693,
+        "restore": 0.431,
+        "shipoutAndPublish": 4.115,
+        "typeset": 4.377
       }
     }
   ],
-  "startupMs": 1530.1818,
-  "unmappedPages": []
+  "startupMs": 1400.913321,
+  "unmappedPages": [],
+  "targetPage": 7
 }

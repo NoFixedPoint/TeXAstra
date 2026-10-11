@@ -3,6 +3,11 @@
 
 namespace bako {
 inline const std::string reset = "\\bakoattr=0 ";
+inline bool primitive_conditional(const std::string &name) {
+    static const auto names = words("if ifcat ifnum ifdim ifodd ifvmode ifhmode ifmmode ifinner "
+        "ifvoid ifhbox ifvbox ifx ifeof iftrue iffalse ifcase ifdefined ifcsname iffontchar ifincsname ifabsnum ifabsdim");
+    return names.count(name) != 0;
+}
 struct Span {
     int id = 0, start = 0, end = 0, line = 0, column = 0, endLine = 0, endColumn = 0;
     std::string file, text, kind;
@@ -116,6 +121,21 @@ class Sources {
         }
         return slice(a, i);
     }
+    void opaque_field() {
+        whitespace();
+        if (i>=text.size()) return;
+        if (std::u32string(U"}$^_&").find(text[i])!=std::u32string::npos) return;
+        if (text[i]=='{') { group(); return; }
+        if (text[i]!='\\') { ++i; return; }
+        auto name=control().substr(1);
+        // A field can start with a macro that still needs its arguments. Keep
+        // accents and fractions intact, including unbraced script fields.
+        if (name=="sqrt" && i<text.size() && text[i]=='[') group('[',']');
+        int count=words("frac dfrac tfrac binom").count(name) ? 2 :
+            (math_args.count(name) || text_args.count(name) ||
+             words("sqrt dot ddot dddot ddddot breve check acute grave widehat widetilde mathnormal mathfrak mathscr boldsymbol pmb underbrace overbrace").count(name) ? 1 : 0);
+        while (count--) opaque_field();
+    }
     std::string argument(bool math) {
         auto ws = whitespace();
         if (i < text.size() && text[i] == '{') {
@@ -125,7 +145,7 @@ class Sources {
         size_t a = i;
         if (i < text.size()) {
             if (text[i] == '\\') {
-                control();
+                if (general) opaque_field(); else control();
             } else {
                 ++i;
             }
@@ -138,9 +158,7 @@ class Sources {
         const auto control_end = i;
         auto name = cmd.substr(1);
         if (general && words("' ` ^ ~ = . u v H c k b d r").count(name)) {
-            whitespace();
-            if (i < text.size() && text[i] == '{') group();
-            else if (i < text.size()) { if (text[i]=='\\') control(); else ++i; }
+            opaque_field();
             return mark(a, i, "macro-origin") + slice(a, i) + reset;
         }
         if (general && (name == "(" || name == "[" || name == ")" || name == "]"))
@@ -170,7 +188,18 @@ class Sources {
             }
             return reset + cmd + option + argument(true) + reset;
         }
-        const bool live_math_arg = general && words("widetilde widehat dot ddot dddot ddddot breve check acute grave mathnormal mathfrak mathscr boldsymbol underbrace overbrace").count(name);
+        const bool live_math_arg = general && words("widetilde widehat dot ddot dddot ddddot breve check acute grave mathnormal mathfrak mathscr boldsymbol pmb underbrace overbrace").count(name);
+        if (general && (math_args.count(name) || live_math_arg)) {
+            auto start=i;
+            whitespace();
+            if (i<text.size() && text[i]!='{') {
+                opaque_field();
+                // Bracing an originally unbraced nested accent can change its
+                // placement. Keep its field grammar exactly as TeX received it.
+                return mark(a,i,"macro-origin")+slice(a,i)+reset;
+            }
+            i=start;
+        }
         if (text_args.count(name) || math_args.count(name) || live_math_arg) {
             if (i < text.size() && text[i] == '*') {
                 cmd += '*';
@@ -232,10 +261,20 @@ class Sources {
              {"offset", a},
              {"command", name},
              {"reason", "unknown command: arguments are not instrumented"}});
+        if (general && i<text.size() && text[i]=='*') ++i;
         size_t end = i;
-        if (general && i < text.size() && text[i]=='$') {
-            auto closing=text.find('$',i+1);
-            if (closing!=std::u32string::npos) {
+        if (general && !math && i < text.size() && text[i]=='$') {
+            size_t closing=i+1;
+            int braces=0;
+            for (;closing<text.size();++closing) {
+                auto c=text[closing];
+                if (c=='\\') { ++closing; continue; }
+                if (c=='%') { while(closing<text.size() && text[closing]!='\n') ++closing; continue; }
+                if (c=='{') ++braces;
+                else if (c=='}') --braces;
+                else if (c=='$' && !braces) break;
+            }
+            if (closing<text.size()) {
                 i=closing+1;
                 return mark(a,i,"macro-origin")+slice(a,i);
             }
@@ -425,7 +464,20 @@ class Sources {
                 }
             }
         }
-        if (general && std::regex_search(source, std::regex(R"(\\(def|gdef|edef|xdef|newcommand|renewcommand|catcode|verb)\b)"))) {
+        bool conditional = false;
+        if (general) for (size_t at=0; at<text.size(); ++at) {
+            if (text[at]=='%') {
+                while (at<text.size() && text[at]!='\n') ++at;
+            } else if (text[at]=='\\') {
+                auto end=at+1;
+                while (end<text.size() && letter(text[end])) ++end;
+                if (primitive_conditional(utf8(text.substr(at+1,end-at-1)))) { conditional=true; break; }
+                at=end>at+1 ? end-1 : at+1;
+            }
+        }
+        // Setters between a conditional and its operands can change which
+        // branch TeX selects. Preserve this complete block as a macro origin.
+        if (general && (conditional || std::regex_search(source, std::regex(R"(\\(def|gdef|edef|xdef|newcommand|renewcommand|catcode|verb)\b)")))) {
             i = text.size();
             return mark(0, i, "macro-origin") + source + reset;
         }

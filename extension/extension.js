@@ -50,7 +50,7 @@ function activate(context){
     backend.on('error',error=>{output.appendLine(String(error));web.postMessage({type:'status',state:'error',error:String(error)});});
     backend.on('exit',code=>{if(code)web.postMessage({type:'status',state:'error',error:`Backend exited (${code}). See Output → BaKoMa prototype.`});});
     readline.createInterface({input:backend.stdout}).on('line',line=>{
-      try{const message=JSON.parse(line);if(message.type==='frame'){
+      try{const message=JSON.parse(line);if(message.error)output.appendLine(String(message.error));if(message.type==='frame'){
         if(message.clientId<latestMutation)message.isStale=true;
         if(!message.isStale&&(!currentFrame||message.generation>=currentFrame.generation))currentFrame=message;
       }else if(message.state)currentFrame=null;web.postMessage(message);}catch(error){output.appendLine(String(error));}

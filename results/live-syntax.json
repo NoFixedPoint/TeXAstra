@@ -1,0 +1,304 @@
+{
+  "checks": [
+    {
+      "name": "false across paragraphs compiles",
+      "ok": true
+    },
+    {
+      "name": "false across paragraphs exact pixels",
+      "ok": true
+    },
+    {
+      "name": "false across paragraphs preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "false across paragraphs maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "false across paragraphs live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested branches compiles",
+      "ok": true
+    },
+    {
+      "name": "nested branches exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested branches preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "nested branches maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "nested branches live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "numeric operands compiles",
+      "ok": true
+    },
+    {
+      "name": "numeric operands exact pixels",
+      "ok": true
+    },
+    {
+      "name": "numeric operands preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "numeric operands maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "numeric operands live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "skipped unbalanced braces compiles",
+      "ok": true
+    },
+    {
+      "name": "skipped unbalanced braces exact pixels",
+      "ok": true
+    },
+    {
+      "name": "skipped unbalanced braces preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "skipped unbalanced braces maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "skipped unbalanced braces live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "comments and escaped controls compiles",
+      "ok": true
+    },
+    {
+      "name": "comments and escaped controls exact pixels",
+      "ok": true
+    },
+    {
+      "name": "comments and escaped controls preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "comments and escaped controls maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "comments and escaped controls live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unbraced accent chain compiles",
+      "ok": true
+    },
+    {
+      "name": "unbraced accent chain exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unbraced accent chain preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "unbraced accent chain maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "unbraced accent chain live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unbraced fraction exponent compiles",
+      "ok": true
+    },
+    {
+      "name": "unbraced fraction exponent exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unbraced fraction exponent preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "unbraced fraction exponent maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "unbraced fraction exponent live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested math accents compiles",
+      "ok": true
+    },
+    {
+      "name": "nested math accents exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested math accents preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "nested math accents maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "nested math accents live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "redefined accent without argument compiles",
+      "ok": true
+    },
+    {
+      "name": "redefined accent without argument exact pixels",
+      "ok": true
+    },
+    {
+      "name": "redefined accent without argument preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "redefined accent without argument maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "redefined accent without argument live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "redefined accent before script compiles",
+      "ok": true
+    },
+    {
+      "name": "redefined accent before script exact pixels",
+      "ok": true
+    },
+    {
+      "name": "redefined accent before script preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "redefined accent before script maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "redefined accent before script live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unbraced bold math compiles",
+      "ok": true
+    },
+    {
+      "name": "unbraced bold math exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unbraced bold math preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "unbraced bold math maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "unbraced bold math live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "delimited macro with nested dollars compiles",
+      "ok": true
+    },
+    {
+      "name": "delimited macro with nested dollars exact pixels",
+      "ok": true
+    },
+    {
+      "name": "delimited macro with nested dollars preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "delimited macro with nested dollars maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "delimited macro with nested dollars live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "starred citation compiles",
+      "ok": true
+    },
+    {
+      "name": "starred citation exact pixels",
+      "ok": true
+    },
+    {
+      "name": "starred citation preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "starred citation maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "starred citation live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "symbol before delimited equation compiles",
+      "ok": true
+    },
+    {
+      "name": "symbol before delimited equation exact pixels",
+      "ok": true
+    },
+    {
+      "name": "symbol before delimited equation preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "symbol before delimited equation maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "symbol before delimited equation live edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "virtual fonts and missing glyphs compiles",
+      "ok": true
+    },
+    {
+      "name": "virtual fonts and missing glyphs exact pixels",
+      "ok": true
+    },
+    {
+      "name": "virtual fonts and missing glyphs preserves outside token mapping",
+      "ok": true
+    },
+    {
+      "name": "virtual fonts and missing glyphs maps the correct visible glyph",
+      "ok": true
+    },
+    {
+      "name": "virtual fonts and missing glyphs live edit exact pixels",
+      "ok": true
+    }
+  ]
+}

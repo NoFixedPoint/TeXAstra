@@ -2,7 +2,9 @@
 
 This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The 150 ms latency target has not been met.** The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Version **0.0.8** makes **Open Experimental Preview** start our own live LuaHBTeX compiler for ordinary projects, regardless of older PDFs, compiler comments or legacy preview settings. It adds paragraph-boundary checkpoints, token/macro-origin navigation, reusable build files in the user's cache, and continuous scrolling with nearby pages loaded on demand. The original project receives no generated build files. See [live-project validation and limitations](docs/live-projects-20261011.md).
+Version **0.0.9** fixes live compilation of conditional blocks and unbraced math fields. TeX parsing, macro expansion and typesetting use the existing LuaHBTeX engine; the experimental code manages source instrumentation, checkpoints, incremental output and preview navigation. We do not implement our own TeX typesetter. See [the compatibility fixes](docs/compatibility-20261011.md).
+
+Version 0.0.8 made **Open Experimental Preview** start a live LuaHBTeX session for ordinary projects, regardless of older PDFs, compiler comments or legacy preview settings. It added paragraph-boundary checkpoints, token/macro-origin navigation, reusable build files in the user's cache, and continuous scrolling with nearby pages loaded on demand. The original project receives no generated build files. See [live-project validation and limitations](docs/live-projects-20261011.md).
 
 Version 0.0.6 adds experimental **internal differential compiler snapshots**: one retained compiler process restores its TeX/Lua memory, continuation, and file state from undo records, without forking per checkpoint or edit. The comparison measured 137.5 ms median versus 155 ms for fork checkpoints, but p95 regressed to 325 ms versus 185 ms on large backward rollbacks. **Fork remains the default; internal snapshots are opt-in.** Source mapping, compiler control, page-buffer reception, and rendering remain in C++; Python is only a build/test tool. Read the [internal snapshot report](docs/internal-snapshots-20261011.md) and [architecture decision](docs/adr/0004-internal-compiler-snapshots.md) for validation and the Linux-specific memory contract. Earlier work is recorded in the [C++ report](docs/cpp-backend-20261011.md) and [feasibility report](docs/feasibility-20261010.md).
 
@@ -31,7 +33,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.8.vsix --force`, reload VS Code, and run the same preview command. Set `bakoma.checkpointMode` to `internal` to try internal snapshots on the corpus; `fork` remains the default. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.9.vsix --force`, reload VS Code, and run the same preview command. Set `bakoma.checkpointMode` to `internal` to try internal snapshots on the corpus; `fork` remains the default. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -69,6 +71,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 ```powershell
 python -m pip install -r requirements.txt
 python scripts/check_cpp_mapper.py
+python scripts/check_live_syntax.py
 python scripts/check_cpp.py
 python scripts/live_fixture.py
 python scripts/check_live_mode.py --project .work/scroll-case --main paper.tex --output live-fixture.json

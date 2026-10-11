@@ -1376,170 +1376,170 @@
   "samples": [
     {
       "case": "text-last",
-      "compileMs": 100.867619,
+      "compileMs": 240.867934,
       "compilerStagesMs": {
         "fork": 0.0,
         "replaceChild": 0.0,
-        "restore": 37.975,
-        "shipoutAndPublish": 10.585,
-        "typeset": 51.431
+        "restore": 202.356,
+        "shipoutAndPublish": 7.008,
+        "typeset": 30.915
       },
-      "mapMs": 0.642033,
+      "mapMs": 0.672,
       "outputMode": "page-stream",
-      "pipelineMs": 117.809636,
-      "prepareMs": 0.569708,
-      "renderMs": 14.152142,
+      "pipelineMs": 255.129431,
+      "prepareMs": 0.4273,
+      "renderMs": 11.298897,
       "renderStagesMs": {
-        "displayList": 0.389492,
-        "origins": 1.584,
-        "png": 10.701351,
-        "raster": 0.838109,
-        "text": 0.522866
+        "displayList": 0.4182,
+        "origins": 0.8263,
+        "png": 8.836798,
+        "raster": 0.6807,
+        "text": 0.439899
       },
       "resumedFrom": 100
     },
     {
       "case": "math-middle",
-      "compileMs": 272.585807,
+      "compileMs": 378.070796,
       "compilerStagesMs": {
         "fork": 0.0,
         "replaceChild": 0.0,
-        "restore": 214.379,
-        "shipoutAndPublish": 8.899,
-        "typeset": 48.387
+        "restore": 346.046,
+        "shipoutAndPublish": 4.029,
+        "typeset": 27.467
       },
-      "mapMs": 0.5731,
+      "mapMs": 0.6899,
       "outputMode": "page-stream",
-      "pipelineMs": 297.825008,
-      "prepareMs": 0.9183,
-      "renderMs": 22.121401,
+      "pipelineMs": 392.637993,
+      "prepareMs": 0.9923,
+      "renderMs": 11.681797,
       "renderStagesMs": {
-        "displayList": 0.9678,
-        "origins": 1.5702,
-        "png": 16.9889,
-        "raster": 1.703501,
-        "text": 0.6037
+        "displayList": 0.7172,
+        "origins": 0.7256,
+        "png": 8.945698,
+        "raster": 0.727299,
+        "text": 0.5047
       },
       "resumedFrom": 50
     },
     {
       "case": "rotated-TikZ",
-      "compileMs": 70.664002,
+      "compileMs": 45.007187,
       "compilerStagesMs": {
         "fork": 0.0,
         "replaceChild": 0.0,
-        "restore": 26.132,
-        "shipoutAndPublish": 6.554,
-        "typeset": 37.209
+        "restore": 10.809,
+        "shipoutAndPublish": 4.365,
+        "typeset": 29.319
       },
-      "mapMs": 1.1321,
+      "mapMs": 0.5831,
       "outputMode": "page-stream",
-      "pipelineMs": 89.598402,
-      "prepareMs": 0.6736,
-      "renderMs": 15.3216,
+      "pipelineMs": 58.348584,
+      "prepareMs": 0.4055,
+      "renderMs": 11.110797,
       "renderStagesMs": {
-        "displayList": 0.6083,
-        "origins": 1.4142,
-        "png": 11.6489,
-        "raster": 0.9929,
-        "text": 0.5654
+        "displayList": 0.4033,
+        "origins": 0.819699,
+        "png": 8.610098,
+        "raster": 0.7695,
+        "text": 0.4516
       },
       "resumedFrom": 50
     },
     {
       "case": "colored-TikZ",
-      "compileMs": 57.460102,
+      "compileMs": 37.081605,
       "compilerStagesMs": {
         "fork": 0.0,
         "replaceChild": 0.0,
-        "restore": 14.103,
-        "shipoutAndPublish": 6.417,
-        "typeset": 35.816
+        "restore": 8.294,
+        "shipoutAndPublish": 3.619,
+        "typeset": 24.784
       },
-      "mapMs": 0.5513,
+      "mapMs": 0.466492,
       "outputMode": "page-stream",
-      "pipelineMs": 74.672202,
-      "prepareMs": 0.4436,
-      "renderMs": 14.3391,
+      "pipelineMs": 50.198264,
+      "prepareMs": 0.312125,
+      "renderMs": 11.281585,
       "renderStagesMs": {
-        "displayList": 0.4343,
-        "origins": 1.2924,
-        "png": 11.3072,
-        "raster": 0.619,
-        "text": 0.5832
+        "displayList": 0.356766,
+        "origins": 0.690157,
+        "png": 9.223121,
+        "raster": 0.551741,
+        "text": 0.396367
       },
       "resumedFrom": 50
     },
     {
       "case": "new-Chinese-glyph",
-      "compileMs": 54.570101,
+      "compileMs": 46.532739,
       "compilerStagesMs": {
         "fork": 0.0,
         "replaceChild": 0.0,
-        "restore": 13.456,
-        "shipoutAndPublish": 5.334,
-        "typeset": 35.283
+        "restore": 11.287,
+        "shipoutAndPublish": 4.841,
+        "typeset": 29.841
       },
-      "mapMs": 0.544,
+      "mapMs": 0.562399,
       "outputMode": "resource-seed",
-      "pipelineMs": 135.737103,
-      "prepareMs": 0.379,
-      "renderMs": 18.1046,
+      "pipelineMs": 117.683946,
+      "prepareMs": 0.409099,
+      "renderMs": 16.819778,
       "renderStagesMs": {
-        "displayList": 3.078,
-        "origins": 1.2769,
-        "png": 10.8921,
-        "raster": 2.1221,
-        "text": 0.5292
+        "displayList": 3.015796,
+        "origins": 0.890199,
+        "png": 10.303787,
+        "raster": 1.988397,
+        "text": 0.519499
       },
       "resourceRefresh": "New font or glyph requires a resource refresh",
       "resumedFrom": 50
     },
     {
       "case": "same-new-glyph-cached",
-      "compileMs": 54.552851,
+      "compileMs": 43.277703,
       "compilerStagesMs": {
         "fork": 0.0,
         "replaceChild": 0.0,
-        "restore": 17.743,
-        "shipoutAndPublish": 4.817,
-        "typeset": 31.404
+        "restore": 13.378,
+        "shipoutAndPublish": 4.021,
+        "typeset": 25.518
       },
-      "mapMs": 0.611508,
+      "mapMs": 0.579333,
       "outputMode": "page-stream",
-      "pipelineMs": 69.797019,
-      "prepareMs": 0.361534,
-      "renderMs": 12.958917,
+      "pipelineMs": 57.339442,
+      "prepareMs": 0.439082,
+      "renderMs": 11.771634,
       "renderStagesMs": {
-        "displayList": 0.370792,
-        "origins": 1.018509,
-        "png": 10.079758,
-        "raster": 0.868817,
-        "text": 0.556416
+        "displayList": 0.405166,
+        "origins": 0.826466,
+        "png": 9.20763,
+        "raster": 0.811065,
+        "text": 0.44935
       },
       "resumedFrom": 50
     },
     {
       "case": "reflow-first",
-      "compileMs": 333.89191,
+      "compileMs": 182.432566,
       "compilerStagesMs": {
         "fork": 0.0,
         "replaceChild": 0.0,
-        "restore": 266.852,
-        "shipoutAndPublish": 3.861,
-        "typeset": 62.336
+        "restore": 127.735,
+        "shipoutAndPublish": 3.116,
+        "typeset": 50.982
       },
-      "mapMs": 1.9356,
+      "mapMs": 1.4711,
       "outputMode": "page-stream",
-      "pipelineMs": 356.64751,
-      "prepareMs": 1.2666,
-      "renderMs": 16.9143,
+      "pipelineMs": 200.727963,
+      "prepareMs": 0.7554,
+      "renderMs": 14.254997,
       "renderStagesMs": {
-        "displayList": 0.7783,
-        "origins": 2.0915,
-        "png": 10.9852,
-        "raster": 1.6194,
-        "text": 1.2596
+        "displayList": 0.6144,
+        "origins": 1.618399,
+        "png": 9.565398,
+        "raster": 1.3515,
+        "text": 0.9496
       },
       "resumedFrom": 1
     }

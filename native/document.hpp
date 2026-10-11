@@ -36,7 +36,7 @@ class LiveDocument {
         }
         size_t start = a;
         std::vector<bool> groups;
-        int arguments = 0, environments = 0;
+        int arguments = 0, environments = 0, conditionals = 0;
         bool math = false, blank = false;
         auto push = [&](size_t finish) {
             if (finish > start) blocks.push_back({utf8(u.substr(start, finish-start)), int(start), lines[start], columns[start]});
@@ -45,6 +45,19 @@ class LiveDocument {
         for (size_t i = a; i < b; ++i) {
             auto c = visible[i];
             if (c == '\\') {
+                auto word_end=i+1;
+                while (word_end<b && letter(visible[word_end])) ++word_end;
+                auto command=utf8(visible.substr(i+1,word_end-i-1));
+                if (primitive_conditional(command)) ++conditionals;
+                else if (command=="fi" && conditionals) --conditionals;
+                // TeX's skipped branch does not expand the Lua driver that
+                // supplies later blocks. Keep the whole conditional together.
+                // Its skipped text can even contain unmatched braces/environments.
+                if (conditionals || command=="fi") {
+                    i=word_end>i+1 ? word_end-1 : std::min(i+1,b-1);
+                    blank=false;
+                    continue;
+                }
                 if (visible.compare(i, 7, U"\\begin{") == 0) {
                     auto end=visible.find('}',i+7);
                     if (!words("appendices subappendices").count(utf8(visible.substr(i+7,end-i-7)))) ++environments;
@@ -61,6 +74,7 @@ class LiveDocument {
                 blank = false;
                 continue;
             }
+            if (conditionals) continue;
             if (c == '{') {
                 size_t previous=i;
                 while (previous>a && space(visible[previous-1])) --previous;

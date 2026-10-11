@@ -3,7 +3,7 @@ const assert=require('assert'),fs=require('fs'),path=require('path'),Module=requ
 const {EventEmitter}=require('events'),{PassThrough}=require('stream');
 const root=path.resolve(__dirname,'..'),project=path.join(root,'.work/scroll-case');
 const document={uri:{scheme:'file',fsPath:path.join(project,'paper.tex')},isDirty:true,getText:()=>fs.readFileSync(path.join(project,'paper.tex'),'utf8')+'% unsaved\n'};
-const editor={document};let command,receiver,change,launchArgs,disposed,webMessages=[];
+const editor={document};let command,receiver,change,launchArgs,disposed,webMessages=[],outputLines=[];
 const child=new EventEmitter();child.stdin=new PassThrough();child.stdout=new PassThrough();child.stderr=new PassThrough();
 let input='';child.stdin.on('data',c=>input+=c);
 const web={cspSource:'test',asWebviewUri:u=>u.fsPath,postMessage:m=>{webMessages.push(m);},onDidReceiveMessage:f=>{receiver=f;}};
@@ -15,7 +15,7 @@ const vscode={
   workspace:{isTrusted:true,textDocuments:[document],workspaceFolders:[{uri:{fsPath:project}}],
     getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(k,d)=>config[k]??d}),
     onDidChangeTextDocument:f=>{change=f;}},
-  window:{activeTextEditor:editor,createOutputChannel:()=>({append(){},appendLine(){}}),
+  window:{activeTextEditor:editor,createOutputChannel:()=>({append(){},appendLine:s=>outputLines.push(s)}),
     createWebviewPanel:()=>panel,onDidChangeTextEditorSelection:()=>{},showErrorMessage:m=>{throw Error(m);}}
 };
 const original=Module._load;
@@ -36,6 +36,9 @@ Module._load=function(request,parent,...rest){
   assert.equal(webMessages.at(-1).state,'building');
   child.stdout.write(JSON.stringify({type:'frame',clientId:1,generation:1,revisionId:1,isStale:false})+'\n');
   await new Promise(r=>setImmediate(r));assert.equal(webMessages.at(-1).isStale,true);
+  child.stdout.write(JSON.stringify({type:'status',state:'error',error:'Incomplete \\iffalse'})+'\n');
+  await new Promise(r=>setImmediate(r));assert(outputLines.includes('Incomplete \\iffalse'));
+  assert.equal(webMessages.at(-1).state,'error');
   disposed();Module._load=original;
-  const result={checks:5,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
+  const result={checks:6,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(e=>{Module._load=original;console.error(e);process.exitCode=1;});

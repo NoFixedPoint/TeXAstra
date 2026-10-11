@@ -14,6 +14,42 @@ local page_number=0
 local geometry=nil
 local records={}
 local mode=os.getenv('BAKO_GEOMETRY') or 'sidecar'
+-- TeX virtual characters can draw several physical glyphs (for example a
+-- Palatino ffi made from f + fi). Missing characters draw none. The renderer
+-- trace follows those physical draws, not the number of TeX glyph nodes.
+local font_counts, virtual_fonts = {}, {}
+local function virtual_font(name,size)
+  local key=name..':'..tostring(size)
+  if virtual_fonts[key]==nil then virtual_fonts[key]=font.read_vf(name,size) or false end
+  return virtual_fonts[key]
+end
+local function physical_count(f,char,depth)
+  if not f or depth>16 then return 1 end
+  local character=f.characters[char]
+  if not character then return 0 end
+  if not character.commands and f.type=='unknown' then
+    local vf=virtual_font(f.name,f.size)
+    if vf then return physical_count(vf,char,depth+1) end
+  end
+  if not character.commands then return 1 end
+  local selected,count=1,0
+  for _,command in ipairs(character.commands) do
+    local op=command[1]
+    if op=='font' or op=='slot' then selected=command[2] end
+    if op=='char' or op=='slot' then
+      local sub=f.fonts and f.fonts[selected]
+      local child=sub and (sub.id and font.getfont(sub.id) or virtual_font(sub.name,sub.size))
+      count=count+(child and physical_count(child,command[op=='slot' and 3 or 2],depth+1) or 1)
+    end
+  end
+  return count
+end
+local function glyph_count(id,char)
+  local counts=font_counts[id]
+  if not counts then counts={};font_counts[id]=counts end
+  if counts[char]==nil then counts[char]=physical_count(font.getfont(id),char,0) end
+  return counts[char]
+end
 function bako_record(source,width,height,depth)
   if mode=='sidecar' then geometry:write(source,'\n');return end
   local x,y=pdf.getpos()
@@ -30,7 +66,7 @@ local function annotate(head)
         -- invoking buffered file IO separately for every glyph.
         local font_id,char=n.font,n.char
         late.data=function()
-          records[#records+1]=source
+          for _=1,glyph_count(font_id,char) do records[#records+1]=source end
           if bako_stream_glyph then bako_stream_glyph(font_id,char) end
         end
         head=node.insert_before(head,n,late)
