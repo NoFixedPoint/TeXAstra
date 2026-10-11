@@ -1,0 +1,239 @@
+{
+  "url": "http://127.0.0.1:8783",
+  "checks": [
+    {
+      "name": "reverse repeated math x",
+      "region": {
+        "id": 1000116,
+        "rect": [
+          148.7760009765625,
+          121.11988830566406,
+          154.46466064453125,
+          131.08253479003906
+        ],
+        "file": "pages/page-001.tex",
+        "start": 165,
+        "end": 166,
+        "line": 4,
+        "column": 21,
+        "endLine": 4,
+        "endColumn": 22,
+        "text": "x",
+        "kind": "token"
+      },
+      "selection": {
+        "start": 165,
+        "end": 166,
+        "text": "x"
+      }
+    },
+    {
+      "name": "reverse repeated math x",
+      "region": {
+        "id": 1000118,
+        "rect": [
+          166.57899475097656,
+          121.11988830566406,
+          172.2676544189453,
+          131.08253479003906
+        ],
+        "file": "pages/page-001.tex",
+        "start": 167,
+        "end": 168,
+        "line": 4,
+        "column": 23,
+        "endLine": 4,
+        "endColumn": 24,
+        "text": "x",
+        "kind": "token"
+      },
+      "selection": {
+        "start": 167,
+        "end": 168,
+        "text": "x"
+      }
+    },
+    {
+      "name": "fraction numerator",
+      "selection": {
+        "start": 146,
+        "end": 147,
+        "text": "a"
+      }
+    },
+    {
+      "name": "subscript",
+      "selection": {
+        "start": 180,
+        "end": 181,
+        "text": "1"
+      }
+    },
+    {
+      "name": "Chinese character",
+      "selection": {
+        "start": 124,
+        "end": 125,
+        "text": "中"
+      }
+    },
+    {
+      "name": "TikZ math label",
+      "selection": {
+        "start": 464,
+        "end": 465,
+        "text": "x"
+      }
+    },
+    {
+      "name": "rotated TikZ math label",
+      "selection": {
+        "start": 507,
+        "end": 508,
+        "text": "y"
+      }
+    },
+    {
+      "name": "generated macro fallback",
+      "selection": {
+        "start": 310,
+        "end": 316,
+        "text": "\\fixed"
+      }
+    },
+    {
+      "name": "forward math navigation",
+      "ok": true
+    },
+    {
+      "name": "rendered text selection",
+      "ok": true
+    },
+    {
+      "name": "typing preserves scroll and restores preview caret",
+      "ok": true
+    },
+    {
+      "name": "invalid input retains visibly stale image",
+      "ok": true
+    },
+    {
+      "name": "automatic full-document convergence",
+      "ok": true
+    },
+    {
+      "name": "recovers after invalid input",
+      "ok": true
+    },
+    {
+      "name": "idle convergence restores far-page checkpoints",
+      "ok": true
+    }
+  ],
+  "initialPaint": {
+    "type": "paint",
+    "revision": 1,
+    "clientId": 1,
+    "page": 1,
+    "pipelineMs": 13557.762500000536,
+    "visibleMs": 16291,
+    "stale": false,
+    "at": 1791689063053,
+    "engineMs": 12754.984409999452,
+    "renderMs": 61.421300008078106,
+    "requestToPayloadMs": 16151.223199995002,
+    "outputMode": "resource-seed"
+  },
+  "initialRegions": 1503,
+  "isolatedEdit": {
+    "type": "paint",
+    "revision": 2,
+    "clientId": 2,
+    "page": 1,
+    "pipelineMs": 171.95790000550915,
+    "visibleMs": 248,
+    "stale": false,
+    "at": 1791689064302,
+    "engineMs": 114.77005999768153,
+    "prepareMs": 26.00809099385515,
+    "compileMs": 88.75456900568679,
+    "mapMs": 8.496800001012161,
+    "roundtripMs": 117.08940000971779,
+    "renderMs": 43.35939999145921,
+    "requestToPayloadMs": 173.22919999423902,
+    "resumedFrom": 1,
+    "outputMode": "page-stream",
+    "pageBytes": 12225
+  },
+  "continuousTyping": {
+    "lastFrameDuringTyping": {
+      "type": "paint",
+      "revision": 20,
+      "clientId": 20,
+      "page": 1,
+      "pipelineMs": 116.76009999064263,
+      "visibleMs": null,
+      "stale": true,
+      "at": 1791689066953,
+      "engineMs": 58.244879997801036,
+      "prepareMs": 1.3183989940444008,
+      "compileMs": 56.92008099867962,
+      "mapMs": 8.878499997081235,
+      "roundtripMs": 60.01309999555815,
+      "renderMs": 45.16009999497328,
+      "requestToPayloadMs": 257.11440001032315,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageBytes": 12210
+    },
+    "lastFrame": {
+      "type": "paint",
+      "revision": 22,
+      "clientId": 22,
+      "page": 1,
+      "pipelineMs": 217.457499995362,
+      "visibleMs": 329,
+      "stale": false,
+      "at": 1791689067203,
+      "engineMs": 58.54117999842856,
+      "prepareMs": 0.8439999946858734,
+      "compileMs": 57.6889799995115,
+      "mapMs": 14.617099994211458,
+      "roundtripMs": 60.29280000075232,
+      "renderMs": 139.49679999495856,
+      "requestToPayloadMs": 252.0275999995647,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageBytes": 12210
+    },
+    "eventBefore": 4,
+    "eventAfter": 42,
+    "frames": 18,
+    "durationMs": 2894,
+    "updatesPerSecond": 6.2197650310988255,
+    "longestVisibleFreezeMs": 268,
+    "scrollStable": true,
+    "caretRestored": true
+  },
+  "afterConvergenceEdit": {
+    "type": "paint",
+    "revision": 26,
+    "clientId": 26,
+    "page": 100,
+    "pipelineMs": 112.42760000459384,
+    "visibleMs": 225,
+    "stale": false,
+    "at": 1791689084483,
+    "engineMs": 58.08898599934764,
+    "prepareMs": 1.5369000029750168,
+    "compileMs": 56.5472860034788,
+    "mapMs": 8.94960000005085,
+    "roundtripMs": 60.10430000605993,
+    "renderMs": 40.64970000763424,
+    "requestToPayloadMs": 113.21849998785183,
+    "resumedFrom": 100,
+    "outputMode": "page-stream",
+    "pageBytes": 12134
+  },
+  "browserErrors": []
+}

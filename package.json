@@ -1,0 +1,29 @@
+{
+  "name":"bakoma-revived-prototype",
+  "displayName":"BaKoMa Revived — Feasibility Prototype",
+  "description":"Experimental live LaTeX preview with token provenance and a LuaTeX checkpoint backend.",
+  "version":"0.0.3",
+  "publisher":"local-prototype",
+  "engines":{"vscode":"^1.85.0"},
+  "categories":["Other"],
+  "main":"./extension/extension.js",
+  "activationEvents":["onCommand:bakoma.openPreview"],
+  "capabilities":{"untrustedWorkspaces":{"supported":false}},
+  "contributes":{
+    "commands":[{"command":"bakoma.openPreview","title":"BaKoMa: Open Experimental Preview"}],
+    "configuration":{"title":"BaKoMa prototype","properties":{
+      "bakoma.python":{"type":"string","default":"python","description":"Python interpreter with PyMuPDF installed."},
+      "bakoma.engine":{"type":"string","enum":["stream","snapshot","native"],"default":"stream","description":"stream sends live page buffers to a persistent renderer (LuaHBTeX 1.14 in Ubuntu-22.04 WSL); snapshot finalizes PDF per edit; native uses full LuaLaTeX builds."},
+      "bakoma.mainFile":{"type":"string","default":"corpus/main.tex","description":"Root document relative to the workspace folder."}
+    }}
+  },
+  "scripts":{
+    "demo":"python -m prototype.demo",
+    "demo:native":"python -m prototype.demo --engine native",
+    "corpus":"python scripts/generate_corpus.py",
+    "check:mapping":"python scripts/check_mapping.py 100",
+    "check:snapshot":"python scripts/check_snapshot.py",
+    "check:stream":"python scripts/check_page_stream.py",
+    "check:browser":"python scripts/check_browser.py"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "candidate": "TeXpresso",
+  "commit": "e8df7709077b2f86f6e16e6c86ceefb86de06f8d",
+  "headless": true,
+  "measurement": "request to changed-pixel SDL render-present; NOT a verified-correct-output latency; includes diagnostic capture, excludes VS Code/compositor",
+  "updates": [
+    {
+      "page": 1,
+      "ms": 37.96549799153581,
+      "correctText": false,
+      "pixelHash": 2552782717
+    },
+    {
+      "page": 1,
+      "ms": 36.246597999706864,
+      "correctText": false,
+      "pixelHash": 610273142
+    },
+    {
+      "page": 1,
+      "ms": 37.08489899872802,
+      "correctText": false,
+      "pixelHash": 2552782717
+    },
+    {
+      "page": 1,
+      "ms": 34.63719799765386,
+      "correctText": false,
+      "pixelHash": 610273142
+    },
+    {
+      "page": 1,
+      "ms": 37.04159799963236,
+      "correctText": false,
+      "pixelHash": 2552782717
+    },
+    {
+      "page": 1,
+      "ms": 36.73299901129212,
+      "correctText": false,
+      "pixelHash": 610273142
+    },
+    {
+      "page": 50,
+      "ms": 34.562899003503844,
+      "correctText": false,
+      "pixelHash": 2832707657
+    },
+    {
+      "page": 50,
+      "ms": 82.08119600021746,
+      "correctText": false,
+      "pixelHash": 627129874
+    },
+    {
+      "page": 50,
+      "ms": 26.96129900868982,
+      "correctText": false,
+      "pixelHash": 2832707657
+    },
+    {
+      "page": 50,
+      "ms": 28.15199800534174,
+      "correctText": false,
+      "pixelHash": 627129874
+    },
+    {
+      "page": 50,
+      "ms": 26.349198989919387,
+      "correctText": false,
+      "pixelHash": 2832707657
+    },
+    {
+      "page": 50,
+      "ms": 26.177498992183246,
+      "correctText": false,
+      "pixelHash": 627129874
+    },
+    {
+      "page": 100,
+      "ms": 34.97009800048545,
+      "correctText": false,
+      "pixelHash": 2966620507
+    },
+    {
+      "page": 100,
+      "ms": 29.05279900005553,
+      "correctText": false,
+      "pixelHash": 998310012
+    },
+    {
+      "page": 100,
+      "ms": 29.181498000980355,
+      "correctText": false,
+      "pixelHash": 2966620507
+    },
+    {
+      "page": 100,
+      "ms": 28.15339899098035,
+      "correctText": false,
+      "pixelHash": 998310012
+    },
+    {
+      "page": 100,
+      "ms": 30.031599002541043,
+      "correctText": false,
+      "pixelHash": 2966620507
+    },
+    {
+      "page": 100,
+      "ms": 30.49719799309969,
+      "correctText": false,
+      "pixelHash": 998310012
+    }
+  ],
+  "startupMs": 241.31218799448106
+}

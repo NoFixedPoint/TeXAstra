@@ -1,0 +1,292 @@
+{
+  "checks": [
+    {
+      "name": "all 100 initial pages match uninstrumented full build",
+      "ok": true,
+      "pages": 100
+    },
+    {
+      "name": "text-last uses expected output path",
+      "ok": true,
+      "mode": "page-stream"
+    },
+    {
+      "name": "text-last leaves seed PDF untouched",
+      "ok": true
+    },
+    {
+      "name": "text-last skips document finalization",
+      "ok": true
+    },
+    {
+      "name": "text-last exact rendered pixels",
+      "ok": true
+    },
+    {
+      "name": "text-last exact source regions",
+      "ok": true,
+      "count": 1486
+    },
+    {
+      "name": "math-middle uses expected output path",
+      "ok": true,
+      "mode": "page-stream"
+    },
+    {
+      "name": "math-middle leaves seed PDF untouched",
+      "ok": true
+    },
+    {
+      "name": "math-middle skips document finalization",
+      "ok": true
+    },
+    {
+      "name": "math-middle exact rendered pixels",
+      "ok": true
+    },
+    {
+      "name": "math-middle exact source regions",
+      "ok": true,
+      "count": 1485
+    },
+    {
+      "name": "invalid input is rejected",
+      "ok": true
+    },
+    {
+      "name": "error recovery uses correct memory output",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ uses expected output path",
+      "ok": true,
+      "mode": "page-stream"
+    },
+    {
+      "name": "rotated-TikZ leaves seed PDF untouched",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ skips document finalization",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ exact rendered pixels",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ exact source regions",
+      "ok": true,
+      "count": 1485
+    },
+    {
+      "name": "new-Chinese-glyph uses expected output path",
+      "ok": true,
+      "mode": "resource-seed"
+    },
+    {
+      "name": "new-Chinese-glyph exact rendered pixels",
+      "ok": true
+    },
+    {
+      "name": "new-Chinese-glyph exact source regions",
+      "ok": true,
+      "count": 1485
+    },
+    {
+      "name": "same-new-glyph-cached uses expected output path",
+      "ok": true,
+      "mode": "page-stream"
+    },
+    {
+      "name": "same-new-glyph-cached leaves seed PDF untouched",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached skips document finalization",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached exact rendered pixels",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached exact source regions",
+      "ok": true,
+      "count": 1485
+    },
+    {
+      "name": "reflow-first uses expected output path",
+      "ok": true,
+      "mode": "page-stream"
+    },
+    {
+      "name": "reflow-first leaves seed PDF untouched",
+      "ok": true
+    },
+    {
+      "name": "reflow-first skips document finalization",
+      "ok": true
+    },
+    {
+      "name": "reflow-first exact rendered pixels",
+      "ok": true
+    },
+    {
+      "name": "reflow-first exact source regions",
+      "ok": true,
+      "count": 3047
+    },
+    {
+      "name": "adjacent page after reflow",
+      "ok": true
+    },
+    {
+      "name": "adjacent reflow pixels",
+      "ok": true
+    }
+  ],
+  "samples": [
+    {
+      "case": "text-last",
+      "ok": true,
+      "engineMs": 89.98294199409429,
+      "streamed": true,
+      "complete": false,
+      "resumedFrom": 100,
+      "prepareMs": 1.949999001226388,
+      "compileMs": 88.02414299861994,
+      "page": 99,
+      "pageCount": 100,
+      "width": 595.2760009765625,
+      "height": 841.8900146484375,
+      "revision": "ab4513c2c226ec6082cf280b8fc3c6445a0b894a34fcb9614c8da1bb69ef47b1",
+      "renderMs": 45.92290001164656,
+      "outputMode": "page-stream",
+      "pageBytes": 12106,
+      "mapMs": 12.358300009509549,
+      "roundtripMs": 92.53009999520145,
+      "pipelineMs": 154.44559999741614,
+      "provisional": true
+    },
+    {
+      "case": "math-middle",
+      "ok": true,
+      "engineMs": 75.45075099915266,
+      "streamed": true,
+      "complete": false,
+      "resumedFrom": 50,
+      "prepareMs": 8.587493997765705,
+      "compileMs": 66.85645700781606,
+      "page": 49,
+      "pageCount": 100,
+      "width": 595.2760009765625,
+      "height": 841.8900146484375,
+      "revision": "e369a318730d6515309181f7122de05d697c1cdf261791459123b1ebc206ceb8",
+      "renderMs": 38.807100005215034,
+      "outputMode": "page-stream",
+      "pageBytes": 12066,
+      "mapMs": 7.08729999314528,
+      "roundtripMs": 77.35390000743791,
+      "pipelineMs": 125.7589999877382,
+      "provisional": true
+    },
+    {
+      "case": "rotated-TikZ",
+      "ok": true,
+      "engineMs": 53.94397399504669,
+      "streamed": true,
+      "complete": false,
+      "resumedFrom": 50,
+      "prepareMs": 0.9300499950768426,
+      "compileMs": 53.01025700464379,
+      "page": 49,
+      "pageCount": 100,
+      "width": 595.2760009765625,
+      "height": 841.8900146484375,
+      "revision": "a2c994a27c90d5475f0910f8d0d6745e92a8b2d2281565248b4c4a9b3452bd29",
+      "renderMs": 41.224300002795644,
+      "outputMode": "page-stream",
+      "pageBytes": 12069,
+      "mapMs": 7.860300000174902,
+      "roundtripMs": 60.371700004907325,
+      "pipelineMs": 111.66930000763386,
+      "provisional": true
+    },
+    {
+      "case": "new-Chinese-glyph",
+      "ok": true,
+      "engineMs": 59.42896999476943,
+      "streamed": true,
+      "complete": true,
+      "resumedFrom": 50,
+      "prepareMs": 0.9342990088043734,
+      "compileMs": 56.33917199156713,
+      "availablePages": [
+        49
+      ],
+      "limit": 50,
+      "compiledPages": 50,
+      "lastCheckpointUs": 92271509745,
+      "lastShipoutUs": 92271498077,
+      "pdfFinishedUs": 92271511576,
+      "stoppedUs": 92271558219,
+      "resourceRefresh": "New font or glyph requires a resource refresh",
+      "page": 49,
+      "pageCount": 50,
+      "width": 595.2760009765625,
+      "height": 841.8900146484375,
+      "revision": "cfdfbf09f3a9b444adf6ec405c8885ca104dccb0a70c0740d72c2649772cbb72",
+      "renderMs": 35.457199992379174,
+      "outputMode": "resource-seed",
+      "mapMs": 8.564699994167313,
+      "roundtripMs": 58.9864000066882,
+      "pipelineMs": 357.7346999954898,
+      "provisional": true
+    },
+    {
+      "case": "same-new-glyph-cached",
+      "ok": true,
+      "engineMs": 51.21569900074974,
+      "streamed": true,
+      "complete": false,
+      "resumedFrom": 50,
+      "prepareMs": 1.5225819952320307,
+      "compileMs": 49.68505100987386,
+      "page": 49,
+      "pageCount": 50,
+      "width": 595.2760009765625,
+      "height": 841.8900146484375,
+      "revision": "d097af76ac5c45bee028b96e3123380fd52d844493b17dbb6ed68244a14c2a61",
+      "renderMs": 41.366400007973425,
+      "outputMode": "page-stream",
+      "pageBytes": 12101,
+      "mapMs": 9.359400006360374,
+      "roundtripMs": 58.17390000447631,
+      "pipelineMs": 111.44449999846984,
+      "provisional": true
+    },
+    {
+      "case": "reflow-first",
+      "ok": true,
+      "engineMs": 100.23056399950292,
+      "streamed": true,
+      "complete": false,
+      "resumedFrom": 1,
+      "prepareMs": 4.911598007311113,
+      "compileMs": 95.31376599625219,
+      "page": 0,
+      "pageCount": 50,
+      "width": 595.2760009765625,
+      "height": 841.8900146484375,
+      "revision": "5e9870f3954d7355dd3dff82559e0f49d014376c156583022c3df6219725c6e8",
+      "renderMs": 103.30309999699239,
+      "outputMode": "page-stream",
+      "pageBytes": 19658,
+      "mapMs": 33.31290000642184,
+      "roundtripMs": 103.53419999592006,
+      "pipelineMs": 242.94189999636728,
+      "provisional": true
+    }
+  ]
+}

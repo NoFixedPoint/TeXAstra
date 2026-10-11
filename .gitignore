@@ -1,0 +1,9 @@
+.work/
+node_modules/
+__pycache__/
+*.vsix
+.venv/
+*.py[cod]
+.env
+.env.*
+!.env.example

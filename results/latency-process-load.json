@@ -1,0 +1,42 @@
+﻿[
+    {
+        "Name":  "_Total",
+        "IDProcess":  0,
+        "PercentProcessorTime":  3191
+    },
+    {
+        "Name":  "Idle",
+        "IDProcess":  0,
+        "PercentProcessorTime":  2451
+    },
+    {
+        "Name":  "julia",
+        "IDProcess":  30852,
+        "PercentProcessorTime":  399
+    },
+    {
+        "Name":  "com.docker.backend#1",
+        "IDProcess":  16964,
+        "PercentProcessorTime":  113
+    },
+    {
+        "Name":  "vmmem",
+        "IDProcess":  11856,
+        "PercentProcessorTime":  108
+    },
+    {
+        "Name":  "System",
+        "IDProcess":  4,
+        "PercentProcessorTime":  29
+    },
+    {
+        "Name":  "WmiPrvSE#2",
+        "IDProcess":  12952,
+        "PercentProcessorTime":  19
+    },
+    {
+        "Name":  "firefox#7",
+        "IDProcess":  13156,
+        "PercentProcessorTime":  14
+    }
+]

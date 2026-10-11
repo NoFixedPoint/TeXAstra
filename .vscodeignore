@@ -1,0 +1,8 @@
+.work/**
+.git/**
+node_modules/**
+results/**
+artifacts/**
+corpus/**
+**/__pycache__/**
+*.vsix

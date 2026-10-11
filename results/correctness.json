@@ -1,0 +1,44 @@
+{
+  "sameEngine": "Linux LuaHBTeX / same installed packages and fonts",
+  "checks": [
+    {
+      "name": "math-middle",
+      "incrementalPages": 50,
+      "referencePages": 100,
+      "equalPages": 50,
+      "visiblePageEqual": true,
+      "allAvailablePagesEqual": true,
+      "pipelineMs": 162.2726000059629
+    },
+    {
+      "name": "fatal error restores deleted PDF prefix at page 50",
+      "ok": true
+    },
+    {
+      "name": "tikz-transform",
+      "incrementalPages": 50,
+      "referencePages": 100,
+      "equalPages": 50,
+      "visiblePageEqual": true,
+      "allAvailablePagesEqual": true,
+      "pipelineMs": 157.54620000370778
+    },
+    {
+      "name": "reflow-first",
+      "incrementalPages": 2,
+      "referencePages": 101,
+      "equalPages": 2,
+      "visiblePageEqual": true,
+      "allAvailablePagesEqual": true,
+      "pipelineMs": 301.9034000026295
+    },
+    {
+      "name": "preamble refuses unsafe checkpoint reuse",
+      "ok": true
+    },
+    {
+      "name": "preamble rebuild",
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "scope": "Retained edit frames in last 32 demo events; includes typing/recovery, not the 36-sample benchmark",
+  "definition": "finish_pdffile callback entry through stop_run callback entry; finalization/end-of-run window, not pure PDF CPU time",
+  "samples": [
+    {
+      "revisionId": 54,
+      "page": 0,
+      "isStale": true,
+      "compileMs": 103.51229699153919,
+      "pdfFinishedUs": 90132214891,
+      "stoppedUs": 90132250689,
+      "renderMs": 75.37750000483356,
+      "pipelineMs": 188.74199999845587,
+      "finalizationCallbackWindowMs": 35.798
+    },
+    {
+      "revisionId": 56,
+      "page": 0,
+      "isStale": true,
+      "compileMs": 107.85149699950125,
+      "pdfFinishedUs": 90132419579,
+      "stoppedUs": 90132455733,
+      "renderMs": 24.31220001017209,
+      "pipelineMs": 141.83939999202266,
+      "finalizationCallbackWindowMs": 36.154
+    },
+    {
+      "revisionId": 57,
+      "page": 0,
+      "isStale": true,
+      "compileMs": 107.2427970066201,
+      "pdfFinishedUs": 90132577366,
+      "stoppedUs": 90132615511,
+      "renderMs": 25.366400004713796,
+      "pipelineMs": 143.51670000178274,
+      "finalizationCallbackWindowMs": 38.145
+    },
+    {
+      "revisionId": 58,
+      "page": 0,
+      "isStale": true,
+      "compileMs": 105.21219699876383,
+      "pdfFinishedUs": 90132737481,
+      "stoppedUs": 90132773592,
+      "renderMs": 25.772099994355813,
+      "pipelineMs": 141.39210000575986,
+      "finalizationCallbackWindowMs": 36.111
+    },
+    {
+      "revisionId": 60,
+      "page": 0,
+      "isStale": true,
+      "compileMs": 117.43499599106144,
+      "pdfFinishedUs": 90132896397,
+      "stoppedUs": 90132939518,
+      "renderMs": 28.408400001353584,
+      "pipelineMs": 156.40520000306424,
+      "finalizationCallbackWindowMs": 43.121
+    },
+    {
+      "revisionId": 61,
+      "page": 0,
+      "isStale": true,
+      "compileMs": 105.7957969896961,
+      "pdfFinishedUs": 90133068221,
+      "stoppedUs": 90133104485,
+      "renderMs": 24.771299998974428,
+      "pipelineMs": 140.36060000944417,
+      "finalizationCallbackWindowMs": 36.264
+    },
+    {
+      "revisionId": 62,
+      "page": 0,
+      "isStale": true,
+      "compileMs": 105.87659699376673,
+      "pdfFinishedUs": 90133274396,
+      "stoppedUs": 90133309822,
+      "renderMs": 24.40070000011474,
+      "pipelineMs": 140.3368000028422,
+      "finalizationCallbackWindowMs": 35.426
+    },
+    {
+      "revisionId": 64,
+      "page": 0,
+      "isStale": false,
+      "compileMs": 102.53819699573796,
+      "pdfFinishedUs": 90133427163,
+      "stoppedUs": 90133462343,
+      "renderMs": 25.587899988749996,
+      "pipelineMs": 138.99740000488237,
+      "finalizationCallbackWindowMs": 35.18
+    },
+    {
+      "revisionId": 66,
+      "page": 0,
+      "isStale": false,
+      "compileMs": 103.15619700122625,
+      "pdfFinishedUs": 90133990213,
+      "stoppedUs": 90134025926,
+      "renderMs": 24.665699995239265,
+      "pipelineMs": 141.89050000277348,
+      "finalizationCallbackWindowMs": 35.713
+    },
+    {
+      "revisionId": 68,
+      "page": 99,
+      "isStale": false,
+      "compileMs": 126.8545970087871,
+      "pdfFinishedUs": 90150776540,
+      "stoppedUs": 90150812255,
+      "renderMs": 25.14789999986533,
+      "pipelineMs": 167.4021999933757,
+      "finalizationCallbackWindowMs": 35.715
+    },
+    {
+      "revisionId": 69,
+      "page": 99,
+      "isStale": false,
+      "compileMs": 133.5938959964551,
+      "pdfFinishedUs": 90151060525,
+      "stoppedUs": 90151096295,
+      "renderMs": 25.593399986973964,
+      "pipelineMs": 174.47769999853335,
+      "finalizationCallbackWindowMs": 35.77
+    },
+    {
+      "revisionId": 70,
+      "page": 0,
+      "isStale": false,
+      "compileMs": 170.03446799935773,
+      "pdfFinishedUs": 90282218850,
+      "stoppedUs": 90282301928,
+      "renderMs": 30.749600002309307,
+      "pipelineMs": 286.34609999426175,
+      "finalizationCallbackWindowMs": 83.078
+    }
+  ],
+  "medianWindowMs": 35.954499999999996
+}

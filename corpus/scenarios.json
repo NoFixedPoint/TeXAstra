@@ -1,0 +1,98 @@
+[
+  {
+    "name": "text-001",
+    "file": "pages/page-001.tex",
+    "before": "word: alpha.",
+    "after": "word: omega."
+  },
+  {
+    "name": "math-001",
+    "file": "pages/page-001.tex",
+    "before": "x+x+y=",
+    "after": "x+x+z="
+  },
+  {
+    "name": "tikz-001",
+    "file": "pages/page-001.tex",
+    "before": "(1,0.5)",
+    "after": "(1.5,0.7)"
+  },
+  {
+    "name": "invalid-001",
+    "file": "pages/page-001.tex",
+    "before": "\\frac{a_{1}+b^{2}}{c+d}",
+    "after": "\\frac{a_{1}+b^{2}}{c+d"
+  },
+  {
+    "name": "reflow-001",
+    "file": "pages/page-001.tex",
+    "before": "Editable word: alpha.",
+    "after": "Editable word: expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase ."
+  },
+  {
+    "name": "text-050",
+    "file": "pages/page-050.tex",
+    "before": "word: alpha.",
+    "after": "word: omega."
+  },
+  {
+    "name": "math-050",
+    "file": "pages/page-050.tex",
+    "before": "x+x+y=",
+    "after": "x+x+z="
+  },
+  {
+    "name": "tikz-050",
+    "file": "pages/page-050.tex",
+    "before": "(1,0.5)",
+    "after": "(1.5,0.7)"
+  },
+  {
+    "name": "invalid-050",
+    "file": "pages/page-050.tex",
+    "before": "\\frac{a_{1}+b^{2}}{c+d}",
+    "after": "\\frac{a_{1}+b^{2}}{c+d"
+  },
+  {
+    "name": "reflow-050",
+    "file": "pages/page-050.tex",
+    "before": "Editable word: alpha.",
+    "after": "Editable word: expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase ."
+  },
+  {
+    "name": "text-100",
+    "file": "pages/page-100.tex",
+    "before": "word: alpha.",
+    "after": "word: omega."
+  },
+  {
+    "name": "math-100",
+    "file": "pages/page-100.tex",
+    "before": "x+x+y=",
+    "after": "x+x+z="
+  },
+  {
+    "name": "tikz-100",
+    "file": "pages/page-100.tex",
+    "before": "(1,0.5)",
+    "after": "(1.5,0.7)"
+  },
+  {
+    "name": "invalid-100",
+    "file": "pages/page-100.tex",
+    "before": "\\frac{a_{1}+b^{2}}{c+d}",
+    "after": "\\frac{a_{1}+b^{2}}{c+d"
+  },
+  {
+    "name": "reflow-100",
+    "file": "pages/page-100.tex",
+    "before": "Editable word: alpha.",
+    "after": "Editable word: expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase expanded phrase ."
+  },
+  {
+    "name": "global-macro",
+    "file": "main.tex",
+    "before": "\\newcommand{\\globalword}{global}",
+    "after": "\\newcommand{\\globalword}{changed everywhere}"
+  }
+]

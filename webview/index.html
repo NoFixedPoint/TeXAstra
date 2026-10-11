@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BaKoMa revived · feasibility prototype</title><link rel="stylesheet" href="viewer.css"></head>
+<body>
+<header><strong>BaKoMa revived</strong><span class="badge">Feasibility prototype</span><span id="status">Ready</span></header>
+<main>
+<section id="source-pane"><div class="source-toolbar"><label>Source <input id="file" value="pages/page-001.tex"></label><button id="load">Open</button></div><textarea id="source" spellcheck="false" aria-label="LaTeX source"></textarea><p>Edits stay in memory in this demo. Click a glyph to select its source token; click source to locate it in the preview.</p></section>
+<section id="preview-pane"><nav><button id="previous" aria-label="Previous page">←</button><label>Page <input id="page" type="number" min="1" value="1"></label><button id="next" aria-label="Next page">→</button><span id="timing"></span></nav><div id="scroll"><div id="paper"><img id="image" alt="Rendered LaTeX page"><div id="text-layer"></div><div id="caret"></div><div id="highlight"></div></div></div><div id="location">Select text, math, or a TikZ label to inspect its source.</div></section>
+</main><details id="diagnostics"><summary>Prototype limitations and diagnostics</summary><p>Experimental source instrumentation supports the supplied corpus and a documented LaTeX subset. POSIX checkpointing uses explicit input-file boundaries; native Windows checkpointing and general TeX compatibility are unproved. Timing includes the measured pipeline and browser display, not a claim of meeting 150 ms.</p><pre id="error"></pre></details>
+<script src="viewer.js"></script></body></html>
