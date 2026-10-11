@@ -1,0 +1,891 @@
+{
+  "checks": [
+    {
+      "name": "initial exact pixels",
+      "ok": true
+    },
+    {
+      "name": "preamble dependency recorded",
+      "ok": true
+    },
+    {
+      "name": "body macro dependency retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "body macro dependency exact pixels",
+      "ok": true
+    },
+    {
+      "name": "body macro dependency valid source spans",
+      "ok": true
+    },
+    {
+      "name": "body macro dependency glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "macro dependency restores before definition, not visible use",
+      "ok": true
+    },
+    {
+      "name": "computed chapter input retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "computed chapter input exact pixels",
+      "ok": true
+    },
+    {
+      "name": "computed chapter input valid source spans",
+      "ok": true
+    },
+    {
+      "name": "computed chapter input glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "nested repeated input retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input valid source spans",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "nested repeated input page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 1 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 1 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "nested repeated input page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 2 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 2 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "nested repeated input page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 3 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 3 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "nested repeated input page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 4 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 4 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "nested repeated input page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 5 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 5 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "nested repeated input page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 6 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 6 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "nested repeated input page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 7 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "nested repeated input page 7 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "repeated input restores before its earliest use",
+      "ok": true
+    },
+    {
+      "name": "second nested edit retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "second nested edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "second nested edit valid source spans",
+      "ok": true
+    },
+    {
+      "name": "second nested edit glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included-file forward synchronization",
+      "ok": true
+    },
+    {
+      "name": "include command retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "include command exact pixels",
+      "ok": true
+    },
+    {
+      "name": "include command valid source spans",
+      "ok": true
+    },
+    {
+      "name": "include command glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "include command page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "include command page 1 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "include command page 1 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "include command page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "include command page 2 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "include command page 2 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "include command page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "include command page 3 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "include command page 3 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "include command page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "include command page 4 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "include command page 4 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "include command page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "include command page 5 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "include command page 5 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "include command page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "include command page 6 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "include command page 6 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "include command page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "include command page 7 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "include command page 7 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "introduce nested input retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "introduce nested input exact pixels",
+      "ok": true
+    },
+    {
+      "name": "introduce nested input valid source spans",
+      "ok": true
+    },
+    {
+      "name": "introduce nested input glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "new nested dependency with spaces retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "new nested dependency with spaces exact pixels",
+      "ok": true
+    },
+    {
+      "name": "new nested dependency with spaces valid source spans",
+      "ok": true
+    },
+    {
+      "name": "new nested dependency with spaces glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included syntax error reported",
+      "ok": true
+    },
+    {
+      "name": "included error recovery retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "included error recovery exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included error recovery valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included error recovery glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "included reflow exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 1 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 1 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 2 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 2 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 3 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 3 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 4 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 4 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 5 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 5 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 6 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 6 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 7 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 7 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 8 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 8 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 8 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 9 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 9 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 9 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 10 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 10 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 10 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "included reflow page 11 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 11 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "included reflow page 11 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 1 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 1 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 2 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 2 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 3 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 3 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 4 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 4 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 5 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 5 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 6 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 6 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 7 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 7 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 8 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 8 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 8 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "root removes chapter input page 9 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 9 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "root removes chapter input page 9 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency moved to later occurrence retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence exact pixels",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence valid source spans",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency moved to later occurrence page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 1 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 1 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency moved to later occurrence page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 2 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 2 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency moved to later occurrence page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 3 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 3 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency moved to later occurrence page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 4 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 4 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency moved to later occurrence page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 5 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 5 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency moved to later occurrence page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 6 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 6 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency moved to later occurrence page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 7 valid source spans",
+      "ok": true
+    },
+    {
+      "name": "dependency moved to later occurrence page 7 glyph mapping enabled",
+      "ok": true,
+      "warnings": []
+    },
+    {
+      "name": "dependency journal follows rollback",
+      "ok": true
+    },
+    {
+      "name": "shared.tex requires safe session rebuild",
+      "ok": true
+    },
+    {
+      "name": "unused.tex requires safe session rebuild",
+      "ok": true
+    },
+    {
+      "name": "local.sty requires safe session rebuild",
+      "ok": true
+    },
+    {
+      "name": "service included edit reuses checkpoint",
+      "ok": true
+    },
+    {
+      "name": "service included edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "service included edit converges",
+      "ok": true
+    },
+    {
+      "name": "converged session retains input dependencies",
+      "ok": true
+    },
+    {
+      "name": "service rebuilds preamble dependency",
+      "ok": true
+    },
+    {
+      "name": "preamble rebuild preserves body overlays",
+      "ok": true
+    },
+    {
+      "name": "body overlay survives preamble rebuild",
+      "ok": true
+    },
+    {
+      "name": "service reflow 6 retained edit",
+      "ok": true
+    },
+    {
+      "name": "service reflow 6 converged layout",
+      "ok": true
+    },
+    {
+      "name": "service reflow 7 retained edit",
+      "ok": true
+    },
+    {
+      "name": "service reflow 7 converged layout",
+      "ok": true
+    },
+    {
+      "name": "project sources remain unchanged",
+      "ok": true
+    }
+  ],
+  "edits": [
+    {
+      "name": "body macro dependency",
+      "resumedFrom": 3,
+      "pipelineMs": 28.147699,
+      "compileMs": 16.9192,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "computed chapter input",
+      "resumedFrom": 4,
+      "pipelineMs": 20.2852,
+      "compileMs": 10.3529,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "nested repeated input",
+      "resumedFrom": 4,
+      "pipelineMs": 26.457399,
+      "compileMs": 16.68,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "second nested edit",
+      "resumedFrom": 4,
+      "pipelineMs": 30.231599,
+      "compileMs": 16.764699,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "include command",
+      "resumedFrom": 4,
+      "pipelineMs": 36.859899,
+      "compileMs": 26.945399,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "introduce nested input",
+      "resumedFrom": 4,
+      "pipelineMs": 19.859899,
+      "compileMs": 9.515899,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "new nested dependency with spaces",
+      "resumedFrom": 4,
+      "pipelineMs": 19.671899,
+      "compileMs": 10.077099,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "included error recovery",
+      "resumedFrom": 4,
+      "pipelineMs": 30.057099,
+      "compileMs": 16.390699,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "included reflow",
+      "resumedFrom": 4,
+      "pipelineMs": 207.021595,
+      "compileMs": 48.708899,
+      "outputMode": "resource-seed"
+    },
+    {
+      "name": "root removes chapter input",
+      "resumedFrom": 4,
+      "pipelineMs": 17.198683,
+      "compileMs": 7.099674,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "dependency moved to later occurrence",
+      "resumedFrom": 5,
+      "pipelineMs": 28.052291,
+      "compileMs": 13.76485,
+      "outputMode": "page-stream"
+    }
+  ]
+}

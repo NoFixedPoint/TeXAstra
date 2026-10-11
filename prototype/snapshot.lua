@@ -1,5 +1,5 @@
--- Loaded after packages and before the document. Input checkpoints are injected
--- at explicit page-file boundaries of the controlled acceptance corpus only.
+-- Loaded after packages and before the document. General projects checkpoint
+-- at root paragraph boundaries; the corpus uses explicit page-file boundaries.
 local snapshot=assert(package.loadlib('./bako_snapshot.so','luaopen_bako_snapshot'))()
 local general=os.getenv('BAKO_LIVE_DOCUMENT')=='1'
 local limit=general and 10000 or 100
@@ -20,6 +20,7 @@ local block=0
 local checkpoint_page=-1
 function bako_block(index)
   block=index
+  bako_input_block=index
   local f=assert(io.open('bako-block-count','r'));local count=tonumber(f:read('*a'));f:close()
   if block>count then return end
   local shipped=bako_stream_page_count or 0
@@ -41,13 +42,14 @@ luatexbase.add_to_callback('finish_pdffile',function()
   if stream then bako_publish_page() end
   finished=snapshot.now()
 end,'bako.pdf_timing')
-luatexbase.add_to_callback('open_read_file',function(name)
+-- General projects install this reader before packages, with an input journal.
+if not general then luatexbase.add_to_callback('open_read_file',function(name)
   local index=tonumber(name:match('page%-(%d+)%.tex$'))
   if not general and index and index>limit then return {reader=function() return nil end,close=function() end} end
   local f=io.open(name,'r')
   if not f then return nil end
   return {reader=function() return f:read('*l') end,close=function() f:close() end}
-end,'bako.buffered_input')
+end,'bako.buffered_input') end
 luatexbase.add_to_callback(stream and 'wrapup_run' or 'stop_run',function()
   if stream and finished==0 then
     local f=assert(io.open('failed.json','w'))

@@ -13,8 +13,11 @@ arguments, math and environments. A fixed driver inputs the generated blocks.
 The driver survives restoration even when edits change the number of blocks.
 One retained checkpoint per newly shipped physical page saves the partially
 built page, floats, macros and compiler state before the next safe block. An edit
-restores the latest checkpoint preceding the changed block. Preamble and
-included-file edits reconstruct the session. The existing acceptance corpus
+restores the latest checkpoint preceding the changed block. Since version 0.0.11,
+included `.tex` edits also reuse checkpoints: a journal of actual TeX input reads
+identifies the first affected root block. Preamble dependencies and inputs without
+usable history reconstruct the session. See [the included-edit design and checks](../included-edits-20261011.md).
+The existing acceptance corpus
 continues to use its explicit page-file checkpoints; fork remains the default.
 
 The general source instrumenter retains original Unicode offsets and UTF-16

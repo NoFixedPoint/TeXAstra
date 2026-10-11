@@ -132,7 +132,7 @@ class LiveDocument {
         for (int index=1;index<=2048;++index) driver += "\\directlua{bako_block("+std::to_string(index)+")}%\n";
         write(directory / "bako-driver.tex", driver);
         main += "\\input{bako-driver.tex}%\n" + suffix;
-        write(directory / "main.tex", main);
+        write(directory / "main.tex", "\\directlua{dofile('inputs.lua')}%\n" + main);
     }
 };
 }

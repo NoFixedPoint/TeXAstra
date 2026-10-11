@@ -40,11 +40,12 @@ with sync_playwright() as pw:
     page.wait_for_function('lastPaint && !stale && [...pages.values()].some(p=>p.frame?.phase==="converged")',timeout=120000)
     page.wait_for_function('pages.get(page)?.frame?.generation===generation',timeout=30000)
     check('convergence preserves scrolled viewport',page.evaluate('page===documentCount-1'))
-    # An included file rebuilds checkpoints but remains in the live mode.
+    # An included file resumes a retained checkpoint in the live session.
     previous=page.evaluate('latestRequest')
     page.evaluate('''()=>{markStale();send({type:'edit',file:'parts/table.tex',source:'Changed include. $x+x$',page});}''')
     page.wait_for_function('(r)=>lastPaint.revision>r && !stale && lastPaint.clientId===latestClient',arg=previous,timeout=30000)
     check('included-file edit stays in live compilation',page.evaluate('lastPaint.compilationMode==="live" && pages.get(page).frame.characters.map(c=>c.text).join("").includes("Changed include")'))
+    check('included-file edit reuses a retained checkpoint',page.evaluate('lastPaint.resumedFrom>1'))
     # Invalid source retains the last image but cannot navigate using old spans.
     valid=page.locator('#source').input_value();previous=page.evaluate('latestRequest')
     page.locator('#source').evaluate('(e,s)=>{e.value=s;e.dispatchEvent(new InputEvent("input",{bubbles:true}));}',valid.replace('Updated paragraph',r'\undefinedBrokenCommand'))

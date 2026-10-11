@@ -37,6 +37,10 @@
       "ok": true
     },
     {
+      "name": "included-file edit reuses a retained checkpoint",
+      "ok": true
+    },
+    {
       "name": "compile error retains a stale image",
       "ok": true
     },
@@ -55,31 +59,31 @@
     "clientId": 10,
     "page": 1,
     "generation": 2,
-    "pipelineMs": 373.96308,
-    "visibleMs": 467,
+    "pipelineMs": 375.805369,
+    "visibleMs": 420,
     "stale": false,
-    "at": 1791715213939,
-    "compileMs": 93.253995,
+    "at": 1791719118465,
+    "compileMs": 95.493743,
     "compilerStagesMs": {
-      "fork": 3.249,
-      "replaceChild": 0.027,
-      "restore": 1.238,
-      "shipoutAndPublish": 51.728,
-      "typeset": 36.407
+      "fork": 3.024,
+      "replaceChild": 0.014,
+      "restore": 0.34,
+      "shipoutAndPublish": 52.587,
+      "typeset": 38.939
     },
     "snapshot": {
       "mode": "fork",
-      "pid": 415432
+      "pid": 422830
     },
-    "renderMs": 11.77477,
+    "renderMs": 12.247306,
     "renderStagesMs": {
-      "displayList": 2.395525,
-      "origins": 0.232833,
-      "png": 7.667369,
-      "raster": 1.235667,
-      "text": 0.192683
+      "displayList": 2.311301,
+      "origins": 0.2202,
+      "png": 8.289004,
+      "raster": 1.191001,
+      "text": 0.1595
     },
-    "requestToPayloadMs": 384.8873659968376,
+    "requestToPayloadMs": 386.26397401094437,
     "resumedFrom": 1,
     "outputMode": "resource-seed",
     "compilationMode": "live"

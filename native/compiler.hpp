@@ -18,6 +18,7 @@ class Engine {
     bool live = false;
     std::unique_ptr<LiveDocument> document;
     std::unique_ptr<BuildCache> cache;
+    std::set<fs::path> known_inputs;
     Fd listener;
     pid_t process = -1;
     std::map<int, PageBuffer> buffers;
@@ -330,6 +331,7 @@ class Engine {
     }
     Json resume(int input, int page) {
         auto started = Clock::now();
+        if (live) input_blocks();
         int index = 0;
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
@@ -369,6 +371,38 @@ class Engine {
         result["prepareMs"] = std::chrono::duration<double, std::milli>(resumed - started).count();
         result["resumedFrom"] = index;
         return display(page, std::move(result));
+    }
+    std::map<fs::path, int> input_blocks() {
+        std::ifstream journal(directory / "bako-inputs.jsonl");
+        if (!journal) throw RebuildRequired("Input dependency journal unavailable");
+        std::map<fs::path, int> inputs;
+        std::string line;
+        while (std::getline(journal, line)) {
+            auto event = Json::parse(line, nullptr, false);
+            if (!event.is_array() || event.size() != 2 || !event[0].is_number_integer() || !event[1].is_string())
+                throw RebuildRequired("Input dependency journal incomplete");
+            auto path = fs::weakly_canonical(directory / event[1].get<std::string>());
+            int block = event[0].get<int>();
+            auto [it, inserted] = inputs.emplace(path, block);
+            if (!inserted) it->second = std::min(it->second, block);
+            known_inputs.insert(path);
+        }
+        return inputs;
+    }
+    int first_input_block(const std::string &file) {
+        const auto target = fs::weakly_canonical(inside(directory, file));
+        auto inputs = input_blocks();
+        auto found = inputs.find(target);
+        if (found != inputs.end()) {
+            if (found->second == 0) throw RebuildRequired("Included file was read before body checkpoints");
+            return found->second;
+        }
+        // Partial replay has not reached this previously observed file yet.
+        // The journal covers the entire current prefix; every surviving
+        // checkpoint precedes this file's next read. Do not reuse old block
+        // numbers from an abandoned suffix, which may have changed structure.
+        if (!known_inputs.count(target)) throw RebuildRequired("Included file has no recorded body dependency");
+        return int(document->blocks.size()) + 1;
     }
     void prepare(const std::map<std::string, std::string> &overlays) {
         std::vector<fs::path> files;
@@ -415,7 +449,7 @@ class Engine {
             }
         }
         if (full) return;
-        for (const auto *name : {"snapshot.lua", "page_stream.lua", "provenance.lua"}) {
+        for (const auto *name : {"snapshot.lua", "page_stream.lua", "provenance.lua", "inputs.lua"}) {
             fs::copy_file(assets / name, directory / name, fs::copy_options::overwrite_existing);
         }
         fs::copy_file(runtime / "bako_snapshot.so", directory / "bako_snapshot.so",
@@ -425,7 +459,7 @@ class Engine {
             if (!overlays.count(options.main)) { replace_all(source,"\r\n","\n"); replace_all(source,"\r","\n"); }
             document = std::make_unique<LiveDocument>(source);
             document->generate(directory, options.main, sources);
-            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex"));
+            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex"));
             cache->finish_inputs();
             return;
         }
@@ -635,6 +669,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (!converged) {
             throw std::runtime_error("Auxiliary state did not converge");
         }
+        if (live) input_blocks();
         auto frame = display(page, result);
         frame["ok"] = true;
         frame["provisional"] = false;
@@ -651,11 +686,18 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
     Json edit(const std::string &file, const std::string &source, int page) {
         if (full) return update_files({{file, source}}, page);
         if (live) {
-            if (file != options.main) throw RebuildRequired("Included-file edit requires rebuilding compiler checkpoints");
-            if (source == document->original) return navigate(page);
-            auto next = std::make_unique<LiveDocument>(source);
-            int changed = document->first_change(*next);
-            if (changed < 0) throw RebuildRequired("Preamble or document structure changed");
+            auto started = Clock::now();
+            std::unique_ptr<LiveDocument> next;
+            int changed;
+            if (file == options.main) {
+                if (source == document->original) return navigate(page);
+                next = std::make_unique<LiveDocument>(source);
+                changed = document->first_change(*next);
+                if (changed < 0) throw RebuildRequired("Preamble or document structure changed");
+            } else {
+                if (fs::path(file).extension() != ".tex") throw RebuildRequired("Package or asset edit requires rebuilding compiler checkpoints");
+                changed = first_input_block(file);
+            }
             int checkpoint = 0;
             for (const auto &entry : fs::directory_iterator(directory)) {
                 auto name = entry.path().filename().string();
@@ -666,10 +708,14 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
                 }
             }
             if (!checkpoint) throw RebuildRequired("No retained checkpoint before the changed paragraph");
-            auto started = Clock::now();
             cache->invalidate(); cache->put(file,source);
-            next->generate(directory, file, sources);
-            document = std::move(next);
+            if (next) {
+                next->generate(directory, file, sources);
+                document = std::move(next);
+            } else {
+                sources.index(source, file);
+                sources.manifest(directory / "bako-sources.tsv");
+            }
             available.erase(available.lower_bound(checkpoint-1), available.end());
             auto result = resume(checkpoint, std::max(page,checkpoint-1));
             converged = false;
