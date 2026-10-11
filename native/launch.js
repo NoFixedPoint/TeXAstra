@@ -14,6 +14,7 @@ function linuxPath(value){
 function launch(root,project,checkpoint=process.env.BAKO_CHECKPOINT_MODE||'fork',options={}){
   const executable=path.join(options.runtime||path.join(root,'native/runtime'),'bakoma-backend');
   if(!fs.existsSync(executable))throw new Error('Build the C++ backend first: python scripts/build_cpp.py');
+  if(!fs.existsSync(path.join(path.dirname(executable),'bakoma-luahbtex')))throw new Error('Build the token-origin engine first: python scripts/build_engine.py');
   if(checkpoint!=='fork')throw new Error('Internal snapshots were removed; use fork checkpoints.');
   const args=['--project',linuxPath(project),'--assets',linuxPath(path.join(root,'prototype')),'--checkpoint',checkpoint,
     '--main',options.main||'main.tex','--preview-mode',options.mode||'auto','--compiler',options.compiler||'lualatex'];

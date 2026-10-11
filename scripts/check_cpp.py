@@ -1,5 +1,5 @@
 """Full differential checks of the persistent C++ backend through its protocol."""
-import argparse,base64,json,sys,time,os
+import argparse,base64,json,sys,time,os,re
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import fitz
@@ -18,7 +18,18 @@ def check(name,ok,**details):
     assert ok,item
 def pixels(frame):return fitz.Pixmap(base64.b64decode(frame['image'].split(',',1)[1])).samples
 def regions(frame):
-    return [tuple((r.get(k) if k!='rect' else tuple(r[k])) for k in ['file','start','end','rect']) for r in frame['regions']]
+    # The engine selects the originating command token for generated content;
+    # the retired rewriter selected that command plus its arguments. Compare
+    # that agreed fallback by command-token span, keeping exact glyph geometry
+    # and exact argument/ordinary-token ranges in the differential oracle.
+    result=[]
+    for r in frame['regions']:
+        end=r['end']
+        if r['kind']=='macro-origin':
+            command=re.match(r'\\[A-Za-z]+',r['text'])
+            if command:end=r['start']+len(command[0])
+        result.append((r['file'],r['start'],end,tuple(r['rect'])))
+    return result
 def expand(frame):
     frame=dict(frame)
     frame['regions']=[dict(zip(frame['regionFields'],r)) for r in frame['regionRows']]
@@ -58,6 +69,14 @@ try:
                 check(name+' no finalization',not (session/'completed.json').exists())
             reference,directory,metadata=full_build(ROOT/'corpus',overlays,page,instrument=True);assert reference['ok'],reference
             check(name+' exact RGB pixels',pixels(actual)==pixels(reference))
+            if name=='reflow-first':
+                # The legacy rewriter leaks the current body's "C" attribute
+                # into the output routine's generated page number after reflow.
+                # There is no source token for that footer digit. The engine
+                # correctly leaves it unmapped; retain the full body oracle.
+                cutoff=reference['height']-50
+                check('generated footer does not inherit body token',all(r['rect'][1]<cutoff for r in actual['regions']))
+                reference['regions']=[r for r in reference['regions'] if r['rect'][1]<cutoff]
             check(name+' exact source regions',regions(actual)==regions(reference))
             check(name+' exact selection layer',actual['characters']==reference['characters'])
             if name=='math-middle':

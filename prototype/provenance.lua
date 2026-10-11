@@ -1,6 +1,24 @@
 -- Instrument final glyphs after TeX has performed shaping and math layout.
--- Source identifiers come from the explicitly limited source instrumenter.
+-- Production identifiers come from LuaHBTeX's token scanner and expansion.
 local aid=luatexbase.new_attribute('bako_source')
+local origins=nil
+function bako_reload_sources()
+  if not origins then return end
+  local manifest=assert(io.open('bako-sources.tsv','r'))
+  for row in manifest:lines() do
+    local slot,path=row:match('^(%d+)\t(.+)$')
+    assert(slot and path,'Invalid source manifest')
+    origins.source_register(path,tonumber(slot))
+  end
+  manifest:close()
+end
+local manifest=io.open('bako-sources.tsv','r')
+if manifest then
+  manifest:close()
+  origins=assert(package.loadlib('./bako_snapshot.so','luaopen_bako_snapshot'))()
+  origins.source_enable(aid)
+  bako_reload_sources()
+end
 tex.sprint('\\attributedef\\bakoattr='..aid..' ')
 -- A brace-delimited setter does not consume source whitespace following it.
 tex.sprint('\\protected\\def\\bakoSet#1{\\bakoattr=#1\\relax}')
@@ -111,6 +129,16 @@ end,'bako.provenance')
 luatexbase.add_to_callback('finish_pdfpage',function()
   if geometry then
     if mode=='sidecar' and #records>0 then geometry:write(table.concat(records,'\n'),'\n') end
+    if origins then
+      local out=assert(io.open(string.format('origins-%03d.txt',page_number),'w'))
+      local seen={}
+      for _,id in ipairs(records) do
+        if id>0 and not seen[id] then
+          seen[id]=true;out:write(id,' ',origins.source_length(id),'\n')
+        end
+      end
+      out:close()
+    end
     geometry:close();geometry=nil
   end
 end,'bako.geometry')

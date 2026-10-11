@@ -1,0 +1,209 @@
+{
+  "checks": [
+    {
+      "name": "page count equals plain LuaLaTeX",
+      "ok": true,
+      "pages": 12
+    },
+    {
+      "name": "page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 1 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 2 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 3 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 4 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 5 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 6 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 7 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 8 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 8 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 9 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 9 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 10 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 10 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 11 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 11 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 12 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 12 source spans",
+      "ok": true
+    },
+    {
+      "name": "all pages match plain LuaLaTeX",
+      "ok": true
+    },
+    {
+      "name": "body pages have source mappings",
+      "ok": true,
+      "unmapped": []
+    },
+    {
+      "name": "middle-page token exists",
+      "ok": true
+    },
+    {
+      "name": "forward token location",
+      "ok": true
+    },
+    {
+      "name": "forward navigation prefers the visible occurrence",
+      "ok": true
+    },
+    {
+      "name": "edit 1 exact pixels",
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
+    },
+    {
+      "name": "edit 1 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "edit 2 exact pixels",
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
+    },
+    {
+      "name": "edit 2 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "edit 3 exact pixels",
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
+    },
+    {
+      "name": "edit 3 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "cache reused on reopen",
+      "ok": true
+    },
+    {
+      "name": "original project unchanged",
+      "ok": true,
+      "files": 3
+    }
+  ],
+  "edits": [
+    {
+      "pipelineMs": 42.249701,
+      "compileMs": 30.292101,
+      "resumedFrom": 6,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 4.313,
+        "replaceChild": 15.302,
+        "restore": 0.328,
+        "shipoutAndPublish": 4.185,
+        "typeset": 5.145
+      }
+    },
+    {
+      "pipelineMs": 41.244601,
+      "compileMs": 28.385901,
+      "resumedFrom": 6,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 2.941,
+        "replaceChild": 13.561,
+        "restore": 0.332,
+        "shipoutAndPublish": 4.889,
+        "typeset": 5.391
+      }
+    },
+    {
+      "pipelineMs": 41.566901,
+      "compileMs": 29.112501,
+      "resumedFrom": 6,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 3.421,
+        "replaceChild": 14.397,
+        "restore": 0.306,
+        "shipoutAndPublish": 5.127,
+        "typeset": 5.002
+      }
+    }
+  ],
+  "startupMs": 1815.170248,
+  "unmappedPages": [],
+  "targetPage": 7
+}

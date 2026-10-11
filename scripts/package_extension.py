@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
 parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime')
 args=parser.parse_args()
+if not (args.runtime/'bakoma-luahbtex').is_file():raise SystemExit('Build the token-origin compiler first: python scripts/build_engine.py')
 version=json.loads((ROOT/'package.json').read_text(encoding='utf-8'))['version']
 stage=Path(tempfile.mkdtemp(prefix='package-',dir=ROOT/'.work'))
 files=subprocess.check_output(['git','ls-files','-co','--exclude-standard','-z'],cwd=ROOT).decode().split('\0')
@@ -31,7 +32,10 @@ with zipfile.ZipFile(artifact) as archive:
                 assert archive.read(name)==source.read_bytes(),name
                 checked+=1
     assert json.loads(archive.read('extension/package.json'))['version']==version
+    assert 'extension/native/runtime/bako_internal.so' not in archive.namelist()
+    assert 'extension/native/runtime/bakoma-luahbtex' in archive.namelist()
 report={'version':version,'sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),
-    'verifiedPackagedFiles':checked,'runtimeSha256':hashlib.sha256((args.runtime/'bakoma-backend').read_bytes()).hexdigest()}
+    'verifiedPackagedFiles':checked,'runtimeSha256':hashlib.sha256((args.runtime/'bakoma-backend').read_bytes()).hexdigest(),
+    'compilerSha256':hashlib.sha256((args.runtime/'bakoma-luahbtex').read_bytes()).hexdigest()}
 (ROOT/'results'/f'package-{version}.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))

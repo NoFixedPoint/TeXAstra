@@ -31,6 +31,7 @@ function bako_block(index)
     local f=assert(io.open(string.format('cp-%03d.meta',index),'w'))
     f:write(block,' ',shipped);f:close()
     limit=snapshot.checkpoint(index)
+    if snapshot.is_live()==1 and bako_reload_sources then bako_reload_sources() end
     checkpoint_page=shipped
   end
   tex.sprint(string.format('\\input{bako-blocks/block-%03d.tex}',block))

@@ -92,6 +92,8 @@ class Engine {
             }
         }
         env.emplace_back("BAKO_PAGE_STREAM=1");
+        // A relocatable engine must find the installed distro's TeX trees.
+        if (!getenv("TEXMFCNF")) env.emplace_back("TEXMFCNF=/etc/texmf/web2c:/usr/local/share/texmf/web2c:/usr/share/texlive/texmf-dist/web2c");
         if (live) env.emplace_back("BAKO_LIVE_DOCUMENT=1");
         if (full) env.emplace_back("openout_any=p");
         if (prime) {
@@ -105,7 +107,7 @@ class Engine {
         std::vector<std::string> arguments = full
             ? std::vector<std::string>{options.compiler, "-no-shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-file-line-error", "./" + options.main}
-            : std::vector<std::string>{"lualatex", "--shell-escape", "-interaction=nonstopmode",
+            : std::vector<std::string>{(runtime / "bakoma-luahbtex").string(), "--fmt=lualatex", "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-recorder", "main.tex"};
         std::vector<char *> argv;
         for (auto &argument : arguments) argv.push_back(argument.data());
@@ -121,6 +123,7 @@ class Engine {
         return pid;
     }
     std::vector<int> ids(int page) {
+        sources.ranges(directory / page_name(page+1,"origins-",".txt"));
         std::vector<int> out;
         std::ifstream in(directory / page_name(page + 1, "geometry-", ".jsonl"));
         int n;
@@ -395,8 +398,8 @@ class Engine {
                 replace_all(data, "\r\n", "\n");
                 replace_all(data, "\r", "\n");
             }
-            if (!full && !live && file.extension() == ".tex" && name != "main.tex") {
-                data = sources.instrument(data, name) + reset;
+            if (!full && file.extension() == ".tex" && name != options.main) {
+                data = sources.index(data, name);
             }
             if (cache) {
                 if (file != fs::path(options.main).stem().string()+".pdf") cache->put(name, data);
@@ -406,6 +409,7 @@ class Engine {
         for (const auto &[name, data] : overlays) {
             auto target = inside(directory, name);
             if (full || live) {
+                if (!full && fs::path(name).extension()==".tex" && name!=options.main) sources.index(data,name);
                 fs::create_directories(target.parent_path());
                 if (cache) cache->put(name, data); else write(target, data);
             }
@@ -420,30 +424,8 @@ class Engine {
             auto source = overlays.count(options.main) ? overlays.at(options.main) : read(project / options.main);
             if (!overlays.count(options.main)) { replace_all(source,"\r\n","\n"); replace_all(source,"\r","\n"); }
             document = std::make_unique<LiveDocument>(source);
-            std::set<std::string> instrumented;
-            std::function<void(const std::string &)> include_sources;
-            include_sources = [&](const std::string &body) {
-                // Literal body inputs share TeX's project-relative lookup.
-                // Preamble inputs remain untouched: the attribute is defined
-                // only after package loading, immediately before the body.
-                static const std::regex input(R"(\\(?:input|include)\s*\{([^}]+)\})");
-                for (auto it=std::sregex_iterator(body.begin(),body.end(),input);it!=std::sregex_iterator();++it) {
-                    fs::path relative=(*it)[1].str();
-                    if (relative.extension().empty()) relative += ".tex";
-                    auto name=relative.generic_string();
-                    if (name==options.main || !instrumented.insert(name).second) continue;
-                    auto file=inside(directory,name);
-                    if (!fs::is_regular_file(file)) continue;
-                    auto original=read(file);
-                    auto rewritten=sources.instrument(original,name,name,0,0,0,true);
-                    if (rewritten.empty() || rewritten.back()!='\n') rewritten+='\n';
-                    write(file,"\\directlua{bako_push_source()}%\n"+rewritten+"\\directlua{bako_pop_source()}%\n");
-                    include_sources(original);
-                }
-            };
-            for (const auto &block : document->blocks) include_sources(block.source);
             document->generate(directory, options.main, sources);
-            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(runtime / "bakoma-backend"));
+            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex"));
             cache->finish_inputs();
             return;
         }
@@ -470,6 +452,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         }
         patched += root.substr(previous);
         write(directory / "main.tex", patched);
+        sources.manifest(directory / "bako-sources.tsv");
     }
 
     Json full_frame(int page) {
@@ -702,7 +685,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             throw std::runtime_error("Structural edits require session rebuild");
         }
         int index = std::stoi(match[1]);
-        auto rewritten = sources.instrument(source, file) + reset;
+        auto rewritten = sources.index(source, file);
         auto mapped = Clock::now();
         write(inside(directory, file), rewritten);
         available.erase(available.lower_bound(index - 1), available.end());

@@ -262,7 +262,7 @@ int main(int argc, char **argv) {
         std::map<std::string, std::string> args;
         for (int i = 1; i < argc; ++i) {
             std::string key = argv[i];
-            if (key == "--sync" || key == "--instrument") {
+            if (key == "--sync") {
                 args[key] = "1";
             } else {
                 if (i + 1 == argc) {
@@ -270,21 +270,6 @@ int main(int argc, char **argv) {
                 }
                 args[key] = argv[++i];
             }
-        }
-        if (args.count("--instrument")) {
-            Sources sources;
-            std::string line;
-            while (std::getline(std::cin, line)) {
-                auto request = Json::parse(line);
-                auto result = sources.instrument(request.at("source"), request.at("file"));
-                std::cout << Json({{"source", result},
-                                   {"spans", sources.export_spans()},
-                                   {"warnings", sources.warnings()}})
-                                 .dump()
-                          << '\n'
-                          << std::flush;
-            }
-            return 0;
         }
         fs::path executable = fs::canonical("/proc/self/exe"), runtime = executable.parent_path();
         std::string checkpoint =

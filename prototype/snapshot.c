@@ -30,6 +30,20 @@ extern void lua_pushlstring(lua_State*,const char*,size_t);
  * is used. The page-stream adapter checks the engine before loading this code. */
 extern void *static_pdf;
 extern void pdf_flush(void*);
+extern void bako_source_enable(int) __attribute__((weak));
+extern void bako_source_register(const char*,int) __attribute__((weak));
+extern int bako_source_length(int) __attribute__((weak));
+static int source_enable(lua_State *L) {
+  if(!bako_source_enable)return luaL_error(L,"Token origins require the bundled patched LuaHBTeX engine");
+  bako_source_enable((int)luaL_checkinteger(L,1));return 0;
+}
+static int source_register(lua_State *L) {
+  if(!bako_source_register)return luaL_error(L,"Token origin API unavailable");
+  bako_source_register(luaL_checklstring(L,1,NULL),(int)luaL_checkinteger(L,2));return 0;
+}
+static int source_length(lua_State *L) {
+  lua_pushinteger(L,bako_source_length?bako_source_length((int)luaL_checkinteger(L,1)):0);return 1;
+}
 
 struct saved_fd { int fd,flags; off_t pos; char path[4096]; };
 static int limit=100;
@@ -199,10 +213,14 @@ static int checkpoint(lua_State *L) {
 }
 
 int luaopen_bako_snapshot(lua_State *L) {
+  /* The same small bridge is used by provenance and checkpoint control. */
   lua_createtable(L,0,5);lua_pushcclosure(L,checkpoint,0);lua_setfield(L,-2,"checkpoint");lua_pushcclosure(L,now,0);lua_setfield(L,-2,"now");
   lua_pushcclosure(L,is_live,0);lua_setfield(L,-2,"is_live");lua_pushcclosure(L,page_bytes,0);lua_setfield(L,-2,"page_bytes");lua_pushcclosure(L,publish,0);lua_setfield(L,-2,"publish");
   lua_pushcclosure(L,export_pdf,0);lua_setfield(L,-2,"export_pdf");
   lua_pushcclosure(L,timings,0);lua_setfield(L,-2,"timings");
   lua_pushcclosure(L,park,0);lua_setfield(L,-2,"park");
-  lua_pushcclosure(L,stats,0);lua_setfield(L,-2,"stats");return 1;
+  lua_pushcclosure(L,stats,0);lua_setfield(L,-2,"stats");
+  lua_pushcclosure(L,source_enable,0);lua_setfield(L,-2,"source_enable");
+  lua_pushcclosure(L,source_register,0);lua_setfield(L,-2,"source_register");
+  lua_pushcclosure(L,source_length,0);lua_setfield(L,-2,"source_length");return 1;
 }

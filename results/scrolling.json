@@ -55,31 +55,31 @@
     "clientId": 10,
     "page": 1,
     "generation": 2,
-    "pipelineMs": 428.202742,
-    "visibleMs": 489,
+    "pipelineMs": 373.96308,
+    "visibleMs": 467,
     "stale": false,
-    "at": 1791704440770,
-    "compileMs": 91.868831,
+    "at": 1791715213939,
+    "compileMs": 93.253995,
     "compilerStagesMs": {
-      "fork": 3.372,
-      "replaceChild": 0.017,
-      "restore": 0.862,
-      "shipoutAndPublish": 47.65,
-      "typeset": 38.965
+      "fork": 3.249,
+      "replaceChild": 0.027,
+      "restore": 1.238,
+      "shipoutAndPublish": 51.728,
+      "typeset": 36.407
     },
     "snapshot": {
       "mode": "fork",
-      "pid": 179935
+      "pid": 415432
     },
-    "renderMs": 12.028604,
+    "renderMs": 11.77477,
     "renderStagesMs": {
-      "displayList": 2.220101,
-      "origins": 0.365,
-      "png": 7.982902,
-      "raster": 1.165401,
-      "text": 0.2337
+      "displayList": 2.395525,
+      "origins": 0.232833,
+      "png": 7.667369,
+      "raster": 1.235667,
+      "text": 0.192683
     },
-    "requestToPayloadMs": 438.60824601352215,
+    "requestToPayloadMs": 384.8873659968376,
     "resumedFrom": 1,
     "outputMode": "resource-seed",
     "compilationMode": "live"

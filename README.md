@@ -2,7 +2,7 @@
 
 This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The 150 ms latency target has not been met.** The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Version **0.0.9** fixes live compilation of conditional blocks and unbraced math fields. TeX parsing, macro expansion and typesetting use the existing LuaHBTeX engine; the experimental code manages source instrumentation, checkpoints, incremental output and preview navigation. We do not implement our own TeX typesetter. See [the compatibility fixes](docs/compatibility-20261011.md).
+Version **0.0.10** moves source tracking into LuaHBTeX?s token scanner and macro expansion. The bundled engine carries token origins into text and math nodes; the production source rewriter has been removed. Internal snapshots have also been removed, leaving fork checkpoints. See [the implementation and validation](docs/token-origins-20261011.md).
 
 Version 0.0.8 made **Open Experimental Preview** start a live LuaHBTeX session for ordinary projects, regardless of older PDFs, compiler comments or legacy preview settings. It added paragraph-boundary checkpoints, token/macro-origin navigation, reusable build files in the user's cache, and continuous scrolling with nearby pages loaded on demand. The original project receives no generated build files. See [live-project validation and limitations](docs/live-projects-20261011.md).
 
@@ -15,13 +15,14 @@ The [BaKoMa binary investigation](docs/bakoma-binary-pipeline.md) motivated sepa
 On this Windows machine, Node and Ubuntu-22.04 under WSL are already available. The packaged backend is Linux x86-64; Windows launches it through WSL. To build from source, close running C++ previews first:
 
 ```powershell
+python scripts/build_engine.py
 python scripts/build_cpp.py
 node native/demo.js
 ```
 
 Open <http://127.0.0.1:8765>. Edit the source pane, click individual rendered math symbols or TikZ text to select their source, or click a source token to highlight its output. Drag across the preview to select rendered text. Demo edits remain in memory; the original corpus files are not changed.
 
-The default `cpp` backend requires Linux LuaHBTeX **1.14**, CTeX, TikZ, Fandol fonts, and system libdeflate/zlib. Building also requires Python, G++, GCC, `libdeflate-dev`, and `zlib1g-dev`. Pinned MuPDF and JSON dependencies are fetched by the build script; Python is only a build/test tool for this backend. On Windows it uses the existing `Ubuntu-22.04` WSL distribution. Its C checkpoint module requires a trusted TeX process with Lua dynamic loading enabled. Live drawing output uses a memory-backed descriptor. General-project build files live in `$XDG_CACHE_HOME/bakoma-revived`, defaulting to `~/.cache/bakoma-revived` inside WSL; corpus/comparison sessions use `/tmp/bakoma-cpp-*`.
+The default `cpp` backend bundles patched Linux LuaHBTeX **1.14** and requires installed LaTeX packages, CTeX, TikZ, Fandol fonts, and system libdeflate/zlib. Building also requires Python, G++, GCC, `libdeflate-dev`, and `zlib1g-dev`. Pinned MuPDF and JSON dependencies are fetched by the build script; Python is only a build/test tool for this backend. On Windows it uses the existing `Ubuntu-22.04` WSL distribution. Its C checkpoint module requires a trusted TeX process with Lua dynamic loading enabled. Live drawing output uses a memory-backed descriptor. General-project build files live in `$XDG_CACHE_HOME/bakoma-revived`, defaulting to `~/.cache/bakoma-revived` inside WSL; corpus/comparison sessions use `/tmp/bakoma-cpp-*`.
 
 For the Python comparison, install `requirements.txt` and run `node native/demo.js --engine stream`. Use `python -m prototype.demo --engine snapshot` to compare with finalized-PDF output on every edit. `python -m prototype.demo` also launches the C++ demo by default.
 
@@ -33,7 +34,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.9.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.10.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -52,7 +53,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 ## What the experiments establish
 
 - `scripts/generate_corpus.py` creates a deterministic 100-page, multi-file Chinese/English, math, macro, and TikZ corpus, plus edit scenarios.
-- `native/source.hpp` instruments an explicitly limited LaTeX subset with source-span identifiers; `prototype/instrument.py` remains its independent reference. `prototype/provenance.lua` retains those identifiers on final glyph nodes and records them in actual glyph-output order during shipout. The renderer pairs this sidecar with its glyph trace, including TikZ transforms; a glyph-count mismatch disables navigation for that page. These are explicit identifiers, not repeated-word matching or line-only SyncTeX.
+- `engine/` adds token origins to LuaHBTeX; `native/source.hpp` indexes unchanged source text and translates engine spans into editor positions. `prototype/provenance.lua` records glyph origins in actual output order. The renderer pairs these IDs with its glyph trace, including TikZ transforms; a glyph-count mismatch disables navigation for that page.
 - `prototype/snapshot.c` retains compiler processes at checkpoints; edits fork from the preceding checkpoint and resume typesetting.
 - The service keeps a visibly stale preview on invalid input and disables navigation from stale output. During sustained typing it displays completed intermediate revisions, labels them stale, and coalesces queued edits. Complete builds run after an idle interval to converge references and downstream layout and supply a fresh set of reusable checkpoints.
 - A separately built TeXpresso checkout is used for comparison; it is not a dependency of the LuaTeX prototype.
@@ -60,17 +61,17 @@ The webview and browser demo share their renderer. The compiler service exchange
 ## Important limits of the proof
 
 - General projects use safe paragraph boundaries and retain at most one checkpoint per shipped page; the supplied corpus retains explicit page-file boundaries. Long paragraphs and opaque environments can require more replay. Preamble and included-file edits rebuild the session. The root needs explicit `\begin{document}` and `\end{document}`; the current driver allows 2048 paragraph blocks.
-- Root body text and literal body inputs are instrumented. Supported text/math get token mappings; opaque macro arguments and environments get invocation ranges. Arbitrary catcodes, generated input and document classes remain outside the proof. Non-glyph constructs such as fraction rules are not selectable source tokens. Existing bibliography output can be copied, but automatic bibliography/index tools are not implemented.
-- Source instrumentation is a research technique, not a complete parser or engine-level provenance implementation. Rendering equivalence and source mapping are validated on the supplied fixtures; they must not be generalized to arbitrary LaTeX.
+- Root body text and project `.tex` inputs get engine token origins. Macro arguments retain their token locations; generated macro content falls back to the calling command token. Non-glyph constructs such as fraction rules are not selectable. Existing bibliography output can be copied, but automatic bibliography/index tools are not implemented.
+- The compiler provenance patch is experimental. Arbitrary Lua-generated nodes, transformed input buffers and external token manipulation are outside the validated cases. The paragraph scheduler still has input-structure limits; moving provenance into TeX does not remove those separate constraints.
 - Fork checkpoints require Linux/WSL. Native Windows and macOS checkpoint implementations are unavailable.
 - Ordinary page payloads pass through in-memory drawing commands, PNG, and JSON. Complete PDFs remain necessary for resource seeding and background convergence. New fonts/glyphs or unsupported graphics resources trigger a refresh. TeX still writes auxiliary files, logs, source copies, and metadata inside the session; the complete workflow is not filesystem-free.
-- Source navigation uses rendered glyph IDs and physical pages, including pages outside the currently loaded viewport. Imported PDF figure text has no TeX-token provenance; body text and captions on those pages remain navigable. Unrecognized macro/environment syntax uses an invocation range where possible. This bounded source instrumenter is not a general TeX parser.
+- Source navigation uses rendered glyph IDs and physical pages, including pages outside the loaded viewport. Imported PDF figure text has no TeX-token provenance; body text and captions remain navigable.
 
 ## Reproduce the checks
 
 ```powershell
 python -m pip install -r requirements.txt
-python scripts/check_cpp_mapper.py
+python scripts/check_token_origins.py
 python scripts/check_live_syntax.py
 python scripts/check_cpp.py
 python scripts/live_fixture.py

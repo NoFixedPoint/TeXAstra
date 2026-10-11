@@ -1,0 +1,324 @@
+{
+  "checks": [
+    {
+      "name": "reordered arguments exact pixels",
+      "ok": true
+    },
+    {
+      "name": "reordered arguments token J",
+      "ok": true
+    },
+    {
+      "name": "reordered arguments token Q",
+      "ok": true
+    },
+    {
+      "name": "reordered arguments source ranges",
+      "ok": true
+    },
+    {
+      "name": "reordered arguments edit pixels",
+      "ok": true
+    },
+    {
+      "name": "delimited argument exact pixels",
+      "ok": true
+    },
+    {
+      "name": "delimited argument token Q",
+      "ok": true
+    },
+    {
+      "name": "delimited argument source ranges",
+      "ok": true
+    },
+    {
+      "name": "delimited argument edit pixels",
+      "ok": true
+    },
+    {
+      "name": "nested arguments exact pixels",
+      "ok": true
+    },
+    {
+      "name": "nested arguments token Q",
+      "ok": true
+    },
+    {
+      "name": "nested arguments source ranges",
+      "ok": true
+    },
+    {
+      "name": "nested arguments edit pixels",
+      "ok": true
+    },
+    {
+      "name": "generated macro exact pixels",
+      "ok": true
+    },
+    {
+      "name": "generated macro token Q",
+      "ok": true
+    },
+    {
+      "name": "generated macro source ranges",
+      "ok": true
+    },
+    {
+      "name": "generated macro edit pixels",
+      "ok": true
+    },
+    {
+      "name": "math arguments exact pixels",
+      "ok": true
+    },
+    {
+      "name": "math arguments token J",
+      "ok": true
+    },
+    {
+      "name": "math arguments token Q",
+      "ok": true
+    },
+    {
+      "name": "math arguments token 2",
+      "ok": true
+    },
+    {
+      "name": "math arguments token 3",
+      "ok": true
+    },
+    {
+      "name": "math arguments token \u03b1",
+      "ok": true
+    },
+    {
+      "name": "math arguments source ranges",
+      "ok": true
+    },
+    {
+      "name": "math arguments edit pixels",
+      "ok": true
+    },
+    {
+      "name": "unbraced math exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unbraced math token J",
+      "ok": true
+    },
+    {
+      "name": "unbraced math token Q",
+      "ok": true
+    },
+    {
+      "name": "unbraced math source ranges",
+      "ok": true
+    },
+    {
+      "name": "unbraced math edit pixels",
+      "ok": true
+    },
+    {
+      "name": "active character exact pixels",
+      "ok": true
+    },
+    {
+      "name": "active character token Q",
+      "ok": true
+    },
+    {
+      "name": "active character source ranges",
+      "ok": true
+    },
+    {
+      "name": "active character edit pixels",
+      "ok": true
+    },
+    {
+      "name": "changed letter catcode exact pixels",
+      "ok": true
+    },
+    {
+      "name": "changed letter catcode token Q",
+      "ok": true
+    },
+    {
+      "name": "changed letter catcode source ranges",
+      "ok": true
+    },
+    {
+      "name": "changed letter catcode edit pixels",
+      "ok": true
+    },
+    {
+      "name": "expanded definition exact pixels",
+      "ok": true
+    },
+    {
+      "name": "expanded definition token Q",
+      "ok": true
+    },
+    {
+      "name": "expanded definition source ranges",
+      "ok": true
+    },
+    {
+      "name": "expanded definition edit pixels",
+      "ok": true
+    },
+    {
+      "name": "expandafter argument exact pixels",
+      "ok": true
+    },
+    {
+      "name": "expandafter argument token Q",
+      "ok": true
+    },
+    {
+      "name": "expandafter argument source ranges",
+      "ok": true
+    },
+    {
+      "name": "expandafter argument edit pixels",
+      "ok": true
+    },
+    {
+      "name": "conditional argument exact pixels",
+      "ok": true
+    },
+    {
+      "name": "conditional argument token Q",
+      "ok": true
+    },
+    {
+      "name": "conditional argument source ranges",
+      "ok": true
+    },
+    {
+      "name": "conditional argument edit pixels",
+      "ok": true
+    },
+    {
+      "name": "verbatim exact pixels",
+      "ok": true
+    },
+    {
+      "name": "verbatim token J",
+      "ok": true
+    },
+    {
+      "name": "verbatim token Q",
+      "ok": true
+    },
+    {
+      "name": "verbatim source ranges",
+      "ok": true
+    },
+    {
+      "name": "verbatim edit pixels",
+      "ok": true
+    },
+    {
+      "name": "token register exact pixels",
+      "ok": true
+    },
+    {
+      "name": "token register token Q",
+      "ok": true
+    },
+    {
+      "name": "token register source ranges",
+      "ok": true
+    },
+    {
+      "name": "token register edit pixels",
+      "ok": true
+    },
+    {
+      "name": "control sequence alias exact pixels",
+      "ok": true
+    },
+    {
+      "name": "control sequence alias token Q",
+      "ok": true
+    },
+    {
+      "name": "control sequence alias source ranges",
+      "ok": true
+    },
+    {
+      "name": "control sequence alias edit pixels",
+      "ok": true
+    },
+    {
+      "name": "after group exact pixels",
+      "ok": true
+    },
+    {
+      "name": "after group token Q",
+      "ok": true
+    },
+    {
+      "name": "after group source ranges",
+      "ok": true
+    },
+    {
+      "name": "after group edit pixels",
+      "ok": true
+    },
+    {
+      "name": "after assignment exact pixels",
+      "ok": true
+    },
+    {
+      "name": "after assignment token Q",
+      "ok": true
+    },
+    {
+      "name": "after assignment source ranges",
+      "ok": true
+    },
+    {
+      "name": "after assignment edit pixels",
+      "ok": true
+    },
+    {
+      "name": "future let exact pixels",
+      "ok": true
+    },
+    {
+      "name": "future let token J",
+      "ok": true
+    },
+    {
+      "name": "future let token Q",
+      "ok": true
+    },
+    {
+      "name": "future let source ranges",
+      "ok": true
+    },
+    {
+      "name": "future let edit pixels",
+      "ok": true
+    },
+    {
+      "name": "computed input exact pixels",
+      "ok": true
+    },
+    {
+      "name": "computed input token origin",
+      "ok": true
+    },
+    {
+      "name": "new paragraph exact pixels",
+      "ok": true
+    },
+    {
+      "name": "new paragraph token origin",
+      "ok": true
+    }
+  ]
+}

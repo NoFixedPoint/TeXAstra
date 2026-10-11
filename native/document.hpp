@@ -2,6 +2,13 @@
 #include "source.hpp"
 
 namespace bako {
+// Checkpoint splitting is separate from engine-owned source tracking.
+inline bool primitive_conditional(const std::string &name) {
+    static const auto names = words("if ifcat ifnum ifdim ifodd ifvmode ifhmode ifmmode ifinner "
+        "ifvoid ifhbox ifvbox ifx ifeof iftrue iffalse ifcase ifdefined ifcsname iffontchar ifincsname ifabsnum ifabsdim");
+    return names.count(name) != 0;
+}
+
 struct DocumentBlock {
     std::string source;
     int offset = 0, line = 0, column = 0;
@@ -109,10 +116,11 @@ class LiveDocument {
         for (size_t i = 0; i < blocks.size(); ++i) {
             auto &b = blocks[i];
             auto name = page_name(int(i)+1, "block-", ".tex");
-            auto rewritten = sources.instrument(b.source, file, file+"#"+std::to_string(i+1), b.offset, b.line, b.column, true);
+            auto rewritten = sources.index(b.source, file, "bako-blocks/"+name, b.offset, b.line, b.column, true);
             // A percent at EOF stops \input's end-line character adding glue.
             write(directory / "bako-blocks" / name, rewritten + "%\n");
         }
+        sources.manifest(directory / "bako-sources.tsv");
         write(directory / "bako-block-count", std::to_string(blocks.size()));
         auto injection = std::string("\\directlua{dofile('provenance.lua')}\n") +
             "\\ifcsname pdfstringdefDisableCommands\\endcsname\\pdfstringdefDisableCommands{\\def\\bakoSet#1{}}\\fi\n"
