@@ -1,0 +1,209 @@
+{
+  "checks": [
+    {
+      "name": "page count equals plain LuaLaTeX",
+      "ok": true,
+      "pages": 12
+    },
+    {
+      "name": "page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 1 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 2 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 3 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 4 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 5 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 6 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 7 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 8 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 8 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 9 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 9 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 10 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 10 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 11 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 11 source spans",
+      "ok": true
+    },
+    {
+      "name": "page 12 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "page 12 source spans",
+      "ok": true
+    },
+    {
+      "name": "all pages match plain LuaLaTeX",
+      "ok": true
+    },
+    {
+      "name": "body pages have source mappings",
+      "ok": true,
+      "unmapped": []
+    },
+    {
+      "name": "middle-page token exists",
+      "ok": true
+    },
+    {
+      "name": "forward token location",
+      "ok": true
+    },
+    {
+      "name": "forward navigation prefers the visible occurrence",
+      "ok": true
+    },
+    {
+      "name": "edit 1 exact pixels",
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
+    },
+    {
+      "name": "edit 1 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "edit 2 exact pixels",
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
+    },
+    {
+      "name": "edit 2 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "edit 3 exact pixels",
+      "ok": true,
+      "page": 7,
+      "expectedPage": 7
+    },
+    {
+      "name": "edit 3 retained checkpoint",
+      "ok": true
+    },
+    {
+      "name": "cache reused on reopen",
+      "ok": true
+    },
+    {
+      "name": "original project unchanged",
+      "ok": true,
+      "files": 3
+    }
+  ],
+  "edits": [
+    {
+      "pipelineMs": 27.143982,
+      "compileMs": 11.244692,
+      "resumedFrom": 7,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 2.86,
+        "replaceChild": 0.014,
+        "restore": 0.33,
+        "shipoutAndPublish": 2.555,
+        "typeset": 4.901
+      }
+    },
+    {
+      "pipelineMs": 32.435679,
+      "compileMs": 11.466292,
+      "resumedFrom": 7,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 3.281,
+        "replaceChild": 0.012,
+        "restore": 0.425,
+        "shipoutAndPublish": 2.498,
+        "typeset": 4.805
+      }
+    },
+    {
+      "pipelineMs": 24.922784,
+      "compileMs": 11.871393,
+      "resumedFrom": 7,
+      "outputMode": "page-stream",
+      "compilerStagesMs": {
+        "fork": 2.969,
+        "replaceChild": 0.007,
+        "restore": 0.387,
+        "shipoutAndPublish": 2.555,
+        "typeset": 5.446
+      }
+    }
+  ],
+  "startupMs": 1650.695641,
+  "unmappedPages": [],
+  "targetPage": 7
+}

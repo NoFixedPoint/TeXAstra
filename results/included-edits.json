@@ -813,78 +813,78 @@
     {
       "name": "body macro dependency",
       "resumedFrom": 3,
-      "pipelineMs": 28.147699,
-      "compileMs": 16.9192,
+      "pipelineMs": 24.058408,
+      "compileMs": 12.315905,
       "outputMode": "page-stream"
     },
     {
       "name": "computed chapter input",
       "resumedFrom": 4,
-      "pipelineMs": 20.2852,
-      "compileMs": 10.3529,
+      "pipelineMs": 18.820606,
+      "compileMs": 9.121502,
       "outputMode": "page-stream"
     },
     {
       "name": "nested repeated input",
       "resumedFrom": 4,
-      "pipelineMs": 26.457399,
-      "compileMs": 16.68,
+      "pipelineMs": 27.499208,
+      "compileMs": 17.476605,
       "outputMode": "page-stream"
     },
     {
       "name": "second nested edit",
       "resumedFrom": 4,
-      "pipelineMs": 30.231599,
-      "compileMs": 16.764699,
+      "pipelineMs": 19.615405,
+      "compileMs": 8.270803,
       "outputMode": "page-stream"
     },
     {
       "name": "include command",
       "resumedFrom": 4,
-      "pipelineMs": 36.859899,
-      "compileMs": 26.945399,
+      "pipelineMs": 35.065409,
+      "compileMs": 24.917107,
       "outputMode": "page-stream"
     },
     {
       "name": "introduce nested input",
       "resumedFrom": 4,
-      "pipelineMs": 19.859899,
-      "compileMs": 9.515899,
+      "pipelineMs": 19.951805,
+      "compileMs": 8.772703,
       "outputMode": "page-stream"
     },
     {
       "name": "new nested dependency with spaces",
       "resumedFrom": 4,
-      "pipelineMs": 19.671899,
-      "compileMs": 10.077099,
+      "pipelineMs": 19.049005,
+      "compileMs": 9.177902,
       "outputMode": "page-stream"
     },
     {
       "name": "included error recovery",
       "resumedFrom": 4,
-      "pipelineMs": 30.057099,
-      "compileMs": 16.390699,
+      "pipelineMs": 17.148605,
+      "compileMs": 8.147702,
       "outputMode": "page-stream"
     },
     {
       "name": "included reflow",
       "resumedFrom": 4,
-      "pipelineMs": 207.021595,
-      "compileMs": 48.708899,
+      "pipelineMs": 151.126842,
+      "compileMs": 38.00961,
       "outputMode": "resource-seed"
     },
     {
       "name": "root removes chapter input",
       "resumedFrom": 4,
-      "pipelineMs": 17.198683,
-      "compileMs": 7.099674,
+      "pipelineMs": 16.915604,
+      "compileMs": 6.135902,
       "outputMode": "page-stream"
     },
     {
       "name": "dependency moved to later occurrence",
       "resumedFrom": 5,
-      "pipelineMs": 28.052291,
-      "compileMs": 13.76485,
+      "pipelineMs": 17.541205,
+      "compileMs": 6.697902,
       "outputMode": "page-stream"
     }
   ]

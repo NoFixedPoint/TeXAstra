@@ -16,6 +16,7 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 #include <time.h>
+#include <stdint.h>
 typedef struct lua_State lua_State;
 typedef long long lua_Integer;
 extern lua_Integer luaL_checkinteger(lua_State*,int);
@@ -26,6 +27,11 @@ extern void lua_createtable(lua_State*,int,int);
 extern void lua_setfield(lua_State*,int,const char*);
 extern const char *luaL_checklstring(lua_State*,int,size_t*);
 extern void lua_pushlstring(lua_State*,const char*,size_t);
+extern int lua_getglobal(lua_State*,const char*);
+extern int lua_gettop(lua_State*);
+extern void lua_settop(lua_State*,int);
+extern const char *lua_tolstring(lua_State*,int,size_t*);
+extern int lua_pcallk(lua_State*,int,int,int,intptr_t,int (*)(lua_State*,int,intptr_t));
 /* Exported by the pinned Linux LuaHBTeX 1.14 backend. No private struct layout
  * is used. The page-stream adapter checks the engine before loading this code. */
 extern void *static_pdf;
@@ -33,6 +39,29 @@ extern void pdf_flush(void*);
 extern void bako_source_enable(int) __attribute__((weak));
 extern void bako_source_register(const char*,int) __attribute__((weak));
 extern int bako_source_length(int) __attribute__((weak));
+extern void bako_sources_refresh(void) __attribute__((weak));
+extern void bako_set_boundary(void (*)(void)) __attribute__((weak));
+static lua_State *boundary_lua;
+static void engine_boundary(void) {
+  int top=lua_gettop(boundary_lua);
+  lua_getglobal(boundary_lua,"bako_boundary");
+  if(lua_pcallk(boundary_lua,0,0,0,0,NULL)) {
+    dprintf(2,"Engine checkpoint callback failed: %s\n",lua_tolstring(boundary_lua,-1,NULL));
+    _exit(7);
+  }
+  lua_settop(boundary_lua,top);
+}
+static int enable_boundaries(lua_State *L) {
+  if(!bako_set_boundary)return luaL_error(L,"Engine checkpoint API unavailable");
+  boundary_lua=L;bako_set_boundary(engine_boundary);return 0;
+}
+static int disable_boundaries(lua_State *L) {
+  (void)L;if(bako_set_boundary)bako_set_boundary(NULL);return 0;
+}
+static int refresh_sources(lua_State *L) {
+  if(!bako_sources_refresh)return luaL_error(L,"Source refresh API unavailable");
+  bako_sources_refresh();return 0;
+}
 static int source_enable(lua_State *L) {
   if(!bako_source_enable)return luaL_error(L,"Token origins require the bundled patched LuaHBTeX engine");
   bako_source_enable((int)luaL_checkinteger(L,1));return 0;
@@ -222,5 +251,8 @@ int luaopen_bako_snapshot(lua_State *L) {
   lua_pushcclosure(L,stats,0);lua_setfield(L,-2,"stats");
   lua_pushcclosure(L,source_enable,0);lua_setfield(L,-2,"source_enable");
   lua_pushcclosure(L,source_register,0);lua_setfield(L,-2,"source_register");
-  lua_pushcclosure(L,source_length,0);lua_setfield(L,-2,"source_length");return 1;
+  lua_pushcclosure(L,source_length,0);lua_setfield(L,-2,"source_length");
+  lua_pushcclosure(L,enable_boundaries,0);lua_setfield(L,-2,"enable_boundaries");
+  lua_pushcclosure(L,disable_boundaries,0);lua_setfield(L,-2,"disable_boundaries");
+  lua_pushcclosure(L,refresh_sources,0);lua_setfield(L,-2,"refresh_sources");return 1;
 }

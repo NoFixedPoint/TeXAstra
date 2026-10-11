@@ -34,10 +34,10 @@ and our patch/build recipe. It uses the installed WSL distribution's LaTeX
 packages and fonts. Updating the engine requires rebasing the checked patch and
 rerunning pixel, provenance, and checkpoint tests.
 
-This does not replace the separate paragraph splitter used to choose checkpoint
-boundaries. That scheduler still requires explicit document boundaries and can
-have compatibility limits for unusual input structure or category-code changes
-across blocks. Generated Lua nodes, rewritten input buffers, imported PDF text,
+Version 0.0.10 kept a separate paragraph splitter for checkpoint scheduling.
+[ADR 0008](0008-engine-checkpoints.md) replaces it in 0.0.12 with engine safe
+points and removes the requirement for literal document boundaries. Generated
+Lua nodes, rewritten input buffers, imported PDF text,
 and arbitrary token manipulation by external modules are not established as
 precise source origins. Non-glyph rules are not selectable source tokens.
 

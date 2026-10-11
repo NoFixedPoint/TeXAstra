@@ -61,3 +61,7 @@ _Avoid_: Isolated-edit latency
 **Glyph origin**:
 The source token or source range responsible for a rendered glyph, including an argument or macro invocation when expansion produces the content.
 _Avoid_: Nearby source line
+
+**Read frontier**:
+The furthest position in a source file already consumed by a retained compiler state, including text read ahead of its visible output.
+_Avoid_: Rendered position

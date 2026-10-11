@@ -1,7 +1,6 @@
 #pragma once
 #include "renderer.hpp"
 #include "cache.hpp"
-#include "document.hpp"
 #include <functional>
 extern char **environ;
 
@@ -16,7 +15,7 @@ class Engine {
     bool full = false;
     bool full_ready = false;
     bool live = false;
-    std::unique_ptr<LiveDocument> document;
+    bool live_edit_failed = false;
     std::unique_ptr<BuildCache> cache;
     std::set<fs::path> known_inputs;
     Fd listener;
@@ -109,7 +108,7 @@ class Engine {
             ? std::vector<std::string>{options.compiler, "-no-shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-file-line-error", "./" + options.main}
             : std::vector<std::string>{(runtime / "bakoma-luahbtex").string(), "--fmt=lualatex", "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
-                                       "-halt-on-error", "-recorder", "main.tex"};
+                                       "-halt-on-error", "-recorder", "--jobname=main", live ? "bako-driver.tex" : "main.tex"};
         std::vector<char *> argv;
         for (auto &argument : arguments) argv.push_back(argument.data());
         argv.push_back(nullptr);
@@ -331,7 +330,7 @@ class Engine {
     }
     Json resume(int input, int page) {
         auto started = Clock::now();
-        if (live) input_blocks();
+        if (live) remember_inputs();
         int index = 0;
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
@@ -372,37 +371,43 @@ class Engine {
         result["resumedFrom"] = index;
         return display(page, std::move(result));
     }
-    std::map<fs::path, int> input_blocks() {
+    void remember_inputs() {
         std::ifstream journal(directory / "bako-inputs.jsonl");
         if (!journal) throw RebuildRequired("Input dependency journal unavailable");
-        std::map<fs::path, int> inputs;
         std::string line;
         while (std::getline(journal, line)) {
             auto event = Json::parse(line, nullptr, false);
             if (!event.is_array() || event.size() != 2 || !event[0].is_number_integer() || !event[1].is_string())
                 throw RebuildRequired("Input dependency journal incomplete");
             auto path = fs::weakly_canonical(directory / event[1].get<std::string>());
-            int block = event[0].get<int>();
-            auto [it, inserted] = inputs.emplace(path, block);
-            if (!inserted) it->second = std::min(it->second, block);
             known_inputs.insert(path);
         }
-        return inputs;
     }
-    int first_input_block(const std::string &file) {
+    int checkpoint_before(const std::string &file, size_t changed) {
         const auto target = fs::weakly_canonical(inside(directory, file));
-        auto inputs = input_blocks();
-        auto found = inputs.find(target);
-        if (found != inputs.end()) {
-            if (found->second == 0) throw RebuildRequired("Included file was read before body checkpoints");
-            return found->second;
-        }
-        // Partial replay has not reached this previously observed file yet.
-        // The journal covers the entire current prefix; every surviving
-        // checkpoint precedes this file's next read. Do not reuse old block
-        // numbers from an abandoned suffix, which may have changed structure.
+        remember_inputs();
         if (!known_inputs.count(target)) throw RebuildRequired("Included file has no recorded body dependency");
-        return int(document->blocks.size()) + 1;
+        int checkpoint = 0;
+        for (const auto &entry : fs::directory_iterator(directory)) {
+            auto name = entry.path().filename().string();
+            if (!starts(name,"cp-") || entry.path().extension()!=".meta") continue;
+            int index = std::stoi(name.substr(3));
+            if (!fs::exists(directory / page_name(index,"cp-", ".pid"))) continue;
+            auto metadata = Json::parse(read(entry.path()), nullptr, false);
+            if (!metadata.is_object() || metadata.value("kind", "") != "engine" ||
+                !metadata.contains("inputs") || !metadata["inputs"].is_array())
+                throw RebuildRequired("Checkpoint input metadata unavailable");
+            size_t consumed = 0;
+            for (const auto &input : metadata["inputs"]) {
+                if (!input.is_array() || input.size()!=2 || !input[0].is_string() || !input[1].is_number_unsigned())
+                    throw RebuildRequired("Checkpoint input metadata incomplete");
+                if (fs::weakly_canonical(directory / input[0].get<std::string>()) == target)
+                    consumed = std::max(consumed, input[1].get<size_t>());
+            }
+            if (consumed <= changed) checkpoint = std::max(checkpoint, index);
+        }
+        if (!checkpoint) throw RebuildRequired("Changed input was consumed before body checkpoints");
+        return checkpoint;
     }
     void prepare(const std::map<std::string, std::string> &overlays) {
         std::vector<fs::path> files;
@@ -432,7 +437,7 @@ class Engine {
                 replace_all(data, "\r\n", "\n");
                 replace_all(data, "\r", "\n");
             }
-            if (!full && file.extension() == ".tex" && name != options.main) {
+            if (!full && file.extension() == ".tex" && (live || name != options.main)) {
                 data = sources.index(data, name);
             }
             if (cache) {
@@ -443,7 +448,7 @@ class Engine {
         for (const auto &[name, data] : overlays) {
             auto target = inside(directory, name);
             if (full || live) {
-                if (!full && fs::path(name).extension()==".tex" && name!=options.main) sources.index(data,name);
+                if (!full && fs::path(name).extension()==".tex" && (live || name!=options.main)) sources.index(data,name);
                 fs::create_directories(target.parent_path());
                 if (cache) cache->put(name, data); else write(target, data);
             }
@@ -455,10 +460,12 @@ class Engine {
         fs::copy_file(runtime / "bako_snapshot.so", directory / "bako_snapshot.so",
                       fs::copy_options::overwrite_existing);
         if (live) {
-            auto source = overlays.count(options.main) ? overlays.at(options.main) : read(project / options.main);
-            if (!overlays.count(options.main)) { replace_all(source,"\r\n","\n"); replace_all(source,"\r","\n"); }
-            document = std::make_unique<LiveDocument>(source);
-            document->generate(directory, options.main, sources);
+            sources.manifest(directory / "bako-sources.tsv");
+            write(directory / "bako-driver.tex",
+                  "\\directlua{dofile('inputs.lua')}%\n"
+                  "\\AtBeginDocument{\\directlua{dofile('provenance.lua');dofile('snapshot.lua');bako_live_begin()}}%\n"
+                  "\\AtEndDocument{\\directlua{bako_live_end()}}%\n"
+                  "\\input{\\detokenize{" + options.main + "}}%\n");
             cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex"));
             cache->finish_inputs();
             return;
@@ -669,7 +676,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (!converged) {
             throw std::runtime_error("Auxiliary state did not converge");
         }
-        if (live) input_blocks();
+        if (live) remember_inputs();
         auto frame = display(page, result);
         frame["ok"] = true;
         frame["provisional"] = false;
@@ -687,37 +694,19 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (full) return update_files({{file, source}}, page);
         if (live) {
             auto started = Clock::now();
-            std::unique_ptr<LiveDocument> next;
-            int changed;
-            if (file == options.main) {
-                if (source == document->original) return navigate(page);
-                next = std::make_unique<LiveDocument>(source);
-                changed = document->first_change(*next);
-                if (changed < 0) throw RebuildRequired("Preamble or document structure changed");
-            } else {
-                if (fs::path(file).extension() != ".tex") throw RebuildRequired("Package or asset edit requires rebuilding compiler checkpoints");
-                changed = first_input_block(file);
-            }
-            int checkpoint = 0;
-            for (const auto &entry : fs::directory_iterator(directory)) {
-                auto name = entry.path().filename().string();
-                if (starts(name,"cp-") && entry.path().extension()==".meta") {
-                    int block=0, shipped=0; std::istringstream(read(entry.path())) >> block >> shipped;
-                    int index = std::stoi(name.substr(3));
-                    if (block <= changed && fs::exists(directory / page_name(index,"cp-", ".pid"))) checkpoint=std::max(checkpoint,index);
-                }
-            }
-            if (!checkpoint) throw RebuildRequired("No retained checkpoint before the changed paragraph");
+            if (fs::path(file).extension() != ".tex") throw RebuildRequired("Package or asset edit requires rebuilding compiler checkpoints");
+            const auto previous = read(inside(directory, file));
+            if (source == previous && !live_edit_failed) return navigate(page);
+            size_t changed = 0;
+            while (changed < previous.size() && changed < source.size() && previous[changed] == source[changed]) ++changed;
+            int checkpoint = checkpoint_before(file, changed);
+            live_edit_failed = true;
             cache->invalidate(); cache->put(file,source);
-            if (next) {
-                next->generate(directory, file, sources);
-                document = std::move(next);
-            } else {
-                sources.index(source, file);
-                sources.manifest(directory / "bako-sources.tsv");
-            }
+            sources.index(source, file);
+            sources.manifest(directory / "bako-sources.tsv");
             available.erase(available.lower_bound(checkpoint-1), available.end());
             auto result = resume(checkpoint, std::max(page,checkpoint-1));
+            live_edit_failed = false;
             converged = false;
             result["pipelineMs"] = elapsed(started); result["ok"] = true; result["provisional"] = true;
             result["compilationMode"] = "live"; result["sourceSync"] = "token-and-macro-origin";

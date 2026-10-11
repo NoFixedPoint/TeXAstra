@@ -1,4 +1,4 @@
-"""Apply auditable metadata-only edits to the pinned upstream engine tree."""
+"""Apply checked provenance and safe-point hooks to the pinned engine tree."""
 from pathlib import Path
 import shutil,re
 
@@ -30,6 +30,13 @@ def apply(source):
     edit('tex/equivalents.c','        save_value(save_ptr) = t;','        save_value(save_ptr) = t;\n        save_stack[save_ptr].bako_origin_field = bako_origin;')
     edit('tex/equivalents.c','                reinsert_token(a, p);','                int bako_saved_origin = bako_origin;\n                bako_origin = save_stack[save_ptr].bako_origin_field;\n                reinsert_token(a, p);\n                bako_origin = bako_saved_origin;')
     edit('tex/maincontrol.c','    after_token = cur_tok;','    after_token = cur_tok;\n    bako_after_origin = bako_origin;')
+    # Only the outer interpreter, between completed commands. Never interrupt
+    # argument scanning, an output routine, a box, or recursive local control.
+    edit('tex/maincontrol.c',
+         '            get_x_token();\n        }\n        /*tex\n            Give diagnostic information',
+         '            if (bako_boundary_hook && mode == vmode && !output_active &&\n'
+         '                scanner_status == normal && local_level == 0) bako_boundary_hook();\n'
+         '            get_x_token();\n        }\n        /*tex\n            Give diagnostic information')
     edit('tex/maincontrol.c','        cur_tok = after_token;','        cur_tok = after_token;\n        bako_origin = bako_after_origin;')
     edit('tex/maincontrol.c','void prefixed_command(void)\n{','void prefixed_command(void)\n{\n    int bako_future_origin = 0;')
     edit('tex/maincontrol.c','                    q = cur_tok;\n                    get_token();','                    q = cur_tok;\n                    bako_future_origin = bako_origin;\n                    get_token();')

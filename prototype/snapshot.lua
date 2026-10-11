@@ -1,5 +1,5 @@
--- Loaded after packages and before the document. General projects checkpoint
--- at root paragraph boundaries; the corpus uses explicit page-file boundaries.
+-- General projects checkpoint at engine safe points; the comparison corpus
+-- retains its explicit page-file boundaries.
 local snapshot=assert(package.loadlib('./bako_snapshot.so','luaopen_bako_snapshot'))()
 local general=os.getenv('BAKO_LIVE_DOCUMENT')=='1'
 local limit=general and 10000 or 100
@@ -16,26 +16,30 @@ function bako_checkpoint(index)
   resumed=snapshot.now()
   if index>limit then tex.sprint('\\end{document}') end
 end
-local block=0
 local checkpoint_page=-1
-function bako_block(index)
-  block=index
-  bako_input_block=index
-  local f=assert(io.open('bako-block-count','r'));local count=tonumber(f:read('*a'));f:close()
-  if block>count then return end
+function bako_live_begin()
+  bako_input_block=1
+  snapshot.refresh_sources()
+  snapshot.enable_boundaries()
+end
+function bako_live_end() snapshot.disable_boundaries() end
+function bako_boundary()
   local shipped=bako_stream_page_count or 0
   if stream and snapshot.is_live()==1 and shipped>=limit then bako_publish_page() end
-  -- One safe paragraph checkpoint per physical page. Unlike the old corpus
-  -- driver, block numbers do not pretend to be page numbers.
+  -- One checkpoint per physical page, between commands in outer vertical
+  -- mode. The engine supplies these boundaries inside included files too.
   if shipped~=checkpoint_page and not os.getenv('BAKO_SNAPSHOT_DISABLE') then
     local index=shipped+1
     local f=assert(io.open(string.format('cp-%03d.meta',index),'w'))
-    f:write(block,' ',shipped);f:close()
+    f:write(bako_input_metadata(shipped));f:close()
     limit=snapshot.checkpoint(index)
-    if snapshot.is_live()==1 and bako_reload_sources then bako_reload_sources() end
+    bako_reload_inputs()
+    if snapshot.is_live()==1 then
+      bako_reload_sources()
+      snapshot.refresh_sources()
+    end
     checkpoint_page=shipped
   end
-  tex.sprint(string.format('\\input{bako-blocks/block-%03d.tex}',block))
 end
 luatexbase.add_to_callback('pre_shipout_filter',function(box) shipped=snapshot.now();return true end,'bako.timing')
 luatexbase.add_to_callback('finish_pdffile',function()

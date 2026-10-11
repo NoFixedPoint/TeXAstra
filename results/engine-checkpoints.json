@@ -1,0 +1,340 @@
+{
+  "checks": [
+    {
+      "name": "long chapter exact first page",
+      "ok": true
+    },
+    {
+      "name": "long chapter spans many pages",
+      "ok": true,
+      "pages": 12
+    },
+    {
+      "name": "unchanged input preserves viewport",
+      "ok": true
+    },
+    {
+      "name": "late chapter forward mapping",
+      "ok": true
+    },
+    {
+      "name": "late chapter token exact pixels",
+      "ok": true
+    },
+    {
+      "name": "late chapter token source spans",
+      "ok": true
+    },
+    {
+      "name": "late chapter token navigation enabled",
+      "ok": true
+    },
+    {
+      "name": "late chapter token nearby checkpoint",
+      "ok": true,
+      "checkpoint": 10,
+      "targetPage": 10
+    },
+    {
+      "name": "late token edit streams without resource export",
+      "ok": true
+    },
+    {
+      "name": "unchanged earlier command spans retained",
+      "ok": true
+    },
+    {
+      "name": "late chapter insertion exact pixels",
+      "ok": true
+    },
+    {
+      "name": "late chapter insertion source spans",
+      "ok": true
+    },
+    {
+      "name": "late chapter insertion navigation enabled",
+      "ok": true
+    },
+    {
+      "name": "late chapter insertion nearby checkpoint",
+      "ok": true,
+      "checkpoint": 10,
+      "targetPage": 10
+    },
+    {
+      "name": "late chapter new paragraphs exact pixels",
+      "ok": true
+    },
+    {
+      "name": "late chapter new paragraphs source spans",
+      "ok": true
+    },
+    {
+      "name": "late chapter new paragraphs navigation enabled",
+      "ok": true
+    },
+    {
+      "name": "late chapter new paragraphs nearby checkpoint",
+      "ok": true,
+      "checkpoint": 10,
+      "targetPage": 10
+    },
+    {
+      "name": "late chapter second edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "late chapter second edit source spans",
+      "ok": true
+    },
+    {
+      "name": "late chapter second edit navigation enabled",
+      "ok": true
+    },
+    {
+      "name": "late chapter second edit nearby checkpoint",
+      "ok": true,
+      "checkpoint": 10,
+      "targetPage": 10
+    },
+    {
+      "name": "late included error reported",
+      "ok": true
+    },
+    {
+      "name": "late included error recovery exact pixels",
+      "ok": true
+    },
+    {
+      "name": "late included error recovery source spans",
+      "ok": true
+    },
+    {
+      "name": "late included error recovery navigation enabled",
+      "ok": true
+    },
+    {
+      "name": "late included error recovery nearby checkpoint",
+      "ok": true,
+      "checkpoint": 10,
+      "targetPage": 10
+    },
+    {
+      "name": "append after observed EOF exact pixels",
+      "ok": true
+    },
+    {
+      "name": "append after observed EOF source spans",
+      "ok": true
+    },
+    {
+      "name": "append after observed EOF navigation enabled",
+      "ok": true
+    },
+    {
+      "name": "append after observed EOF nearby checkpoint",
+      "ok": true,
+      "checkpoint": 10,
+      "targetPage": 10
+    },
+    {
+      "name": "appended page visible",
+      "ok": true
+    },
+    {
+      "name": "root suffix retains chapter edits exact pixels",
+      "ok": true
+    },
+    {
+      "name": "root suffix retains chapter edits source spans",
+      "ok": true
+    },
+    {
+      "name": "root suffix retains chapter edits navigation enabled",
+      "ok": true
+    },
+    {
+      "name": "root suffix retains chapter edits nearby checkpoint",
+      "ok": true,
+      "checkpoint": 13,
+      "targetPage": 10
+    },
+    {
+      "name": "edited chapter page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 1 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 2 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 3 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 4 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 4 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 5 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 5 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 6 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 6 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 7 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 7 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 8 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 8 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 9 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 9 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 10 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 10 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 11 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 11 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 12 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 12 source spans",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 13 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "edited chapter page 13 source spans",
+      "ok": true
+    },
+    {
+      "name": "long chapter original files untouched",
+      "ok": true
+    },
+    {
+      "name": "macro read-ahead uses earlier checkpoint",
+      "ok": true,
+      "checkpoint": 1,
+      "pages": 6
+    },
+    {
+      "name": "macro read-ahead edit exact pixels",
+      "ok": true
+    },
+    {
+      "name": "computed begin and over 2048 paragraphs exact pixels",
+      "ok": true
+    },
+    {
+      "name": "over 2048 paragraphs live edit",
+      "ok": true
+    }
+  ],
+  "edits": [
+    {
+      "name": "late chapter token",
+      "resumedFrom": 10,
+      "pipelineMs": 34.626609,
+      "compileMs": 15.053804,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "late chapter insertion",
+      "resumedFrom": 10,
+      "pipelineMs": 102.472028,
+      "compileMs": 18.235705,
+      "outputMode": "resource-seed"
+    },
+    {
+      "name": "late chapter new paragraphs",
+      "resumedFrom": 10,
+      "pipelineMs": 142.217439,
+      "compileMs": 16.066604,
+      "outputMode": "resource-seed"
+    },
+    {
+      "name": "late chapter second edit",
+      "resumedFrom": 10,
+      "pipelineMs": 34.856809,
+      "compileMs": 16.339204,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "late included error recovery",
+      "resumedFrom": 10,
+      "pipelineMs": 34.878409,
+      "compileMs": 16.751605,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "append after observed EOF",
+      "resumedFrom": 10,
+      "pipelineMs": 57.711016,
+      "compileMs": 44.414112,
+      "outputMode": "page-stream"
+    },
+    {
+      "name": "root suffix retains chapter edits",
+      "resumedFrom": 13,
+      "pipelineMs": 67.870418,
+      "compileMs": 11.654503,
+      "outputMode": "resource-seed"
+    }
+  ]
+}

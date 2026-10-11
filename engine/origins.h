@@ -9,3 +9,4 @@ extern void bako_origin_copy(unsigned to, unsigned from);
 extern void bako_source_open(const char *name);
 extern void bako_scan_begin(void);
 extern void bako_scan_end(void);
+extern void (*bako_boundary_hook)(void);

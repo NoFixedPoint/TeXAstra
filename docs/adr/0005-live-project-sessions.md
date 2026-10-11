@@ -1,5 +1,8 @@
 # Own the live compilation session for ordinary projects
 
+The paragraph scheduling below describes versions 0.0.8–0.0.11. Version 0.0.12
+replaces that scheduler with [engine safe points and read frontiers](0008-engine-checkpoints.md).
+
 Opening the experimental preview must activate token synchronization and live
 updates independently of whichever compiler or PDF the user previously used.
 The command therefore always launches the C++ controller and LuaHBTeX live path.

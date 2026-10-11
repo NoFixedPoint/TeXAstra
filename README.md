@@ -2,7 +2,9 @@
 
 This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The 150 ms latency target has not been met.** The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Version **0.0.11** reuses compiler checkpoints for edits in included `.tex` files. Actual TeX input reads identify the earliest affected root block, including nested, repeated, and computed inputs. Preamble dependencies still rebuild safely. See [the implementation and validation](docs/included-edits-20261011.md).
+Version **0.0.12** places checkpoints at safe points in the TeX engine, including inside long included chapters. Input read positions determine which compiler state can be reused after an edit. The handwritten root paragraph splitter and its 2,048-block limit have been removed. See [the implementation and validation](docs/engine-checkpoints-20261011.md).
+
+Version 0.0.11 introduced checkpoint reuse for included `.tex` edits using their earliest affected root block. Preamble dependencies still rebuild safely. See [the earlier implementation and validation](docs/included-edits-20261011.md).
 
 Version 0.0.10 moved source tracking into LuaHBTeX's token scanner and macro expansion. The bundled engine carries token origins into text and math nodes; the production source rewriter has been removed. Internal snapshots have also been removed, leaving fork checkpoints. See [the implementation and validation](docs/token-origins-20261011.md).
 
@@ -38,7 +40,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.11.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.12.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -50,7 +52,7 @@ For another project, open its folder and main `.tex` file, then run **BaKoMa: Op
 
 The command always uses C++ and LuaHBTeX live compilation. Legacy `bakoma.engine`, `bakoma.previewMode` and `bakoma.latexCompiler` settings no longer select a reduced-feature preview. `% !TEX root` still selects the root; `% !TEX program` does not choose our compiler. Close the preview and reopen it after changing the main file. Windows uses packages/fonts installed in **Ubuntu-22.04 WSL**. XeLaTeX-specific source may need adaptation to LuaLaTeX; opening our preview does not silently switch to a compiler without source mapping.
 
-Live builds copy supported TeX, image, font and data assets below the main file's directory. Root body edits and previously observed body `.tex` inputs restore an earlier paragraph checkpoint. Preamble dependencies, package/asset edits, and files without usable dependency history rebuild the compiler session. Initial loading and idle convergence still compile the complete document. Assets outside that directory and automatic bibliography/index tools are not yet supported. Build files are isolated from the source directory and reused when inputs and dependencies match. The extension never saves editor buffers automatically; saving in VS Code still writes the file you opened, so use a separate copy to edit a read-only project.
+Live builds copy supported TeX, image, font and data assets below the main file's directory. Root and included-body edits restore the latest retained engine checkpoint that has not read the changed text. Preamble dependencies, package/asset edits, and files without usable dependency history rebuild the compiler session. Initial loading and idle convergence still compile the complete document. Assets outside that directory and automatic bibliography/index tools are not yet supported. Build files are isolated from the source directory and reused when inputs and dependencies match. The extension never saves editor buffers automatically; saving in VS Code still writes the file you opened, so use a separate copy to edit a read-only project.
 
 The webview and browser demo share their renderer. The compiler service exchanges versioned source updates and page payloads over JSON lines. Its source mapping and compiler state do not depend on a separate native window.
 
@@ -64,9 +66,9 @@ The webview and browser demo share their renderer. The compiler service exchange
 
 ## Important limits of the proof
 
-- General projects use safe root paragraph boundaries and retain at most one checkpoint per shipped page; the supplied corpus retains explicit page-file boundaries. Included-file edits replay from before the file's first read; long chapters, paragraphs, and opaque environments can require more replay. Preamble dependencies and coalesced edits to multiple files still rebuild the session. The root needs explicit `\begin{document}` and `\end{document}`; the current driver allows 2048 paragraph blocks.
+- General projects retain at most one checkpoint per shipped page, between completed TeX commands in outer vertical mode. Long paragraphs, boxes, and macro arguments read ahead of their output can require earlier replay. Preamble dependencies and coalesced edits to multiple files still rebuild the session. The supplied comparison corpus retains explicit page-file checkpoints. Source origins currently support up to 2,146 registered files, each smaller than one million Unicode characters; root documents are now indexed as whole files too.
 - Root body text and project `.tex` inputs get engine token origins. Macro arguments retain their token locations; generated macro content falls back to the calling command token. Non-glyph constructs such as fraction rules are not selectable. Existing bibliography output can be copied, but automatic bibliography/index tools are not implemented.
-- The compiler provenance patch is experimental. Arbitrary Lua-generated nodes, transformed input buffers and external token manipulation are outside the validated cases. The paragraph scheduler still has input-structure limits; moving provenance into TeX does not remove those separate constraints.
+- The compiler provenance and checkpoint patches are experimental. Arbitrary Lua-generated nodes, transformed input buffers, external token manipulation, and file reads performed directly by external Lua modules are outside the validated cases.
 - Fork checkpoints require Linux/WSL. Native Windows and macOS checkpoint implementations are unavailable.
 - Ordinary page payloads pass through in-memory drawing commands, PNG, and JSON. Complete PDFs remain necessary for resource seeding and background convergence. New fonts/glyphs or unsupported graphics resources trigger a refresh. TeX still writes auxiliary files, logs, source copies, and metadata inside the session; the complete workflow is not filesystem-free.
 - Source navigation uses rendered glyph IDs and physical pages, including pages outside the loaded viewport. Imported PDF figure text has no TeX-token provenance; body text and captions remain navigable.
@@ -78,6 +80,7 @@ python -m pip install -r requirements.txt
 python scripts/check_token_origins.py
 python scripts/check_live_syntax.py
 python scripts/check_included_edits.py
+python scripts/check_engine_checkpoints.py
 python scripts/check_cpp.py
 python scripts/live_fixture.py
 python scripts/check_live_mode.py --project .work/scroll-case --main paper.tex --output live-fixture.json

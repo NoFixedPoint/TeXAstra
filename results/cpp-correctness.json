@@ -1380,170 +1380,170 @@
   "samples": [
     {
       "case": "text-last",
-      "compileMs": 81.602158,
+      "compileMs": 106.880463,
       "compilerStagesMs": {
-        "fork": 14.607,
-        "replaceChild": 0.012,
-        "restore": 0.786,
-        "shipoutAndPublish": 15.85,
-        "typeset": 49.558
+        "fork": 25.411,
+        "replaceChild": 0.014,
+        "restore": 1.457,
+        "shipoutAndPublish": 19.529,
+        "typeset": 59.155
       },
-      "mapMs": 0.4603,
+      "mapMs": 1.122101,
       "outputMode": "page-stream",
-      "pipelineMs": 103.246373,
-      "prepareMs": 0.719001,
-      "renderMs": 18.447313,
+      "pipelineMs": 126.741775,
+      "prepareMs": 0.8275,
+      "renderMs": 16.193409,
       "renderStagesMs": {
-        "displayList": 0.4389,
-        "origins": 0.8708,
-        "png": 15.526011,
-        "raster": 0.967301,
-        "text": 0.490901
+        "displayList": 0.5592,
+        "origins": 1.084501,
+        "png": 12.469307,
+        "raster": 1.416401,
+        "text": 0.535
       },
       "resumedFrom": 100
     },
     {
       "case": "math-middle",
-      "compileMs": 79.872157,
+      "compileMs": 81.576323,
       "compilerStagesMs": {
-        "fork": 12.211,
-        "replaceChild": 0.003,
-        "restore": 1.292,
-        "shipoutAndPublish": 12.047,
-        "typeset": 53.39
+        "fork": 13.752,
+        "replaceChild": 0.006,
+        "restore": 1.9,
+        "shipoutAndPublish": 8.755,
+        "typeset": 56.073
       },
-      "mapMs": 0.239433,
+      "mapMs": 0.355575,
       "outputMode": "page-stream",
-      "pipelineMs": 96.466401,
-      "prepareMs": 2.714527,
-      "renderMs": 12.230725,
+      "pipelineMs": 98.649158,
+      "prepareMs": 2.866235,
+      "renderMs": 12.638824,
       "renderStagesMs": {
-        "displayList": 0.487484,
-        "origins": 0.964426,
-        "png": 9.43709,
-        "raster": 0.815192,
-        "text": 0.445134
+        "displayList": 0.352458,
+        "origins": 1.01585,
+        "png": 9.589072,
+        "raster": 1.050134,
+        "text": 0.492617
       },
       "resumedFrom": 50
     },
     {
       "case": "rotated-TikZ",
-      "compileMs": 81.275637,
+      "compileMs": 65.700646,
       "compilerStagesMs": {
-        "fork": 9.224,
-        "replaceChild": 0.007,
-        "restore": 0.867,
-        "shipoutAndPublish": 16.503,
-        "typeset": 53.901
+        "fork": 10.251,
+        "replaceChild": 0.011,
+        "restore": 1.081,
+        "shipoutAndPublish": 9.251,
+        "typeset": 44.261
       },
-      "mapMs": 0.2189,
+      "mapMs": 0.34045,
       "outputMode": "page-stream",
-      "pipelineMs": 98.074744,
-      "prepareMs": 0.6331,
-      "renderMs": 14.593107,
+      "pipelineMs": 80.264928,
+      "prepareMs": 0.531392,
+      "renderMs": 12.433122,
       "renderStagesMs": {
-        "displayList": 0.4566,
-        "origins": 0.9894,
-        "png": 11.633406,
-        "raster": 0.899501,
-        "text": 0.5215
+        "displayList": 0.4642,
+        "origins": 1.043626,
+        "png": 9.528663,
+        "raster": 0.820417,
+        "text": 0.489958
       },
       "resumedFrom": 50
     },
     {
       "case": "colored-TikZ",
-      "compileMs": 63.416829,
+      "compileMs": 62.361411,
       "compilerStagesMs": {
-        "fork": 7.348,
-        "replaceChild": 0.009,
-        "restore": 0.804,
-        "shipoutAndPublish": 9.737,
-        "typeset": 44.75
+        "fork": 10.019,
+        "replaceChild": 0.01,
+        "restore": 0.66,
+        "shipoutAndPublish": 8.234,
+        "typeset": 42.59
       },
-      "mapMs": 0.2919,
+      "mapMs": 0.615083,
       "outputMode": "page-stream",
-      "pipelineMs": 80.408836,
-      "prepareMs": 0.6465,
-      "renderMs": 14.626007,
+      "pipelineMs": 78.711635,
+      "prepareMs": 0.574842,
+      "renderMs": 13.312481,
       "renderStagesMs": {
-        "displayList": 0.4162,
-        "origins": 1.1788,
-        "png": 11.654205,
-        "raster": 0.806401,
-        "text": 0.506101
+        "displayList": 0.551467,
+        "origins": 0.906033,
+        "png": 10.406371,
+        "raster": 0.887608,
+        "text": 0.465576
       },
       "resumedFrom": 50
     },
     {
       "case": "new-Chinese-glyph",
-      "compileMs": 61.481727,
+      "compileMs": 138.013561,
       "compilerStagesMs": {
-        "fork": 7.147,
-        "replaceChild": 0.009,
-        "restore": 0.88,
-        "shipoutAndPublish": 8.923,
-        "typeset": 43.902
+        "fork": 24.893,
+        "replaceChild": 0.014,
+        "restore": 2.124,
+        "shipoutAndPublish": 22.631,
+        "typeset": 85.886
       },
-      "mapMs": 0.2297,
+      "mapMs": 0.3728,
       "outputMode": "resource-seed",
-      "pipelineMs": 159.795472,
-      "prepareMs": 0.585601,
-      "renderMs": 17.613408,
+      "pipelineMs": 282.620824,
+      "prepareMs": 0.704,
+      "renderMs": 21.84171,
       "renderStagesMs": {
-        "displayList": 2.970901,
-        "origins": 0.947701,
-        "png": 10.950605,
-        "raster": 2.134201,
-        "text": 0.5205
+        "displayList": 3.263002,
+        "origins": 3.340301,
+        "png": 11.173105,
+        "raster": 2.892301,
+        "text": 1.027401
       },
       "resourceRefresh": "New font or glyph requires a resource refresh",
       "resumedFrom": 50
     },
     {
       "case": "same-new-glyph-cached",
-      "compileMs": 60.747527,
+      "compileMs": 63.739028,
       "compilerStagesMs": {
-        "fork": 7.184,
-        "replaceChild": 0.04,
-        "restore": 0.776,
-        "shipoutAndPublish": 9.173,
-        "typeset": 42.812
+        "fork": 9.283,
+        "replaceChild": 0.008,
+        "restore": 0.647,
+        "shipoutAndPublish": 7.655,
+        "typeset": 45.45
       },
-      "mapMs": 0.1573,
+      "mapMs": 0.3247,
       "outputMode": "page-stream",
-      "pipelineMs": 76.679435,
-      "prepareMs": 0.559501,
-      "renderMs": 13.933707,
+      "pipelineMs": 78.226935,
+      "prepareMs": 0.560001,
+      "renderMs": 12.354406,
       "renderStagesMs": {
-        "displayList": 0.415901,
-        "origins": 0.9254,
-        "png": 11.090805,
-        "raster": 0.9543,
-        "text": 0.485801
+        "displayList": 0.362,
+        "origins": 0.7541,
+        "png": 9.916105,
+        "raster": 0.791001,
+        "text": 0.4606
       },
       "resumedFrom": 50
     },
     {
       "case": "reflow-first",
-      "compileMs": 110.891141,
+      "compileMs": 96.644742,
       "compilerStagesMs": {
-        "fork": 7.383,
-        "replaceChild": 0.005,
-        "restore": 0.726,
-        "shipoutAndPublish": 8.342,
-        "typeset": 91.301
+        "fork": 6.718,
+        "replaceChild": 0.03,
+        "restore": 0.505,
+        "shipoutAndPublish": 3.935,
+        "typeset": 69.157
       },
-      "mapMs": 1.018417,
+      "mapMs": 0.783901,
       "outputMode": "page-stream",
-      "pipelineMs": 132.914251,
-      "prepareMs": 3.230977,
-      "renderMs": 15.509182,
+      "pipelineMs": 120.983953,
+      "prepareMs": 7.245303,
+      "renderMs": 14.315606,
       "renderStagesMs": {
-        "displayList": 0.662383,
-        "origins": 1.745426,
-        "png": 10.789997,
-        "raster": 1.269034,
-        "text": 0.946642
+        "displayList": 0.866,
+        "origins": 1.585001,
+        "png": 9.363604,
+        "raster": 1.249701,
+        "text": 1.1661
       },
       "resumedFrom": 1
     }

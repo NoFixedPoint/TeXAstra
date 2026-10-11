@@ -6,6 +6,8 @@ int bako_origin = 0;
 int bako_attribute = -1;
 int bako_after_origin = 0;
 int *bako_token_origins = NULL;
+void (*bako_boundary_hook)(void) = NULL;
+void bako_set_boundary(void (*hook)(void)) { bako_boundary_hook = hook; }
 static unsigned bako_token_capacity = 0;
 typedef struct {
     char *path;
@@ -59,7 +61,7 @@ static bako_file *bako_file_for(const char *path) {
         if (!strcmp(path,bako_files[i].path)) return &bako_files[i];
     return NULL;
 }
-void bako_source_open(const char *path) {
+static void bako_source_load(const char *path, int preserve) {
     bako_last_path = NULL;
     bako_file *f = bako_file_for(path);
     if (!f) return;
@@ -70,12 +72,18 @@ void bako_source_open(const char *path) {
     unsigned char *data=malloc(size+1);
     if (!data || fread(data,1,size,in)!=(size_t)size) abort();
     fclose(in);
-    free(f->scalar); free(f->line_start); free(f->ends);
+    int old_size = f->size, *old_ends = f->ends;
+    free(f->scalar); free(f->line_start);
     f->size=(int)size;
     f->scalar=calloc(size+1,sizeof(int));
     f->line_start=calloc(size+2,sizeof(int));
     f->ends=calloc(size+1,sizeof(int));
     if (!f->scalar || !f->line_start || !f->ends) abort();
+    /* Already-built nodes in a checkpoint still reference prefix tokens.
+     * Their lengths survive refresh; rescanned suffix tokens replace theirs. */
+    if (preserve && old_ends)
+        memcpy(f->ends, old_ends, ((old_size < size ? old_size : size)+1)*sizeof(int));
+    free(old_ends);
     int scalar=0;
     f->lines=1;
     for (int i=0; i<size; ++i) {
@@ -87,6 +95,15 @@ void bako_source_open(const char *path) {
     /* Continuation bytes belong to the same Unicode scalar. */
     for (int i=1;i<size;++i) if ((data[i]&0xc0)==0x80) f->scalar[i]=f->scalar[i-1];
     free(data);
+}
+void bako_source_open(const char *path) { bako_source_load(path, 0); }
+void bako_sources_refresh(void) {
+    /* Closed files reopen through bako_source_open. Only the active input
+     * stack can retain old line tables after a checkpoint is resumed. */
+    for (int i=1; i<=in_open; ++i) {
+        bako_file *f = bako_file_for(full_source_filename_stack[i]);
+        if (f) bako_source_load(f->path, 1);
+    }
 }
 void bako_scan_begin(void) {
     bako_scanning = NULL;

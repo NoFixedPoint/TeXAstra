@@ -42,7 +42,11 @@ public:
             it=files.emplace(identity,std::move(f)).first;slots[it->second.slot]=&it->second;
         }
         current=&it->second;
-        current->text=unicode(source);current->spans.clear();
+        auto next=unicode(source);
+        size_t prefix=0;
+        while(prefix<next.size() && prefix<current->text.size() && next[prefix]==current->text[prefix]) ++prefix;
+        auto previous=std::move(current->spans);
+        current->text=std::move(next);current->spans.clear();
         if(current->text.size()>=1000000) throw std::runtime_error("Source file/block exceeds one million characters");
         int line=base_line,column=base_column;
         for(size_t n=0;n<current->text.size();++n) {
@@ -51,6 +55,10 @@ public:
             auto c=current->text[n];
             if(c=='\n'){++line;column=0;}else column+=c>0xffff?2:1;
             s.endLine=line;s.endColumn=column;s.text=rune(c);s.kind="token";
+            // Earlier pages remain available when resuming inside this file.
+            // Preserve engine-reported command spans in the unchanged prefix.
+            if(n<previous.size() && previous[n].start==s.start && previous[n].file==file &&
+               previous[n].end<=base_offset+int(prefix)) s=std::move(previous[n]);
             current->spans.push_back(std::move(s));
         }
         return source;
