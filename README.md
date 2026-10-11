@@ -2,7 +2,9 @@
 
 This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The latest local 13-page browser benchmark measures 91–158 ms p95; typing bursts and new-font edits exceed the 150 ms target.** This does not establish performance for arbitrary projects or the real VS Code host. The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Version **0.0.16** runs BibTeX, Biber, and MakeIndex from the installed LaTeX distribution during complete builds and idle convergence. Content fingerprints reuse unchanged auxiliary outputs, while bibliography, citation, index-entry, and index-style changes regenerate them. Builds stop after six LaTeX passes and report unresolved references and tool failures. See [the implementation and validation](docs/build-tools-20261011.md).
+Version **0.0.17** supports main documents in subdirectories with shared project assets in sibling directories. The workspace folder defines the project root by default; `bakoma.projectRoot` overrides it. Saved asset changes refresh the preview while preserving unsaved text buffers. Source navigation uses project-relative paths, including aliased inputs. See [the implementation and validation](docs/project-assets-20261011.md).
+
+Version 0.0.16 runs BibTeX, Biber, and MakeIndex from the installed LaTeX distribution during complete builds and idle convergence. Content fingerprints reuse unchanged auxiliary outputs, while bibliography, citation, index-entry, and index-style changes regenerate them. Builds stop after six LaTeX passes and report unresolved references and tool failures. See [the implementation and validation](docs/build-tools-20261011.md).
 
 Version 0.0.15 keeps source-navigation failures local to individual output nodes. Fraction bars, radical bars, overlines and underlines navigate to their source commands; rotated rules retain their shape for click testing. Clicking unmapped content explains why no verified source location is available. See [the implementation and validation](docs/source-mapping-20261011.md).
 
@@ -48,7 +50,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.16.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.17.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -60,7 +62,9 @@ For another project, open its folder and main `.tex` file, then run **BaKoMa: Op
 
 The command always uses C++ and LuaHBTeX live compilation. Legacy `bakoma.engine`, `bakoma.previewMode` and `bakoma.latexCompiler` settings no longer select a reduced-feature preview. `% !TEX root` still selects the root; `% !TEX program` does not choose our compiler. Close the preview and reopen it after changing the main file. Windows uses packages/fonts installed in **Ubuntu-22.04 WSL**. XeLaTeX-specific source may need adaptation to LuaLaTeX; opening our preview does not silently switch to a compiler without source mapping.
 
-Live builds copy supported TeX, image, font and data assets below the main file's directory. Root and included-body edits restore the latest retained engine checkpoint that has not read the changed text. Preamble dependencies, package/asset edits, and files without usable dependency history rebuild the compiler session. Initial loading and idle convergence compile the complete document and run required bibliography/index tools. Assets outside that directory remain unsupported. Build files are isolated from the source directory and reused when inputs and dependencies match. The extension never saves editor buffers automatically; saving in VS Code still writes the file you opened, so use a separate copy to edit a read-only project.
+Live builds copy supported TeX, image, font and data assets beneath the project root, preserving the directory layout and compiling from the mirrored main-file directory. For example, `paper/main.tex` can reference `../figures/chart.pdf` and `../shared/references.bib`. The project root defaults to the containing workspace folder, or the main-file directory without a workspace. Set `bakoma.projectRoot` to a common ancestor when shared files live outside that folder; relative settings resolve against the workspace, or the main-file directory without a workspace. Close and reopen the preview after changing either project setting.
+
+Root and included-body text edits restore the latest retained engine checkpoint that has not read the changed text. Preamble dependencies, package/asset edits, and files without usable dependency history rebuild the session. A debounced VS Code watcher refreshes saved changes, creations and deletions of supported project files, preserving currently dirty buffers. Initial loading and idle convergence compile the complete document and run required bibliography/index tools. Build files stay in the cache. Hidden directories and `node_modules` are excluded; files outside the chosen project root and absolute project paths are not remapped. The extension never saves editor buffers automatically; saving in VS Code still writes the file you opened, so use a separate copy to edit a read-only project.
 
 The webview and browser demo share their renderer. The compiler service exchanges versioned source updates and page payloads over JSON lines. Its source mapping and compiler state do not depend on a separate native window.
 
@@ -92,6 +96,9 @@ python scripts/check_engine_checkpoints.py
 python scripts/check_font_resources.py
 python scripts/check_source_mapping.py
 python scripts/check_build_tools.py
+python scripts/check_project_assets.py
+node scripts/check_project.js
+node scripts/check_extension_live.js
 python scripts/check_mapping_browser.py
 python scripts/check_cpp.py
 python scripts/live_fixture.py

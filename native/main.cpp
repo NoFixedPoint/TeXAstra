@@ -95,7 +95,7 @@ class Preview {
                     if (kind == "close") {
                         break;
                     }
-                    const bool mutation = kind=="start" || kind=="edit";
+                    const bool mutation = kind=="start" || kind=="edit" || kind=="reload";
                     auto revision = mutation ? ++latest : latest.load();
                     request["revision"] = revision;
                     if (mutation) cancel_build = true;
@@ -151,7 +151,7 @@ class Preview {
             auto selected=requests.begin();
             bool mutation=false;
             for (auto it=requests.begin();it!=requests.end();++it) {
-                if (it->at("type")=="edit" || it->at("type")=="start") { selected=it; mutation=true; }
+                if (it->at("type")=="edit" || it->at("type")=="start" || it->at("type")=="reload") { selected=it; mutation=true; }
             }
             auto request = *selected;
             const double queue_ms =
@@ -160,7 +160,7 @@ class Preview {
             {
                 std::lock_guard<std::mutex> lock(mutex);
                 for (auto it=requests.rbegin();it!=requests.rend();++it) {
-                    if (it->at("type")!="edit" && it->at("type")!="start" && &*it!=&*selected) queue.push_front(*it);
+                    if (it->at("type")!="edit" && it->at("type")!="start" && it->at("type")!="reload" && &*it!=&*selected) queue.push_front(*it);
                 }
             }
             if (mutation) { previous = request; last_action = Clock::now(); }
@@ -180,8 +180,10 @@ class Preview {
                         continue;
                     }
                 }
+                bool reload = false;
                 for (auto &r : requests) {
-                    if (r.at("type") == "start" && r.contains("overlays")) {
+                    if (r.at("type") == "reload") { overlays.clear(); edits.clear(); reload = true; }
+                    if ((r.at("type") == "start" || r.at("type") == "reload") && r.contains("overlays")) {
                         for (const auto &[file, source] : r.at("overlays").items()) {
                             inside(project, file);
                             overlays[file] = source.get<std::string>();
@@ -195,7 +197,7 @@ class Preview {
                         edits.insert(file);
                     }
                 }
-                if (request.at("type")=="start") engine.reset();
+                if (request.at("type")=="start" || reload) engine.reset();
                 bool rebuild = !engine || edits.size() > 1 || (engine->full_build() && !edits.empty());
                 for (const auto &file : edits) {
                     if (!std::regex_match(file, std::regex(R"(pages/page-\d{3}\.tex)"))) {
@@ -302,7 +304,13 @@ int main(int argc, char **argv) {
                     }
                     int page = request.value("page", 0);
                     Json result;
-                    if (kind == "start") {
+                    if (kind == "start" || kind == "reload") {
+                        if (kind == "reload") overlays.clear();
+                        if (request.contains("overlays")) for (const auto &[file, source] : request.at("overlays").items()) {
+                            inside(project, file);
+                            overlays[file] = source.get<std::string>();
+                        }
+                        engine.reset();
                         engine = std::make_unique<Engine>(project, assets, runtime, overlays, nullptr, options);
                         result = engine->start(page);
                     } else if (!engine) {

@@ -11,7 +11,7 @@ struct ProjectOptions {
     std::string main = "main.tex", mode = "auto", compiler = "lualatex";
 };
 class Engine {
-    fs::path project, assets, runtime;
+    fs::path project, assets, runtime, mirror, main_parent;
     ProjectOptions options;
     bool full = false;
     bool full_ready = false;
@@ -19,7 +19,7 @@ class Engine {
     bool live_edit_failed = false;
     std::unique_ptr<BuildCache> cache;
     std::set<fs::path> known_inputs;
-    Fd listener;
+    Fd listener, directory_fd;
     Fd resource_channel;
     pid_t process = -1;
     std::map<int, PageBuffer> buffers;
@@ -31,6 +31,11 @@ class Engine {
     bool build_limited = false;
     std::unique_ptr<BuildTools> build_tools;
     int log_fd = -1;
+    static std::string extension(const fs::path &file) {
+        auto value = file.extension().string();
+        std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) { return std::tolower(c); });
+        return value;
+    }
     static void kill_pid(pid_t pid) {
         if (pid > 0) {
             kill(pid, SIGTERM);
@@ -112,7 +117,7 @@ class Engine {
         envp.push_back(nullptr);
         std::vector<std::string> arguments = full
             ? std::vector<std::string>{options.compiler, "-no-shell-escape", "-interaction=nonstopmode",
-                                       "-halt-on-error", "-file-line-error", "-recorder", "./" + options.main}
+                                       "-halt-on-error", "-file-line-error", "-recorder", "./" + fs::path(options.main).filename().string()}
             : std::vector<std::string>{(runtime / "bakoma-luahbtex").string(), "--fmt=lualatex", "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-recorder", "--jobname=main", live ? "bako-driver.tex" : "main.tex"};
         std::vector<char *> argv;
@@ -417,7 +422,7 @@ class Engine {
         sockaddr_un address = {};
         address.sun_family = AF_UNIX;
         auto path =
-            (directory / page_name(index, "cp-", ".sock")).string();
+            (fs::path("/proc/self/fd") / std::to_string(directory_fd.value) / page_name(index, "cp-", ".sock")).string();
         if (path.size() >= sizeof(address.sun_path)) {
             throw std::runtime_error("Checkpoint socket path too long");
         }
@@ -447,7 +452,7 @@ class Engine {
         }
     }
     int checkpoint_before(const std::string &file, size_t changed) {
-        const auto target = fs::weakly_canonical(inside(directory, file));
+        const auto target = fs::weakly_canonical(inside(mirror, file));
         remember_inputs();
         if (!known_inputs.count(target)) throw RebuildRequired("Included file has no recorded body dependency");
         int checkpoint = 0;
@@ -474,7 +479,12 @@ class Engine {
     }
     void prepare(const std::map<std::string, std::string> &overlays) {
         std::vector<fs::path> files;
-        for (const auto &entry : fs::recursive_directory_iterator(project)) {
+        for (auto it = fs::recursive_directory_iterator(project); it != fs::recursive_directory_iterator(); ++it) {
+            const auto &entry = *it;
+            if (entry.is_directory() && (starts(entry.path().filename().string(), ".") || entry.path().filename()=="node_modules")) {
+                it.disable_recursion_pending();
+                continue;
+            }
             if (entry.is_regular_file()) {
                 auto rel = entry.path().lexically_relative(project);
                 bool hidden = false;
@@ -484,7 +494,7 @@ class Engine {
                     }
                 }
                 if (!hidden && words(".tex .sty .cls .bib .bst .bbl .png .jpg .jpeg .pdf .eps .ps .otf .ttf .tfm .map .enc .cfg .def .clo .fd .ldf .bbx .cbx .lbx .ist .csv .dat .txt .lua")
-                                   .count(entry.path().extension().string())) {
+                                   .count(extension(entry.path()))) {
                     files.push_back(rel);
                 }
             }
@@ -492,26 +502,28 @@ class Engine {
         std::sort(files.begin(), files.end());
         for (const auto &file : files) {
             auto name = file.generic_string();
-            fs::create_directories((directory / file).parent_path());
-            auto data = overlays.count(name) ? overlays.at(name) : read(project / file);
+            // Resolve containment before copying, including symlink targets.
+            auto source = inside(project, name);
+            fs::create_directories((mirror / file).parent_path());
+            auto data = overlays.count(name) ? overlays.at(name) : read(source);
             // Match text-mode source loading on both platforms. Editor buffers
             // retain their supplied newlines so their source offsets stay exact.
-            if (file.extension() == ".tex" && !overlays.count(name)) {
+            if (extension(file) == ".tex" && !overlays.count(name)) {
                 replace_all(data, "\r\n", "\n");
                 replace_all(data, "\r", "\n");
             }
-            if (!full && file.extension() == ".tex" && (live || name != options.main)) {
+            if (!full && extension(file) == ".tex" && (live || name != options.main)) {
                 data = sources.index(data, name);
             }
             if (cache) {
-                if (file != fs::path(options.main).stem().string()+".pdf") cache->put(name, data);
-            } else write(directory / file, data);
+                if (file != main_parent / (fs::path(options.main).stem().string()+".pdf") && file != main_parent / "main.pdf") cache->put(name, data);
+            } else write(mirror / file, data);
         }
         // Unsaved, newly created project files may not exist on disk yet.
         for (const auto &[name, data] : overlays) {
-            auto target = inside(directory, name);
+            auto target = inside(mirror, name);
             if (full || live) {
-                if (!full && fs::path(name).extension()==".tex" && (live || name!=options.main)) sources.index(data,name);
+                if (!full && extension(name)==".tex" && (live || name!=options.main)) sources.index(data,name);
                 fs::create_directories(target.parent_path());
                 if (cache) cache->put(name, data); else write(target, data);
             }
@@ -523,12 +535,12 @@ class Engine {
         fs::copy_file(runtime / "bako_snapshot.so", directory / "bako_snapshot.so",
                       fs::copy_options::overwrite_existing);
         if (live) {
-            sources.manifest(directory / "bako-sources.tsv");
+            sources.manifest(directory / "bako-sources.tsv", mirror);
             write(directory / "bako-driver.tex",
                   "\\directlua{dofile('inputs.lua')}%\n"
                   "\\AtBeginDocument{\\directlua{dofile('provenance.lua');dofile('snapshot.lua');bako_live_begin()}}%\n"
                   "\\AtEndDocument{\\directlua{bako_live_end()}}%\n"
-                  "\\input{\\detokenize{" + options.main + "}}%\n");
+                  "\\input{\\detokenize{" + fs::path(options.main).filename().string() + "}}%\n");
             cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex") + read(runtime / "bako_snapshot.so"));
             cache->finish_inputs();
             return;
@@ -625,9 +637,11 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
            const std::map<std::string, std::string> &overlays = {},
            std::atomic<bool> *stop = nullptr, ProjectOptions config = {})
         : project(fs::canonical(p)), assets(std::move(a)), runtime(std::move(r)), options(std::move(config)), cancel(stop) {
-        if (fs::path(options.main).filename() != options.main || options.main.empty())
-            throw std::runtime_error("Main file must be a filename in the project directory");
+        if (options.main.empty() || fs::path(options.main).is_absolute())
+            throw std::runtime_error("Main file must be relative to and inside the project root");
         auto root = read(inside(project, options.main));
+        options.main = fs::path(options.main).lexically_normal().generic_string();
+        main_parent = fs::path(options.main).parent_path();
         const bool fixture = options.main == "main.tex" && root.find("\\input{pages/page-001.tex}") != std::string::npos &&
             root.find("\\newcommand{\\globalword}{global}") != std::string::npos &&
             root.find("\\usepackage{tikz}") != std::string::npos;
@@ -638,8 +652,10 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         live = !full && !fixture;
         if (!full) options.compiler = "lualatex";
         if (live) {
-            cache = std::make_unique<BuildCache>(project, options.main+":live", options.compiler);
-            directory = cache->directory;
+            cache = std::make_unique<BuildCache>(project, options.main+":live", options.compiler, main_parent);
+            mirror = cache->directory;
+            directory = mirror / main_parent;
+            fs::create_directories(directory);
             // Persistent files are data, not evidence that old PIDs still belong
             // to us. Remove stale checkpoint markers without signalling them.
             for (const auto &entry : fs::directory_iterator(directory)) {
@@ -651,7 +667,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             char name[] = "/tmp/bakoma-cpp-XXXXXX";
             auto path = mkdtemp(name);
             if (!path) throw std::runtime_error("Cannot create session");
-            directory = path;
+            mirror = path;
+            directory = mirror / main_parent;
+            fs::create_directories(directory);
         }
         try {
             prepare(overlays);
@@ -659,7 +677,12 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             listener = Fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
             sockaddr_un address = {};
             address.sun_family = AF_UNIX;
-            strcpy(address.sun_path, (directory / "pages.sock").c_str());
+            // Resolve through a retained directory descriptor so deep project
+            // paths do not overflow sockaddr_un's small pathname field.
+            directory_fd = Fd(open(directory.c_str(), O_PATH | O_DIRECTORY | O_CLOEXEC));
+            if (directory_fd.value < 0) throw std::runtime_error("Cannot open compiler directory");
+            auto socket_path = (fs::path("/proc/self/fd") / std::to_string(directory_fd.value) / "pages.sock").string();
+            strcpy(address.sun_path, socket_path.c_str());
             if (listener.value < 0 ||
                 bind(listener.value, reinterpret_cast<sockaddr *>(&address), sizeof(address)) ||
                 listen(listener.value, 4)) {
@@ -763,8 +786,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (live) {
             auto started = Clock::now();
             if (build_limited) throw RebuildRequired("Unstable auxiliary state requires a complete rebuild");
-            if (fs::path(file).extension() != ".tex") throw RebuildRequired("Package or asset edit requires rebuilding compiler checkpoints");
-            const auto previous = read(inside(directory, file));
+            if (extension(file) != ".tex") throw RebuildRequired("Package or asset edit requires rebuilding compiler checkpoints");
+            if (!fs::is_regular_file(inside(mirror, file))) throw RebuildRequired("New source file requires rebuilding compiler checkpoints");
+            const auto previous = read(inside(mirror, file));
             if (source == previous && !live_edit_failed) return navigate(page);
             size_t changed = 0;
             while (changed < previous.size() && changed < source.size() && previous[changed] == source[changed]) ++changed;
@@ -772,7 +796,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             live_edit_failed = true;
             cache->invalidate(); cache->put(file,source);
             sources.index(source, file);
-            sources.manifest(directory / "bako-sources.tsv");
+            sources.manifest(directory / "bako-sources.tsv", mirror);
             available.erase(available.lower_bound(checkpoint-1), available.end());
             auto result = resume(checkpoint, std::max(page,checkpoint-1));
             live_edit_failed = false;
@@ -873,7 +897,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
     Json update_files(const std::map<std::string, std::string> &overlays, int page) {
         if (!full) throw std::runtime_error("Batch updates require full-build mode");
         for (const auto &[file, source] : overlays) {
-            auto target = inside(directory, file);
+            auto target = inside(mirror, file);
             fs::create_directories(target.parent_path());
             write(target, source);
         }

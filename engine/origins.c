@@ -44,22 +44,28 @@ void bako_origin_copy(unsigned to, unsigned from) {
 void bako_source_enable(int attribute) { bako_attribute = attribute; }
 void bako_source_register(const char *path, int slot) {
     if (slot < 1 || slot > 2146) abort();
+    char *canonical = realpath(path, NULL);
+    if (!canonical) canonical = xstrdup(path);
     for (int i=0;i<bako_file_count;++i) {
-        if (!strcmp(path,bako_files[i].path)) {
+        if (!strcmp(canonical,bako_files[i].path)) {
             if (bako_files[i].slot!=slot) abort();
+            free(canonical);
             return;
         }
     }
     if (bako_file_count >= 2147) abort();
     bako_file *f = &bako_files[bako_file_count++];
-    f->path = xstrdup(path); f->slot = slot;
+    f->path = canonical; f->slot = slot;
 }
 static bako_file *bako_file_for(const char *path) {
     if (!path) return NULL;
-    while (path[0]=='.' && path[1]=='/') path+=2;
+    char *canonical = realpath(path, NULL);
+    const char *key = canonical ? canonical : path;
+    bako_file *found = NULL;
     for (int i=0; i<bako_file_count; ++i)
-        if (!strcmp(path,bako_files[i].path)) return &bako_files[i];
-    return NULL;
+        if (!strcmp(key,bako_files[i].path)) { found = &bako_files[i]; break; }
+    free(canonical);
+    return found;
 }
 static void bako_source_load(const char *path, int preserve) {
     bako_last_path = NULL;

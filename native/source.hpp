@@ -76,9 +76,9 @@ public:
             s.kind=(length>1&&f.text[offset]=='\\')?"macro-origin":"token";
         }
     }
-    void manifest(const fs::path &path) const {
+    void manifest(const fs::path &path, const fs::path &root = {}) const {
         std::string out;
-        for(const auto &[name,f]:files) out+=std::to_string(f.slot)+"\t"+name+"\n";
+        for(const auto &[name,f]:files) out+=std::to_string(f.slot)+"\t"+(root / name).generic_string()+"\n";
         write(path,out);
     }
     const Span *find(int id) const {

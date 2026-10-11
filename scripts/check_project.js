@@ -1,7 +1,7 @@
 /* Project discovery checks use temporary fixtures, never user projects. */
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path');
-const {resolveMain,resolveCompiler,contains}=require('../extension/project');
+const {resolveMain,resolveCompiler,contains,resolveProject,supportedFile}=require('../extension/project');
 const directory=fs.mkdtempSync(path.join(os.tmpdir(),'bakoma-project-'));
 const root=path.join(directory,'paper with spaces.tex'),chapter=path.join(directory,'chapter.tex');
 fs.writeFileSync(root,'\\documentclass{article}\n');
@@ -25,4 +25,15 @@ check(contains(directory,path.join(directory,'..legitimate.tex')),true);
 assert.throws(()=>resolveMain({configured:'missing.tex',workspace:directory}),/does not exist/);checks++;
 fs.writeFileSync(chapter,'% !TEX root = missing.tex');
 assert.throws(()=>resolveMain({active:chapter}),/does not exist/);checks++;
+const nested=path.join(directory,'paper');fs.mkdirSync(nested);
+const main=path.join(nested,'main.tex');fs.writeFileSync(main,'');
+check(resolveProject({main,workspace:directory}),directory);
+check(resolveProject({main}),nested);
+check(resolveProject({main,workspace:directory,configured:'paper'}),nested);
+check(resolveProject({main,configured:'..'}),directory);
+assert.throws(()=>resolveProject({main,configured:path.join(directory,'elsewhere')}),/inside/);checks++;
+check(supportedFile(directory,path.join(directory,'figures/plot.png')),true);
+check(supportedFile(directory,path.join(directory,'.cache/plot.png')),false);
+check(supportedFile(directory,path.join(directory,'node_modules/file.tex')),false);
+check(supportedFile(directory,path.join(directory,'paper/main.log')),false);
 console.log(JSON.stringify({checks,passed:true}));

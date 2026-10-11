@@ -18,16 +18,16 @@ inline Json file_stamp(const fs::path &file) {
 }
 class BuildCache {
     Fd lock;
-    fs::path registry;
+    fs::path registry, working;
   public:
     fs::path directory;
     Json inputs = Json::object();
-    BuildCache(const fs::path &project, const std::string &main, const std::string &compiler) {
+    BuildCache(const fs::path &project, const std::string &main, const std::string &compiler, fs::path cwd = {}) : working(std::move(cwd)) {
         const char *cache = getenv("XDG_CACHE_HOME"), *home = getenv("HOME");
         auto root = cache && *cache ? fs::path(cache) : fs::path(home ? home : "/tmp") / ".cache";
         root /= "bakoma-revived";
         fs::create_directories(root);
-        auto key=digest("v008\n" + project.string() + "\n" + main + "\n" + compiler).substr(0,24);
+        auto key=digest("v017\n" + project.string() + "\n" + main + "\n" + compiler).substr(0,24);
         directory = root / key;
         registry = root / (key+".json");
         if (fs::exists(registry)) try {
@@ -79,10 +79,11 @@ class BuildCache {
     void invalidate() { fs::remove(directory / ".bako-success.json"); }
     void save(const std::string &stem, const std::string &compiler, bool converged) {
         Json dependencies = Json::object();
-        std::istringstream recorder(read(directory / (stem + ".fls")));
+        auto cwd = directory / working;
+        std::istringstream recorder(read(cwd / (stem + ".fls")));
         std::string line;
         while (std::getline(recorder, line)) if (starts(line, "INPUT ")) {
-            auto path = fs::weakly_canonical(directory / line.substr(6));
+            auto path = fs::weakly_canonical(cwd / line.substr(6));
             auto relative = path.lexically_relative(directory);
             if (!relative.empty() && *relative.begin() == ".." && fs::is_regular_file(path))
                 dependencies[path.string()] = file_stamp(path);

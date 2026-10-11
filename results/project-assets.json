@@ -1,0 +1,113 @@
+{
+  "checks": [
+    {
+      "name": "nested main compiles and converges",
+      "ok": true
+    },
+    {
+      "name": "sibling image and local style exact pixels",
+      "ok": true
+    },
+    {
+      "name": "sibling bibliography exact pixels and selection",
+      "ok": true
+    },
+    {
+      "name": "sibling source navigation uses project-relative identity",
+      "ok": true
+    },
+    {
+      "name": "nested root source navigation uses project-relative identity",
+      "ok": true
+    },
+    {
+      "name": "sibling chapter edit restores checkpoint",
+      "ok": true
+    },
+    {
+      "name": "sibling chapter edit matches full build",
+      "ok": true
+    },
+    {
+      "name": "sibling forward navigation",
+      "ok": true
+    },
+    {
+      "name": "initial builds leave source project untouched",
+      "ok": true
+    },
+    {
+      "name": "path aliases retain canonical token origins",
+      "ok": true
+    },
+    {
+      "name": "reopen uses saved sibling source",
+      "ok": true
+    },
+    {
+      "name": "unchanged nested project reuses startup cache",
+      "ok": true
+    },
+    {
+      "name": "saved binary change replaces pixels and invalidates cache",
+      "ok": true
+    },
+    {
+      "name": "disk refresh preserves unsaved root",
+      "ok": true
+    },
+    {
+      "name": "binary reload leaves source project untouched",
+      "ok": true
+    },
+    {
+      "name": "reload discards obsolete saved overlays",
+      "ok": true
+    },
+    {
+      "name": "saved sibling style invalidates checkpoints",
+      "ok": true
+    },
+    {
+      "name": "saved sibling bibliography reruns tool",
+      "ok": true
+    },
+    {
+      "name": "unsaved sibling bibliography reruns tool",
+      "ok": true
+    },
+    {
+      "name": "deleted sibling input reports error",
+      "ok": true
+    },
+    {
+      "name": "created sibling input recovers",
+      "ok": true
+    },
+    {
+      "name": "new unsaved sibling file resolves",
+      "ok": true
+    },
+    {
+      "name": "new editor file rebuilds without missing-file error",
+      "ok": true
+    },
+    {
+      "name": "reloads and overlays preserve source project",
+      "ok": true
+    },
+    {
+      "name": "deep paths support compiler and checkpoint sockets",
+      "ok": true
+    },
+    {
+      "name": "reject main outside root ../escape.tex",
+      "ok": true
+    },
+    {
+      "name": "reject main outside root /tmp/escape.tex",
+      "ok": true
+    }
+  ],
+  "runtimeSha256": "c7d3ddffc2c0b004d846ff5a783515b46dfd40ee838ff4f5dd3ba08bdf3018b1"
+}

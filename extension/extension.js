@@ -2,13 +2,17 @@ const vscode=require('vscode');
 const fs=require('fs');
 const path=require('path');
 const readline=require('readline');
-const {contains,resolveMain}=require('./project');
+const {contains,resolveMain,resolveProject,supportedFile}=require('./project');
 function activate(context){
   let panel,backend,project,currentFrame,suppressSelection,visiblePage=0,serial=0,latestMutation=0,output=vscode.window.createOutputChannel('BaKoMa prototype');
-  const stop=()=>{if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
+  let watcher,reloadTimer,ready=false;
+  const stop=()=>{ready=false;clearTimeout(reloadTimer);watcher?.dispose();watcher=null;if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
+  const dirtyBuffers=()=>Object.fromEntries(vscode.workspace.textDocuments
+    .filter(doc=>doc.isDirty&&doc.uri.scheme==='file'&&contains(project,doc.uri.fsPath))
+    .map(doc=>[path.relative(project,doc.uri.fsPath).replaceAll('\\','/'),doc.getText()]));
   const send=message=>{if(backend&&!backend.killed){
     const clientId=++serial;
-    if(message.type==='start'||message.type==='edit'){
+    if(message.type==='start'||message.type==='edit'||message.type==='reload'){
       latestMutation=clientId;currentFrame=null;
       panel?.webview.postMessage({type:'status',state:'building',clientId});
     }
@@ -30,12 +34,15 @@ function activate(context){
       root=chosen[0].fsPath;
       config=vscode.workspace.getConfiguration('bakoma',chosen[0]);
     }
-    project=path.dirname(root);
+    const rootFolder=vscode.workspace.getWorkspaceFolder(vscode.Uri.file(root));
+    config=vscode.workspace.getConfiguration('bakoma',vscode.Uri.file(root));
+    try{project=resolveProject({main:root,workspace:rootFolder?.uri.fsPath,configured:config.get('projectRoot','')});}
+    catch(error){vscode.window.showErrorMessage(String(error));return;}
     // Opening our preview always starts our compiler, independently of the
     // editor's previous XeLaTeX/pdfLaTeX settings or existing output files.
-    const options={main:path.basename(root),mode:'auto',compiler:'lualatex'};
+    const options={main:path.relative(project,root).replaceAll('\\','/'),mode:'auto',compiler:'lualatex'};
     visiblePage=0;serial=0;latestMutation=0;currentFrame=null;
-    output.appendLine(`Opening ${root} in the live compiler; resources and generated files stay in the user cache.`);
+    output.appendLine(`Opening ${root} with project root ${project}; resources and generated files stay in the user cache.`);
     panel=vscode.window.createWebviewPanel('bakomaPreview','BaKoMa · prototype',vscode.ViewColumn.Beside,{enableScripts:true,retainContextWhenHidden:true,localResourceRoots:[vscode.Uri.joinPath(context.extensionUri,'webview')]});
     const web=panel.webview;
     let html=fs.readFileSync(path.join(context.extensionPath,'webview/index.html'),'utf8');
@@ -49,6 +56,15 @@ function activate(context){
     backend.stderr.on('data',chunk=>output.append(chunk.toString()));
     backend.on('error',error=>{output.appendLine(String(error));web.postMessage({type:'status',state:'error',error:String(error)});});
     backend.on('exit',code=>{if(code)web.postMessage({type:'status',state:'error',error:`Backend exited (${code}). See Output → BaKoMa prototype.`});});
+    watcher=vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(project,'**/*'));
+    const diskChanged=uri=>{
+      if(!ready||!supportedFile(project,uri.fsPath))return;
+      clearTimeout(reloadTimer);
+      reloadTimer=setTimeout(()=>{
+        if(ready)send({type:'reload',page:visiblePage,overlays:dirtyBuffers()});
+      },200);
+    };
+    watcher.onDidCreate(diskChanged);watcher.onDidChange(diskChanged);watcher.onDidDelete(diskChanged);
     readline.createInterface({input:backend.stdout}).on('line',line=>{
       try{const message=JSON.parse(line);if(message.error)output.appendLine(String(message.error));if(message.type==='frame'){
         if(message.clientId<latestMutation)message.isStale=true;
@@ -57,12 +73,8 @@ function activate(context){
     });
     web.onDidReceiveMessage(async message=>{
       if(message.type==='ready'){
-        const overlays={};
-        for(const doc of vscode.workspace.textDocuments){
-          const relative=path.relative(project,doc.uri.fsPath).replaceAll('\\','/');
-          if(doc.isDirty&&doc.uri.scheme==='file'&&contains(project,doc.uri.fsPath))overlays[relative]=doc.getText();
-        }
-        send({type:'start',page:0,overlays});
+        ready=true;
+        send({type:'start',page:0,overlays:dirtyBuffers()});
       }else if(message.type==='navigate'){
         if(!currentFrame||currentFrame.isStale||message.generation!==currentFrame.generation||message.revisionId!==currentFrame.revisionId)return;
         const file=path.resolve(project,message.file);
