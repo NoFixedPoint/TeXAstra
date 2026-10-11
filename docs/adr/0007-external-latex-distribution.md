@@ -31,12 +31,18 @@ retained compiler checkpoints before those changes are used. Supporting external
 bibliography and index tools remains separate build-orchestration work; their
 installation and updates still belong to the distribution.
 
-Currently the launcher selects Ubuntu-22.04 WSL on Windows, and the bundled patched
-LuaHBTeX 1.14 reads its installed TeX configuration and LuaLaTeX format. Supported
-project-local files are copied into the build directory. Cache reuse checks
-external inputs recorded in the compiler's `.fls` file by size and modification
-time. Active sessions do not watch system package updates, so users must reopen
-the preview after such changes. Distribution selection, compatibility preflight,
-environment reports, and active dependency invalidation are planned work, not
-implemented capabilities. This decision does not establish native Windows,
-macOS, or MiKTeX compatibility.
+As of 0.0.18, the launcher discovers WSL instances and the backend discovers TeX
+Live binary directories. Settings can select both explicitly. The selected
+kpathsea supplies configuration and the format path; the bundled LuaHBTeX 1.14
+performs a compatibility compile before project work. Bibliography/index tools
+come from that same binary directory. Preflight and project environment reports
+record identities and resolved dependencies. See the
+[implementation and validation](../distribution-20261011.md).
+
+Project-local files are copied into the build directory. Cache reuse checks
+distribution identity, lookup configuration and recorded external dependencies.
+Active sessions still do not watch system package updates: reopen the preview
+after maintenance. Automatic generation of engine-specific formats is not
+implemented; incompatible formats fail explicitly without changing the selected
+installation. This decision does not establish native Windows, macOS, MiKTeX,
+or compatibility with every TeX Live release.

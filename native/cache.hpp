@@ -27,7 +27,7 @@ class BuildCache {
         auto root = cache && *cache ? fs::path(cache) : fs::path(home ? home : "/tmp") / ".cache";
         root /= "bakoma-revived";
         fs::create_directories(root);
-        auto key=digest("v017\n" + project.string() + "\n" + main + "\n" + compiler).substr(0,24);
+        auto key=digest("v018\n" + project.string() + "\n" + main + "\n" + compiler).substr(0,24);
         directory = root / key;
         registry = root / (key+".json");
         if (fs::exists(registry)) try {
@@ -69,7 +69,7 @@ class BuildCache {
     bool reusable(const fs::path &pdf, const std::string &compiler) {
         try {
             auto state = Json::parse(read(directory / ".bako-success.json"));
-            if (state.at("inputs") != inputs || state.at("compiler") != file_stamp("/usr/bin/" + compiler) ||
+            if (state.at("inputs") != inputs || state.at("compiler") != compiler ||
                 !fs::exists(pdf)) return false;
             for (const auto &[file, stamp] : state.at("dependencies").items())
                 if (file_stamp(file) != stamp) return false;
@@ -90,7 +90,7 @@ class BuildCache {
         }
         auto temporary = directory / ".bako-success.json.new";
         write(temporary, Json({{"inputs", inputs}, {"dependencies", dependencies},
-              {"compiler", file_stamp("/usr/bin/" + compiler)}, {"converged", converged}}).dump());
+              {"compiler", compiler}, {"converged", converged}}).dump());
         fs::rename(temporary, directory / ".bako-success.json");
         write(directory / ".bako-inputs.json", inputs.dump());
         auto pointer=registry.string()+"."+std::to_string(getpid())+".new";

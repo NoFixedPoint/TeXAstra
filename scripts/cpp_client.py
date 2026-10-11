@@ -6,14 +6,14 @@ def linux(path):
     path=path.resolve()
     return '/mnt/'+path.drive[0].lower()+path.as_posix()[2:] if os.name=='nt' else str(path)
 class Client:
-    def __init__(self,project=ROOT/'corpus',runtime=None,main='main.tex',preview_mode='auto',compiler='lualatex',sync=True,environment=None):
+    def __init__(self,project=ROOT/'corpus',runtime=None,main='main.tex',preview_mode='auto',compiler='lualatex',sync=True,environment=None,tex_bin=None):
         prefix=['wsl','-d','Ubuntu-22.04','--exec'] if os.name=='nt' else []
         mode=['env','BAKO_CHECKPOINT_MODE='+os.environ['BAKO_CHECKPOINT_MODE']] if 'BAKO_CHECKPOINT_MODE' in os.environ else []
         if environment:
             mode = ['env']+mode[1:] if mode else ['env']
             mode += [key+'='+value for key,value in environment.items()]
         executable=(runtime or ROOT/'native/runtime')/'bakoma-backend'
-        self.process=subprocess.Popen(prefix+mode+[linux(executable),'--project',linux(project),'--assets',linux(ROOT/'prototype'),'--main',main,'--preview-mode',preview_mode,'--compiler',compiler]+(['--sync'] if sync else []),stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8')
+        self.process=subprocess.Popen(prefix+mode+[linux(executable),'--project',linux(project),'--assets',linux(ROOT/'prototype'),'--main',main,'--preview-mode',preview_mode,'--compiler',compiler]+(['--sync'] if sync else [])+(['--tex-bin',str(tex_bin)] if tex_bin else []),stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8')
         self.responses=queue.Queue()
         def read():
             for line in self.process.stdout:self.responses.put(json.loads(line))

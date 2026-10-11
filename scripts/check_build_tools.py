@@ -172,7 +172,11 @@ Before index.\index{Alpha}
         check('tool failure recovers after repair', not recovered['provisional'] and not recovered['warnings'])
     # Missing executable is distinct from a failed tool or missing database.
     empty=root/'empty-path'; empty.mkdir(exist_ok=True)
-    with Client(project, main='paper.tex', environment={'PATH':linux(empty)}) as live:
+    prefix=['wsl','-d','Ubuntu-22.04','--exec'] if os.name=='nt' else []
+    for tool in ['kpsewhich','lualatex']:
+        (empty/tool).write_text('#!/bin/sh\nexec /usr/bin/'+tool+' "$@"\n',encoding='utf-8',newline='\n')
+        subprocess.run(prefix+['chmod','+x',linux(empty/tool)],check=True)
+    with Client(project, main='paper.tex', tex_bin=linux(empty)) as live:
         missing=live.request(type='start',page=0)
         check('missing tool names external distribution remedy', not missing['ok'] and
               "'bibtex' is missing" in missing['error'] and 'external LaTeX distribution' in missing['error'])
@@ -210,12 +214,15 @@ Before index.\index{Alpha}
     (project/'paper.tex').write_text(sources['bibtex'].replace('\\input{parts/citation}', ''))
     (project/'refs.bib').write_text(bib+'% cancellation\n')
     binpath=root/'slow-bin'; binpath.mkdir(exist_ok=True)
+    for tool in ['kpsewhich','lualatex']:
+        (binpath/tool).write_text('#!/bin/sh\nexec /usr/bin/'+tool+' "$@"\n',encoding='utf-8',newline='\n')
+        subprocess.run(prefix+['chmod','+x',linux(binpath/tool)],check=True)
     marker=root/'tool-running'
     marker.unlink(missing_ok=True)
     (binpath/'bibtex').write_text('#!/bin/sh\nprintf running > "'+linux(marker)+'"\n/bin/sleep 90\n',encoding='utf-8',newline='\n')
     prefix=['wsl','-d','Ubuntu-22.04','--exec'] if os.name=='nt' else []
     subprocess.run(prefix+['chmod','+x',linux(binpath/'bibtex')],check=True)
-    live=Client(project,main='paper.tex',sync=False,environment={'PATH':linux(binpath)+':/usr/bin:/bin'})
+    live=Client(project,main='paper.tex',sync=False,tex_bin=linux(binpath))
     try:
         live.request(type='start',page=0,clientId=1)
         deadline=time.monotonic()+30

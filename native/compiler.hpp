@@ -2,6 +2,7 @@
 #include "renderer.hpp"
 #include "cache.hpp"
 #include "build_tools.hpp"
+#include "distribution.hpp"
 #include <functional>
 extern char **environ;
 
@@ -9,6 +10,7 @@ namespace bako {
 struct RebuildRequired : std::runtime_error { using std::runtime_error::runtime_error; };
 struct ProjectOptions {
     std::string main = "main.tex", mode = "auto", compiler = "lualatex";
+    std::shared_ptr<Distribution> distribution;
 };
 class Engine {
     fs::path project, assets, runtime, mirror, main_parent;
@@ -103,8 +105,6 @@ class Engine {
         env.emplace_back("BAKO_PAGE_STREAM=1");
         env.emplace_back("BAKO_FONT_STREAM=1");
         env.emplace_back("BAKO_SOURCE_MARKERS=1");
-        // A relocatable engine must find the installed distro's TeX trees.
-        if (!getenv("TEXMFCNF")) env.emplace_back("TEXMFCNF=/etc/texmf/web2c:/usr/local/share/texmf/web2c:/usr/share/texlive/texmf-dist/web2c");
         if (live) env.emplace_back("BAKO_LIVE_DOCUMENT=1");
         if (full) env.emplace_back("openout_any=p");
         if (prime) {
@@ -116,9 +116,9 @@ class Engine {
         }
         envp.push_back(nullptr);
         std::vector<std::string> arguments = full
-            ? std::vector<std::string>{options.compiler, "-no-shell-escape", "-interaction=nonstopmode",
+            ? std::vector<std::string>{options.distribution->tool(options.compiler).string(), "-no-shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-file-line-error", "-recorder", "./" + fs::path(options.main).filename().string()}
-            : std::vector<std::string>{(runtime / "bakoma-luahbtex").string(), "--fmt=lualatex", "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
+            : std::vector<std::string>{(runtime / "bakoma-luahbtex").string(), "--fmt="+options.distribution->format_path.string(), "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-recorder", "--jobname=main", live ? "bako-driver.tex" : "main.tex"};
         std::vector<char *> argv;
         for (auto &argument : arguments) argv.push_back(argument.data());
@@ -284,7 +284,7 @@ class Engine {
     }
     std::string error_log() const {
         auto log = read(directory / "engine-output.log");
-        return log.substr(log.size() > 3000 ? log.size() - 3000 : 0);
+        return options.distribution->diagnose(log.substr(log.size() > 3000 ? log.size() - 3000 : 0));
     }
     void seed(const Json &result) {
         seed_pdf = read(directory / "main.pdf");
@@ -542,6 +542,7 @@ class Engine {
                   "\\AtEndDocument{\\directlua{bako_live_end()}}%\n"
                   "\\input{\\detokenize{" + fs::path(options.main).filename().string() + "}}%\n");
             cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex") + read(runtime / "bako_snapshot.so"));
+            cache->inputs["@distribution"] = options.distribution->report.at("identity");
             cache->finish_inputs();
             return;
         }
@@ -571,6 +572,18 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         sources.manifest(directory / "bako-sources.tsv");
     }
 
+    void environment_report(const std::string &stem) {
+        auto report=options.distribution->report;
+        report["projectDependencies"]=Json::object();
+        std::istringstream recorder(read(directory/(stem+".fls")));std::string line;
+        while(std::getline(recorder,line))if(starts(line,"INPUT ")) {
+            auto path=fs::weakly_canonical(directory/line.substr(6));
+            auto relative=path.lexically_relative(mirror);
+            if(!relative.empty()&&*relative.begin()==".."&&fs::is_regular_file(path))
+                report["projectDependencies"][path.string()]=file_stamp(path);
+        }
+        write(directory/"bako-environment.json",report.dump(2));
+    }
     Json full_frame(int page) {
         auto frame = renderer.render(page, sources, {}, false);
         frame["ok"] = true;
@@ -579,6 +592,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         frame["sourceSync"] = "unavailable";
         frame["compiler"] = options.compiler;
         frame["session"] = directory.string();
+        frame["environmentReport"] = (directory/"bako-environment.json").string();
         build_tools->annotate(frame, fs::path(options.main).stem().string(), converged);
         return frame;
     }
@@ -618,6 +632,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             }
         }
         renderer.seed(directory / (stem + ".pdf"), {});
+        environment_report(stem);
         if (!renderer.pages()) throw std::runtime_error("The document produced no pages");
         full_ready = true;
         auto result = full_frame(page);
@@ -637,6 +652,8 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
            const std::map<std::string, std::string> &overlays = {},
            std::atomic<bool> *stop = nullptr, ProjectOptions config = {})
         : project(fs::canonical(p)), assets(std::move(a)), runtime(std::move(r)), options(std::move(config)), cancel(stop) {
+        if(!options.distribution)throw std::runtime_error("LaTeX distribution has not been configured");
+        options.distribution->require_ready();
         if (options.main.empty() || fs::path(options.main).is_absolute())
             throw std::runtime_error("Main file must be relative to and inside the project root");
         auto root = read(inside(project, options.main));
@@ -673,7 +690,8 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         }
         try {
             prepare(overlays);
-            build_tools = std::make_unique<BuildTools>(directory, cancel, fs::path(options.main).stem().string());
+            build_tools = std::make_unique<BuildTools>(directory, cancel, fs::path(options.main).stem().string(), options.distribution->bin);
+            write(directory / "bako-environment.json", options.distribution->report.dump(2));
             listener = Fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
             sockaddr_un address = {};
             address.sun_family = AF_UNIX;
@@ -773,6 +791,8 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         build_tools->annotate(frame, "main", converged);
         frame["pipelineMs"] = elapsed(started);
         frame["session"] = directory.string();
+        environment_report("main");
+        frame["environmentReport"] = (directory/"bako-environment.json").string();
         if (live) {
             frame["compilationMode"] = "live";
             frame["cacheReused"] = reuse;

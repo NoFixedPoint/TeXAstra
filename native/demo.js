@@ -12,6 +12,8 @@ for(let i=2;i<process.argv.length;i++){
   else if(process.argv[i]==='--checkpoint')checkpoint=process.argv[++i];
   else if(process.argv[i]==='--main')options.main=process.argv[++i];
   else if(process.argv[i]==='--runtime')options.runtime=path.resolve(process.argv[++i]);
+  else if(process.argv[i]==='--tex-bin')options.texBinDirectory=process.argv[++i];
+  else if(process.argv[i]==='--wsl-distribution')options.wslDistribution=process.argv[++i];
   else throw new Error('Unknown argument '+process.argv[i]);
 }
 if(!['cpp','stream'].includes(engine))throw new Error('Use cpp or stream for the comparison');

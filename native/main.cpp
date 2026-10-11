@@ -267,7 +267,7 @@ int main(int argc, char **argv) {
         std::map<std::string, std::string> args;
         for (int i = 1; i < argc; ++i) {
             std::string key = argv[i];
-            if (key == "--sync") {
+            if (key == "--sync" || key == "--environment") {
                 args[key] = "1";
             } else {
                 if (i + 1 == argc) {
@@ -285,12 +285,20 @@ int main(int argc, char **argv) {
             throw std::runtime_error("Internal snapshots were removed; use --checkpoint fork");
         }
         setenv("BAKO_CHECKPOINT_MODE", checkpoint.c_str(), 1);
-        fs::path project = fs::canonical(args.at("--project")),
-                 assets = fs::canonical(args.at("--assets"));
         ProjectOptions options;
         if (args.count("--main")) options.main = args.at("--main");
         if (args.count("--preview-mode")) options.mode = args.at("--preview-mode");
         if (args.count("--compiler")) options.compiler = args.at("--compiler");
+        if (!words("auto full incremental").count(options.mode) || !words("lualatex xelatex pdflatex").count(options.compiler))
+            throw std::runtime_error("Invalid preview mode or LaTeX compiler");
+        options.distribution=std::make_shared<Distribution>(runtime,args.count("--tex-bin")?args.at("--tex-bin"):"",
+            options.mode=="full"?options.compiler:"live");
+        if(args.count("--environment")) {
+            std::cout<<options.distribution->report.dump(2)<<'\n';
+            return options.distribution->report.value("ok",false)?0:1;
+        }
+        fs::path project = fs::canonical(args.at("--project")), assets = fs::canonical(args.at("--assets"));
+        if(!args.count("--sync"))std::cout<<Json({{"type","environment"},{"report",options.distribution->report}}).dump()<<'\n'<<std::flush;
         if (args.count("--sync")) {
             std::unique_ptr<Engine> engine;
             std::map<std::string, std::string> overlays;

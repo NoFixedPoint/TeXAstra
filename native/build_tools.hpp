@@ -5,7 +5,7 @@ extern char **environ;
 namespace bako {
 // Auxiliary tools run only between complete TeX passes, never on checkpoint edits.
 class BuildTools {
-    fs::path directory, store;
+    fs::path directory, store, bin;
     std::string source_stem;
     std::atomic<bool> *cancel;
     Json events = Json::array();
@@ -13,13 +13,9 @@ class BuildTools {
     std::map<std::string, std::string> resolved;
 
     fs::path executable(const std::string &name) {
-        std::istringstream paths(getenv("PATH") ? getenv("PATH") : "");
-        std::string part;
-        while (std::getline(paths, part, ':')) {
-            auto path = fs::absolute((part.empty() ? directory : fs::path(part)) / name);
-            if (fs::is_regular_file(path) && access(path.c_str(), X_OK) == 0) return path;
-        }
-        throw std::runtime_error("Required LaTeX tool '" + name + "' is missing. Install it in the external LaTeX distribution and ensure it is on the backend PATH.");
+        auto path=bin/name;
+        if (fs::is_regular_file(path) && access(path.c_str(), X_OK)==0) return path;
+        throw std::runtime_error("Required LaTeX tool '" + name + "' is missing from selected external LaTeX distribution " + bin.string() + ". Install it using that distribution's package manager.");
     }
     std::string run(const fs::path &program, std::vector<std::string> arguments) {
         arguments.insert(arguments.begin(), program.string());
@@ -146,8 +142,8 @@ class BuildTools {
         return changed || !reused; // A run must always be followed by a TeX pass.
     }
   public:
-    BuildTools(fs::path dir, std::atomic<bool> *stop, std::string main_stem)
-        : directory(std::move(dir)), source_stem(std::move(main_stem)), cancel(stop) {
+    BuildTools(fs::path dir, std::atomic<bool> *stop, std::string main_stem, fs::path selected_bin)
+        : directory(std::move(dir)), bin(std::move(selected_bin)), source_stem(std::move(main_stem)), cancel(stop) {
         const char *cache=getenv("XDG_CACHE_HOME"), *home=getenv("HOME");
         store=(cache && *cache ? fs::path(cache) : fs::path(home ? home : "/tmp")/".cache")/
             "bakoma-revived"/"auxiliary-v2";

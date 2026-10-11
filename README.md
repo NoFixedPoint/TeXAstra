@@ -2,7 +2,9 @@
 
 This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The latest local 13-page browser benchmark measures 91–158 ms p95; typing bursts and new-font edits exceed the 150 ms target.** This does not establish performance for arbitrary projects or the real VS Code host. The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Version **0.0.17** supports main documents in subdirectories with shared project assets in sibling directories. The workspace folder defines the project root by default; `bakoma.projectRoot` overrides it. Saved asset changes refresh the preview while preserving unsaved text buffers. Source navigation uses project-relative paths, including aliased inputs. See [the implementation and validation](docs/project-assets-20261011.md).
+Version **0.0.18** discovers installed TeX Live binary directories and supports selecting the WSL instance and TeX installation. Startup verifies the selected format and packages with a compatibility compile using the bundled engine. **BaKoMa: Show LaTeX Environment** reports resolved configuration, tools, formats and dependencies; missing inputs name the selected installation and maintenance remedy. See [the implementation and validation](docs/distribution-20261011.md).
+
+Version 0.0.17 supports main documents in subdirectories with shared project assets in sibling directories. The workspace folder defines the project root by default; `bakoma.projectRoot` overrides it. Saved asset changes refresh the preview while preserving unsaved text buffers. Source navigation uses project-relative paths, including aliased inputs. See [the implementation and validation](docs/project-assets-20261011.md).
 
 Version 0.0.16 runs BibTeX, Biber, and MakeIndex from the installed LaTeX distribution during complete builds and idle convergence. Content fingerprints reuse unchanged auxiliary outputs, while bibliography, citation, index-entry, and index-style changes regenerate them. Builds stop after six LaTeX passes and report unresolved references and tool failures. See [the implementation and validation](docs/build-tools-20261011.md).
 
@@ -22,7 +24,7 @@ Version 0.0.8 made **Open Experimental Preview** start a live LuaHBTeX session f
 
 Internal differential snapshots have been removed to reduce maintenance. Fork checkpoints are the only supported implementation. The [historical snapshot report](docs/internal-snapshots-20261011.md) records why that experiment was retired.
 
-The shipping architecture is to bundle our preview engine and supporting runtime while using the user's existing LaTeX distribution for packages, classes, fonts, and supporting tools. Package installation and updates remain with that distribution's manager. Today the supported integration is TeX Live inside Ubuntu-22.04 WSL on Windows; distribution discovery, compatibility diagnostics, and environment reporting remain future work. See [the package ownership decision](docs/adr/0007-external-latex-distribution.md).
+The shipping architecture is to bundle our preview engine and supporting runtime while using the user's existing LaTeX distribution for packages, classes, fonts, and supporting tools. Package installation and updates remain with that distribution's manager. The validated integration is TeX Live inside Ubuntu-22.04 WSL on Windows. Other Linux x86-64/WSL installations can be selected and must pass preflight; this does not establish compatibility with arbitrary TeX Live releases. Native Windows, macOS and MiKTeX runtimes remain unsupported. See [the package ownership decision](docs/adr/0007-external-latex-distribution.md).
 
 The [BaKoMa binary investigation](docs/bakoma-binary-pipeline.md) motivated separating live page output from document finalization. Ordinary edits now send page drawing commands to the retained renderer without finalizing, transporting, or reopening a document PDF. New supported fonts and glyphs arrive in a small font-only PDF bundle. Complete document PDFs still seed resources at startup, during convergence, and for unsupported resource changes. This is a page-buffer implementation using LuaTeX's PDF drawing language, not a DVI engine.
 
@@ -50,7 +52,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.17.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.18.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -60,7 +62,7 @@ For another project, open its folder and main `.tex` file, then run **BaKoMa: Op
 }
 ```
 
-The command always uses C++ and LuaHBTeX live compilation. Legacy `bakoma.engine`, `bakoma.previewMode` and `bakoma.latexCompiler` settings no longer select a reduced-feature preview. `% !TEX root` still selects the root; `% !TEX program` does not choose our compiler. Close the preview and reopen it after changing the main file. Windows uses packages/fonts installed in **Ubuntu-22.04 WSL**. XeLaTeX-specific source may need adaptation to LuaLaTeX; opening our preview does not silently switch to a compiler without source mapping.
+The command always uses C++ and LuaHBTeX live compilation. Legacy `bakoma.engine`, `bakoma.previewMode` and `bakoma.latexCompiler` settings no longer select a reduced-feature preview. `% !TEX root` still selects the root; `% !TEX program` does not choose our compiler. Close the preview and reopen it after changing the main file. Windows defaults to **Ubuntu-22.04 WSL** when installed, or the owner of a WSL source/runtime path. Set `bakoma.wslDistribution` to choose another installed instance. Set `bakoma.texBinDirectory` to an absolute Linux TeX Live binary directory, such as `/usr/bin`; otherwise discovery uses `kpsewhich` on PATH and conventional installation locations. Reopen after changing selection or maintaining system packages. Run **BaKoMa: Show LaTeX Environment** for a JSON report. XeLaTeX-specific source may need adaptation to LuaLaTeX; opening our preview does not silently switch to a compiler without source mapping.
 
 Live builds copy supported TeX, image, font and data assets beneath the project root, preserving the directory layout and compiling from the mirrored main-file directory. For example, `paper/main.tex` can reference `../figures/chart.pdf` and `../shared/references.bib`. The project root defaults to the containing workspace folder, or the main-file directory without a workspace. Set `bakoma.projectRoot` to a common ancestor when shared files live outside that folder; relative settings resolve against the workspace, or the main-file directory without a workspace. Close and reopen the preview after changing either project setting.
 
@@ -97,6 +99,8 @@ python scripts/check_font_resources.py
 python scripts/check_source_mapping.py
 python scripts/check_build_tools.py
 python scripts/check_project_assets.py
+python scripts/check_distribution.py
+node scripts/check_launcher.js
 node scripts/check_project.js
 node scripts/check_extension_live.js
 python scripts/check_mapping_browser.py

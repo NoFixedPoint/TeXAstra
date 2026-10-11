@@ -5,7 +5,17 @@ const readline=require('readline');
 const {contains,resolveMain,resolveProject,supportedFile}=require('./project');
 function activate(context){
   let panel,backend,project,currentFrame,suppressSelection,visiblePage=0,serial=0,latestMutation=0,output=vscode.window.createOutputChannel('BaKoMa prototype');
-  let watcher,reloadTimer,ready=false;
+  let watcher,reloadTimer,ready=false,selectedOptions={};
+  const distributionOptions=config=>Object.fromEntries(['wslDistribution','texBinDirectory'].map(name=>[name,config.get(name,'')]).filter(([,value])=>value));
+  context.subscriptions.push(vscode.commands.registerCommand('bakoma.showEnvironment',async()=>{
+    if(!vscode.workspace.isTrusted)return;
+    try{
+      const config=vscode.workspace.getConfiguration('bakoma',vscode.window.activeTextEditor?.document.uri);
+      const report=await require('../native/launch').environment(context.extensionPath,panel?selectedOptions:distributionOptions(config));
+      const document=await vscode.workspace.openTextDocument({language:'json',content:JSON.stringify(report,null,2)});
+      await vscode.window.showTextDocument(document,{preview:false});
+    }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));}
+  }));
   const stop=()=>{ready=false;clearTimeout(reloadTimer);watcher?.dispose();watcher=null;if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
   const dirtyBuffers=()=>Object.fromEntries(vscode.workspace.textDocuments
     .filter(doc=>doc.isDirty&&doc.uri.scheme==='file'&&contains(project,doc.uri.fsPath))
@@ -40,7 +50,8 @@ function activate(context){
     catch(error){vscode.window.showErrorMessage(String(error));return;}
     // Opening our preview always starts our compiler, independently of the
     // editor's previous XeLaTeX/pdfLaTeX settings or existing output files.
-    const options={main:path.relative(project,root).replaceAll('\\','/'),mode:'auto',compiler:'lualatex'};
+    selectedOptions=distributionOptions(config);
+    const options={main:path.relative(project,root).replaceAll('\\','/'),mode:'auto',compiler:'lualatex',...selectedOptions};
     visiblePage=0;serial=0;latestMutation=0;currentFrame=null;
     output.appendLine(`Opening ${root} with project root ${project}; resources and generated files stay in the user cache.`);
     panel=vscode.window.createWebviewPanel('bakomaPreview','BaKoMa · prototype',vscode.ViewColumn.Beside,{enableScripts:true,retainContextWhenHidden:true,localResourceRoots:[vscode.Uri.joinPath(context.extensionUri,'webview')]});
@@ -53,9 +64,10 @@ function activate(context){
     try{
       backend=require('../native/launch').launch(context.extensionPath,project,'fork',options);
     }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));panel.dispose();panel=null;return;}
-    backend.stderr.on('data',chunk=>output.append(chunk.toString()));
+    let runtimeError='';
+    backend.stderr.on('data',chunk=>{runtimeError=(runtimeError+chunk.toString()).slice(-4000);output.append(chunk.toString());});
     backend.on('error',error=>{output.appendLine(String(error));web.postMessage({type:'status',state:'error',error:String(error)});});
-    backend.on('exit',code=>{if(code)web.postMessage({type:'status',state:'error',error:`Backend exited (${code}). See Output → BaKoMa prototype.`});});
+    backend.on('exit',code=>{if(code)web.postMessage({type:'status',state:'error',error:`Backend exited (${code}). Check the selected Linux/WSL runtime and shared libraries. ${runtimeError} See Output → BaKoMa prototype.`});});
     watcher=vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(project,'**/*'));
     const diskChanged=uri=>{
       if(!ready||!supportedFile(project,uri.fsPath))return;
@@ -66,7 +78,10 @@ function activate(context){
     };
     watcher.onDidCreate(diskChanged);watcher.onDidChange(diskChanged);watcher.onDidDelete(diskChanged);
     readline.createInterface({input:backend.stdout}).on('line',line=>{
-      try{const message=JSON.parse(line);if(message.error)output.appendLine(String(message.error));if(message.type==='frame'){
+      try{const message=JSON.parse(line);if(message.type==='environment'){
+        output.appendLine(JSON.stringify({...message.report,host:backend?.bakomaEnvironment},null,2));return;
+      }if(message.error)output.appendLine(String(message.error));if(message.type==='frame'){
+        if(message.environmentReport)output.appendLine(`Build environment report: ${message.environmentReport}`);
         if(message.clientId<latestMutation)message.isStale=true;
         if(!message.isStale&&(!currentFrame||message.generation>=currentFrame.generation))currentFrame=message;
       }else if(message.state)currentFrame=null;web.postMessage(message);}catch(error){output.appendLine(String(error));}
