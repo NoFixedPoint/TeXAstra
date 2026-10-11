@@ -38,8 +38,7 @@ class Preview {
         result["purpose"] = request.at("type");
         result["requestId"] = request.value("requestId", Json(nullptr));
         if (converged) {
-            result["phase"] = "converged";
-            result["provisional"] = false;
+            result["phase"] = result.value("provisional", false) ? "convergence-limited" : "converged";
         }
         emit(result);
     }

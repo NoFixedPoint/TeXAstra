@@ -82,7 +82,7 @@ function activate(context){
     const sentAt=Date.now();
     if(!panel||!event.contentChanges.length)return;
     const relative=path.relative(project,event.document.uri.fsPath).replaceAll('\\','/');
-    if(event.document.uri.scheme!=='file'||!contains(project,event.document.uri.fsPath)||! /\.(tex|sty|cls|bib|bst|csv|dat|txt|lua)$/i.test(relative))return;
+    if(event.document.uri.scheme!=='file'||!contains(project,event.document.uri.fsPath)||! /\.(tex|sty|cls|bib|bst|bbx|cbx|lbx|ist|csv|dat|txt|lua)$/i.test(relative))return;
     currentFrame=null;
     send({type:'edit',file:relative,source:event.document.getText(),page:visiblePage,sentAt});
   }),vscode.window.onDidChangeTextEditorSelection(event=>{

@@ -43,6 +43,12 @@ Module._load=function(request,parent,...rest){
   child.stdout.write(JSON.stringify({type:'status',state:'error',error:'Incomplete \\iffalse'})+'\n');
   await new Promise(r=>setImmediate(r));assert(outputLines.includes('Incomplete \\iffalse'));
   assert.equal(webMessages.at(-1).state,'error');
+  for(const suffix of ['bib','ist','bbx','cbx','lbx']){
+    const file=`references.${suffix}`,source=`unsaved ${suffix}`;
+    change({document:{uri:{scheme:'file',fsPath:path.join(project,file)},getText:()=>source},contentChanges:[{text:source}]});
+    const latest=JSON.parse(input.trim().split('\n').at(-1));
+    assert.equal(latest.type,'edit');assert.equal(latest.file,file);assert.equal(latest.source,source);
+  }
   disposed();Module._load=original;
-  const result={checks:7,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
+  const result={checks:12,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(e=>{Module._load=original;console.error(e);process.exitCode=1;});

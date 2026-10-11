@@ -1,0 +1,318 @@
+{
+  "checks": [
+    {
+      "name": "bibtex invokes distribution tool",
+      "ok": true
+    },
+    {
+      "name": "bibtex converges within six passes",
+      "ok": true
+    },
+    {
+      "name": "bibtex no unresolved references",
+      "ok": true
+    },
+    {
+      "name": "bibtex full-build page count",
+      "ok": true
+    },
+    {
+      "name": "bibtex page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "bibtex page 1 exact selection",
+      "ok": true
+    },
+    {
+      "name": "bibtex page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "bibtex page 2 exact selection",
+      "ok": true
+    },
+    {
+      "name": "bibtex generated output appears",
+      "ok": true
+    },
+    {
+      "name": "bibtex reopen skips auxiliary executable",
+      "ok": true
+    },
+    {
+      "name": "bibtex reopen converged",
+      "ok": true
+    },
+    {
+      "name": "bibtex text edit reuses checkpoint",
+      "ok": true
+    },
+    {
+      "name": "bibtex edit path runs no tools",
+      "ok": true
+    },
+    {
+      "name": "bibtex idle worker converges",
+      "ok": true
+    },
+    {
+      "name": "bibtex unchanged tool inputs reused across worker",
+      "ok": true
+    },
+    {
+      "name": "bibtex unsaved bibliography reruns tool",
+      "ok": true
+    },
+    {
+      "name": "bibtex unsaved bibliography visible",
+      "ok": true
+    },
+    {
+      "name": "bibtex citation edit still incremental",
+      "ok": true
+    },
+    {
+      "name": "bibtex changed citation reruns tool",
+      "ok": true
+    },
+    {
+      "name": "bibtex changed citation converges",
+      "ok": true
+    },
+    {
+      "name": "bibtex missing citation remains diagnostic",
+      "ok": true
+    },
+    {
+      "name": "bibtex source directory unchanged",
+      "ok": true
+    },
+    {
+      "name": "biber invokes distribution tool",
+      "ok": true
+    },
+    {
+      "name": "biber converges within six passes",
+      "ok": true
+    },
+    {
+      "name": "biber no unresolved references",
+      "ok": true
+    },
+    {
+      "name": "biber full-build page count",
+      "ok": true
+    },
+    {
+      "name": "biber page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "biber page 1 exact selection",
+      "ok": true
+    },
+    {
+      "name": "biber page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "biber page 2 exact selection",
+      "ok": true
+    },
+    {
+      "name": "biber generated output appears",
+      "ok": true
+    },
+    {
+      "name": "biber reopen skips auxiliary executable",
+      "ok": true
+    },
+    {
+      "name": "biber reopen converged",
+      "ok": true
+    },
+    {
+      "name": "biber text edit reuses checkpoint",
+      "ok": true
+    },
+    {
+      "name": "biber edit path runs no tools",
+      "ok": true
+    },
+    {
+      "name": "biber idle worker converges",
+      "ok": true
+    },
+    {
+      "name": "biber unchanged tool inputs reused across worker",
+      "ok": true
+    },
+    {
+      "name": "biber unsaved bibliography reruns tool",
+      "ok": true
+    },
+    {
+      "name": "biber unsaved bibliography visible",
+      "ok": true
+    },
+    {
+      "name": "biber citation edit still incremental",
+      "ok": true
+    },
+    {
+      "name": "biber changed citation reruns tool",
+      "ok": true
+    },
+    {
+      "name": "biber changed citation converges",
+      "ok": true
+    },
+    {
+      "name": "biber missing citation remains diagnostic",
+      "ok": true
+    },
+    {
+      "name": "biber source directory unchanged",
+      "ok": true
+    },
+    {
+      "name": "index invokes distribution tool",
+      "ok": true
+    },
+    {
+      "name": "index converges within six passes",
+      "ok": true
+    },
+    {
+      "name": "index no unresolved references",
+      "ok": true
+    },
+    {
+      "name": "index full-build page count",
+      "ok": true
+    },
+    {
+      "name": "index page 1 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "index page 1 exact selection",
+      "ok": true
+    },
+    {
+      "name": "index page 2 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "index page 2 exact selection",
+      "ok": true
+    },
+    {
+      "name": "index page 3 exact pixels",
+      "ok": true
+    },
+    {
+      "name": "index page 3 exact selection",
+      "ok": true
+    },
+    {
+      "name": "index generated output appears",
+      "ok": true
+    },
+    {
+      "name": "index reopen skips auxiliary executable",
+      "ok": true
+    },
+    {
+      "name": "index reopen converged",
+      "ok": true
+    },
+    {
+      "name": "index text edit reuses checkpoint",
+      "ok": true
+    },
+    {
+      "name": "index edit path runs no tools",
+      "ok": true
+    },
+    {
+      "name": "index idle worker converges",
+      "ok": true
+    },
+    {
+      "name": "index unchanged tool inputs reused across worker",
+      "ok": true
+    },
+    {
+      "name": "new index entry reruns makeindex",
+      "ok": true
+    },
+    {
+      "name": "new index entry visible",
+      "ok": true
+    },
+    {
+      "name": "index style edit reruns makeindex",
+      "ok": true
+    },
+    {
+      "name": "index style output visible",
+      "ok": true
+    },
+    {
+      "name": "index source directory unchanged",
+      "ok": true
+    },
+    {
+      "name": "undefined reference diagnostic",
+      "ok": true
+    },
+    {
+      "name": "BibTeX failure includes actionable tool output",
+      "ok": true
+    },
+    {
+      "name": "tool failure recovers after repair",
+      "ok": true
+    },
+    {
+      "name": "missing tool names external distribution remedy",
+      "ok": true
+    },
+    {
+      "name": "missing database names required input",
+      "ok": true
+    },
+    {
+      "name": "included auxiliary citations resolved",
+      "ok": true
+    },
+    {
+      "name": "changing auxiliary data bounded to six passes",
+      "ok": true
+    },
+    {
+      "name": "convergence limit diagnostic",
+      "ok": true
+    },
+    {
+      "name": "limited build rejects stale checkpoint reuse",
+      "ok": true
+    },
+    {
+      "name": "auxiliary tool cancellation fixture started",
+      "ok": true
+    },
+    {
+      "name": "shutdown cancels running auxiliary tool",
+      "ok": true
+    }
+  ],
+  "runtimeSha256": "0d9330295c20611e8989f546acaa6f1485bd37ba8bfe6c43f64bde91629084b4",
+  "sourceHashes": {
+    "native/build_tools.hpp": "583dd1d2fad7bb1e2a189f044ca86c11bab4199abcf41d2dea0fd628ad45a47d",
+    "native/compiler.hpp": "3c108e823f8110dee0c8a62d7f5715273ba980bd2f8bdeaae0f5db9f9c1dc9f5",
+    "native/main.cpp": "427c375529ba8bb808d3bf564833a5f3cffa3d845f255ea35c52e237d403d47f"
+  }
+}

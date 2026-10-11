@@ -1,6 +1,7 @@
 #pragma once
 #include "renderer.hpp"
 #include "cache.hpp"
+#include "build_tools.hpp"
 #include <functional>
 extern char **environ;
 
@@ -27,6 +28,8 @@ class Engine {
     std::string seed_pdf;
     unsigned revision = 0;
     bool converged = false;
+    bool build_limited = false;
+    std::unique_ptr<BuildTools> build_tools;
     int log_fd = -1;
     static void kill_pid(pid_t pid) {
         if (pid > 0) {
@@ -109,7 +112,7 @@ class Engine {
         envp.push_back(nullptr);
         std::vector<std::string> arguments = full
             ? std::vector<std::string>{options.compiler, "-no-shell-escape", "-interaction=nonstopmode",
-                                       "-halt-on-error", "-file-line-error", "./" + options.main}
+                                       "-halt-on-error", "-file-line-error", "-recorder", "./" + options.main}
             : std::vector<std::string>{(runtime / "bakoma-luahbtex").string(), "--fmt=lualatex", "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-recorder", "--jobname=main", live ? "bako-driver.tex" : "main.tex"};
         std::vector<char *> argv;
@@ -564,19 +567,21 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         frame["sourceSync"] = "unavailable";
         frame["compiler"] = options.compiler;
         frame["session"] = directory.string();
+        build_tools->annotate(frame, fs::path(options.main).stem().string(), converged);
         return frame;
     }
 
     Json full_start(int page) {
+        build_tools->reset();
         auto started = Clock::now();
         auto stem = fs::path(options.main).stem().string();
         full_ready = false;
         // Keep any renderer's open PDF inode immutable while the next run writes.
         fs::remove(directory / (stem + ".pdf"));
-        std::map<std::string, std::string> previous_aux;
         converged = false;
         int passes = 0;
-        for (; passes < 3; ++passes) {
+        for (; passes < 6; ++passes) {
+            auto previous_aux = build_tools->state();
             process = spawn(true);
             auto run = Clock::now();
             int status = 0;
@@ -593,18 +598,12 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             process = -1;
             if (!WIFEXITED(status) || WEXITSTATUS(status))
                 throw std::runtime_error(options.compiler + " failed: " + error_log());
-            std::map<std::string, std::string> auxiliary;
-            for (const auto &entry : fs::recursive_directory_iterator(directory)) {
-                if (entry.is_regular_file() && words(".aux .toc .out .lof .lot .nav .snm .ptc")
-                    .count(entry.path().extension().string()))
-                    auxiliary[entry.path().lexically_relative(directory).string()] = read(entry.path());
-            }
-            if (passes > 0 && auxiliary == previous_aux) {
+            bool tools_changed = build_tools->update(stem);
+            if (!tools_changed && build_tools->state() == previous_aux) {
                 converged = true;
                 ++passes;
                 break;
             }
-            previous_aux = std::move(auxiliary);
         }
         renderer.seed(directory / (stem + ".pdf"), {});
         if (!renderer.pages()) throw std::runtime_error("The document produced no pages");
@@ -613,7 +612,6 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         result["compileMs"] = elapsed(started) - result["renderMs"].get<double>();
         result["pipelineMs"] = elapsed(started);
         result["passes"] = passes;
-        if (!converged) result["warnings"].push_back({{"reason", "References did not stabilize after three passes."}});
         return result;
     }
 
@@ -657,6 +655,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         }
         try {
             prepare(overlays);
+            build_tools = std::make_unique<BuildTools>(directory, cancel, fs::path(options.main).stem().string());
             listener = Fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
             sockaddr_un address = {};
             address.sun_family = AF_UNIX;
@@ -721,25 +720,34 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         }
         Json result;
         converged = false;
-        for (int attempt = 0; attempt < 3; ++attempt) {
-            auto aux = read(directory / "main.aux");
+        build_tools->update("main");
+        int passes = reuse ? 0 : 1;
+        for (; passes < 6; ++passes) {
+            auto aux = build_tools->state();
             fs::remove(directory / "completed.json");
+            fs::remove(directory / "failed.json");
+            // A long preamble has not yet created this pass's active child.
+            // Never interpret the previous pass's dead child as a new failure.
+            fs::remove(directory / "active.pid");
             process = spawn(false);
             result = wait_done(false);
-            if (read(directory / "main.aux") == aux) {
+            bool tools_changed = build_tools->update("main");
+            if (!tools_changed && build_tools->state() == aux) {
                 converged = true;
+                ++passes;
                 break;
             }
+            if (passes == 5) { ++passes; break; } // Keep the last complete PDF usable.
             cleanup_after(0);
             stop_process();
         }
-        if (!converged) {
-            throw std::runtime_error("Auxiliary state did not converge");
-        }
         if (live) remember_inputs();
+        build_limited = !converged;
         auto frame = display(page, result);
         frame["ok"] = true;
-        frame["provisional"] = false;
+        frame["provisional"] = !converged;
+        frame["passes"] = passes;
+        build_tools->annotate(frame, "main", converged);
         frame["pipelineMs"] = elapsed(started);
         frame["session"] = directory.string();
         if (live) {
@@ -754,6 +762,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (full) return update_files({{file, source}}, page);
         if (live) {
             auto started = Clock::now();
+            if (build_limited) throw RebuildRequired("Unstable auxiliary state requires a complete rebuild");
             if (fs::path(file).extension() != ".tex") throw RebuildRequired("Package or asset edit requires rebuilding compiler checkpoints");
             const auto previous = read(inside(directory, file));
             if (source == previous && !live_edit_failed) return navigate(page);
@@ -824,6 +833,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         result["pipelineMs"] = elapsed(started);
         result["ok"] = true;
         result["provisional"] = !converged;
+        build_tools->annotate(result, "main", converged);
         return result;
     }
     bool full_build() const { return full; }

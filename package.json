@@ -2,7 +2,7 @@
   "name": "bakoma-revived-prototype",
   "displayName": "BaKoMa Revived \u2014 Feasibility Prototype",
   "description": "Experimental live LaTeX preview with token provenance and a LuaTeX checkpoint backend.",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "publisher": "local-prototype",
   "engines": {
     "vscode": "^1.85.0"
@@ -97,6 +97,7 @@
     "benchmark:preview": "python scripts/benchmark_preview.py",
     "check:font-resources": "python scripts/check_font_resources.py",
     "check:source-mapping": "python scripts/check_source_mapping.py",
-    "check:mapping-browser": "python scripts/check_mapping_browser.py"
+    "check:mapping-browser": "python scripts/check_mapping_browser.py",
+    "check:build-tools": "python scripts/check_build_tools.py"
   }
 }
