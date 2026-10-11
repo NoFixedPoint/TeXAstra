@@ -2,7 +2,7 @@
   "name": "bakoma-revived-prototype",
   "displayName": "BaKoMa Revived \u2014 Feasibility Prototype",
   "description": "Experimental live LaTeX preview with token provenance and a LuaTeX checkpoint backend.",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "publisher": "local-prototype",
   "engines": {
     "vscode": "^1.85.0"
@@ -85,21 +85,34 @@
           "default": "",
           "description": "Directory containing the main document and shared project assets. Relative to the workspace (or main-file directory without a workspace). Empty uses the containing workspace folder, otherwise the main-file directory."
         },
+        "bakoma.runtimeMode": {
+          "type": "string",
+          "enum": ["native", "wsl"],
+          "default": "native",
+          "description": "Windows: use the native Windows backend (default), or explicitly select the Linux/WSL comparison runtime. Reopen preview after changing."
+        },
         "bakoma.wslDistribution": {
           "type": "string",
           "default": "",
-          "description": "Windows: installed WSL distribution hosting TeX Live. Empty uses a WSL path owner, otherwise Ubuntu-22.04 when installed, otherwise the first listed distribution. Reopen preview after changing."
+          "description": "Used only with bakoma.runtimeMode=wsl. Select the installed WSL distribution hosting TeX Live. Empty uses a WSL path owner, otherwise Ubuntu-22.04 when installed, otherwise the first listed distribution."
         },
         "bakoma.texBinDirectory": {
           "type": "string",
           "default": "",
-          "description": "Absolute Linux TeX Live binary directory inside the selected Linux/WSL environment. Empty discovers kpsewhich on PATH, then conventional TeX Live locations. Reopen preview after changing."
+          "description": "Absolute TeX Live binary directory for the selected runtime, such as C:\\texlive\\2025\\bin\\windows on native Windows or /usr/bin in Linux/WSL. Empty discovers kpsewhich on PATH, then conventional TeX Live locations. Reopen preview after changing."
         }
       }
     }
   },
   "scripts": {
     "check:windows-checkpoint": "python scripts/check_windows_checkpoint.py",
+    "build:windows-engine": "python scripts/build_windows_engine.py",
+    "build:windows": "python scripts/build_windows_cpp.py",
+    "bundle:windows": "python scripts/bundle_windows.py",
+    "package:windows": "python scripts/package_extension.py --target win32-x64 --runtime native/windows-bundle",
+    "check:windows": "python scripts/check_windows_backend.py",
+    "check:windows-browser": "python scripts/check_windows_browser.py",
+    "check:windows-projects": "python scripts/check_windows_projects.py",
     "demo": "node native/demo.js",
     "build:cpp": "python scripts/build_cpp.py",
     "check:cpp": "python scripts/check_cpp.py",

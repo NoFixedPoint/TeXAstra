@@ -15,7 +15,8 @@ end
 local manifest=io.open('bako-sources.tsv','r')
 if manifest then
   manifest:close()
-  origins=assert(package.loadlib('./bako_snapshot.so','luaopen_bako_snapshot'))()
+  local native=os.getenv('BAKO_ENGINE_MODULE')
+  origins=assert(package.loadlib(native or './bako_snapshot.so',native and 'luaopen_bako_native' or 'luaopen_bako_snapshot'))()
   origins.source_enable(aid)
   bako_reload_sources()
 end

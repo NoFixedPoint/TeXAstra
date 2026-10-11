@@ -1,0 +1,84 @@
+{
+  "checks": [
+    {
+      "name": "bibtex runs and converges",
+      "ok": true
+    },
+    {
+      "name": "bibtex output appears",
+      "ok": true
+    },
+    {
+      "name": "bibtex edit is incremental",
+      "ok": true
+    },
+    {
+      "name": "bibtex idle convergence reuses tool result",
+      "ok": true
+    },
+    {
+      "name": "bibtex leaves project untouched",
+      "ok": true
+    },
+    {
+      "name": "biber runs and converges",
+      "ok": true
+    },
+    {
+      "name": "biber output appears",
+      "ok": true
+    },
+    {
+      "name": "biber edit is incremental",
+      "ok": true
+    },
+    {
+      "name": "biber idle convergence reuses tool result",
+      "ok": true
+    },
+    {
+      "name": "biber leaves project untouched",
+      "ok": true
+    },
+    {
+      "name": "makeindex runs and converges",
+      "ok": true
+    },
+    {
+      "name": "makeindex output appears",
+      "ok": true
+    },
+    {
+      "name": "makeindex edit is incremental",
+      "ok": true
+    },
+    {
+      "name": "makeindex idle convergence reuses tool result",
+      "ok": true
+    },
+    {
+      "name": "makeindex leaves project untouched",
+      "ok": true
+    },
+    {
+      "name": "nested project and PDF image",
+      "ok": true
+    },
+    {
+      "name": "concurrent previews isolate cache",
+      "ok": true
+    },
+    {
+      "name": "abrupt compiler exit reports error",
+      "ok": true
+    },
+    {
+      "name": "abrupt exit recovers on next edit",
+      "ok": true
+    },
+    {
+      "name": "shutdown cancels compiler tree",
+      "ok": true
+    }
+  ]
+}

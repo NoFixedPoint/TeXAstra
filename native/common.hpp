@@ -21,6 +21,9 @@
 #include <codecvt>
 #include <locale>
 #include <fcntl.h>
+#ifdef _WIN32
+#include "windows/platform.hpp"
+#else
 #include <poll.h>
 #include <signal.h>
 #include <spawn.h>
@@ -28,6 +31,7 @@
 #include <sys/un.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#endif
 
 namespace bako {
 using Json = nlohmann::json;
@@ -49,6 +53,30 @@ inline void write(const fs::path &p, const std::string &data) {
         throw std::runtime_error("Cannot write " + p.string());
     }
 }
+inline fs::path tool_path(const fs::path &bin, const std::string &name) {
+#ifdef _WIN32
+    return bin / (name + ".exe");
+#else
+    return bin / name;
+#endif
+}
+#ifdef _WIN32
+inline std::string run_logged(const fs::path &program, const std::vector<std::string> &args,
+                              const fs::path &directory, const fs::path &log,
+                              int seconds, std::atomic<bool> *cancel = nullptr) {
+    windows::Child child;
+    child.start(program, args, directory, log);
+    auto started = Clock::now();
+    while (child.running()) {
+        if ((cancel && cancel->load()) || elapsed(started) > seconds * 1000)
+            throw std::runtime_error(program.filename().u8string() + " cancelled or timed out");
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    }
+    auto output = read(log);
+    if (child.status()) throw std::runtime_error(program.filename().u8string() + ":\n" + output.substr(output.size() > 16000 ? output.size() - 16000 : 0));
+    return output;
+}
+#endif
 inline std::string page_name(int n, const std::string &prefix, const std::string &suffix) {
     std::ostringstream out;
     out << prefix << std::setw(3) << std::setfill('0') << n << suffix;
@@ -63,7 +91,20 @@ inline std::string utf8(const std::u32string &s) {
     return cv.to_bytes(s);
 }
 inline std::string rune(int c) {
-    return utf8(std::u32string(1, c < 0 ? 0xfffd : c));
+    // Avoid constructing a locale/conversion facet for every source character
+    // and rendered glyph. This is a hot path on the Windows standard library.
+    uint32_t value = c < 0 || c > 0x10ffff || (c >= 0xd800 && c <= 0xdfff) ? 0xfffd : c;
+    std::string result;
+    if (value < 0x80) result += char(value);
+    else if (value < 0x800) {
+        result += char(0xc0 | (value >> 6)); result += char(0x80 | (value & 63));
+    } else if (value < 0x10000) {
+        result += char(0xe0 | (value >> 12)); result += char(0x80 | ((value >> 6) & 63)); result += char(0x80 | (value & 63));
+    } else {
+        result += char(0xf0 | (value >> 18)); result += char(0x80 | ((value >> 12) & 63));
+        result += char(0x80 | ((value >> 6) & 63)); result += char(0x80 | (value & 63));
+    }
+    return result;
 }
 inline bool space(char32_t c) {
     return c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\f' || c == '\v' || c == 0xa0 ||
@@ -136,6 +177,7 @@ struct Fd {
         return *this;
     }
 };
+#ifndef _WIN32
 inline void send_all(int fd, const std::string &s) {
     size_t sent = 0;
     while (sent < s.size()) {
@@ -163,6 +205,15 @@ inline std::string receive_exact(int fd, size_t size) {
         offset += n;
     }
     return out;
+}
+#endif
+inline void replace_file(const fs::path &source, const fs::path &target) {
+#ifdef _WIN32
+    if (!MoveFileExW(source.c_str(), target.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
+        throw std::runtime_error("Cannot replace " + target.u8string());
+#else
+    fs::rename(source, target);
+#endif
 }
 inline fs::path inside(const fs::path &root, const std::string &relative) {
     fs::path p = fs::weakly_canonical(root / relative);

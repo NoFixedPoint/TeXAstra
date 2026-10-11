@@ -14,10 +14,11 @@ FLAGS=['--disable-native-texlive-build','--disable-all-pkgs','--enable-web2c','-
  '--with-system-harfbuzz','--with-system-zlib','--with-system-libpng','--disable-x','--disable-shared']
 def main():
  parser=argparse.ArgumentParser();parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime')
+ parser.add_argument('--source-only',action='store_true')
  args=parser.parse_args()
  if os.name=='nt':
   def linux(p):return subprocess.check_output(['wsl','-d','Ubuntu-22.04','--exec','wslpath','-a',str(p.resolve())],text=True).strip()
-  subprocess.run(['wsl','-d','Ubuntu-22.04','--exec','python3',linux(Path(__file__)),'--runtime',linux(args.runtime)],check=True);return
+  subprocess.run(['wsl','-d','Ubuntu-22.04','--exec','python3',linux(Path(__file__)),'--runtime',linux(args.runtime)]+(['--source-only'] if args.source_only else []),check=True);return
  cache=Path.home()/'.cache/bakoma-engine';source=cache/'source';build=cache/'build'
  cache.mkdir(parents=True,exist_ok=True);build.mkdir(exist_ok=True)
  for name,digest in ARCHIVES.items():
@@ -50,6 +51,7 @@ def main():
  sys.path.insert(0,str(ROOT/'engine'))
  from patch import apply
  apply(source)
+ if args.source_only:return
  signature='\n'.join(FLAGS)
  if not (build/'.bako-configure').exists() or (build/'.bako-configure').read_text()!=signature:
   with (build/'configure.log').open('w') as log:subprocess.run([str(source/'configure'),*FLAGS],cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)

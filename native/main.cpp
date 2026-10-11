@@ -6,6 +6,9 @@
 #include <functional>
 
 using namespace bako;
+#ifdef _WIN32
+int run_compiler_worker(const fs::path &, int, char **);
+#endif
 
 class Preview {
     fs::path project, assets, runtime;
@@ -262,8 +265,21 @@ class Preview {
 };
 
 int main(int argc, char **argv) {
+#ifndef _WIN32
     signal(SIGPIPE, SIG_IGN);
+#endif
     try {
+#ifdef _WIN32
+        wchar_t native_path[32768];
+        auto length=GetModuleFileNameW(nullptr,native_path,32768);
+        if(!length||length>=32768)throw std::runtime_error("Cannot resolve backend executable");
+        fs::path executable=native_path, runtime=executable.parent_path();
+        if(argc>1&&std::string(argv[1])=="--compiler-worker") {
+            argv[1]=argv[0];
+            return run_compiler_worker(runtime/"bakoma-engine.dll",argc-1,argv+1);
+        }
+        _setmode(_fileno(stdin),_O_BINARY); _setmode(_fileno(stdout),_O_BINARY);
+#endif
         std::map<std::string, std::string> args;
         for (int i = 1; i < argc; ++i) {
             std::string key = argv[i];
@@ -276,15 +292,25 @@ int main(int argc, char **argv) {
                 args[key] = argv[++i];
             }
         }
+#ifndef _WIN32
         fs::path executable = fs::canonical("/proc/self/exe"), runtime = executable.parent_path();
+#endif
+#ifdef _WIN32
+        const char *default_checkpoint="windows";
+#else
+        const char *default_checkpoint="fork";
+#endif
         std::string checkpoint =
             args.count("--checkpoint")
                 ? args.at("--checkpoint")
-                : (getenv("BAKO_CHECKPOINT_MODE") ? getenv("BAKO_CHECKPOINT_MODE") : "fork");
-        if (checkpoint != "fork") {
-            throw std::runtime_error("Internal snapshots were removed; use --checkpoint fork");
+                : (getenv("BAKO_CHECKPOINT_MODE") ? getenv("BAKO_CHECKPOINT_MODE") : default_checkpoint);
+        if (checkpoint != default_checkpoint) {
+            throw std::runtime_error(std::string("This runtime requires --checkpoint ")+default_checkpoint);
         }
         setenv("BAKO_CHECKPOINT_MODE", checkpoint.c_str(), 1);
+#ifdef _WIN32
+        if (!args.count("--assets")) args["--assets"] = runtime.u8string();
+#endif
         ProjectOptions options;
         if (args.count("--main")) options.main = args.at("--main");
         if (args.count("--preview-mode")) options.mode = args.at("--preview-mode");

@@ -182,7 +182,7 @@ int main(int argc, char **argv) {
                   << ",\"warmRestore64KiBp95Ms\":" << percentile(timings, .95)
                   << ",\"fullReplay128MiBMs\":" << replay_ms
                   << ",\"materializedPages\":" << arena.materialized_pages()
-                  << ",\"compilerIntegrated\":false,\"endToEndLatencyMeasured\":false}\n";
+                  << ",\"scope\":\"arena-only\",\"endToEndLatencyMeasured\":false}\n";
         return 0;
     } catch (const std::exception &error) {
         std::cerr << error.what() << '\n';

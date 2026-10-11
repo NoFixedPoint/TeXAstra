@@ -30,6 +30,7 @@ class CheckpointArena {
     DWORD owner = GetCurrentThreadId();
     unsigned char *memory = nullptr;
     size_t byte_count = 0, page_size = 0, page_count = 0;
+    size_t tracked_bytes = 0;
     PVOID handler = nullptr;
     Image current;
     std::vector<Snapshot> snapshots;
@@ -78,7 +79,7 @@ class CheckpointArena {
     }
 
   public:
-    explicit CheckpointArena(size_t bytes) {
+    explicit CheckpointArena(size_t bytes, size_t initially_tracked = 0) {
         SYSTEM_INFO system;
         GetSystemInfo(&system);
         page_size = system.dwPageSize;
@@ -86,6 +87,8 @@ class CheckpointArena {
             throw std::invalid_argument("Invalid checkpoint arena size");
         page_count = (bytes + page_size - 1) / page_size;
         byte_count = page_count * page_size;
+        if (initially_tracked > bytes) throw std::invalid_argument("Tracked range exceeds arena");
+        tracked_bytes = initially_tracked ? (initially_tracked + page_size - 1) / page_size * page_size : byte_count;
         current.resize((page_count + leaf_size - 1) / leaf_size);
         pending.resize(page_count);
         written.resize(page_count);
@@ -118,6 +121,14 @@ class CheckpointArena {
     size_t checkpoint_count() const { return snapshots.size(); }
     uint64_t materialized_pages() const { return faults; }
     uint64_t restored_bytes() const { return copied_bytes; }
+    // An owned allocator can track only the high-water allocation prefix.
+    // The range must grow before capture/restore, including uncaptured writes;
+    // it never shrinks, so abandoned allocations still roll back correctly.
+    void track(size_t bytes) {
+        require_owner();
+        if (bytes > byte_count) throw std::out_of_range("Tracked range exceeds arena");
+        tracked_bytes = std::max(tracked_bytes, (bytes + page_size - 1) / page_size * page_size);
+    }
 
     // Windows may probe a buffer in kernel mode without dispatching a user-mode
     // VEH. Materialize before passing arena ranges into ReadFile/WriteFile/etc.
@@ -137,7 +148,7 @@ class CheckpointArena {
         require_owner();
         ULONG_PTR count = written.size();
         ULONG granularity = 0;
-        auto status = GetWriteWatch(0, memory, byte_count, written.data(), &count, &granularity);
+        auto status = GetWriteWatch(0, memory, tracked_bytes, written.data(), &count, &granularity);
         if (status || granularity != page_size)
             throw std::runtime_error("GetWriteWatch failed or returned unsupported granularity");
         Image image = current;
@@ -164,7 +175,7 @@ class CheckpointArena {
         // Keep write-watch bits until every potentially failing allocation is
         // done: allocation failure must not lose uncaptured compiler changes.
         snapshots.push_back({next_id, image});
-        if (ResetWriteWatch(memory, byte_count)) {
+        if (ResetWriteWatch(memory, tracked_bytes)) {
             snapshots.pop_back();
             throw std::runtime_error("ResetWriteWatch failed");
         }
@@ -181,16 +192,16 @@ class CheckpointArena {
         DWORD previous;
         // One protection operation, no traversal of an undo chain and no eager
         // copy of old compiler bytes. Page versions are indexed by the target.
-        if (!VirtualProtect(memory, byte_count, PAGE_NOACCESS, &previous))
+        if (!VirtualProtect(memory, tracked_bytes, PAGE_NOACCESS, &previous))
             throw error("VirtualProtect");
         current.swap(target);
-        for (size_t i = 0; i < page_count; ++i) {
+        for (size_t i = 0; i < tracked_bytes / page_size; ++i) {
             const auto &version = page(current, i);
             pending[i] = {version ? version->data() : nullptr, true};
         }
         snapshots.erase(found + 1, snapshots.end());
         // Materialization will set bits again. No compiler writes may race us.
-        if (ResetWriteWatch(memory, byte_count))
+        if (ResetWriteWatch(memory, tracked_bytes))
             throw std::runtime_error("ResetWriteWatch failed after restore");
     }
 };

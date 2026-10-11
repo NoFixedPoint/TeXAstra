@@ -6,7 +6,7 @@ const {contains,resolveMain,resolveProject,supportedFile}=require('./project');
 function activate(context){
   let panel,backend,project,currentFrame,suppressSelection,visiblePage=0,serial=0,latestMutation=0,output=vscode.window.createOutputChannel('BaKoMa prototype');
   let watcher,reloadTimer,ready=false,selectedOptions={};
-  const distributionOptions=config=>Object.fromEntries(['wslDistribution','texBinDirectory'].map(name=>[name,config.get(name,'')]).filter(([,value])=>value));
+  const distributionOptions=config=>Object.fromEntries(['runtimeMode','wslDistribution','texBinDirectory'].map(name=>[name,config.get(name,'')]).filter(([,value])=>value));
   context.subscriptions.push(vscode.commands.registerCommand('bakoma.showEnvironment',async()=>{
     if(!vscode.workspace.isTrusted)return;
     try{
@@ -62,12 +62,12 @@ function activate(context){
     html=html.replace('<script src=',`<script nonce="${nonce}" src=`);
     html=html.replace('<meta charset="utf-8">',`<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src ${web.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">`);
     try{
-      backend=require('../native/launch').launch(context.extensionPath,project,'fork',options);
+      backend=require('../native/launch').launch(context.extensionPath,project,'auto',options);
     }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));panel.dispose();panel=null;return;}
     let runtimeError='';
     backend.stderr.on('data',chunk=>{runtimeError=(runtimeError+chunk.toString()).slice(-4000);output.append(chunk.toString());});
     backend.on('error',error=>{output.appendLine(String(error));web.postMessage({type:'status',state:'error',error:String(error)});});
-    backend.on('exit',code=>{if(code)web.postMessage({type:'status',state:'error',error:`Backend exited (${code}). Check the selected Linux/WSL runtime and shared libraries. ${runtimeError} See Output → BaKoMa prototype.`});});
+    backend.on('exit',code=>{if(code)web.postMessage({type:'status',state:'error',error:`Backend exited (${code}). ${runtimeError} See Output → BaKoMa prototype.`});});
     watcher=vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(project,'**/*'));
     const diskChanged=uri=>{
       if(!ready||!supportedFile(project,uri.fsPath))return;

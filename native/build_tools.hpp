@@ -13,11 +13,14 @@ class BuildTools {
     std::map<std::string, std::string> resolved;
 
     fs::path executable(const std::string &name) {
-        auto path=bin/name;
+        auto path=tool_path(bin,name);
         if (fs::is_regular_file(path) && access(path.c_str(), X_OK)==0) return path;
         throw std::runtime_error("Required LaTeX tool '" + name + "' is missing from selected external LaTeX distribution " + bin.string() + ". Install it using that distribution's package manager.");
     }
     std::string run(const fs::path &program, std::vector<std::string> arguments) {
+#ifdef _WIN32
+        return run_logged(program, arguments, directory, directory / ".bako-tool.log", 90, cancel);
+#else
         arguments.insert(arguments.begin(), program.string());
         std::vector<char *> argv;
         for (auto &arg : arguments) argv.push_back(arg.data());
@@ -57,6 +60,7 @@ class BuildTools {
             throw std::runtime_error(program.filename().string() + " failed in " + directory.string() + ":\n" + output);
         }
         return output;
+#endif
     }
     std::string dependency(std::string name, const std::string &extension) {
         if (fs::path(name).extension().empty()) name += extension;
@@ -132,7 +136,7 @@ class BuildTools {
             auto temporary=cached.string()+"."+std::to_string(getpid())+"."+
                 std::to_string(Clock::now().time_since_epoch().count())+".new";
             write(temporary,Json({{"data",data},{"digest",digest(data)},{"log",log}}).dump());
-            fs::rename(temporary,cached);
+            replace_file(temporary,cached);
         }
         bool changed=!fs::exists(directory/output) || read(directory/output)!=data;
         if (changed) write(directory/output,data);
@@ -144,9 +148,13 @@ class BuildTools {
   public:
     BuildTools(fs::path dir, std::atomic<bool> *stop, std::string main_stem, fs::path selected_bin)
         : directory(std::move(dir)), bin(std::move(selected_bin)), source_stem(std::move(main_stem)), cancel(stop) {
+#ifdef _WIN32
+        store=windows::cache_root()/"auxiliary-v2";
+#else
         const char *cache=getenv("XDG_CACHE_HOME"), *home=getenv("HOME");
         store=(cache && *cache ? fs::path(cache) : fs::path(home ? home : "/tmp")/".cache")/
             "bakoma-revived"/"auxiliary-v2";
+#endif
     }
     void reset() { events=Json::array(); diagnostics=nullptr; resolved.clear(); }
     Json state() const {

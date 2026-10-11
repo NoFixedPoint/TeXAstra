@@ -1,0 +1,2617 @@
+{
+  "recordedAt": "2026-10-11T16:22:47.178302+00:00",
+  "measurement": "Browser input handler to image decode, text-layer installation and two animation frames; not physical display latency or the VS Code host.",
+  "deliveryMs": "Residual: total minus backend request-to-payload and browser stages; includes request/response transport, serialization and adapter scheduling.",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "runtimeMode": "native",
+  "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "repeats": 6,
+  "burstEdits": 6,
+  "burstIntervalMs": 35,
+  "targetMs": 150,
+  "samples": [
+    {
+      "case": "root",
+      "type": "paint",
+      "revision": 4,
+      "clientId": 6,
+      "page": 1,
+      "generation": 4,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 93.9715,
+      "visibleMs": 120.40000000596046,
+      "stale": false,
+      "at": 1791735773250,
+      "browserStagesMs": {
+        "prepare": 0.09999999403953552,
+        "decode": 0.30000001192092896,
+        "install": 0.4000000059604645,
+        "paintWait": 21.299999982118607
+      },
+      "deliveryMs": 4.103100031614304,
+      "compileMs": 86.2626,
+      "prepareMs": 0.7514,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 8.103,
+        "shipoutAndPublish": 67.32,
+        "typeset": 7.791
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 257385168,
+        "mode": "windows",
+        "pid": 25056
+      },
+      "renderMs": 3.795,
+      "renderStagesMs": {
+        "displayList": 0.0867,
+        "origins": 0.1173,
+        "png": 2.8662,
+        "raster": 0.5907,
+        "text": 0.0264
+      },
+      "queueMs": 0.0737999975681305,
+      "requestToPayloadMs": 94.19689998030663,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "root",
+      "type": "paint",
+      "revision": 5,
+      "clientId": 7,
+      "page": 1,
+      "generation": 5,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 105.6017,
+      "visibleMs": 142,
+      "stale": false,
+      "at": 1791735773416,
+      "browserStagesMs": {
+        "prepare": 0.10000002384185791,
+        "decode": 0.29999998211860657,
+        "install": 0.30000001192092896,
+        "paintWait": 31.900000005960464
+      },
+      "deliveryMs": 3.6045999825000763,
+      "compileMs": 98.1223,
+      "prepareMs": 0.6609,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.911,
+        "shipoutAndPublish": 67.701,
+        "typeset": 7.655
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 257380496,
+        "mode": "windows",
+        "pid": 25056
+      },
+      "renderMs": 3.7801,
+      "renderStagesMs": {
+        "displayList": 0.0857,
+        "origins": 0.0986,
+        "png": 2.8913,
+        "raster": 0.5774,
+        "text": 0.0237
+      },
+      "queueMs": 0.03519999980926514,
+      "requestToPayloadMs": 105.79539999365807,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "root",
+      "type": "paint",
+      "revision": 6,
+      "clientId": 8,
+      "page": 1,
+      "generation": 6,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 91.6866,
+      "visibleMs": 124.5,
+      "stale": false,
+      "at": 1791735773567,
+      "browserStagesMs": {
+        "prepare": 0.09999999403953552,
+        "decode": 0.20000001788139343,
+        "install": 0.29999998211860657,
+        "paintWait": 28.200000017881393
+      },
+      "deliveryMs": 3.737099975347519,
+      "compileMs": 83.5982,
+      "prepareMs": 0.7328,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.508,
+        "shipoutAndPublish": 66.027,
+        "typeset": 7.455
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 257385168,
+        "mode": "windows",
+        "pid": 25056
+      },
+      "renderMs": 4.047,
+      "renderStagesMs": {
+        "displayList": 0.0832,
+        "origins": 0.1082,
+        "png": 3.136,
+        "raster": 0.5805,
+        "text": 0.0297
+      },
+      "queueMs": 0.039200007915496826,
+      "requestToPayloadMs": 91.96290001273155,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "root",
+      "type": "paint",
+      "revision": 7,
+      "clientId": 9,
+      "page": 1,
+      "generation": 7,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 101.0803,
+      "visibleMs": 125.5,
+      "stale": false,
+      "at": 1791735773716,
+      "browserStagesMs": {
+        "prepare": 0.10000002384185791,
+        "decode": 0.29999998211860657,
+        "install": 0.5999999940395355,
+        "paintWait": 18.30000001192093
+      },
+      "deliveryMs": 4.833899974822998,
+      "compileMs": 92.0407,
+      "prepareMs": 0.646,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.159,
+        "shipoutAndPublish": 64.338,
+        "typeset": 7.365
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 257380496,
+        "mode": "windows",
+        "pid": 25056
+      },
+      "renderMs": 4.4546,
+      "renderStagesMs": {
+        "displayList": 0.1414,
+        "origins": 0.1544,
+        "png": 3.2964,
+        "raster": 0.7161,
+        "text": 0.0441
+      },
+      "queueMs": 0.04129999876022339,
+      "requestToPayloadMs": 101.36610001325607,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "root",
+      "type": "paint",
+      "revision": 8,
+      "clientId": 10,
+      "page": 1,
+      "generation": 8,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 90.6396,
+      "visibleMs": 123.2000000178814,
+      "stale": false,
+      "at": 1791735773865,
+      "browserStagesMs": {
+        "prepare": 0.09999999403953552,
+        "decode": 0.29999998211860657,
+        "install": 0.4000000059604645,
+        "paintWait": 27.80000001192093
+      },
+      "deliveryMs": 3.7052000164985657,
+      "compileMs": 82.0678,
+      "prepareMs": 0.868,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.54,
+        "shipoutAndPublish": 65.298,
+        "typeset": 7.554
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 257385168,
+        "mode": "windows",
+        "pid": 25056
+      },
+      "renderMs": 3.9501,
+      "renderStagesMs": {
+        "displayList": 0.0818,
+        "origins": 0.1029,
+        "png": 3.0628,
+        "raster": 0.573,
+        "text": 0.0246
+      },
+      "queueMs": 0.043800026178359985,
+      "requestToPayloadMs": 90.89480000734329,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "root",
+      "type": "paint",
+      "revision": 9,
+      "clientId": 11,
+      "page": 1,
+      "generation": 9,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 88.9724,
+      "visibleMs": 125.19999998807907,
+      "stale": false,
+      "at": 1791735774016,
+      "browserStagesMs": {
+        "prepare": 0.09999999403953552,
+        "decode": 0.20000001788139343,
+        "install": 0.3999999761581421,
+        "paintWait": 31.80000001192093
+      },
+      "deliveryMs": 3.5456999838352203,
+      "compileMs": 81.2534,
+      "prepareMs": 0.705,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.55,
+        "shipoutAndPublish": 64.147,
+        "typeset": 7.415
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 257380496,
+        "mode": "windows",
+        "pid": 25056
+      },
+      "renderMs": 3.7627,
+      "renderStagesMs": {
+        "displayList": 0.1019,
+        "origins": 0.1076,
+        "png": 2.866,
+        "raster": 0.5448,
+        "text": 0.0253
+      },
+      "queueMs": 0.03600001335144043,
+      "requestToPayloadMs": 89.15430000424385,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "late-chapter",
+      "type": "paint",
+      "revision": 12,
+      "clientId": 19,
+      "page": 11,
+      "generation": 12,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 111.1886,
+      "visibleMs": 157.90000000596046,
+      "stale": false,
+      "at": 1791735776949,
+      "browserStagesMs": {
+        "prepare": 0.7999999821186066,
+        "decode": 0.5,
+        "install": 0.800000011920929,
+        "paintWait": 27.30000001192093
+      },
+      "deliveryMs": 17.094300001859665,
+      "compileMs": 59.6627,
+      "prepareMs": 0.7556,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.494,
+        "shipoutAndPublish": 9.409,
+        "typeset": 18.823
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 12.0312,
+      "renderStagesMs": {
+        "displayList": 2.409,
+        "origins": 3.4947,
+        "png": 3.8474,
+        "raster": 1.0889,
+        "text": 0.8388
+      },
+      "queueMs": 0.038999974727630615,
+      "requestToPayloadMs": 111.40569999814034,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "late-chapter",
+      "type": "paint",
+      "revision": 13,
+      "clientId": 20,
+      "page": 11,
+      "generation": 13,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 113.9623,
+      "visibleMs": 156.7000000178814,
+      "stale": false,
+      "at": 1791735777133,
+      "browserStagesMs": {
+        "prepare": 1,
+        "decode": 4.4000000059604645,
+        "install": 0.699999988079071,
+        "paintWait": 18.100000023841858
+      },
+      "deliveryMs": 18.252000004053116,
+      "compileMs": 61.8285,
+      "prepareMs": 0.8003,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 9.397,
+        "shipoutAndPublish": 9.567,
+        "typeset": 18.71
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 12.1226,
+      "renderStagesMs": {
+        "displayList": 2.3561,
+        "origins": 3.551,
+        "png": 4.0165,
+        "raster": 1.0324,
+        "text": 0.8503
+      },
+      "queueMs": 0.0826999843120575,
+      "requestToPayloadMs": 114.24799999594688,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "late-chapter",
+      "type": "paint",
+      "revision": 14,
+      "clientId": 21,
+      "page": 11,
+      "generation": 14,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 114.5432,
+      "visibleMs": 158.09999999403954,
+      "stale": false,
+      "at": 1791735777316,
+      "browserStagesMs": {
+        "prepare": 1.0999999940395355,
+        "decode": 0.20000001788139343,
+        "install": 0.699999988079071,
+        "paintWait": 23.80000001192093
+      },
+      "deliveryMs": 17.344799995422363,
+      "compileMs": 60.5813,
+      "prepareMs": 0.6957,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 6.937,
+        "shipoutAndPublish": 9.198,
+        "typeset": 18.544
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 12.4129,
+      "renderStagesMs": {
+        "displayList": 2.4511,
+        "origins": 3.6298,
+        "png": 3.9154,
+        "raster": 1.0513,
+        "text": 1.0304
+      },
+      "queueMs": 0.07760000228881836,
+      "requestToPayloadMs": 114.95519998669624,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "late-chapter",
+      "type": "paint",
+      "revision": 15,
+      "clientId": 22,
+      "page": 11,
+      "generation": 15,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 110.0377,
+      "visibleMs": 156.69999998807907,
+      "stale": false,
+      "at": 1791735777499,
+      "browserStagesMs": {
+        "prepare": 1,
+        "decode": 1.199999988079071,
+        "install": 0.5,
+        "paintWait": 26.099999994039536
+      },
+      "deliveryMs": 17.54720002412796,
+      "compileMs": 57.0725,
+      "prepareMs": 0.7363,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.544,
+        "shipoutAndPublish": 9.193,
+        "typeset": 17.482
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 12.029,
+      "renderStagesMs": {
+        "displayList": 2.3645,
+        "origins": 3.3349,
+        "png": 3.8503,
+        "raster": 1.1569,
+        "text": 0.8769
+      },
+      "queueMs": 0.03839999437332153,
+      "requestToPayloadMs": 110.3527999818325,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "late-chapter",
+      "type": "paint",
+      "revision": 16,
+      "clientId": 23,
+      "page": 11,
+      "generation": 16,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 108.5865,
+      "visibleMs": 156.59999999403954,
+      "stale": false,
+      "at": 1791735777682,
+      "browserStagesMs": {
+        "prepare": 1,
+        "decode": 0.4000000059604645,
+        "install": 0.5999999940395355,
+        "paintWait": 29.900000005960464
+      },
+      "deliveryMs": 15.907299995422363,
+      "compileMs": 57.5798,
+      "prepareMs": 1.1484,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.464,
+        "shipoutAndPublish": 9.579,
+        "typeset": 17.595
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 11.6272,
+      "renderStagesMs": {
+        "displayList": 2.3506,
+        "origins": 3.2857,
+        "png": 3.7171,
+        "raster": 1.0924,
+        "text": 0.831
+      },
+      "queueMs": 0.038300007581710815,
+      "requestToPayloadMs": 108.79269999265671,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "late-chapter",
+      "type": "paint",
+      "revision": 17,
+      "clientId": 24,
+      "page": 11,
+      "generation": 17,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 108.4161,
+      "visibleMs": 156.09999999403954,
+      "stale": false,
+      "at": 1791735777865,
+      "browserStagesMs": {
+        "prepare": 0.7000000178813934,
+        "decode": 1.699999988079071,
+        "install": 0.5,
+        "paintWait": 27.69999998807907
+      },
+      "deliveryMs": 16.892599999904633,
+      "compileMs": 57.2999,
+      "prepareMs": 0.7396,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.239,
+        "shipoutAndPublish": 9.02,
+        "typeset": 17.572
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 11.6401,
+      "renderStagesMs": {
+        "displayList": 2.3391,
+        "origins": 3.3336,
+        "png": 3.6757,
+        "raster": 1.0707,
+        "text": 0.8763
+      },
+      "queueMs": 0.03139999508857727,
+      "requestToPayloadMs": 108.60740000009537,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "typing-final",
+      "type": "paint",
+      "revision": 23,
+      "clientId": 30,
+      "page": 11,
+      "generation": 20,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 112.7948,
+      "visibleMs": 174.69999998807907,
+      "stale": false,
+      "at": 1791735778282,
+      "browserStagesMs": {
+        "prepare": 0.699999988079071,
+        "decode": 4,
+        "install": 0.699999988079071,
+        "paintWait": 20.80000001192093
+      },
+      "deliveryMs": 16.95149999856949,
+      "compileMs": 61.7915,
+      "prepareMs": 0.7349,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.237,
+        "shipoutAndPublish": 9.677,
+        "typeset": 18.04
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 12.1575,
+      "renderStagesMs": {
+        "displayList": 2.4777,
+        "origins": 3.3799,
+        "png": 3.8187,
+        "raster": 1.2385,
+        "text": 0.8871
+      },
+      "queueMs": 18.433400005102158,
+      "requestToPayloadMs": 131.5485000014305,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "typing-final",
+      "type": "paint",
+      "revision": 29,
+      "clientId": 36,
+      "page": 11,
+      "generation": 23,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 120.0673,
+      "visibleMs": 236.40000000596046,
+      "stale": false,
+      "at": 1791735778733,
+      "browserStagesMs": {
+        "prepare": 0.9000000059604645,
+        "decode": 11.5,
+        "install": 0.5,
+        "paintWait": 26.400000005960464
+      },
+      "deliveryMs": 20.844499975442886,
+      "compileMs": 61.1619,
+      "prepareMs": 1.013,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.487,
+        "shipoutAndPublish": 9.484,
+        "typeset": 18.552
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 12.5352,
+      "renderStagesMs": {
+        "displayList": 2.4804,
+        "origins": 3.9481,
+        "png": 3.7931,
+        "raster": 1.106,
+        "text": 0.8638
+      },
+      "queueMs": 55.96110001206398,
+      "requestToPayloadMs": 176.25550001859665,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "typing-final",
+      "type": "paint",
+      "revision": 35,
+      "clientId": 44,
+      "page": 11,
+      "generation": 26,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 121.1684,
+      "visibleMs": 207.90000000596046,
+      "stale": false,
+      "at": 1791735779433,
+      "browserStagesMs": {
+        "prepare": 1,
+        "decode": 6.200000017881393,
+        "install": 0.3999999761581421,
+        "paintWait": 26.400000005960464
+      },
+      "deliveryMs": 17.18180000782013,
+      "compileMs": 66.5792,
+      "prepareMs": 0.977,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 9.142,
+        "shipoutAndPublish": 10.657,
+        "typeset": 18.747
+      },
+      "snapshot": {
+        "checkpoints": 14,
+        "heapUsedBytes": 286988144,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 12.3975,
+      "renderStagesMs": {
+        "displayList": 2.5811,
+        "origins": 3.4185,
+        "png": 4.0573,
+        "raster": 1.1316,
+        "text": 0.8691
+      },
+      "queueMs": 35.19779998064041,
+      "requestToPayloadMs": 156.71819999814034,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "typing-final",
+      "type": "paint",
+      "revision": 41,
+      "clientId": 52,
+      "page": 11,
+      "generation": 29,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 120.8326,
+      "visibleMs": 206.09999999403954,
+      "stale": false,
+      "at": 1791735780099,
+      "browserStagesMs": {
+        "prepare": 0.7000000178813934,
+        "decode": 4.699999988079071,
+        "install": 0.4000000059604645,
+        "paintWait": 23.19999998807907
+      },
+      "deliveryMs": 15.627399981021881,
+      "compileMs": 64.2357,
+      "prepareMs": 0.7193,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.235,
+        "shipoutAndPublish": 9.548,
+        "typeset": 18.042
+      },
+      "snapshot": {
+        "checkpoints": 15,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 13.7577,
+      "renderStagesMs": {
+        "displayList": 2.7042,
+        "origins": 3.8444,
+        "png": 4.4285,
+        "raster": 1.1349,
+        "text": 0.9719
+      },
+      "queueMs": 40.30830001831055,
+      "requestToPayloadMs": 161.47260001301765,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "typing-final",
+      "type": "paint",
+      "revision": 47,
+      "clientId": 60,
+      "page": 11,
+      "generation": 32,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 122.1622,
+      "visibleMs": 202.5,
+      "stale": false,
+      "at": 1791735780749,
+      "browserStagesMs": {
+        "prepare": 0.9000000059604645,
+        "decode": 8.899999976158142,
+        "install": 0.4000000059604645,
+        "paintWait": 27.599999994039536
+      },
+      "deliveryMs": 16.688400000333786,
+      "compileMs": 63.5877,
+      "prepareMs": 0.7797,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.041,
+        "shipoutAndPublish": 9.603,
+        "typeset": 18.948
+      },
+      "snapshot": {
+        "checkpoints": 16,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 15.8191,
+      "renderStagesMs": {
+        "displayList": 2.7584,
+        "origins": 5.0957,
+        "png": 4.417,
+        "raster": 1.7301,
+        "text": 1.4777
+      },
+      "queueMs": 25.554399996995926,
+      "requestToPayloadMs": 148.0116000175476,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "typing-final",
+      "type": "paint",
+      "revision": 53,
+      "clientId": 68,
+      "page": 11,
+      "generation": 35,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 114.219,
+      "visibleMs": 200.7000000178814,
+      "stale": false,
+      "at": 1791735781383,
+      "browserStagesMs": {
+        "prepare": 0.800000011920929,
+        "decode": 3.800000011920929,
+        "install": 0.5,
+        "paintWait": 19
+      },
+      "deliveryMs": 16.58559998869896,
+      "compileMs": 62.4158,
+      "prepareMs": 0.8124,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 7.727,
+        "shipoutAndPublish": 9.838,
+        "typeset": 18.417
+      },
+      "snapshot": {
+        "checkpoints": 17,
+        "heapUsedBytes": 286987056,
+        "mode": "windows",
+        "pid": 18428
+      },
+      "renderMs": 11.4594,
+      "renderStagesMs": {
+        "displayList": 2.2343,
+        "origins": 3.2216,
+        "png": 3.7325,
+        "raster": 1.103,
+        "text": 0.7854
+      },
+      "queueMs": 45.474999994039536,
+      "requestToPayloadMs": 160.01440000534058,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "new-font",
+      "type": "paint",
+      "revision": 55,
+      "clientId": 75,
+      "page": 11,
+      "generation": 37,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 225.1225,
+      "visibleMs": 273,
+      "stale": false,
+      "at": 1791735784349,
+      "browserStagesMs": {
+        "prepare": 0.9000000059604645,
+        "decode": 4.300000011920929,
+        "install": 2.899999976158142,
+        "paintWait": 19.900000005960464
+      },
+      "deliveryMs": 19.435000002384186,
+      "compileMs": 90.3279,
+      "prepareMs": 0.9855,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 30.803,
+        "shipoutAndPublish": 8.215,
+        "typeset": 25.563
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 289199856,
+        "mode": "windows",
+        "pid": 14316
+      },
+      "renderMs": 13.9362,
+      "renderStagesMs": {
+        "displayList": 3.658,
+        "origins": 3.5746,
+        "png": 3.9539,
+        "raster": 1.691,
+        "text": 0.8555
+      },
+      "fontRefreshMs": 81.343,
+      "fontResourceBytes": 32525,
+      "queueMs": 0.03329998254776001,
+      "requestToPayloadMs": 225.5649999976158,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "new-font",
+      "type": "paint",
+      "revision": 57,
+      "clientId": 82,
+      "page": 11,
+      "generation": 39,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 227.4438,
+      "visibleMs": 272.90000000596046,
+      "stale": false,
+      "at": 1791735787350,
+      "browserStagesMs": {
+        "prepare": 0.7999999821186066,
+        "decode": 0.4000000059604645,
+        "install": 3.300000011920929,
+        "paintWait": 24.69999998807907
+      },
+      "deliveryMs": 16.042600005865097,
+      "compileMs": 92.9821,
+      "prepareMs": 1.0255,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 32.152,
+        "shipoutAndPublish": 8.311,
+        "typeset": 25.892
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 289203248,
+        "mode": "windows",
+        "pid": 34380
+      },
+      "renderMs": 13.3715,
+      "renderStagesMs": {
+        "displayList": 3.2094,
+        "origins": 3.2846,
+        "png": 3.941,
+        "raster": 1.86,
+        "text": 0.8311
+      },
+      "fontRefreshMs": 81.4259,
+      "fontResourceBytes": 32525,
+      "queueMs": 0.03940001130104065,
+      "requestToPayloadMs": 227.6574000120163,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "new-font",
+      "type": "paint",
+      "revision": 59,
+      "clientId": 89,
+      "page": 11,
+      "generation": 41,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 224.5779,
+      "visibleMs": 274.10000002384186,
+      "stale": false,
+      "at": 1791735790249,
+      "browserStagesMs": {
+        "prepare": 1,
+        "decode": 5,
+        "install": 2.699999988079071,
+        "paintWait": 25.80000001192093
+      },
+      "deliveryMs": 14.81300002336502,
+      "compileMs": 91.6582,
+      "prepareMs": 0.9004,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 31.988,
+        "shipoutAndPublish": 8.321,
+        "typeset": 25.522
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 289201264,
+        "mode": "windows",
+        "pid": 40380
+      },
+      "renderMs": 12.853,
+      "renderStagesMs": {
+        "displayList": 3.2661,
+        "origins": 3.313,
+        "png": 3.6576,
+        "raster": 1.66,
+        "text": 0.7463
+      },
+      "fontRefreshMs": 80.0996,
+      "fontResourceBytes": 32525,
+      "queueMs": 0.036500006914138794,
+      "requestToPayloadMs": 224.78700000047684,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "new-font",
+      "type": "paint",
+      "revision": 61,
+      "clientId": 95,
+      "page": 11,
+      "generation": 43,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 227.4013,
+      "visibleMs": 267.30000001192093,
+      "stale": false,
+      "at": 1791735792967,
+      "browserStagesMs": {
+        "prepare": 0.699999988079071,
+        "decode": 4,
+        "install": 2.9000000059604645,
+        "paintWait": 16.400000005960464
+      },
+      "deliveryMs": 15.673500031232834,
+      "compileMs": 92.922,
+      "prepareMs": 0.9823,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 31.301,
+        "shipoutAndPublish": 8.229,
+        "typeset": 25.166
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 289204080,
+        "mode": "windows",
+        "pid": 44340
+      },
+      "renderMs": 13.051,
+      "renderStagesMs": {
+        "displayList": 3.2134,
+        "origins": 3.3341,
+        "png": 3.8145,
+        "raster": 1.7332,
+        "text": 0.7494
+      },
+      "fontRefreshMs": 86.7222,
+      "fontResourceBytes": 32525,
+      "queueMs": 0.05679997801780701,
+      "requestToPayloadMs": 227.6264999806881,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "new-font",
+      "type": "paint",
+      "revision": 63,
+      "clientId": 102,
+      "page": 11,
+      "generation": 45,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 230.8273,
+      "visibleMs": 274.7000000178814,
+      "stale": false,
+      "at": 1791735795749,
+      "browserStagesMs": {
+        "prepare": 1,
+        "decode": 0.30000001192092896,
+        "install": 2.899999976158142,
+        "paintWait": 23.700000017881393
+      },
+      "deliveryMs": 15.737399995326996,
+      "compileMs": 93.161,
+      "prepareMs": 0.9202,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 30.259,
+        "shipoutAndPublish": 8.14,
+        "typeset": 25.776
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 289203504,
+        "mode": "windows",
+        "pid": 28064
+      },
+      "renderMs": 13.044,
+      "renderStagesMs": {
+        "displayList": 3.2901,
+        "origins": 3.2319,
+        "png": 3.8059,
+        "raster": 1.7446,
+        "text": 0.7564
+      },
+      "fontRefreshMs": 84.1868,
+      "fontResourceBytes": 32525,
+      "queueMs": 0.04640001058578491,
+      "requestToPayloadMs": 231.06260001659393,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    },
+    {
+      "case": "new-font",
+      "type": "paint",
+      "revision": 65,
+      "clientId": 109,
+      "page": 11,
+      "generation": 47,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 229.0985,
+      "visibleMs": 287.59999999403954,
+      "stale": false,
+      "at": 1791735798498,
+      "browserStagesMs": {
+        "prepare": 1,
+        "decode": 7.699999988079071,
+        "install": 2.300000011920929,
+        "paintWait": 26.799999982118607
+      },
+      "deliveryMs": 15.730700016021729,
+      "compileMs": 93.6445,
+      "prepareMs": 1.0787,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 31.198,
+        "shipoutAndPublish": 8.137,
+        "typeset": 25.094
+      },
+      "snapshot": {
+        "checkpoints": 13,
+        "heapUsedBytes": 289203312,
+        "mode": "windows",
+        "pid": 42288
+      },
+      "renderMs": 13.4134,
+      "renderStagesMs": {
+        "displayList": 3.7135,
+        "origins": 3.2658,
+        "png": 3.7971,
+        "raster": 1.662,
+        "text": 0.7702
+      },
+      "fontRefreshMs": 81.7759,
+      "fontResourceBytes": 32525,
+      "queueMs": 4.776199996471405,
+      "requestToPayloadMs": 234.0692999958992,
+      "resumedFrom": 11,
+      "outputMode": "page-stream",
+      "compilationMode": "live"
+    }
+  ],
+  "bursts": [
+    {
+      "events": [
+        {
+          "clientId": 25,
+          "atMs": 9674.300000011921,
+          "token": "Marker100"
+        },
+        {
+          "clientId": 26,
+          "atMs": 9723.5,
+          "token": "Marker101"
+        },
+        {
+          "clientId": 27,
+          "atMs": 9770.40000000596,
+          "token": "Marker102"
+        },
+        {
+          "clientId": 28,
+          "atMs": 9811.40000000596,
+          "token": "Marker103"
+        },
+        {
+          "clientId": 29,
+          "atMs": 9850.59999999404,
+          "token": "Marker104"
+        },
+        {
+          "clientId": 30,
+          "atMs": 9893.200000017881,
+          "token": "Marker105"
+        }
+      ],
+      "paintedInputs": 1,
+      "supersededInputs": 5,
+      "paints": [
+        {
+          "type": "paint",
+          "revision": 18,
+          "clientId": 25,
+          "page": 11,
+          "generation": 18,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 110.9565,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735778050,
+          "browserStagesMs": {
+            "prepare": 0.7000000178813934,
+            "decode": 7,
+            "install": 0.29999998211860657,
+            "paintWait": 23.900000005960464
+          },
+          "deliveryMs": null,
+          "compileMs": 58.049,
+          "prepareMs": 0.7659,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.261,
+            "shipoutAndPublish": 9.071,
+            "typeset": 17.875
+          },
+          "snapshot": {
+            "checkpoints": 13,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 11.6934,
+          "renderStagesMs": {
+            "displayList": 2.3406,
+            "origins": 3.3417,
+            "png": 3.7636,
+            "raster": 1.0781,
+            "text": 0.8295
+          },
+          "queueMs": 0.033700019121170044,
+          "requestToPayloadMs": 111.21610000729561,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 20,
+          "clientId": 27,
+          "page": 11,
+          "generation": 19,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 116.6438,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735778167,
+          "browserStagesMs": {
+            "prepare": 1,
+            "decode": 4.5,
+            "install": 0.7000000178813934,
+            "paintWait": 20.69999998807907
+          },
+          "deliveryMs": null,
+          "compileMs": 62.7212,
+          "prepareMs": 1.1173,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 8.178,
+            "shipoutAndPublish": 9.865,
+            "typeset": 19.058
+          },
+          "snapshot": {
+            "checkpoints": 13,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.4685,
+          "renderStagesMs": {
+            "displayList": 2.4245,
+            "origins": 3.422,
+            "png": 4.0805,
+            "raster": 1.2438,
+            "text": 0.884
+          },
+          "queueMs": 20.634200006723404,
+          "requestToPayloadMs": 137.5561000108719,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 23,
+          "clientId": 30,
+          "page": 11,
+          "generation": 20,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 112.7948,
+          "visibleMs": 174.69999998807907,
+          "stale": false,
+          "at": 1791735778282,
+          "browserStagesMs": {
+            "prepare": 0.699999988079071,
+            "decode": 4,
+            "install": 0.699999988079071,
+            "paintWait": 20.80000001192093
+          },
+          "deliveryMs": 16.95149999856949,
+          "compileMs": 61.7915,
+          "prepareMs": 0.7349,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.237,
+            "shipoutAndPublish": 9.677,
+            "typeset": 18.04
+          },
+          "snapshot": {
+            "checkpoints": 13,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.1575,
+          "renderStagesMs": {
+            "displayList": 2.4777,
+            "origins": 3.3799,
+            "png": 3.8187,
+            "raster": 1.2385,
+            "text": 0.8871
+          },
+          "queueMs": 18.433400005102158,
+          "requestToPayloadMs": 131.5485000014305,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        }
+      ],
+      "burstToFinalMs": 393.59999999403954
+    },
+    {
+      "events": [
+        {
+          "clientId": 31,
+          "atMs": 10094.59999999404,
+          "token": "Marker106"
+        },
+        {
+          "clientId": 32,
+          "atMs": 10130.59999999404,
+          "token": "Marker107"
+        },
+        {
+          "clientId": 33,
+          "atMs": 10167.90000000596,
+          "token": "Marker108"
+        },
+        {
+          "clientId": 34,
+          "atMs": 10205,
+          "token": "Marker109"
+        },
+        {
+          "clientId": 35,
+          "atMs": 10242,
+          "token": "Marker110"
+        },
+        {
+          "clientId": 36,
+          "atMs": 10281.800000011921,
+          "token": "Marker111"
+        }
+      ],
+      "paintedInputs": 1,
+      "supersededInputs": 5,
+      "paints": [
+        {
+          "type": "paint",
+          "revision": 24,
+          "clientId": 31,
+          "page": 11,
+          "generation": 21,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 115.0436,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735778466,
+          "browserStagesMs": {
+            "prepare": 0.800000011920929,
+            "decode": 6.5999999940395355,
+            "install": 1.300000011920929,
+            "paintWait": 15.399999976158142
+          },
+          "deliveryMs": null,
+          "compileMs": 63.2372,
+          "prepareMs": 0.7171,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.502,
+            "shipoutAndPublish": 10.367,
+            "typeset": 18.277
+          },
+          "snapshot": {
+            "checkpoints": 13,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.6167,
+          "renderStagesMs": {
+            "displayList": 2.409,
+            "origins": 3.59,
+            "png": 4.1046,
+            "raster": 1.0842,
+            "text": 0.9608
+          },
+          "queueMs": 0.09459999203681946,
+          "requestToPayloadMs": 115.4282999932766,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 27,
+          "clientId": 34,
+          "page": 11,
+          "generation": 22,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 117.2311,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735778598,
+          "browserStagesMs": {
+            "prepare": 1,
+            "decode": 7.5,
+            "install": 0.699999988079071,
+            "paintWait": 24.400000005960464
+          },
+          "deliveryMs": null,
+          "compileMs": 63.9472,
+          "prepareMs": 0.7521,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 8.509,
+            "shipoutAndPublish": 9.734,
+            "typeset": 19.347
+          },
+          "snapshot": {
+            "checkpoints": 13,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.1457,
+          "renderStagesMs": {
+            "displayList": 2.4949,
+            "origins": 3.5421,
+            "png": 3.775,
+            "raster": 1.0922,
+            "text": 0.9122
+          },
+          "queueMs": 9.921000003814697,
+          "requestToPayloadMs": 127.48669999837875,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 29,
+          "clientId": 36,
+          "page": 11,
+          "generation": 23,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 120.0673,
+          "visibleMs": 236.40000000596046,
+          "stale": false,
+          "at": 1791735778733,
+          "browserStagesMs": {
+            "prepare": 0.9000000059604645,
+            "decode": 11.5,
+            "install": 0.5,
+            "paintWait": 26.400000005960464
+          },
+          "deliveryMs": 20.844499975442886,
+          "compileMs": 61.1619,
+          "prepareMs": 1.013,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.487,
+            "shipoutAndPublish": 9.484,
+            "typeset": 18.552
+          },
+          "snapshot": {
+            "checkpoints": 13,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.5352,
+          "renderStagesMs": {
+            "displayList": 2.4804,
+            "origins": 3.9481,
+            "png": 3.7931,
+            "raster": 1.106,
+            "text": 0.8638
+          },
+          "queueMs": 55.96110001206398,
+          "requestToPayloadMs": 176.25550001859665,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        }
+      ],
+      "burstToFinalMs": 423.60000002384186
+    },
+    {
+      "events": [
+        {
+          "clientId": 39,
+          "atMs": 10790.5,
+          "token": "Marker112"
+        },
+        {
+          "clientId": 40,
+          "atMs": 10840.59999999404,
+          "token": "Marker113"
+        },
+        {
+          "clientId": 41,
+          "atMs": 10886.5,
+          "token": "Marker114"
+        },
+        {
+          "clientId": 42,
+          "atMs": 10928.300000011921,
+          "token": "Marker115"
+        },
+        {
+          "clientId": 43,
+          "atMs": 10972.800000011921,
+          "token": "Marker116"
+        },
+        {
+          "clientId": 44,
+          "atMs": 11010.59999999404,
+          "token": "Marker117"
+        }
+      ],
+      "paintedInputs": 1,
+      "supersededInputs": 5,
+      "paints": [
+        {
+          "type": "paint",
+          "revision": 30,
+          "clientId": 39,
+          "page": 11,
+          "generation": 24,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 123.4741,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735779182,
+          "browserStagesMs": {
+            "prepare": 1.0999999940395355,
+            "decode": 7.800000011920929,
+            "install": 0.7999999821186066,
+            "paintWait": 19
+          },
+          "deliveryMs": null,
+          "compileMs": 63.6756,
+          "prepareMs": 0.8331,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.673,
+            "shipoutAndPublish": 9.21,
+            "typeset": 18.394
+          },
+          "snapshot": {
+            "checkpoints": 14,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.6317,
+          "renderStagesMs": {
+            "displayList": 2.6779,
+            "origins": 3.4825,
+            "png": 4.1319,
+            "raster": 1.1086,
+            "text": 0.8946
+          },
+          "queueMs": 0.03630000352859497,
+          "requestToPayloadMs": 123.67370000481606,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 32,
+          "clientId": 41,
+          "page": 11,
+          "generation": 25,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 120.657,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735779298,
+          "browserStagesMs": {
+            "prepare": 1.0999999940395355,
+            "decode": 5.5,
+            "install": 1.0999999940395355,
+            "paintWait": 18.700000017881393
+          },
+          "deliveryMs": null,
+          "compileMs": 66.1803,
+          "prepareMs": 0.8729,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.868,
+            "shipoutAndPublish": 9.837,
+            "typeset": 19.805
+          },
+          "snapshot": {
+            "checkpoints": 14,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.8459,
+          "renderStagesMs": {
+            "displayList": 2.5422,
+            "origins": 3.4662,
+            "png": 4.0305,
+            "raster": 1.3702,
+            "text": 1.0184
+          },
+          "queueMs": 32.766099989414215,
+          "requestToPayloadMs": 153.67679998278618,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 35,
+          "clientId": 44,
+          "page": 11,
+          "generation": 26,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 121.1684,
+          "visibleMs": 207.90000000596046,
+          "stale": false,
+          "at": 1791735779433,
+          "browserStagesMs": {
+            "prepare": 1,
+            "decode": 6.200000017881393,
+            "install": 0.3999999761581421,
+            "paintWait": 26.400000005960464
+          },
+          "deliveryMs": 17.18180000782013,
+          "compileMs": 66.5792,
+          "prepareMs": 0.977,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 9.142,
+            "shipoutAndPublish": 10.657,
+            "typeset": 18.747
+          },
+          "snapshot": {
+            "checkpoints": 14,
+            "heapUsedBytes": 286988144,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.3975,
+          "renderStagesMs": {
+            "displayList": 2.5811,
+            "origins": 3.4185,
+            "png": 4.0573,
+            "raster": 1.1316,
+            "text": 0.8691
+          },
+          "queueMs": 35.19779998064041,
+          "requestToPayloadMs": 156.71819999814034,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        }
+      ],
+      "burstToFinalMs": 428.0
+    },
+    {
+      "events": [
+        {
+          "clientId": 47,
+          "atMs": 11457.800000011921,
+          "token": "Marker118"
+        },
+        {
+          "clientId": 48,
+          "atMs": 11507.59999999404,
+          "token": "Marker119"
+        },
+        {
+          "clientId": 49,
+          "atMs": 11554.59999999404,
+          "token": "Marker120"
+        },
+        {
+          "clientId": 50,
+          "atMs": 11599.200000017881,
+          "token": "Marker121"
+        },
+        {
+          "clientId": 51,
+          "atMs": 11639,
+          "token": "Marker122"
+        },
+        {
+          "clientId": 52,
+          "atMs": 11678,
+          "token": "Marker123"
+        }
+      ],
+      "paintedInputs": 1,
+      "supersededInputs": 5,
+      "paints": [
+        {
+          "type": "paint",
+          "revision": 36,
+          "clientId": 47,
+          "page": 11,
+          "generation": 27,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 127.8801,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735779848,
+          "browserStagesMs": {
+            "prepare": 0.699999988079071,
+            "decode": 8.5,
+            "install": 0.4000000059604645,
+            "paintWait": 14.300000011920929
+          },
+          "deliveryMs": null,
+          "compileMs": 72.3389,
+          "prepareMs": 0.8992,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 11.961,
+            "shipoutAndPublish": 9.546,
+            "typeset": 20.755
+          },
+          "snapshot": {
+            "checkpoints": 15,
+            "heapUsedBytes": 286988144,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.0512,
+          "renderStagesMs": {
+            "displayList": 2.3866,
+            "origins": 3.55,
+            "png": 3.7822,
+            "raster": 1.1209,
+            "text": 0.8771
+          },
+          "queueMs": 0.034999996423721313,
+          "requestToPayloadMs": 128.1051999926567,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 38,
+          "clientId": 49,
+          "page": 11,
+          "generation": 28,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 122.1656,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735779982,
+          "browserStagesMs": {
+            "prepare": 0.5999999940395355,
+            "decode": 9.5,
+            "install": 0.5999999940395355,
+            "paintWait": 26.400000005960464
+          },
+          "deliveryMs": null,
+          "compileMs": 67.9507,
+          "prepareMs": 0.7584,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 9.285,
+            "shipoutAndPublish": 9.965,
+            "typeset": 19.293
+          },
+          "snapshot": {
+            "checkpoints": 15,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.8157,
+          "renderStagesMs": {
+            "displayList": 2.8745,
+            "origins": 3.6571,
+            "png": 3.9515,
+            "raster": 1.1094,
+            "text": 0.8869
+          },
+          "queueMs": 36.320100009441376,
+          "requestToPayloadMs": 158.6976000070572,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 41,
+          "clientId": 52,
+          "page": 11,
+          "generation": 29,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 120.8326,
+          "visibleMs": 206.09999999403954,
+          "stale": false,
+          "at": 1791735780099,
+          "browserStagesMs": {
+            "prepare": 0.7000000178813934,
+            "decode": 4.699999988079071,
+            "install": 0.4000000059604645,
+            "paintWait": 23.19999998807907
+          },
+          "deliveryMs": 15.627399981021881,
+          "compileMs": 64.2357,
+          "prepareMs": 0.7193,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.235,
+            "shipoutAndPublish": 9.548,
+            "typeset": 18.042
+          },
+          "snapshot": {
+            "checkpoints": 15,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 13.7577,
+          "renderStagesMs": {
+            "displayList": 2.7042,
+            "origins": 3.8444,
+            "png": 4.4285,
+            "raster": 1.1349,
+            "text": 0.9719
+          },
+          "queueMs": 40.30830001831055,
+          "requestToPayloadMs": 161.47260001301765,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        }
+      ],
+      "burstToFinalMs": 426.2999999821186
+    },
+    {
+      "events": [
+        {
+          "clientId": 55,
+          "atMs": 12106.700000017881,
+          "token": "Marker124"
+        },
+        {
+          "clientId": 56,
+          "atMs": 12145.59999999404,
+          "token": "Marker125"
+        },
+        {
+          "clientId": 57,
+          "atMs": 12192.59999999404,
+          "token": "Marker126"
+        },
+        {
+          "clientId": 58,
+          "atMs": 12238.700000017881,
+          "token": "Marker127"
+        },
+        {
+          "clientId": 59,
+          "atMs": 12284,
+          "token": "Marker128"
+        },
+        {
+          "clientId": 60,
+          "atMs": 12331.59999999404,
+          "token": "Marker129"
+        }
+      ],
+      "paintedInputs": 1,
+      "supersededInputs": 5,
+      "paints": [
+        {
+          "type": "paint",
+          "revision": 42,
+          "clientId": 55,
+          "page": 11,
+          "generation": 30,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 121.1101,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735780482,
+          "browserStagesMs": {
+            "prepare": 0.699999988079071,
+            "decode": 4.199999988079071,
+            "install": 1.9000000059604645,
+            "paintWait": 15.5
+          },
+          "deliveryMs": null,
+          "compileMs": 62.6547,
+          "prepareMs": 1.2995,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.916,
+            "shipoutAndPublish": 9.883,
+            "typeset": 18.418
+          },
+          "snapshot": {
+            "checkpoints": 16,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.431,
+          "renderStagesMs": {
+            "displayList": 2.5194,
+            "origins": 3.4415,
+            "png": 3.9973,
+            "raster": 1.1361,
+            "text": 0.9413
+          },
+          "queueMs": 0.037400007247924805,
+          "requestToPayloadMs": 121.34749999642372,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 44,
+          "clientId": 57,
+          "page": 11,
+          "generation": 31,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 118.8117,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735780615,
+          "browserStagesMs": {
+            "prepare": 0.699999988079071,
+            "decode": 4.699999988079071,
+            "install": 0.5,
+            "paintWait": 23.600000023841858
+          },
+          "deliveryMs": null,
+          "compileMs": 63.8976,
+          "prepareMs": 0.749,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.312,
+            "shipoutAndPublish": 10.157,
+            "typeset": 18.983
+          },
+          "snapshot": {
+            "checkpoints": 16,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.3345,
+          "renderStagesMs": {
+            "displayList": 2.4592,
+            "origins": 3.3756,
+            "png": 4.0899,
+            "raster": 1.2515,
+            "text": 0.7652
+          },
+          "queueMs": 39.98030000925064,
+          "requestToPayloadMs": 159.0489999949932,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 47,
+          "clientId": 60,
+          "page": 11,
+          "generation": 32,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 122.1622,
+          "visibleMs": 202.5,
+          "stale": false,
+          "at": 1791735780749,
+          "browserStagesMs": {
+            "prepare": 0.9000000059604645,
+            "decode": 8.899999976158142,
+            "install": 0.4000000059604645,
+            "paintWait": 27.599999994039536
+          },
+          "deliveryMs": 16.688400000333786,
+          "compileMs": 63.5877,
+          "prepareMs": 0.7797,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.041,
+            "shipoutAndPublish": 9.603,
+            "typeset": 18.948
+          },
+          "snapshot": {
+            "checkpoints": 16,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 15.8191,
+          "renderStagesMs": {
+            "displayList": 2.7584,
+            "origins": 5.0957,
+            "png": 4.417,
+            "raster": 1.7301,
+            "text": 1.4777
+          },
+          "queueMs": 25.554399996995926,
+          "requestToPayloadMs": 148.0116000175476,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        }
+      ],
+      "burstToFinalMs": 427.39999997615814
+    },
+    {
+      "events": [
+        {
+          "clientId": 63,
+          "atMs": 12756.90000000596,
+          "token": "Marker130"
+        },
+        {
+          "clientId": 64,
+          "atMs": 12795.59999999404,
+          "token": "Marker131"
+        },
+        {
+          "clientId": 65,
+          "atMs": 12842.09999999404,
+          "token": "Marker132"
+        },
+        {
+          "clientId": 66,
+          "atMs": 12889.300000011921,
+          "token": "Marker133"
+        },
+        {
+          "clientId": 67,
+          "atMs": 12925.700000017881,
+          "token": "Marker134"
+        },
+        {
+          "clientId": 68,
+          "atMs": 12967.5,
+          "token": "Marker135"
+        }
+      ],
+      "paintedInputs": 1,
+      "supersededInputs": 5,
+      "paints": [
+        {
+          "type": "paint",
+          "revision": 48,
+          "clientId": 63,
+          "page": 11,
+          "generation": 33,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 122.2306,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735781148,
+          "browserStagesMs": {
+            "prepare": 0.800000011920929,
+            "decode": 10.099999994039536,
+            "install": 0.5,
+            "paintWait": 24.599999994039536
+          },
+          "deliveryMs": null,
+          "compileMs": 64.4217,
+          "prepareMs": 1.0737,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.944,
+            "shipoutAndPublish": 10.05,
+            "typeset": 18.716
+          },
+          "snapshot": {
+            "checkpoints": 17,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 12.5643,
+          "renderStagesMs": {
+            "displayList": 2.5193,
+            "origins": 3.5775,
+            "png": 3.9948,
+            "raster": 1.2313,
+            "text": 0.9003
+          },
+          "queueMs": 0.03979998826980591,
+          "requestToPayloadMs": 122.43419998884201,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 50,
+          "clientId": 65,
+          "page": 11,
+          "generation": 34,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 123.4226,
+          "visibleMs": null,
+          "stale": true,
+          "at": 1791735781266,
+          "browserStagesMs": {
+            "prepare": 0.7999999821186066,
+            "decode": 4.5,
+            "install": 0.7000000178813934,
+            "paintWait": 20.099999994039536
+          },
+          "deliveryMs": null,
+          "compileMs": 66.8186,
+          "prepareMs": 0.7794,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 8.084,
+            "shipoutAndPublish": 10.357,
+            "typeset": 19.802
+          },
+          "snapshot": {
+            "checkpoints": 17,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 11.4149,
+          "renderStagesMs": {
+            "displayList": 2.1742,
+            "origins": 3.2533,
+            "png": 3.6813,
+            "raster": 1.1232,
+            "text": 0.7947
+          },
+          "queueMs": 41.72220000624657,
+          "requestToPayloadMs": 165.42710000276566,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        },
+        {
+          "type": "paint",
+          "revision": 53,
+          "clientId": 68,
+          "page": 11,
+          "generation": 35,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 114.219,
+          "visibleMs": 200.7000000178814,
+          "stale": false,
+          "at": 1791735781383,
+          "browserStagesMs": {
+            "prepare": 0.800000011920929,
+            "decode": 3.800000011920929,
+            "install": 0.5,
+            "paintWait": 19
+          },
+          "deliveryMs": 16.58559998869896,
+          "compileMs": 62.4158,
+          "prepareMs": 0.8124,
+          "compilerStagesMs": {
+            "fork": 0,
+            "replaceChild": 0,
+            "restore": 7.727,
+            "shipoutAndPublish": 9.838,
+            "typeset": 18.417
+          },
+          "snapshot": {
+            "checkpoints": 17,
+            "heapUsedBytes": 286987056,
+            "mode": "windows",
+            "pid": 18428
+          },
+          "renderMs": 11.4594,
+          "renderStagesMs": {
+            "displayList": 2.2343,
+            "origins": 3.2216,
+            "png": 3.7325,
+            "raster": 1.103,
+            "text": 0.7854
+          },
+          "queueMs": 45.474999994039536,
+          "requestToPayloadMs": 160.01440000534058,
+          "resumedFrom": 11,
+          "outputMode": "page-stream",
+          "compilationMode": "live"
+        }
+      ],
+      "burstToFinalMs": 411.30000001192093
+    }
+  ],
+  "checks": [
+    "Matching current edit is painted with expected text",
+    "Late chapter reuses nearby checkpoint",
+    "New font exercises resource refresh",
+    "Typing bursts report superseded inputs separately",
+    "No browser errors",
+    "Project sources unchanged"
+  ],
+  "sourceSha256": {
+    "webview\\viewer.js": "c72d8760c472984555410ce04b300b68395b76328e9b24095e278c1f66f66f6b",
+    "native\\main.cpp": "fed41da5055b59f9b2c25781ceac895af4453f95026073080414026668117711",
+    "native\\renderer.hpp": "643200f201119246ed946680033ad96a2e7e545f7bf5484e2db1dd0708e74aec",
+    "native\\mapping.hpp": "6f2ab622caabe1fbc265289df78835066c1e09dc9c1c6c2f14f78bae01c7308a",
+    "prototype\\provenance.lua": "e301c30603dcce140b0a008bb745848716783d6ab99928b58566ebf8d15b795e",
+    "native\\compiler.hpp": "01fec16f8a404f783d269e043f2ade7ca656c2dee1de6292b648cc68f8c4a637",
+    "prototype\\snapshot.c": "6563dc7e2cec21642351ea7622269528ef33ba35794a47b7bbbfb4cd3a3cd818",
+    "engine\\resources.c": "21f12ebd4aab6632f8d2697f84a275b909e89a9c75f654b5688f83f5c53e6d7e",
+    "native\\runtime\\windows-x64\\bakoma-backend.exe": "b8be0e34f7419893fd716817be398b8babd90a8228cf2c165ddb7d130ba078c1",
+    "native\\runtime\\windows-x64\\bakoma-engine.dll": "98be537bb23446c0b611d0b1eb1fcdb909e98c11c097bc8aeb0663cc372a3c72"
+  },
+  "chromium": "145.0.7632.6",
+  "chapterPage": 11,
+  "cases": {
+    "root": {
+      "count": 6,
+      "medianMs": 124.84999999403954,
+      "p95Ms": 142,
+      "maxMs": 142,
+      "passes150ms": true,
+      "stages": {
+        "pipelineMs": {
+          "count": 6,
+          "medianMs": 92.82905,
+          "p95Ms": 105.6017,
+          "maxMs": 105.6017
+        },
+        "queueMs": {
+          "count": 6,
+          "medianMs": 0.04025000333786011,
+          "p95Ms": 0.0737999975681305,
+          "maxMs": 0.0737999975681305
+        },
+        "requestToPayloadMs": {
+          "count": 6,
+          "medianMs": 93.07989999651909,
+          "p95Ms": 105.79539999365807,
+          "maxMs": 105.79539999365807
+        },
+        "deliveryMs": {
+          "count": 6,
+          "medianMs": 3.7211499959230423,
+          "p95Ms": 4.833899974822998,
+          "maxMs": 4.833899974822998
+        },
+        "compileMs": {
+          "count": 6,
+          "medianMs": 84.9304,
+          "p95Ms": 98.1223,
+          "maxMs": 98.1223
+        },
+        "renderMs": {
+          "count": 6,
+          "medianMs": 3.87255,
+          "p95Ms": 4.4546,
+          "maxMs": 4.4546
+        }
+      },
+      "browserStages": {
+        "prepare": {
+          "count": 6,
+          "medianMs": 0.09999999403953552,
+          "p95Ms": 0.10000002384185791,
+          "maxMs": 0.10000002384185791
+        },
+        "decode": {
+          "count": 6,
+          "medianMs": 0.29999998211860657,
+          "p95Ms": 0.30000001192092896,
+          "maxMs": 0.30000001192092896
+        },
+        "install": {
+          "count": 6,
+          "medianMs": 0.3999999910593033,
+          "p95Ms": 0.5999999940395355,
+          "maxMs": 0.5999999940395355
+        },
+        "paintWait": {
+          "count": 6,
+          "medianMs": 28.00000001490116,
+          "p95Ms": 31.900000005960464,
+          "maxMs": 31.900000005960464
+        }
+      }
+    },
+    "late-chapter": {
+      "count": 6,
+      "medianMs": 156.70000000298023,
+      "p95Ms": 158.09999999403954,
+      "maxMs": 158.09999999403954,
+      "passes150ms": false,
+      "stages": {
+        "pipelineMs": {
+          "count": 6,
+          "medianMs": 110.61314999999999,
+          "p95Ms": 114.5432,
+          "maxMs": 114.5432
+        },
+        "queueMs": {
+          "count": 6,
+          "medianMs": 0.038699984550476074,
+          "p95Ms": 0.0826999843120575,
+          "maxMs": 0.0826999843120575
+        },
+        "requestToPayloadMs": {
+          "count": 6,
+          "medianMs": 110.87924998998642,
+          "p95Ms": 114.95519998669624,
+          "maxMs": 114.95519998669624
+        },
+        "deliveryMs": {
+          "count": 6,
+          "medianMs": 17.219549998641014,
+          "p95Ms": 18.252000004053116,
+          "maxMs": 18.252000004053116
+        },
+        "compileMs": {
+          "count": 6,
+          "medianMs": 58.62125,
+          "p95Ms": 61.8285,
+          "maxMs": 61.8285
+        },
+        "renderMs": {
+          "count": 6,
+          "medianMs": 12.030100000000001,
+          "p95Ms": 12.4129,
+          "maxMs": 12.4129
+        }
+      },
+      "browserStages": {
+        "prepare": {
+          "count": 6,
+          "medianMs": 1.0,
+          "p95Ms": 1.0999999940395355,
+          "maxMs": 1.0999999940395355
+        },
+        "decode": {
+          "count": 6,
+          "medianMs": 0.8499999940395355,
+          "p95Ms": 4.4000000059604645,
+          "maxMs": 4.4000000059604645
+        },
+        "install": {
+          "count": 6,
+          "medianMs": 0.6499999910593033,
+          "p95Ms": 0.800000011920929,
+          "maxMs": 0.800000011920929
+        },
+        "paintWait": {
+          "count": 6,
+          "medianMs": 26.700000002980232,
+          "p95Ms": 29.900000005960464,
+          "maxMs": 29.900000005960464
+        }
+      }
+    },
+    "typing-final": {
+      "count": 6,
+      "medianMs": 204.29999999701977,
+      "p95Ms": 236.40000000596046,
+      "maxMs": 236.40000000596046,
+      "passes150ms": false,
+      "stages": {
+        "pipelineMs": {
+          "count": 6,
+          "medianMs": 120.44995,
+          "p95Ms": 122.1622,
+          "maxMs": 122.1622
+        },
+        "queueMs": {
+          "count": 6,
+          "medianMs": 37.75304999947548,
+          "p95Ms": 55.96110001206398,
+          "maxMs": 55.96110001206398
+        },
+        "requestToPayloadMs": {
+          "count": 6,
+          "medianMs": 158.36630000174046,
+          "p95Ms": 176.25550001859665,
+          "maxMs": 176.25550001859665
+        },
+        "deliveryMs": {
+          "count": 6,
+          "medianMs": 16.819949999451637,
+          "p95Ms": 20.844499975442886,
+          "maxMs": 20.844499975442886
+        },
+        "compileMs": {
+          "count": 6,
+          "medianMs": 63.00175,
+          "p95Ms": 66.5792,
+          "maxMs": 66.5792
+        },
+        "renderMs": {
+          "count": 6,
+          "medianMs": 12.46635,
+          "p95Ms": 15.8191,
+          "maxMs": 15.8191
+        }
+      },
+      "browserStages": {
+        "prepare": {
+          "count": 6,
+          "medianMs": 0.8500000089406967,
+          "p95Ms": 1,
+          "maxMs": 1
+        },
+        "decode": {
+          "count": 6,
+          "medianMs": 5.450000002980232,
+          "p95Ms": 11.5,
+          "maxMs": 11.5
+        },
+        "install": {
+          "count": 6,
+          "medianMs": 0.45000000298023224,
+          "p95Ms": 0.699999988079071,
+          "maxMs": 0.699999988079071
+        },
+        "paintWait": {
+          "count": 6,
+          "medianMs": 24.799999997019768,
+          "p95Ms": 27.599999994039536,
+          "maxMs": 27.599999994039536
+        }
+      }
+    },
+    "new-font": {
+      "count": 6,
+      "medianMs": 273.55000001192093,
+      "p95Ms": 287.59999999403954,
+      "maxMs": 287.59999999403954,
+      "passes150ms": false,
+      "stages": {
+        "pipelineMs": {
+          "count": 6,
+          "medianMs": 227.42255,
+          "p95Ms": 230.8273,
+          "maxMs": 230.8273
+        },
+        "queueMs": {
+          "count": 6,
+          "medianMs": 0.04290001094341278,
+          "p95Ms": 4.776199996471405,
+          "maxMs": 4.776199996471405
+        },
+        "requestToPayloadMs": {
+          "count": 6,
+          "medianMs": 227.6419499963522,
+          "p95Ms": 234.0692999958992,
+          "maxMs": 234.0692999958992
+        },
+        "deliveryMs": {
+          "count": 6,
+          "medianMs": 15.734050005674362,
+          "p95Ms": 19.435000002384186,
+          "maxMs": 19.435000002384186
+        },
+        "compileMs": {
+          "count": 6,
+          "medianMs": 92.95205,
+          "p95Ms": 93.6445,
+          "maxMs": 93.6445
+        },
+        "renderMs": {
+          "count": 6,
+          "medianMs": 13.21125,
+          "p95Ms": 13.9362,
+          "maxMs": 13.9362
+        },
+        "fontRefreshMs": {
+          "count": 6,
+          "medianMs": 81.6009,
+          "p95Ms": 86.7222,
+          "maxMs": 86.7222
+        }
+      },
+      "browserStages": {
+        "prepare": {
+          "count": 6,
+          "medianMs": 0.9500000029802322,
+          "p95Ms": 1,
+          "maxMs": 1
+        },
+        "decode": {
+          "count": 6,
+          "medianMs": 4.1500000059604645,
+          "p95Ms": 7.699999988079071,
+          "maxMs": 7.699999988079071
+        },
+        "install": {
+          "count": 6,
+          "medianMs": 2.899999976158142,
+          "p95Ms": 3.300000011920929,
+          "maxMs": 3.300000011920929
+        },
+        "paintWait": {
+          "count": 6,
+          "medianMs": 24.200000002980232,
+          "p95Ms": 26.799999982118607,
+          "maxMs": 26.799999982118607
+        }
+      }
+    }
+  },
+  "passes150ms": false
+}

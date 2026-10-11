@@ -40,6 +40,8 @@ luatexbase.add_to_callback('open_read_file',function(name)
     state.position=math.min(state.size,state.position+(value and #value+1 or 0))
     local consumed=value and state.position or state.size+1
     positions[name]=math.max(positions[name],consumed)
-    return value
+    -- Keep byte offsets for checkpoint invalidation, but present TeX with the
+    -- same logical line that its ordinary CRLF-aware input reader would see.
+    return value and value:gsub('\r$','') or nil
   end,close=function() active[state]=nil;state.handle:close() end}
 end,'bako.buffered_input')

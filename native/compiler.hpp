@@ -21,8 +21,13 @@ class Engine {
     bool live_edit_failed = false;
     std::unique_ptr<BuildCache> cache;
     std::set<fs::path> known_inputs;
+#ifdef _WIN32
+    windows::Child child;
+    bool resource_available = false;
+#else
     Fd listener, directory_fd;
     Fd resource_channel;
+#endif
     pid_t process = -1;
     std::map<int, PageBuffer> buffers;
     std::map<int, std::vector<int>> page_ids;
@@ -38,6 +43,7 @@ class Engine {
         std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) { return std::tolower(c); });
         return value;
     }
+#ifndef _WIN32
     static void kill_pid(pid_t pid) {
         if (pid > 0) {
             kill(pid, SIGTERM);
@@ -59,14 +65,19 @@ class Engine {
             return 'Z';
         }
     }
+#endif
     void cleanup_after(int index) {
+#ifndef _WIN32
         kill_pid(active());
+#endif
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
             if (starts(name, "cp-") && entry.path().extension() == ".pid") {
                 int n = std::stoi(name.substr(3));
                 if (n > index) {
+#ifndef _WIN32
                     kill_pid(std::stoi(read(entry.path())));
+#endif
                     fs::remove(entry.path());
                     fs::remove(directory / page_name(n, "cp-", ".sock"));
                 }
@@ -74,14 +85,48 @@ class Engine {
         }
     }
     void stop_process() {
+#ifdef _WIN32
+        child.stop(); process = -1; resource_available = false;
+#else
         if (process > 0) {
             kill(-process, SIGKILL);
             while (waitpid(process, nullptr, 0) < 0 && errno == EINTR) {
             }
             process = -1;
         }
+#endif
+    }
+    pid_t wait_process(int *status) {
+#ifdef _WIN32
+        if (child.running()) return 0;
+        *status = static_cast<int>(child.status()); return process;
+#else
+        return waitpid(process, status, WNOHANG);
+#endif
     }
     pid_t spawn(bool prime) {
+#ifdef _WIN32
+        std::map<std::wstring,std::wstring> env = {
+            {L"BAKO_PAGE_STREAM",L"1"}, {L"BAKO_FONT_STREAM",L"1"}, {L"BAKO_SOURCE_MARKERS",L"1"},
+            {L"BAKO_LIVE_DOCUMENT",live?L"1":L""}, {L"BAKO_SNAPSHOT_DISABLE",prime?L"1":L""},
+            {L"BAKO_ENGINE_MODULE",(runtime/"bakoma-engine.dll").native()}};
+        std::vector<std::string> arguments;
+        fs::path program;
+        if (full) {
+            program=options.distribution->tool(options.compiler);
+            arguments={"-no-shell-escape","-interaction=nonstopmode","-halt-on-error","-file-line-error","-recorder",
+                       "./"+fs::path(options.main).filename().u8string()};
+            env[L"openout_any"]=L"p";
+        } else {
+            program=runtime/"bakoma-backend.exe";
+            arguments={"--compiler-worker","--fmt="+options.distribution->format_path.u8string(),"--progname=lualatex",
+                       "--shell-escape","-interaction=nonstopmode","-halt-on-error","-recorder","--jobname=main",
+                       live?"bako-driver.tex":"main.tex"};
+        }
+        child.start(program,arguments,directory,directory/"engine-output.log",env,!full);
+        resource_available=false;
+        return static_cast<pid_t>(child.pid);
+#else
         posix_spawn_file_actions_t actions;
         posix_spawn_file_actions_init(&actions);
         posix_spawn_file_actions_addchdir_np(&actions, directory.c_str());
@@ -132,6 +177,7 @@ class Engine {
             throw std::runtime_error("Cannot start " + arguments[0] + ": " + strerror(error));
         }
         return pid;
+#endif
     }
     std::vector<int> ids(int page) {
         sources.ranges(directory / page_name(page+1,"origins-",".txt"));
@@ -189,6 +235,12 @@ class Engine {
         return result;
     }
     Json receive() {
+#ifdef _WIN32
+        DWORD available_bytes=0;
+        if (!PeekNamedPipe(child.events.value,nullptr,0,nullptr,&available_bytes,nullptr) || !available_bytes) return nullptr;
+        auto channel=child.events.value;
+        auto receive_bytes=[&](size_t size){return windows::receive_exact(channel,size,cancel);};
+#else
         Fd client(accept4(listener.value, nullptr, nullptr, SOCK_CLOEXEC));
         if (client.value < 0) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -198,9 +250,11 @@ class Engine {
         }
         timeval timeout = {10, 0};
         setsockopt(client.value, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+        auto receive_bytes=[&](size_t size){return receive_exact(client.value,size);};
+#endif
         std::string header;
         while (header.size() < 100) {
-            auto c = receive_exact(client.value, 1);
+            auto c = receive_bytes(1);
             if (c == "\n") {
                 break;
             }
@@ -212,8 +266,8 @@ class Engine {
         if (!meta_size || meta_size >= 8000000 || !byte_size || byte_size >= 64000000) {
             throw std::runtime_error("Invalid page message size");
         }
-        auto metadata = Json::parse(receive_exact(client.value, meta_size));
-        auto raw = receive_exact(client.value, byte_size);
+        auto metadata = Json::parse(receive_bytes(meta_size));
+        auto raw = receive_bytes(byte_size);
         size_t offset = 0;
         for (auto page : metadata.at("pages")) {
             size_t size = page.at("byteLength");
@@ -227,6 +281,9 @@ class Engine {
         if (offset != raw.size()) {
             throw std::runtime_error("Page lengths disagree");
         }
+#ifdef _WIN32
+        resource_available = true;
+#else
         auto pid = active();
         auto deadline = Clock::now();
         while (state(pid) != 'T') {
@@ -236,9 +293,17 @@ class Engine {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         resource_channel = std::move(client);
+#endif
         return {{"streamed", true},
                 {"snapshot", metadata.value("snapshot", Json::object())},
                 {"compilerStagesMs", metadata.value("compilerStagesMs", Json::object())}};
+    }
+    void continue_publisher() {
+#ifdef _WIN32
+        windows::send_all(child.commands.value,"continue\n"); resource_available=false;
+#else
+        resource_channel=Fd(); kill(active(),SIGCONT);
+#endif
     }
     Json wait_done(bool stream) {
         auto start = Clock::now();
@@ -255,8 +320,7 @@ class Engine {
                 // Resource refresh can ship more pages before final export.
                 // Drain and resume each publisher instead of waiting on a
                 // compiler suspended at its next paragraph boundary.
-                resource_channel = Fd();
-                kill(active(), SIGCONT);
+                continue_publisher();
             }
             if (fs::exists(directory / "completed.json")) {
                 try {
@@ -269,6 +333,9 @@ class Engine {
                 }
             }
             if (elapsed(start) > 250) {
+#ifdef _WIN32
+                if (!child.running()) throw std::runtime_error("Native compiler exited: " + error_log());
+#else
                 if (process > 0 && state(process) == 'Z') {
                     throw std::runtime_error("Compiler process exited: " + error_log());
                 }
@@ -276,9 +343,14 @@ class Engine {
                 if (pid > 0 && state(pid) == 'Z') {
                     throw std::runtime_error("TeX compilation failed: " + error_log());
                 }
+#endif
             }
+#ifdef _WIN32
+            windows::pause(1);
+#else
             pollfd fd = {listener.value, POLLIN, 0};
             poll(&fd, 1, 2);
+#endif
         }
         throw std::runtime_error("TeX timeout: " + error_log());
     }
@@ -333,8 +405,8 @@ class Engine {
                     result["fontResourceBytes"] = bytes.size();
                 }
             } catch (const ResourceMiss &e) {
-                resource_channel = Fd();
-                kill(active(), SIGCONT);
+                std::cerr << "Resource refresh: " << e.what() << '\n';
+                continue_publisher();
                 result["resourceRefresh"] = e.what();
                 return finish(page, std::move(result));
             }
@@ -358,7 +430,11 @@ class Engine {
         return frame;
     }
     std::string request_fonts(const PageBuffer &buffer) {
+#ifdef _WIN32
+        if (!resource_available) throw ResourceMiss("Font resource channel unavailable");
+#else
         if (resource_channel.value < 0) throw ResourceMiss("Font resource channel unavailable");
+#endif
         std::string command = "fonts";
         std::set<int> requested;
         static const std::regex font_id(R"(^F([1-9]\d*)[^\s/]*$)");
@@ -372,6 +448,14 @@ class Engine {
         command += "\n";
         std::string bytes;
         try {
+#ifdef _WIN32
+            windows::send_all(child.commands.value,command);
+            std::string header;
+            while(header.size()<32){auto c=windows::receive_exact(child.events.value,1,cancel);if(c=="\n")break;header+=c;}
+            size_t size=std::stoull(header);
+            if(size>32*1024*1024)throw ResourceMiss("Invalid font resource size");
+            bytes=windows::receive_exact(child.events.value,size,cancel);
+#else
             // The exporter child has a ten-second deadline; allow its parent
             // time to report failure and park before resuming the fallback.
             timeval timeout = {15, 0};
@@ -392,6 +476,7 @@ class Engine {
                 if (elapsed(started) > 1000) throw ResourceMiss("Font publisher did not suspend");
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
+#endif
         } catch (const std::exception &e) { throw ResourceMiss(std::string("Font export failed: ") + e.what()); }
         if (bytes.empty()) throw ResourceMiss("Font export is unsupported for this page");
         return bytes;
@@ -418,6 +503,10 @@ class Engine {
         }
         fs::remove(directory / "completed.json");
         fs::remove(directory / "failed.json");
+#ifdef _WIN32
+        windows::send_all(child.commands.value,"restore "+std::to_string(index)+" "+std::to_string(page+1)+"\n");
+        resource_available=false;
+#else
         Fd fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0));
         sockaddr_un address = {};
         address.sun_family = AF_UNIX;
@@ -432,6 +521,7 @@ class Engine {
         }
         send_all(fd.value,
                  std::to_string(page + 1));
+#endif
         auto resumed = Clock::now();
         auto result = wait_done(true);
         result["compileMs"] = elapsed(resumed);
@@ -455,6 +545,10 @@ class Engine {
         const auto target = fs::weakly_canonical(inside(mirror, file));
         remember_inputs();
         if (!known_inputs.count(target)) throw RebuildRequired("Included file has no recorded body dependency");
+        // Input histories repeat earlier paths on each page. Resolve each path
+        // once per selection, not once per historical occurrence (quadratic
+        // filesystem work is particularly expensive on native Windows).
+        std::map<std::string, fs::path> resolved;
         int checkpoint = 0;
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
@@ -469,7 +563,10 @@ class Engine {
             for (const auto &input : metadata["inputs"]) {
                 if (!input.is_array() || input.size()!=2 || !input[0].is_string() || !input[1].is_number_unsigned())
                     throw RebuildRequired("Checkpoint input metadata incomplete");
-                if (fs::weakly_canonical(directory / input[0].get<std::string>()) == target)
+                const auto name = input[0].get<std::string>();
+                auto path = resolved.find(name);
+                if (path == resolved.end()) path = resolved.emplace(name, fs::weakly_canonical(directory / name)).first;
+                if (path->second == target)
                     consumed = std::max(consumed, input[1].get<size_t>());
             }
             if (consumed <= changed) checkpoint = std::max(checkpoint, index);
@@ -532,8 +629,10 @@ class Engine {
         for (const auto *name : {"snapshot.lua", "page_stream.lua", "provenance.lua", "inputs.lua"}) {
             fs::copy_file(assets / name, directory / name, fs::copy_options::overwrite_existing);
         }
+#ifndef _WIN32
         fs::copy_file(runtime / "bako_snapshot.so", directory / "bako_snapshot.so",
                       fs::copy_options::overwrite_existing);
+#endif
         if (live) {
             sources.manifest(directory / "bako-sources.tsv", mirror);
             write(directory / "bako-driver.tex",
@@ -541,7 +640,11 @@ class Engine {
                   "\\AtBeginDocument{\\directlua{dofile('provenance.lua');dofile('snapshot.lua');bako_live_begin()}}%\n"
                   "\\AtEndDocument{\\directlua{bako_live_end()}}%\n"
                   "\\input{\\detokenize{" + fs::path(options.main).filename().string() + "}}%\n");
+#ifdef _WIN32
+            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend.exe") + read(runtime / "bakoma-engine.dll"));
+#else
             cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex") + read(runtime / "bako_snapshot.so"));
+#endif
             cache->inputs["@distribution"] = options.distribution->report.at("identity");
             cache->finish_inputs();
             return;
@@ -612,7 +715,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             auto run = Clock::now();
             int status = 0;
             for (;;) {
-                auto ended = waitpid(process, &status, WNOHANG);
+                auto ended = wait_process(&status);
                 if (ended == process) break;
                 if (ended < 0 && errno != EINTR) throw std::runtime_error("Cannot wait for compiler");
                 if ((cancel && cancel->load()) || elapsed(run) > 90000) {
@@ -681,10 +784,14 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
                     name=="completed.json" || name=="failed.json") fs::remove(entry.path());
             }
         } else {
+#ifdef _WIN32
+            mirror = windows::temporary_directory(fs::temp_directory_path(), "bakoma-cpp-");
+#else
             char name[] = "/tmp/bakoma-cpp-XXXXXX";
             auto path = mkdtemp(name);
             if (!path) throw std::runtime_error("Cannot create session");
             mirror = path;
+#endif
             directory = mirror / main_parent;
             fs::create_directories(directory);
         }
@@ -692,6 +799,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             prepare(overlays);
             build_tools = std::make_unique<BuildTools>(directory, cancel, fs::path(options.main).stem().string(), options.distribution->bin);
             write(directory / "bako-environment.json", options.distribution->report.dump(2));
+#ifndef _WIN32
             listener = Fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
             sockaddr_un address = {};
             address.sun_family = AF_UNIX;
@@ -711,6 +819,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             if (log_fd < 0) {
                 throw std::runtime_error("Cannot open engine log");
             }
+#endif
         } catch (...) {
             if (log_fd >= 0) {
                 close(log_fd);
@@ -738,7 +847,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         auto start = Clock::now();
         int status = 0;
         for (;;) {
-            auto ended = waitpid(process, &status, WNOHANG);
+            auto ended = wait_process(&status);
             if (ended == process) {
                 break;
             }
@@ -805,6 +914,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (full) return update_files({{file, source}}, page);
         if (live) {
             auto started = Clock::now();
+#ifdef _WIN32
+            if (!child.running()) throw RebuildRequired("Native compiler stopped; rebuilding checkpoints");
+#endif
             if (build_limited) throw RebuildRequired("Unstable auxiliary state requires a complete rebuild");
             if (extension(file) != ".tex") throw RebuildRequired("Package or asset edit requires rebuilding compiler checkpoints");
             if (!fs::is_regular_file(inside(mirror, file))) throw RebuildRequired("New source file requires rebuilding compiler checkpoints");

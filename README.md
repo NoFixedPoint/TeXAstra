@@ -1,8 +1,8 @@
 # BaKoMa revived — feasibility prototype
 
-This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The latest local 13-page browser benchmark measures 91–158 ms p95; typing bursts and new-font edits exceed the 150 ms target.** This does not establish performance for arbitrary projects or the real VS Code host. The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
+This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The 150 ms end-to-end target is not met for every workload, including typing bursts, new fonts and dense pages.** Native Windows and Linux use retained checkpoints; measurements and platform limits are documented in the [Windows report](docs/windows-native-20261011.md) and [Linux latency report](docs/preview-latency-20261011.md). The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
-Native Windows work has started with an isolated, tested checkpoint-memory implementation using Windows write-watch and lazy page restoration. Run `python scripts/check_windows_checkpoint.py` with the Visual Studio C++ x64 tools and Windows SDK installed. **This is a checkpoint foundation, not a Windows preview backend: the VSIX still requires Linux/WSL.** Compiler state, execution continuation, and file rollback are not integrated. The intended packaging is one native executable inside the VSIX, with the user's TeX distribution supplying packages and auxiliary tools. See [the implementation, measurements, and remaining work](docs/windows-native-20261011.md).
+Version **0.0.19** adds native Windows x64 preview support with retained compiler checkpoints. The Windows VSIX ships one bundled executable; Windows uses it by default and needs an installed native TeX Live distribution. It does not need WSL at runtime. The executable verifies and extracts its embedded compiler/renderer DLLs into the user cache. See [Windows implementation, build instructions, validation, and limitations](docs/windows-native-20261011.md).
 
 Version **0.0.18** discovers installed TeX Live binary directories and supports selecting the WSL instance and TeX installation. Startup verifies the selected format and packages with a compatibility compile using the bundled engine. **BaKoMa: Show LaTeX Environment** reports resolved configuration, tools, formats and dependencies; missing inputs name the selected installation and maintenance remedy. See [the implementation and validation](docs/distribution-20261011.md).
 
@@ -24,29 +24,32 @@ Version 0.0.10 moved source tracking into LuaHBTeX's token scanner and macro exp
 
 Version 0.0.8 made **Open Experimental Preview** start a live LuaHBTeX session for ordinary projects, regardless of older PDFs, compiler comments or legacy preview settings. It added paragraph-boundary checkpoints, token/macro-origin navigation, reusable build files in the user's cache, and continuous scrolling with nearby pages loaded on demand. The original project receives no generated build files. See [live-project validation and limitations](docs/live-projects-20261011.md).
 
-Internal differential snapshots have been removed to reduce maintenance. Fork checkpoints are the only supported implementation. The [historical snapshot report](docs/internal-snapshots-20261011.md) records why that experiment was retired.
+Internal differential snapshots have been removed to reduce maintenance. Linux retains fork checkpoints; Windows uses owned memory, stack, and file checkpoints. The [historical snapshot report](docs/internal-snapshots-20261011.md) records why that experiment was retired.
 
-The shipping architecture is to bundle our preview engine and supporting runtime while using the user's existing LaTeX distribution for packages, classes, fonts, and supporting tools. Package installation and updates remain with that distribution's manager. The validated integration is TeX Live inside Ubuntu-22.04 WSL on Windows. Other Linux x86-64/WSL installations can be selected and must pass preflight; this does not establish compatibility with arbitrary TeX Live releases. Native Windows, macOS and MiKTeX runtimes remain unsupported. See [the package ownership decision](docs/adr/0007-external-latex-distribution.md).
+The shipping architecture is to bundle our preview engine and supporting runtime while using the user's existing LaTeX distribution for packages, classes, fonts, and supporting tools. Package installation and updates remain with that distribution's manager. Validated integrations include native Windows TeX Live 2025 and TeX Live inside Ubuntu-22.04 WSL. Other Linux x86-64/WSL installations can be selected and must pass preflight; this does not establish compatibility with arbitrary TeX Live releases. macOS, Windows ARM64 and MiKTeX runtimes remain unsupported. See [the package ownership decision](docs/adr/0007-external-latex-distribution.md).
 
 The [BaKoMa binary investigation](docs/bakoma-binary-pipeline.md) motivated separating live page output from document finalization. Ordinary edits now send page drawing commands to the retained renderer without finalizing, transporting, or reopening a document PDF. New supported fonts and glyphs arrive in a small font-only PDF bundle. Complete document PDFs still seed resources at startup, during convergence, and for unsupported resource changes. This is a page-buffer implementation using LuaTeX's PDF drawing language, not a DVI engine.
 
 ## Run the interactive demo
 
-On this Windows machine, Node and Ubuntu-22.04 under WSL are already available. The packaged backend is Linux x86-64; Windows launches it through WSL. To build from source, close running C++ previews first:
+Windows defaults to the native x64 backend. To build it from source, install MSVC C++ tools and a Windows SDK; the compiler cross-build also uses Ubuntu-22.04 WSL as a build tool. Close running previews before rebuilding:
 
 ```powershell
-python scripts/build_engine.py
-python scripts/build_cpp.py
+python scripts/build_windows_engine.py
+python scripts/build_windows_cpp.py
+python scripts/bundle_windows.py
 node native/demo.js
 ```
 
 Open <http://127.0.0.1:8765>. Edit the source pane, click individual rendered math symbols or TikZ text to select their source, or click a source token to highlight its output. Drag across the preview to select rendered text. Demo edits remain in memory; the original corpus files are not changed.
 
-The default `cpp` backend bundles patched Linux LuaHBTeX **1.14** and requires installed LaTeX packages, CTeX, TikZ, Fandol fonts, and system libdeflate/zlib. Building also requires Python, G++, GCC, `libdeflate-dev`, and `zlib1g-dev`. Pinned MuPDF and JSON dependencies are fetched by the build script; Python is only a build/test tool for this backend. On Windows it uses the existing `Ubuntu-22.04` WSL distribution. Its C checkpoint module requires a trusted TeX process with Lua dynamic loading enabled. Live drawing output uses a memory-backed descriptor. General-project build files live in `$XDG_CACHE_HOME/bakoma-revived`, defaulting to `~/.cache/bakoma-revived` inside WSL; corpus/comparison sessions use `/tmp/bakoma-cpp-*`.
+The default `cpp` backend bundles patched LuaHBTeX **1.14**. TeX Live supplies installed packages and fonts; the demo corpus uses CTeX, TikZ and Fandol. Build-time Python is not part of the edit/render path. Native Windows build files live in `%LOCALAPPDATA%/bakoma-revived`. Formats are generated there with the bundled compiler, leaving installed distribution formats unchanged.
+
+Linux builds still use `scripts/build_engine.py` and `scripts/build_cpp.py`. Windows can explicitly select an existing Linux runtime using `node native/demo.js --runtime-mode wsl`; that comparison requires WSL and its TeX Live installation. Linux build prerequisites include GCC/G++, libdeflate/zlib development libraries and the dependencies documented in the build recipes.
 
 For the Python comparison, install `requirements.txt` and run `node native/demo.js --engine stream`. Use `python -m prototype.demo --engine snapshot` to compare with finalized-PDF output on every edit. `python -m prototype.demo` also launches the C++ demo by default.
 
-The C++ backend uses fork checkpoints. The former internal snapshot mode and its VS Code setting have been removed; saved extension settings no longer select it.
+Checkpoint selection follows the platform: Windows uses retained native state; Linux/WSL uses fork checkpoints. The retired internal Linux snapshot setting remains removed.
 
 For the slower native full-build comparison, run `python -m prototype.demo --engine native`. This needs LuaLaTeX and the same packages on the local PATH. Native full builds do not demonstrate incremental compilation.
 
@@ -54,7 +57,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.18.vsix --force`, reload VS Code, and run the same preview command. The package includes the C++ executable, snapshot runtime, and MuPDF library; its TeX/WSL prerequisites still apply.
+Alternatively, install the local package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.19-win32-x64.vsix --force`, reload VS Code, and run the same preview command. The Windows package includes one native executable plus source/license archives. Native TeX Live is required; WSL is not.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 
@@ -64,7 +67,7 @@ For another project, open its folder and main `.tex` file, then run **BaKoMa: Op
 }
 ```
 
-The command always uses C++ and LuaHBTeX live compilation. Legacy `bakoma.engine`, `bakoma.previewMode` and `bakoma.latexCompiler` settings no longer select a reduced-feature preview. `% !TEX root` still selects the root; `% !TEX program` does not choose our compiler. Close the preview and reopen it after changing the main file. Windows defaults to **Ubuntu-22.04 WSL** when installed, or the owner of a WSL source/runtime path. Set `bakoma.wslDistribution` to choose another installed instance. Set `bakoma.texBinDirectory` to an absolute Linux TeX Live binary directory, such as `/usr/bin`; otherwise discovery uses `kpsewhich` on PATH and conventional installation locations. Reopen after changing selection or maintaining system packages. Run **BaKoMa: Show LaTeX Environment** for a JSON report. XeLaTeX-specific source may need adaptation to LuaLaTeX; opening our preview does not silently switch to a compiler without source mapping.
+The command always uses C++ and LuaHBTeX live compilation. Legacy `bakoma.engine`, `bakoma.previewMode` and `bakoma.latexCompiler` settings no longer select a reduced-feature preview. `% !TEX root` still selects the root; `% !TEX program` does not choose our compiler. Close the preview and reopen it after changing the main file. Windows defaults to **native Windows x64**. Set `bakoma.texBinDirectory` to a native TeX Live binary directory such as `C:\texlive\2025\bin\windows`, or leave it empty for discovery. For an explicitly installed Linux comparison runtime, set `bakoma.runtimeMode` to `wsl` and optionally set `bakoma.wslDistribution`; its TeX paths must be Linux paths such as `/usr/bin`. The Windows-only VSIX does not include a second Linux binary. Reopen after changing selection or maintaining system packages. Run **BaKoMa: Show LaTeX Environment** for a JSON report. XeLaTeX-specific source may need adaptation to LuaLaTeX; opening our preview does not silently switch to a compiler without source mapping.
 
 Live builds copy supported TeX, image, font and data assets beneath the project root, preserving the directory layout and compiling from the mirrored main-file directory. For example, `paper/main.tex` can reference `../figures/chart.pdf` and `../shared/references.bib`. The project root defaults to the containing workspace folder, or the main-file directory without a workspace. Set `bakoma.projectRoot` to a common ancestor when shared files live outside that folder; relative settings resolve against the workspace, or the main-file directory without a workspace. Close and reopen the preview after changing either project setting.
 
@@ -76,7 +79,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 
 - `scripts/generate_corpus.py` creates a deterministic 100-page, multi-file Chinese/English, math, macro, and TikZ corpus, plus edit scenarios.
 - `engine/` adds token origins to LuaHBTeX; `native/source.hpp` indexes unchanged source text and translates engine spans into editor positions. `prototype/provenance.lua` marks glyphs and rules without changing text positioning. `native/mapping.hpp` checks each marked output node independently; a mismatch leaves other regions navigable.
-- `prototype/snapshot.c` retains compiler processes at checkpoints; edits fork from the preceding checkpoint and resume typesetting.
+- `prototype/snapshot.c` retains Linux fork checkpoints. `native/windows/` restores compiler-owned memory, execution state and file positions in one persistent Windows worker process.
 - The service keeps a visibly stale preview on invalid input and disables navigation from stale output. During sustained typing it displays completed intermediate revisions, labels them stale, and coalesces queued edits. Complete builds run after an idle interval to converge references and downstream layout and supply a fresh set of reusable checkpoints.
 - A separately built TeXpresso checkout is used for comparison; it is not a dependency of the LuaTeX prototype.
 
@@ -85,7 +88,7 @@ The webview and browser demo share their renderer. The compiler service exchange
 - General projects retain at most one checkpoint per shipped page, between completed TeX commands in outer vertical mode. Long paragraphs, boxes, and macro arguments read ahead of their output can require earlier replay. Preamble dependencies and coalesced edits to multiple files still rebuild the session. The supplied comparison corpus retains explicit page-file checkpoints. Source origins currently support up to 2,146 registered files, each smaller than one million Unicode characters; root documents are now indexed as whole files too.
 - Root body text and project `.tex` inputs get engine token origins. Macro arguments retain their token locations; generated macro content falls back to the calling command token. Math rules with retained origins are clickable but do not add text to copied selections. Generated bibliography/index text has no mapping back to `.bib` entries or index definitions. Automatic tools cover BibTeX, Biber with local data sources, and conventional MakeIndex jobs; custom tool chains and Xindy remain unsupported.
 - The compiler provenance and checkpoint patches are experimental. Arbitrary Lua-generated nodes, transformed input buffers, external token manipulation, and file reads performed directly by external Lua modules are outside the validated cases.
-- Fork checkpoints require Linux/WSL. Native Windows and macOS checkpoint implementations are unavailable.
+- Windows x64 checkpoints own compiler heap/globals/stack and tracked file state; Linux/WSL retains forks. Arbitrary external native Lua modules and their threads/state are outside Windows checkpoint ownership. macOS and Windows ARM64 are unsupported. Windows currently reserves a fixed 2 GiB compiler arena; histories have no memory-budget eviction.
 - Ordinary page payloads pass through in-memory drawing commands, PNG, and JSON. Complete PDFs remain necessary for resource seeding and background convergence. Supported new fonts/glyphs use font-only bundles; Type 3 fonts, custom font attributes, external graphics, changed page dimensions, and new physical pages can require a complete resource export. TeX still writes auxiliary files, logs, source copies, and metadata inside the session; the complete workflow is not filesystem-free.
 - Source navigation uses rendered glyph IDs and physical pages, including pages outside the loaded viewport. Imported PDF figure text has no TeX-token provenance; body text and captions remain navigable.
 

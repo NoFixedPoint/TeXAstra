@@ -29,6 +29,10 @@ def summary(values):
 
 
 def run(args):
+    native_windows = os.name == 'nt' and args.runtime_mode == 'native'
+    runtime = args.runtime or ROOT / ('native/runtime/windows-x64' if native_windows else 'native/runtime')
+    binaries = [runtime / name for name in (['bakoma-backend.exe', 'bakoma-engine.dll'] if native_windows else
+                                            ['bako_snapshot.so', 'bakoma-backend', 'bakoma-luahbtex'])]
     project = ROOT/'.work/preview-benchmark'
     project.mkdir(parents=True, exist_ok=True)
     sources = {
@@ -49,19 +53,19 @@ def run(args):
         'recordedAt': datetime.now(timezone.utc).isoformat(),
         'measurement': 'Browser input handler to image decode, text-layer installation and two animation frames; not physical display latency or the VS Code host.',
         'deliveryMs': 'Residual: total minus backend request-to-payload and browser stages; includes request/response transport, serialization and adapter scheduling.',
-        'platform': platform.platform(), 'processor': platform.processor(), 'repeats': args.repeats,
+        'platform': platform.platform(), 'runtimeMode': args.runtime_mode, 'processor': platform.processor(), 'repeats': args.repeats,
         'burstEdits': args.burst_edits, 'burstIntervalMs': args.interval_ms,
         'targetMs': 150, 'samples': [], 'bursts': [], 'checks': [],
         'sourceSha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [ROOT/'webview/viewer.js', ROOT/'native/main.cpp', ROOT/'native/renderer.hpp',
                                    ROOT/'native/mapping.hpp', ROOT/'prototype/provenance.lua',
                                    ROOT/'native/compiler.hpp', ROOT/'prototype/snapshot.c', ROOT/'engine/resources.c',
-                                   ROOT/'native/runtime/bako_snapshot.so',
-                                   ROOT/'native/runtime/bakoma-backend', ROOT/'native/runtime/bakoma-luahbtex']}}
+                                   *binaries]}}
     output = ROOT/'results'/args.output
     log = (project/'server.log').open('w', encoding='utf-8')
     server = subprocess.Popen(['node', 'native/demo.js', '--port', str(port), '--project', str(project),
-                               '--main', 'paper.tex'], cwd=ROOT, stdout=log, stderr=log,
+                               '--main', 'paper.tex', '--runtime-mode', args.runtime_mode,
+                               '--runtime', str(runtime)], cwd=ROOT, stdout=log, stderr=log,
                               creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
     try:
         deadline = time.monotonic()+30
@@ -214,6 +218,8 @@ if __name__ == '__main__':
     parser.add_argument('--interval-ms', type=float, default=35)
     parser.add_argument('--output', default='preview-latency.json')
     parser.add_argument('--assert-target', action='store_true')
+    parser.add_argument('--runtime-mode', choices=['native', 'wsl'], default='native')
+    parser.add_argument('--runtime', type=Path)
     args = parser.parse_args()
     if args.repeats < 2 or args.burst_edits < 2 or args.interval_ms <= 0:
         parser.error('Use at least two repeats and burst edits, and a positive interval.')

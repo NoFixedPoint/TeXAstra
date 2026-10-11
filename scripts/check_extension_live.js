@@ -33,7 +33,7 @@ Module._load=function(request,parent,...rest){
 (async()=>{
   require('../extension/extension').activate({subscriptions:[],extensionPath:root,extensionUri:{fsPath:root}});
   await command();await receiver({type:'ready'});
-  assert.deepStrictEqual(launchArgs.slice(1),[project,'fork',{main,mode:'auto',compiler:'lualatex',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
+  assert.deepStrictEqual(launchArgs.slice(1),[project,'auto',{main,mode:'auto',compiler:'lualatex',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
   await environmentCommand();assert.deepStrictEqual(environmentArgs,[root,{wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
   assert.equal(environmentDocument.language,'json');assert.equal(JSON.parse(environmentDocument.content).binDirectory,'/selected/bin');
   child.stdout.write(JSON.stringify({type:'environment',report:{ok:true,binDirectory:'/selected/bin'}})+'\n');

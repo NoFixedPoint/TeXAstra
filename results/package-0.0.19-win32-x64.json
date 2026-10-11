@@ -1,0 +1,11 @@
+{
+  "version": "0.0.19",
+  "sha256": "def441d7e2739f45663433d130aba7b0396fc971622d487e9c4a58313a7fe049",
+  "target": "win32-x64",
+  "verifiedPackagedFiles": 151,
+  "runtimeSha256": "7a2e20b714ac955fb889a633a94d690fffeec89ca3dbc9f2e298ea68874d94e1",
+  "nativeBinaries": [
+    "extension/native/runtime/windows-x64/bakoma-backend.exe"
+  ],
+  "standalone": "bakoma-backend-0.0.19-win32-x64.exe"
+}

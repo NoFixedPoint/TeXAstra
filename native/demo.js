@@ -3,7 +3,7 @@ const fs=require('fs'),path=require('path'),http=require('http'),readline=requir
 const {launch}=require('./launch');
 const {spawn}=require('child_process');
 const root=path.resolve(__dirname,'..');
-let port=8765,project=path.join(root,'corpus'),engine='cpp',checkpoint=process.env.BAKO_CHECKPOINT_MODE||'fork';
+let port=8765,project=path.join(root,'corpus'),engine='cpp',checkpoint=process.env.BAKO_CHECKPOINT_MODE||'auto';
 const options={};
 for(let i=2;i<process.argv.length;i++){
   if(process.argv[i]==='--port')port=Number(process.argv[++i]);
@@ -12,6 +12,7 @@ for(let i=2;i<process.argv.length;i++){
   else if(process.argv[i]==='--checkpoint')checkpoint=process.argv[++i];
   else if(process.argv[i]==='--main')options.main=process.argv[++i];
   else if(process.argv[i]==='--runtime')options.runtime=path.resolve(process.argv[++i]);
+  else if(process.argv[i]==='--runtime-mode')options.runtimeMode=process.argv[++i];
   else if(process.argv[i]==='--tex-bin')options.texBinDirectory=process.argv[++i];
   else if(process.argv[i]==='--wsl-distribution')options.wslDistribution=process.argv[++i];
   else throw new Error('Unknown argument '+process.argv[i]);

@@ -24,7 +24,14 @@ function linuxPath(value,distribution='Ubuntu-22.04'){
   throw new Error(`The C++ backend requires a local drive or a WSL path in ${distribution}.`);
 }
 function command(root,project,options={}){
-  if(!['win32','linux'].includes(process.platform))throw new Error('The preview runtime requires Linux x86-64 or Windows with WSL. Native macOS is not supported.');
+  if(!['win32','linux'].includes(process.platform))throw new Error('The preview runtime requires Linux x86-64 or native Windows x64. Native macOS is not supported.');
+  if(options.runtimeMode&&!['native','wsl'].includes(options.runtimeMode))throw new Error('runtimeMode must be native or wsl.');
+  if(process.platform==='win32'&&options.runtimeMode!=='wsl'){
+    if(process.arch!=='x64')throw new Error('The native Windows runtime currently requires an x64 extension host.');
+    const executable=path.join(options.runtime||path.join(root,'native/runtime/windows-x64'),'bakoma-backend.exe');
+    if(!fs.existsSync(executable))throw new Error(`Native Windows runtime is missing: ${executable}. Install the Windows VSIX or build scripts/build_windows_engine.py and scripts/build_windows_cpp.py.`);
+    return {program:executable,prefix:[],args:options.texBinDirectory?['--tex-bin',options.texBinDirectory]:[],distribution:null,nativeWindows:true};
+  }
   const executable=path.join(options.runtime||path.join(root,'native/runtime'),'bakoma-backend');
   for(const file of [executable,path.join(path.dirname(executable),'bakoma-luahbtex')])
     if(!fs.existsSync(file))throw new Error(`Bundled runtime file is missing: ${file}. Reinstall the extension, or rebuild the runtime from source.`);
@@ -39,13 +46,16 @@ function command(root,project,options={}){
   return {program:distribution?'wsl':executable,
     prefix:distribution?['-d',distribution,'--exec',linuxPath(executable,distribution)]:[],args,distribution};
 }
-function launch(root,project,checkpoint=process.env.BAKO_CHECKPOINT_MODE||'fork',options={}){
-  if(checkpoint!=='fork')throw new Error('Internal snapshots were removed; use fork checkpoints.');
+function launch(root,project,checkpoint=process.env.BAKO_CHECKPOINT_MODE||'auto',options={}){
   const chosen=command(root,project,options);
-  const args=[...chosen.prefix,...chosen.args,'--project',linuxPath(project,chosen.distribution),'--assets',linuxPath(path.join(root,'prototype'),chosen.distribution),'--checkpoint',checkpoint,
+  const selected=chosen.nativeWindows?'windows':'fork';
+  if(checkpoint==='auto')checkpoint=selected;
+  if(checkpoint!==selected)throw new Error(`The selected runtime requires ${selected} checkpoints.`);
+  const convert=value=>chosen.nativeWindows?path.resolve(value):linuxPath(value,chosen.distribution);
+  const args=[...chosen.prefix,...chosen.args,'--project',convert(project),'--assets',convert(path.join(root,'prototype')),'--checkpoint',checkpoint,
     '--main',options.main||'main.tex','--preview-mode',options.mode||'auto','--compiler',options.compiler||'lualatex'];
   const child=spawn(chosen.program,args,{windowsHide:true});
-  child.bakomaEnvironment={platform:process.platform,wslDistribution:chosen.distribution};
+  child.bakomaEnvironment={platform:process.platform,wslDistribution:chosen.distribution,runtime:chosen.nativeWindows?'native':'linux'};
   return child;
 }
 function environment(root,options={}){
@@ -56,9 +66,9 @@ function environment(root,options={}){
     child.stdout.on('data',data=>stdout+=data);child.stderr.on('data',data=>stderr+=data);
     child.on('error',reject);
     child.on('close',code=>{
-      try{resolve({...JSON.parse(stdout),host:{platform:process.platform,wslDistribution:chosen.distribution}});}
-      catch{reject(new Error(`Cannot run the preview runtime (exit ${code}). Check Linux x86-64 and its shared-library requirements. ${stderr||stdout}`));}
+      try{resolve({...JSON.parse(stdout),host:{platform:process.platform,wslDistribution:chosen.distribution,runtime:chosen.nativeWindows?'native':'linux'}});}
+      catch{reject(new Error(`Cannot run the selected preview runtime (exit ${code}). ${stderr||stdout}`));}
     });
   });
 }
-module.exports={launch,linuxPath,environment,wslNames,selectWsl};
+module.exports={launch,linuxPath,environment,wslNames,selectWsl,command};

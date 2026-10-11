@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "standaloneHelperAssets": true,
+  "restrictedPath": true,
+  "unicodeExecutablePath": true,
+  "cachedModuleRepair": true,
+  "incrementalEdit": true,
+  "dependentDLLs": [
+    "KERNEL32.dll",
+    "bcrypt.dll"
+  ],
+  "binaryBytes": 17646592,
+  "sha256": "7a2e20b714ac955fb889a633a94d690fffeec89ca3dbc9f2e298ea68874d94e1"
+}

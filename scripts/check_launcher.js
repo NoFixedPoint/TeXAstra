@@ -19,10 +19,16 @@ if(process.platform==='win32'){
 }
 (async()=>{
   const root=path.resolve(__dirname,'..');
-  const report=await environment(root,{texBinDirectory:'/usr/bin'});
+  const report=await environment(root,{runtimeMode:'wsl',texBinDirectory:'/usr/bin'});
   check(report.ok,true);check(report.binDirectory,'/usr/bin');
   check(report.host.platform,process.platform);
-  const failed=await environment(root,{texBinDirectory:'/bakoma-missing-installation'});
+  if(process.platform==='win32'){
+    const native=await environment(root);
+    check(native.ok,true);check(native.platform,'win32-x64');
+    check(native.host.runtime,'native');check(native.host.wslDistribution,null);
+    assert(!native.binDirectory.startsWith('/'));checks++;
+  }
+  const failed=await environment(root,{runtimeMode:'wsl',texBinDirectory:'/bakoma-missing-installation'});
   check(failed.ok,false);assert(failed.error.includes('kpsewhich'));checks++;
   const result={checks,ok:true};fs.writeFileSync(path.join(root,'results/launcher.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(error=>{console.error(error);process.exitCode=1;});

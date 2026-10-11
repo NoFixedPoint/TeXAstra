@@ -36,7 +36,7 @@ def toolchain():
                        (sdk / 'Lib' / p.name / 'um/x64/kernel32.lib').is_file()), key=version_key)
     binary = msvc / 'bin/Hostx64/x64'
     env = os.environ.copy()
-    env['PATH'] = str(binary) + os.pathsep + env['PATH']
+    env['PATH'] = os.pathsep.join([str(binary), str(sdk / 'bin' / sdk_include.name / 'x64'), env['PATH']])
     env['INCLUDE'] = os.pathsep.join(str(p) for p in [msvc / 'include', *[
         sdk_include / part for part in ('ucrt', 'shared', 'um')]])
     env['LIB'] = os.pathsep.join(str(p) for p in [msvc / 'lib/x64', *[
@@ -58,6 +58,12 @@ def main():
                     '/Fo:' + str(build / 'check-checkpoint.obj'), '/link', '/INCREMENTAL:NO'],
                    env=env, cwd=build, check=True)
     report = json.loads(subprocess.check_output([str(exe)], text=True, timeout=120))
+    continuation = build / 'check-continuation.exe'
+    subprocess.run([str(binary / 'cl.exe'), '/nologo', '/std:c++17', '/EHsc', '/O2', '/MT',
+                    '/W4', '/WX', '/utf-8', str(ROOT / 'native/windows/check_continuation.cpp'),
+                    '/Fe:' + str(continuation), '/Fo:' + str(build / 'check-continuation.obj'),
+                    '/link', '/STACK:8388608'], env=env, cwd=build, check=True)
+    report['continuation'] = json.loads(subprocess.check_output([str(continuation)], text=True, timeout=30))
     report['faultIsolation'] = {}
     for mode in ('foreign-thread', 'unrelated', 'execute'):
         result = subprocess.run([str(exe), '--' + mode + '-fault'], capture_output=True, timeout=10)

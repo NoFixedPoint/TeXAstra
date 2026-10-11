@@ -1,0 +1,454 @@
+{
+  "platform": "win32-x64",
+  "pages": 100,
+  "checks": [
+    {
+      "name": "native complete document",
+      "ok": true
+    },
+    {
+      "name": "Windows session path",
+      "ok": true
+    },
+    {
+      "name": "late text streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "late text retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "late text skips earlier pages",
+      "ok": true
+    },
+    {
+      "name": "late text exact pixels",
+      "ok": true
+    },
+    {
+      "name": "late text exact selection",
+      "ok": true
+    },
+    {
+      "name": "late text exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "middle math streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "middle math retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "middle math skips earlier pages",
+      "ok": true
+    },
+    {
+      "name": "middle math exact pixels",
+      "ok": true
+    },
+    {
+      "name": "middle math exact selection",
+      "ok": true
+    },
+    {
+      "name": "middle math exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "invalid TeX reports error",
+      "ok": true
+    },
+    {
+      "name": "checkpoint recovery after TeX error",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "rotated TikZ retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ skips earlier pages",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ exact pixels",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ exact selection",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "new font glyph streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "new font glyph retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "new font glyph skips earlier pages",
+      "ok": true
+    },
+    {
+      "name": "new font glyph exact pixels",
+      "ok": true
+    },
+    {
+      "name": "new font glyph exact selection",
+      "ok": true
+    },
+    {
+      "name": "new font glyph exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "first-page reflow streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "first-page reflow retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "first-page reflow exact pixels",
+      "ok": true
+    },
+    {
+      "name": "first-page reflow exact selection",
+      "ok": true
+    },
+    {
+      "name": "first-page reflow exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 0",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 1",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 2",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 3",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 4",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 5",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 6",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 7",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 8",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 9",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 10",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 11",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 12",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 13",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 14",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 15",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 16",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 17",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 18",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 19",
+      "ok": true
+    },
+    {
+      "name": "forward source navigation",
+      "ok": true
+    }
+  ],
+  "samples": [
+    {
+      "case": "late text",
+      "roundTripMs": 89.31850001681596,
+      "compileMs": 44.7604,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 28.121,
+        "shipoutAndPublish": 3.528,
+        "typeset": 11.444
+      },
+      "pipelineMs": 88.6154,
+      "prepareMs": 7.2801,
+      "renderMs": 3.7878,
+      "renderStagesMs": {
+        "displayList": 0.1322,
+        "origins": 0.1153,
+        "png": 2.8069,
+        "raster": 0.6225,
+        "text": 0.0243
+      },
+      "resumedFrom": 100
+    },
+    {
+      "case": "middle math",
+      "roundTripMs": 107.29519999586046,
+      "compileMs": 41.3229,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 26.884,
+        "shipoutAndPublish": 2.155,
+        "typeset": 11.195
+      },
+      "fontRefreshMs": 16.9214,
+      "fontResourceBytes": 33310,
+      "pipelineMs": 106.5983,
+      "prepareMs": 11.2112,
+      "renderMs": 4.6253,
+      "renderStagesMs": {
+        "displayList": 0.5381,
+        "origins": 0.1218,
+        "png": 3.0979,
+        "raster": 0.7636,
+        "text": 0.02
+      },
+      "resumedFrom": 51
+    },
+    {
+      "case": "rotated TikZ",
+      "roundTripMs": 53.114699985599145,
+      "compileMs": 22.3637,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 6.254,
+        "shipoutAndPublish": 1.978,
+        "typeset": 11.377
+      },
+      "pipelineMs": 52.598,
+      "prepareMs": 5.4018,
+      "renderMs": 3.7105,
+      "renderStagesMs": {
+        "displayList": 0.1098,
+        "origins": 0.1009,
+        "png": 2.8555,
+        "raster": 0.5429,
+        "text": 0.0208
+      },
+      "resumedFrom": 51
+    },
+    {
+      "case": "new font glyph",
+      "roundTripMs": 73.82230000803247,
+      "compileMs": 21.8211,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 6.004,
+        "shipoutAndPublish": 2.066,
+        "typeset": 11.527
+      },
+      "fontRefreshMs": 18.9374,
+      "fontResourceBytes": 33720,
+      "pipelineMs": 73.2677,
+      "prepareMs": 5.7267,
+      "renderMs": 5.0435,
+      "renderStagesMs": {
+        "displayList": 0.5846,
+        "origins": 0.1256,
+        "png": 3.4566,
+        "raster": 0.7397,
+        "text": 0.0437
+      },
+      "resumedFrom": 51
+    },
+    {
+      "case": "first-page reflow",
+      "roundTripMs": 453.4183999930974,
+      "compileMs": 199.2768,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 31.386,
+        "shipoutAndPublish": 1.4,
+        "typeset": 116.518
+      },
+      "fontRefreshMs": 135.0266,
+      "fontResourceBytes": 4867,
+      "pipelineMs": 438.4465,
+      "prepareMs": 9.6031,
+      "renderMs": 21.2565,
+      "renderStagesMs": {
+        "displayList": 5.3655,
+        "origins": 7.1636,
+        "png": 4.3793,
+        "raster": 1.8998,
+        "text": 1.7684
+      },
+      "resumedFrom": 1
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 301.12829999416135,
+      "pipelineMs": 287.5794
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 300.91220000758767,
+      "pipelineMs": 286.3282
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 299.653699999908,
+      "pipelineMs": 284.0939
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 310.3152000112459,
+      "pipelineMs": 296.1704
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 296.8218000023626,
+      "pipelineMs": 283.2512
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 294.90660000010394,
+      "pipelineMs": 281.4858
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 311.9377999973949,
+      "pipelineMs": 297.6431
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 370.01270000473596,
+      "pipelineMs": 349.7831
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 283.29540000413544,
+      "pipelineMs": 270.1493
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 284.9294999905396,
+      "pipelineMs": 272.268
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 288.2675000000745,
+      "pipelineMs": 275.6163
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 288.50409999722615,
+      "pipelineMs": 275.3801
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 281.1865000112448,
+      "pipelineMs": 268.564
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 281.5600000030827,
+      "pipelineMs": 268.6649
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 286.28119998029433,
+      "pipelineMs": 273.5079
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 290.5474999861326,
+      "pipelineMs": 271.2961
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 283.30609999829903,
+      "pipelineMs": 270.9769
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 284.3496999994386,
+      "pipelineMs": 271.7752
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 302.59780000778846,
+      "pipelineMs": 289.227
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 285.3204999992158,
+      "pipelineMs": 272.8812
+    }
+  ],
+  "latency": {
+    "medianMs": 289.5257999916794,
+    "p95Ms": 311.9377999973949
+  }
+}

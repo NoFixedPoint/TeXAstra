@@ -1,0 +1,997 @@
+{
+  "checks": [
+    {
+      "name": "native Chinese/math/TikZ document loads",
+      "ok": true
+    },
+    {
+      "name": "native environment reaches viewer",
+      "ok": true
+    },
+    {
+      "name": "forward source highlight",
+      "ok": true
+    },
+    {
+      "name": "reverse Chinese source selection",
+      "ok": true
+    },
+    {
+      "name": "page 100 edit 0 streams",
+      "ok": true
+    },
+    {
+      "name": "page 100 edit 1 streams",
+      "ok": true
+    },
+    {
+      "name": "page 100 edit 2 streams",
+      "ok": true
+    },
+    {
+      "name": "page 100 edit 3 streams",
+      "ok": true
+    },
+    {
+      "name": "page 100 edit 4 streams",
+      "ok": true
+    },
+    {
+      "name": "page 100 edit 5 streams",
+      "ok": true
+    },
+    {
+      "name": "page 50 edit 0 streams",
+      "ok": true
+    },
+    {
+      "name": "page 50 edit 1 streams",
+      "ok": true
+    },
+    {
+      "name": "page 50 edit 2 streams",
+      "ok": true
+    },
+    {
+      "name": "page 50 edit 3 streams",
+      "ok": true
+    },
+    {
+      "name": "page 50 edit 4 streams",
+      "ok": true
+    },
+    {
+      "name": "page 50 edit 5 streams",
+      "ok": true
+    },
+    {
+      "name": "page 1 edit 0 streams",
+      "ok": true
+    },
+    {
+      "name": "page 1 edit 1 streams",
+      "ok": true
+    },
+    {
+      "name": "page 1 edit 2 streams",
+      "ok": true
+    },
+    {
+      "name": "page 1 edit 3 streams",
+      "ok": true
+    },
+    {
+      "name": "page 1 edit 4 streams",
+      "ok": true
+    },
+    {
+      "name": "page 1 edit 5 streams",
+      "ok": true
+    },
+    {
+      "name": "error keeps visibly stale preview",
+      "ok": true
+    },
+    {
+      "name": "browser recovers after invalid TeX",
+      "ok": true
+    },
+    {
+      "name": "idle convergence restores whole document",
+      "ok": true
+    },
+    {
+      "name": "no browser errors",
+      "ok": true
+    }
+  ],
+  "samples": [
+    {
+      "type": "paint",
+      "revision": 2,
+      "clientId": 4,
+      "page": 100,
+      "generation": 2,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 252.4491,
+      "visibleMs": 301.09999999403954,
+      "stale": false,
+      "at": 1791736157650,
+      "browserStagesMs": {
+        "prepare": 1.2000000178813934,
+        "decode": 4.199999988079071,
+        "install": 1,
+        "paintWait": 19.30000001192093
+      },
+      "deliveryMs": 18.40959995985031,
+      "compileMs": 206.1604,
+      "prepareMs": 0.5841,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 100.612,
+        "shipoutAndPublish": 33.41,
+        "typeset": 46.632
+      },
+      "snapshot": {
+        "checkpoints": 100,
+        "heapUsedBytes": 1077860400,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2454,
+      "renderMs": 11.7961,
+      "renderStagesMs": {
+        "displayList": 2.2021,
+        "origins": 3.5432,
+        "png": 3.7384,
+        "raster": 1.2415,
+        "text": 0.8454
+      },
+      "queueMs": 4.386700004339218,
+      "requestToPayloadMs": 256.99040001630783,
+      "resumedFrom": 100,
+      "outputMode": "page-stream",
+      "pageNumber": 100
+    },
+    {
+      "type": "paint",
+      "revision": 3,
+      "clientId": 7,
+      "page": 100,
+      "generation": 3,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 180.0375,
+      "visibleMs": 241.5,
+      "stale": false,
+      "at": 1791736157918,
+      "browserStagesMs": {
+        "prepare": 1.300000011920929,
+        "decode": 2.9000000059604645,
+        "install": 0.5999999940395355,
+        "paintWait": 31.5
+      },
+      "deliveryMs": 16.833099991083145,
+      "compileMs": 132.4061,
+      "prepareMs": 0.5496,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 23.58,
+        "shipoutAndPublish": 32.574,
+        "typeset": 47.912
+      },
+      "snapshot": {
+        "checkpoints": 100,
+        "heapUsedBytes": 1077863600,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.3201,
+      "renderMs": 11.3785,
+      "renderStagesMs": {
+        "displayList": 2.1451,
+        "origins": 3.399,
+        "png": 3.7418,
+        "raster": 1.1415,
+        "text": 0.7442
+      },
+      "queueMs": 8.138099998235703,
+      "requestToPayloadMs": 188.36689999699593,
+      "resumedFrom": 100,
+      "outputMode": "page-stream",
+      "pageNumber": 100
+    },
+    {
+      "type": "paint",
+      "revision": 4,
+      "clientId": 10,
+      "page": 100,
+      "generation": 4,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 191.4504,
+      "visibleMs": 240.09999999403954,
+      "stale": false,
+      "at": 1791736158183,
+      "browserStagesMs": {
+        "prepare": 1.4000000059604645,
+        "decode": 0.4000000059604645,
+        "install": 0.7999999821186066,
+        "paintWait": 18
+      },
+      "deliveryMs": 18.96279999613762,
+      "compileMs": 144.9138,
+      "prepareMs": 0.5532,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 36.101,
+        "shipoutAndPublish": 32.373,
+        "typeset": 47.67
+      },
+      "snapshot": {
+        "checkpoints": 100,
+        "heapUsedBytes": 1077860400,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.3162,
+      "renderMs": 11.452,
+      "renderStagesMs": {
+        "displayList": 2.1904,
+        "origins": 3.4154,
+        "png": 3.7806,
+        "raster": 1.1398,
+        "text": 0.7244
+      },
+      "queueMs": 8.844799995422363,
+      "requestToPayloadMs": 200.53720000386238,
+      "resumedFrom": 100,
+      "outputMode": "page-stream",
+      "pageNumber": 100
+    },
+    {
+      "type": "paint",
+      "revision": 5,
+      "clientId": 13,
+      "page": 100,
+      "generation": 5,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 177.7693,
+      "visibleMs": 239.59999999403954,
+      "stale": false,
+      "at": 1791736158450,
+      "browserStagesMs": {
+        "prepare": 1.100000023841858,
+        "decode": 6.299999982118607,
+        "install": 0.7000000178813934,
+        "paintWait": 30.299999982118607
+      },
+      "deliveryMs": 17.09479996562004,
+      "compileMs": 129.6715,
+      "prepareMs": 0.5776,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 22.906,
+        "shipoutAndPublish": 32.727,
+        "typeset": 46.842
+      },
+      "snapshot": {
+        "checkpoints": 100,
+        "heapUsedBytes": 1077863600,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2521,
+      "renderMs": 11.884,
+      "renderStagesMs": {
+        "displayList": 2.1713,
+        "origins": 3.5114,
+        "png": 3.6736,
+        "raster": 1.5129,
+        "text": 0.7691
+      },
+      "queueMs": 6.162200003862381,
+      "requestToPayloadMs": 184.10520002245903,
+      "resumedFrom": 100,
+      "outputMode": "page-stream",
+      "pageNumber": 100
+    },
+    {
+      "type": "paint",
+      "revision": 6,
+      "clientId": 16,
+      "page": 100,
+      "generation": 6,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 178.5956,
+      "visibleMs": 222.89999997615814,
+      "stale": false,
+      "at": 1791736158700,
+      "browserStagesMs": {
+        "prepare": 1.699999988079071,
+        "decode": 0.7000000178813934,
+        "install": 1.399999976158142,
+        "paintWait": 15
+      },
+      "deliveryMs": 18.53880000114441,
+      "compileMs": 129.8589,
+      "prepareMs": 0.5279,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 23.03,
+        "shipoutAndPublish": 31.989,
+        "typeset": 47.416
+      },
+      "snapshot": {
+        "checkpoints": 100,
+        "heapUsedBytes": 1077860400,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.4091,
+      "renderMs": 13.269,
+      "renderStagesMs": {
+        "displayList": 2.2269,
+        "origins": 4.3706,
+        "png": 4.0184,
+        "raster": 1.5864,
+        "text": 0.8133
+      },
+      "queueMs": 6.781700015068054,
+      "requestToPayloadMs": 185.56119999289513,
+      "resumedFrom": 100,
+      "outputMode": "page-stream",
+      "pageNumber": 100
+    },
+    {
+      "type": "paint",
+      "revision": 7,
+      "clientId": 19,
+      "page": 100,
+      "generation": 7,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 176.158,
+      "visibleMs": 225.09999999403954,
+      "stale": false,
+      "at": 1791736158951,
+      "browserStagesMs": {
+        "prepare": 1.100000023841858,
+        "decode": 0.5,
+        "install": 0.7999999821186066,
+        "paintWait": 18.30000001192093
+      },
+      "deliveryMs": 16.340499967336655,
+      "compileMs": 128.9082,
+      "prepareMs": 0.6023,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 22.519,
+        "shipoutAndPublish": 32.116,
+        "typeset": 47.62
+      },
+      "snapshot": {
+        "checkpoints": 100,
+        "heapUsedBytes": 1077863600,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.4005,
+      "renderMs": 11.3284,
+      "renderStagesMs": {
+        "displayList": 2.1697,
+        "origins": 3.3854,
+        "png": 3.6704,
+        "raster": 1.1508,
+        "text": 0.7431
+      },
+      "queueMs": 11.568700015544891,
+      "requestToPayloadMs": 188.0595000088215,
+      "resumedFrom": 100,
+      "outputMode": "page-stream",
+      "pageNumber": 100
+    },
+    {
+      "type": "paint",
+      "revision": 8,
+      "clientId": 23,
+      "page": 50,
+      "generation": 8,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 297.7925,
+      "visibleMs": 366.90000000596046,
+      "stale": false,
+      "at": 1791736159350,
+      "browserStagesMs": {
+        "prepare": 1.0999999940395355,
+        "decode": 3.9000000059604645,
+        "install": 3,
+        "paintWait": 25.099999994039536
+      },
+      "deliveryMs": 23.393400013446808,
+      "compileMs": 247.4847,
+      "prepareMs": 3.8929,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 156.782,
+        "shipoutAndPublish": 19.41,
+        "typeset": 43.147
+      },
+      "snapshot": {
+        "checkpoints": 100,
+        "heapUsedBytes": 790269840,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.27,
+      "renderMs": 11.3971,
+      "renderStagesMs": {
+        "displayList": 2.2007,
+        "origins": 3.4258,
+        "png": 3.6727,
+        "raster": 1.1267,
+        "text": 0.7566
+      },
+      "queueMs": 12.383000016212463,
+      "requestToPayloadMs": 310.4065999984741,
+      "resumedFrom": 50,
+      "outputMode": "page-stream",
+      "pageNumber": 50
+    },
+    {
+      "type": "paint",
+      "revision": 9,
+      "clientId": 27,
+      "page": 50,
+      "generation": 9,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 159.2003,
+      "visibleMs": 206.59999999403954,
+      "stale": false,
+      "at": 1791736159583,
+      "browserStagesMs": {
+        "prepare": 1.300000011920929,
+        "decode": 4.5,
+        "install": 1.199999988079071,
+        "paintWait": 16.5
+      },
+      "deliveryMs": 15.964299976825714,
+      "compileMs": 112.0428,
+      "prepareMs": 0.489,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 20.247,
+        "shipoutAndPublish": 18.707,
+        "typeset": 44.522
+      },
+      "snapshot": {
+        "checkpoints": 100,
+        "heapUsedBytes": 790269840,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2602,
+      "renderMs": 11.369,
+      "renderStagesMs": {
+        "displayList": 2.3894,
+        "origins": 3.3941,
+        "png": 3.5694,
+        "raster": 1.0989,
+        "text": 0.7293
+      },
+      "queueMs": 7.737300008535385,
+      "requestToPayloadMs": 167.13570001721382,
+      "resumedFrom": 50,
+      "outputMode": "page-stream",
+      "pageNumber": 50
+    },
+    {
+      "type": "paint",
+      "revision": 10,
+      "clientId": 31,
+      "page": 50,
+      "generation": 10,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 157.1226,
+      "visibleMs": 458.40000000596046,
+      "stale": false,
+      "at": 1791736160067,
+      "browserStagesMs": {
+        "prepare": 1.199999988079071,
+        "decode": 1.300000011920929,
+        "install": 0.699999988079071,
+        "paintWait": 15.700000017881393
+      },
+      "deliveryMs": 16.113800019025803,
+      "compileMs": 110.7082,
+      "prepareMs": 0.5922,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 21.37,
+        "shipoutAndPublish": 19.029,
+        "typeset": 43.631
+      },
+      "snapshot": {
+        "checkpoints": 101,
+        "heapUsedBytes": 790269840,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2346,
+      "renderMs": 11.443,
+      "renderStagesMs": {
+        "displayList": 2.2514,
+        "origins": 3.4025,
+        "png": 3.6848,
+        "raster": 1.1472,
+        "text": 0.739
+      },
+      "queueMs": 266.10439997911453,
+      "requestToPayloadMs": 423.3861999809742,
+      "resumedFrom": 50,
+      "outputMode": "page-stream",
+      "pageNumber": 50
+    },
+    {
+      "type": "paint",
+      "revision": 11,
+      "clientId": 35,
+      "page": 50,
+      "generation": 11,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 156.7772,
+      "visibleMs": 207.40000000596046,
+      "stale": false,
+      "at": 1791736160300,
+      "browserStagesMs": {
+        "prepare": 0.800000011920929,
+        "decode": 0.4000000059604645,
+        "install": 0.699999988079071,
+        "paintWait": 24.30000001192093
+      },
+      "deliveryMs": 15.425599992275238,
+      "compileMs": 110.2481,
+      "prepareMs": 0.5718,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 21.644,
+        "shipoutAndPublish": 17.763,
+        "typeset": 44.371
+      },
+      "snapshot": {
+        "checkpoints": 101,
+        "heapUsedBytes": 790269840,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.3777,
+      "renderMs": 11.2494,
+      "renderStagesMs": {
+        "displayList": 2.1801,
+        "origins": 3.4079,
+        "png": 3.5653,
+        "raster": 1.1848,
+        "text": 0.713
+      },
+      "queueMs": 8.79899999499321,
+      "requestToPayloadMs": 165.77439999580383,
+      "resumedFrom": 50,
+      "outputMode": "page-stream",
+      "pageNumber": 50
+    },
+    {
+      "type": "paint",
+      "revision": 12,
+      "clientId": 39,
+      "page": 50,
+      "generation": 12,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 155.2902,
+      "visibleMs": 207.2000000178814,
+      "stale": false,
+      "at": 1791736160534,
+      "browserStagesMs": {
+        "prepare": 1,
+        "decode": 4.0999999940395355,
+        "install": 0.800000011920929,
+        "paintWait": 21.400000005960464
+      },
+      "deliveryMs": 16.10359999537468,
+      "compileMs": 109.3767,
+      "prepareMs": 0.5596,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 21.839,
+        "shipoutAndPublish": 18.279,
+        "typeset": 43.054
+      },
+      "snapshot": {
+        "checkpoints": 101,
+        "heapUsedBytes": 790269840,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2562,
+      "renderMs": 11.4925,
+      "renderStagesMs": {
+        "displayList": 2.3636,
+        "origins": 3.386,
+        "png": 3.5519,
+        "raster": 1.2574,
+        "text": 0.7314
+      },
+      "queueMs": 8.315099984407425,
+      "requestToPayloadMs": 163.79640001058578,
+      "resumedFrom": 50,
+      "outputMode": "page-stream",
+      "pageNumber": 50
+    },
+    {
+      "type": "paint",
+      "revision": 13,
+      "clientId": 43,
+      "page": 50,
+      "generation": 13,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 160.8762,
+      "visibleMs": 208.2999999821186,
+      "stale": false,
+      "at": 1791736160767,
+      "browserStagesMs": {
+        "prepare": 0.8999999761581421,
+        "decode": 0.5,
+        "install": 0.5,
+        "paintWait": 18.5
+      },
+      "deliveryMs": 17.60970002412796,
+      "compileMs": 113.923,
+      "prepareMs": 0.4771,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 25.19,
+        "shipoutAndPublish": 18.023,
+        "typeset": 42.975
+      },
+      "snapshot": {
+        "checkpoints": 101,
+        "heapUsedBytes": 790269840,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.3383,
+      "renderMs": 11.7201,
+      "renderStagesMs": {
+        "displayList": 2.1462,
+        "origins": 3.3878,
+        "png": 3.9045,
+        "raster": 1.1234,
+        "text": 0.7278
+      },
+      "queueMs": 9.206999987363815,
+      "requestToPayloadMs": 170.2902999818325,
+      "resumedFrom": 50,
+      "outputMode": "page-stream",
+      "pageNumber": 50
+    },
+    {
+      "type": "paint",
+      "revision": 14,
+      "clientId": 48,
+      "page": 1,
+      "generation": 14,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 328.5722,
+      "visibleMs": 617.9000000059605,
+      "stale": false,
+      "at": 1791736161418,
+      "browserStagesMs": {
+        "prepare": 0.8999999761581421,
+        "decode": 5.600000023841858,
+        "install": 2.7999999821186066,
+        "paintWait": 17.700000017881393
+      },
+      "deliveryMs": 15.492700010538101,
+      "compileMs": 278.9762,
+      "prepareMs": 3.7616,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 187.257,
+        "shipoutAndPublish": 17.344,
+        "typeset": 47.704
+      },
+      "snapshot": {
+        "checkpoints": 102,
+        "heapUsedBytes": 616772368,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.3059,
+      "renderMs": 12.3963,
+      "renderStagesMs": {
+        "displayList": 2.2115,
+        "origins": 3.4446,
+        "png": 4.3988,
+        "raster": 1.2372,
+        "text": 0.8364
+      },
+      "queueMs": 246.6637000143528,
+      "requestToPayloadMs": 575.4072999954224,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageNumber": 1
+    },
+    {
+      "type": "paint",
+      "revision": 15,
+      "clientId": 51,
+      "page": 1,
+      "generation": 15,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 170.2069,
+      "visibleMs": 457.40000000596046,
+      "stale": false,
+      "at": 1791736161901,
+      "browserStagesMs": {
+        "prepare": 1.100000023841858,
+        "decode": 3.699999988079071,
+        "install": 0.800000011920929,
+        "paintWait": 22
+      },
+      "deliveryMs": 15.873600006103516,
+      "compileMs": 122.8348,
+      "prepareMs": 0.5491,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 23.202,
+        "shipoutAndPublish": 18.953,
+        "typeset": 54.086
+      },
+      "snapshot": {
+        "checkpoints": 103,
+        "heapUsedBytes": 616775568,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2272,
+      "renderMs": 11.7764,
+      "renderStagesMs": {
+        "displayList": 2.3425,
+        "origins": 3.4526,
+        "png": 3.7766,
+        "raster": 1.211,
+        "text": 0.7784
+      },
+      "queueMs": 243.52599999308586,
+      "requestToPayloadMs": 413.9263999760151,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageNumber": 1
+    },
+    {
+      "type": "paint",
+      "revision": 16,
+      "clientId": 54,
+      "page": 1,
+      "generation": 16,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 160.0273,
+      "visibleMs": 440.80000001192093,
+      "stale": false,
+      "at": 1791736162367,
+      "browserStagesMs": {
+        "prepare": 0.9000000059604645,
+        "decode": 0.4000000059604645,
+        "install": 0.9000000059604645,
+        "paintWait": 22.19999998807907
+      },
+      "deliveryMs": 15.915900021791458,
+      "compileMs": 113.4905,
+      "prepareMs": 0.55,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 21.36,
+        "shipoutAndPublish": 17.205,
+        "typeset": 47.8
+      },
+      "snapshot": {
+        "checkpoints": 104,
+        "heapUsedBytes": 616772368,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2395,
+      "renderMs": 11.504,
+      "renderStagesMs": {
+        "displayList": 2.1869,
+        "origins": 3.4,
+        "png": 3.7645,
+        "raster": 1.1579,
+        "text": 0.7978
+      },
+      "queueMs": 240.3139999806881,
+      "requestToPayloadMs": 400.484099984169,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageNumber": 1
+    },
+    {
+      "type": "paint",
+      "revision": 17,
+      "clientId": 57,
+      "page": 1,
+      "generation": 17,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 162.2322,
+      "visibleMs": 441.2999999821186,
+      "stale": false,
+      "at": 1791736162834,
+      "browserStagesMs": {
+        "prepare": 1.199999988079071,
+        "decode": 0.4000000059604645,
+        "install": 1,
+        "paintWait": 22.69999998807907
+      },
+      "deliveryMs": 15.585900008678436,
+      "compileMs": 115.2796,
+      "prepareMs": 0.5509,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 22.229,
+        "shipoutAndPublish": 18.087,
+        "typeset": 47.773
+      },
+      "snapshot": {
+        "checkpoints": 105,
+        "heapUsedBytes": 616775568,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2296,
+      "renderMs": 11.1693,
+      "renderStagesMs": {
+        "displayList": 2.1644,
+        "origins": 3.3966,
+        "png": 3.5433,
+        "raster": 1.1024,
+        "text": 0.7513
+      },
+      "queueMs": 237.99919998645782,
+      "requestToPayloadMs": 400.41409999132156,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageNumber": 1
+    },
+    {
+      "type": "paint",
+      "revision": 18,
+      "clientId": 60,
+      "page": 1,
+      "generation": 18,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 164.4585,
+      "visibleMs": 457.60000002384186,
+      "stale": false,
+      "at": 1791736163317,
+      "browserStagesMs": {
+        "prepare": 1.0999999940395355,
+        "decode": 0.30000001192092896,
+        "install": 0.9000000059604645,
+        "paintWait": 24
+      },
+      "deliveryMs": 16.543799996376038,
+      "compileMs": 117.0801,
+      "prepareMs": 0.5661,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 21.36,
+        "shipoutAndPublish": 19.094,
+        "typeset": 48.19
+      },
+      "snapshot": {
+        "checkpoints": 106,
+        "heapUsedBytes": 616772368,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.2903,
+      "renderMs": 11.6693,
+      "renderStagesMs": {
+        "displayList": 2.1595,
+        "origins": 3.5621,
+        "png": 3.8002,
+        "raster": 1.1407,
+        "text": 0.7757
+      },
+      "queueMs": 250.12170001864433,
+      "requestToPayloadMs": 414.7562000155449,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageNumber": 1
+    },
+    {
+      "type": "paint",
+      "revision": 19,
+      "clientId": 63,
+      "page": 1,
+      "generation": 19,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 165.8868,
+      "visibleMs": 524,
+      "stale": false,
+      "at": 1791736163868,
+      "browserStagesMs": {
+        "prepare": 1.300000011920929,
+        "decode": 4.199999988079071,
+        "install": 0.7000000178813934,
+        "paintWait": 25.5
+      },
+      "deliveryMs": 17.018999963998795,
+      "compileMs": 119.137,
+      "prepareMs": 0.5342,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 24.917,
+        "shipoutAndPublish": 18.597,
+        "typeset": 48.794
+      },
+      "snapshot": {
+        "checkpoints": 107,
+        "heapUsedBytes": 616775568,
+        "mode": "windows",
+        "pid": 25464
+      },
+      "mapMs": 0.3217,
+      "renderMs": 11.6404,
+      "renderStagesMs": {
+        "displayList": 2.1587,
+        "origins": 3.4598,
+        "png": 3.726,
+        "raster": 1.3632,
+        "text": 0.7327
+      },
+      "queueMs": 309.22350001335144,
+      "requestToPayloadMs": 475.2810000181198,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageNumber": 1
+    }
+  ],
+  "runtime": "D:\\macro_local\\bakoma_new\\native\\windows-bundle",
+  "latency": {
+    "medianMs": 271.29999999701977,
+    "p95Ms": 617.9000000059605
+  }
+}

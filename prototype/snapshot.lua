@@ -1,6 +1,7 @@
 -- General projects checkpoint at engine safe points; the comparison corpus
 -- retains its explicit page-file boundaries.
-local snapshot=assert(package.loadlib('./bako_snapshot.so','luaopen_bako_snapshot'))()
+local native=os.getenv('BAKO_ENGINE_MODULE')
+local snapshot=assert(package.loadlib(native or './bako_snapshot.so',native and 'luaopen_bako_native' or 'luaopen_bako_snapshot'))()
 local general=os.getenv('BAKO_LIVE_DOCUMENT')=='1'
 local limit=general and 10000 or 100
 local resumed,shipped,finished=0,0,0

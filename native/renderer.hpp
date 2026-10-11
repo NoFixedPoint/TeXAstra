@@ -3,7 +3,9 @@
 #include <mupdf/fitz.h>
 #include <mupdf/pdf.h>
 #include <libdeflate.h>
+#ifndef _WIN32
 #include <zlib.h>
+#endif
 #include <cmath>
 #include <cfloat>
 #include "mapping.hpp"
@@ -145,7 +147,11 @@ class Renderer {
         size_t start = s.size();
         s.append(type, 4);
         s += data;
+#ifdef _WIN32
+        integer(s, libdeflate_crc32(0, s.data() + start, 4 + data.size()));
+#else
         integer(s, crc32(0, reinterpret_cast<const Bytef *>(s.data() + start), 4 + data.size()));
+#endif
     }
     std::string png(fz_pixmap *pix) {
         int width = fz_pixmap_width(ctx, pix), height = fz_pixmap_height(ctx, pix),
@@ -224,7 +230,7 @@ class Renderer {
         fz_try(ctx) {
             // MuPDF reads objects lazily. An early compiler checkpoint may
             // rewrite the output file, so retain an immutable resource seed.
-            bytes = fz_read_file(ctx, path.c_str());
+            bytes = fz_read_file(ctx, path.u8string().c_str());
             stream = fz_open_buffer(ctx, bytes);
             replacement = pdf_open_document_with_stream(ctx, stream);
         }

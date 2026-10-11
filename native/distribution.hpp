@@ -1,4 +1,7 @@
 #pragma once
+#ifdef _WIN32
+#include "windows/distribution.hpp"
+#else
 #include "cache.hpp"
 extern char **environ;
 
@@ -184,3 +187,4 @@ class Distribution {
     }
 };
 }
+#endif
