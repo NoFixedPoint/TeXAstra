@@ -1,0 +1,127 @@
+{
+  "checks": [
+    {
+      "name": "xelatex initial custom filename",
+      "ok": true
+    },
+    {
+      "name": "xelatex unsaved root edit",
+      "ok": true
+    },
+    {
+      "name": "xelatex include edit and retained root overlay",
+      "ok": true
+    },
+    {
+      "name": "xelatex page clamp",
+      "ok": true
+    },
+    {
+      "name": "xelatex reports compile failure",
+      "ok": true
+    },
+    {
+      "name": "xelatex rejects stale page navigation",
+      "ok": true
+    },
+    {
+      "name": "xelatex recovery preserves include overlay",
+      "ok": true
+    },
+    {
+      "name": "pdflatex initial custom filename",
+      "ok": true
+    },
+    {
+      "name": "pdflatex unsaved root edit",
+      "ok": true
+    },
+    {
+      "name": "pdflatex include edit and retained root overlay",
+      "ok": true
+    },
+    {
+      "name": "pdflatex page clamp",
+      "ok": true
+    },
+    {
+      "name": "pdflatex reports compile failure",
+      "ok": true
+    },
+    {
+      "name": "pdflatex rejects stale page navigation",
+      "ok": true
+    },
+    {
+      "name": "pdflatex recovery preserves include overlay",
+      "ok": true
+    },
+    {
+      "name": "lualatex initial custom filename",
+      "ok": true
+    },
+    {
+      "name": "lualatex unsaved root edit",
+      "ok": true
+    },
+    {
+      "name": "lualatex include edit and retained root overlay",
+      "ok": true
+    },
+    {
+      "name": "lualatex page clamp",
+      "ok": true
+    },
+    {
+      "name": "lualatex reports compile failure",
+      "ok": true
+    },
+    {
+      "name": "lualatex rejects stale page navigation",
+      "ok": true
+    },
+    {
+      "name": "lualatex recovery preserves include overlay",
+      "ok": true
+    },
+    {
+      "name": "VS Code protocol applies initial unsaved buffers",
+      "ok": true
+    },
+    {
+      "name": "fixture source tree untouched",
+      "ok": true
+    },
+    {
+      "name": "fork corpus retains source mapping",
+      "ok": true
+    },
+    {
+      "name": "fork corpus retains page-stream edits",
+      "ok": true
+    },
+    {
+      "name": "internal corpus retains source mapping",
+      "ok": true
+    },
+    {
+      "name": "internal corpus retains page-stream edits",
+      "ok": true
+    },
+    {
+      "name": "user project XeLaTeX compiles",
+      "ok": true,
+      "pages": 85,
+      "elapsedSeconds": 22.53
+    },
+    {
+      "name": "user project last page renders",
+      "ok": true
+    },
+    {
+      "name": "user project source tree untouched",
+      "ok": true,
+      "files": 653
+    }
+  ]
+}

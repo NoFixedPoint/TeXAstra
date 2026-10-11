@@ -9,6 +9,7 @@ using namespace bako;
 
 class Preview {
     fs::path project, assets, runtime;
+    ProjectOptions options;
     std::mutex mutex, output_mutex;
     std::condition_variable changed;
     std::deque<Json> queue;
@@ -51,7 +52,7 @@ class Preview {
         builder = std::thread([this, snapshot, request, revision] {
             std::unique_ptr<Engine> ready;
             try {
-                ready = std::make_unique<Engine>(project, assets, runtime, snapshot, &cancel_build);
+                ready = std::make_unique<Engine>(project, assets, runtime, snapshot, &cancel_build, options);
                 auto result = ready->start(request.value("page", 0));
                 std::lock_guard<std::mutex> lock(mutex);
                 if (!cancel_build && !stopping && latest == revision) {
@@ -77,8 +78,8 @@ class Preview {
     }
 
   public:
-    Preview(fs::path p, fs::path a, fs::path r)
-        : project(std::move(p)), assets(std::move(a)), runtime(std::move(r)) {}
+    Preview(fs::path p, fs::path a, fs::path r, ProjectOptions config)
+        : project(std::move(p)), assets(std::move(a)), runtime(std::move(r)), options(std::move(config)) {}
     void run() {
         std::thread reader([this] {
             std::string line;
@@ -146,6 +147,13 @@ class Preview {
             std::set<std::string> edits;
             try {
                 for (auto &r : requests) {
+                    if (r.at("type") == "start" && r.contains("overlays")) {
+                        for (const auto &[file, source] : r.at("overlays").items()) {
+                            inside(project, file);
+                            overlays[file] = source.get<std::string>();
+                            edits.insert(file);
+                        }
+                    }
                     if (r.at("type") == "edit") {
                         auto file = r.at("file").get<std::string>();
                         inside(project, file);
@@ -153,17 +161,19 @@ class Preview {
                         edits.insert(file);
                     }
                 }
-                bool rebuild = !engine || edits.size() > 1;
+                bool rebuild = !engine || edits.size() > 1 || (engine->full_build() && !edits.empty());
                 for (const auto &file : edits) {
                     if (!std::regex_match(file, std::regex(R"(pages/page-\d{3}\.tex)"))) {
                         rebuild = true;
                     }
                 }
                 Json result;
-                if (rebuild) {
+                if (engine && engine->full_build() && !edits.empty()) {
+                    result = engine->update_files(overlays, page);
+                } else if (rebuild) {
                     engine.reset();
                     engine =
-                        std::make_unique<Engine>(project, assets, runtime, overlays, &stopping);
+                        std::make_unique<Engine>(project, assets, runtime, overlays, &stopping, options);
                     result = engine->start(page);
                 } else if (!edits.empty()) {
                     result = engine->edit(*edits.begin(), overlays.at(*edits.begin()), page);
@@ -174,7 +184,7 @@ class Preview {
                     std::chrono::duration<double, std::milli>(Clock::now().time_since_epoch())
                         .count() -
                     request.at("submittedMs").get<double>();
-                needs_convergence = result.value("provisional", false);
+                needs_convergence = !engine->full_build() && result.value("provisional", false);
                 frame(std::move(result), request);
             } catch (const std::exception &e) {
                 needs_convergence = false;
@@ -238,8 +248,13 @@ int main(int argc, char **argv) {
         setenv("BAKO_CHECKPOINT_MODE", checkpoint.c_str(), 1);
         fs::path project = fs::canonical(args.at("--project")),
                  assets = fs::canonical(args.at("--assets"));
+        ProjectOptions options;
+        if (args.count("--main")) options.main = args.at("--main");
+        if (args.count("--preview-mode")) options.mode = args.at("--preview-mode");
+        if (args.count("--compiler")) options.compiler = args.at("--compiler");
         if (args.count("--sync")) {
             std::unique_ptr<Engine> engine;
+            std::map<std::string, std::string> overlays;
             std::string line;
             while (std::getline(std::cin, line)) {
                 try {
@@ -251,12 +266,15 @@ int main(int argc, char **argv) {
                     int page = request.value("page", 0);
                     Json result;
                     if (kind == "start") {
-                        engine = std::make_unique<Engine>(project, assets, runtime);
+                        engine = std::make_unique<Engine>(project, assets, runtime, overlays, nullptr, options);
                         result = engine->start(page);
                     } else if (!engine) {
                         throw std::runtime_error("Start the engine first");
                     } else if (kind == "edit") {
-                        result = engine->edit(request.at("file"), request.at("source"), page);
+                        auto file = request.at("file").get<std::string>();
+                        inside(project, file);
+                        overlays[file] = request.at("source").get<std::string>();
+                        result = engine->edit(file, overlays.at(file), page);
                     } else {
                         result = engine->navigate(page);
                     }
@@ -268,7 +286,7 @@ int main(int argc, char **argv) {
             }
             return 0;
         }
-        Preview preview(project, assets, runtime);
+        Preview preview(project, assets, runtime, options);
         preview.run();
         return 0;
     } catch (const std::exception &e) {

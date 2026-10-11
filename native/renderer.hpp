@@ -262,7 +262,7 @@ class Renderer {
             throw ResourceMiss("Expected one page stream");
         }
     }
-    Json render(int number, const Sources &sources, const std::vector<int> &ids) {
+    Json render(int number, const Sources &sources, const std::vector<int> &ids, bool source_sync = true) {
         auto started = Clock::now();
         number = std::clamp(number, 0, pages() - 1);
         fz_var(number);
@@ -307,7 +307,7 @@ class Renderer {
                         regions.push_back(span->row(rectangle(boxes[i])));
                     }
                 }
-            } else {
+            } else if (source_sync) {
                 warnings.push_back({{"reason", "Tagged glyph/renderer sequence mismatch; "
                                                "navigation disabled for this page."},
                                     {"tags", ids.size()},

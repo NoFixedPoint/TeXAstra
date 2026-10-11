@@ -36,7 +36,7 @@ function showRegion(region){
   $('location').textContent=`${region.file}:${region.line+1}:${region.column+1}  ${region.kind}  ${region.text}`;
 }
 function forward(location){
-  if(stale||!frame)return;
+  if(stale||!frame||frame.sourceSync==='unavailable')return;
   const matches=frame.regions.filter(r=>r.file===location.file&&r.line===location.line&&r.column<=location.column&&r.endColumn>location.column);
   if(matches.length)showRegion(matches[0]);
   else{
@@ -80,8 +80,11 @@ async function receive(message){
   for(let i=message.characters.length;i<existing.length;i++)existing[i].remove();
   layer.append(fragment);previousCharacters=message.characters;previousWidth=displayWidth;
   stale=message.isStale||message.revisionId<latestRequest||message.clientId<latestClient;document.body.classList.toggle('stale',stale);
-  $('status').textContent=stale?'Typing · showing an earlier revision':message.provisional?'Provisional preview · references may need convergence':'Preview ready';
+  $('status').textContent=stale?'Typing · showing an earlier revision':message.outputMode==='full-build'
+    ?`Preview ready · ${message.compiler} full build · source navigation unavailable${message.provisional?' · references may need another build':''}`
+    :message.provisional?'Provisional preview · references may need convergence':'Preview ready';
   $('error').textContent=message.warnings?.length?JSON.stringify(message.warnings.slice(0,20),null,2):'';
+  if(message.outputMode==='full-build')$('location').textContent='Text selection is available. Source navigation requires the incremental corpus mode.';
   await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
   const visibleMs=message.sentAt&&!stale?Date.now()-message.sentAt:null;
   $('timing').textContent=`${Math.round(message.pipelineMs)} ms pipeline${visibleMs?` · ${Math.round(visibleMs)} ms to display`:''}`;

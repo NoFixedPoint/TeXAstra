@@ -3,8 +3,14 @@
 extern char **environ;
 
 namespace bako {
+struct ProjectOptions {
+    std::string main = "main.tex", mode = "auto", compiler = "lualatex";
+};
 class Engine {
     fs::path project, assets, runtime;
+    ProjectOptions options;
+    bool full = false;
+    bool full_ready = false;
     Fd listener;
     pid_t process = -1;
     std::map<int, PageBuffer> buffers;
@@ -81,6 +87,7 @@ class Engine {
         posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSID);
         std::vector<std::string> env;
         for (char **e = environ; *e; ++e) {
+            if (full && starts(*e, "openout_any=")) continue;
             if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=")) {
                 if (internal && !prime &&
                     (starts(*e, "LD_PRELOAD=") || starts(*e, "LD_BIND_NOW=") ||
@@ -92,7 +99,8 @@ class Engine {
             }
         }
         env.emplace_back("BAKO_PAGE_STREAM=1");
-        if (internal && !prime) {
+        if (full) env.emplace_back("openout_any=p");
+        if (internal && !prime && !full) {
             env.emplace_back("LD_PRELOAD=" + (runtime / "bako_internal.so").string());
             env.emplace_back("MALLOC_MMAP_MAX_=0");
             env.emplace_back("MALLOC_TRIM_THRESHOLD_=-1");
@@ -107,15 +115,21 @@ class Engine {
             envp.push_back(s.data());
         }
         envp.push_back(nullptr);
-        const char *argv[] = {"lualatex",       "--shell-escape", "-interaction=nonstopmode",
-                              "-halt-on-error", "main.tex",       nullptr};
+        std::vector<std::string> arguments = full
+            ? std::vector<std::string>{options.compiler, "-no-shell-escape", "-interaction=nonstopmode",
+                                       "-halt-on-error", "-file-line-error", "./" + options.main}
+            : std::vector<std::string>{"lualatex", "--shell-escape", "-interaction=nonstopmode",
+                                       "-halt-on-error", "main.tex"};
+        std::vector<char *> argv;
+        for (auto &argument : arguments) argv.push_back(argument.data());
+        argv.push_back(nullptr);
         pid_t pid = -1;
-        int error = posix_spawnp(&pid, "lualatex", &actions, &attr, const_cast<char *const *>(argv),
+        int error = posix_spawnp(&pid, arguments[0].c_str(), &actions, &attr, argv.data(),
                                  envp.data());
         posix_spawn_file_actions_destroy(&actions);
         posix_spawnattr_destroy(&attr);
         if (error) {
-            throw std::runtime_error("Cannot start LuaLaTeX: " + std::string(strerror(error)));
+            throw std::runtime_error("Cannot start " + arguments[0] + ": " + strerror(error));
         }
         return pid;
     }
@@ -378,7 +392,7 @@ class Engine {
                         hidden = true;
                     }
                 }
-                if (!hidden && words(".tex .sty .cls .bib .png .jpg .pdf .eps")
+                if (!hidden && words(".tex .sty .cls .bib .bst .bbl .png .jpg .jpeg .pdf .eps .ps .otf .ttf .tfm .map .enc .cfg .def .clo .fd .ldf .bbx .cbx .lbx .ist .csv .dat .txt .lua")
                                    .count(entry.path().extension().string())) {
                     files.push_back(rel);
                 }
@@ -395,11 +409,20 @@ class Engine {
                 replace_all(data, "\r\n", "\n");
                 replace_all(data, "\r", "\n");
             }
-            if (file.extension() == ".tex" && name != "main.tex") {
+            if (!full && file.extension() == ".tex" && name != "main.tex") {
                 data = sources.instrument(data, name) + reset;
             }
             write(directory / file, data);
         }
+        // Unsaved, newly created project files may not exist on disk yet.
+        for (const auto &[name, data] : overlays) {
+            auto target = inside(directory, name);
+            if (full) {
+                fs::create_directories(target.parent_path());
+                write(target, data);
+            }
+        }
+        if (full) return;
         for (const auto *name : {"snapshot.lua", "page_stream.lua", "provenance.lua"}) {
             fs::copy_file(assets / name, directory / name, fs::copy_options::overwrite_existing);
         }
@@ -430,6 +453,67 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         write(directory / "main.tex", patched);
     }
 
+    Json full_frame(int page) {
+        auto frame = renderer.render(page, sources, {}, false);
+        frame["ok"] = true;
+        frame["provisional"] = !converged;
+        frame["outputMode"] = "full-build";
+        frame["sourceSync"] = "unavailable";
+        frame["compiler"] = options.compiler;
+        frame["session"] = directory.string();
+        return frame;
+    }
+
+    Json full_start(int page) {
+        auto started = Clock::now();
+        auto stem = fs::path(options.main).stem().string();
+        full_ready = false;
+        // Keep any renderer's open PDF inode immutable while the next run writes.
+        fs::remove(directory / (stem + ".pdf"));
+        std::map<std::string, std::string> previous_aux;
+        converged = false;
+        int passes = 0;
+        for (; passes < 3; ++passes) {
+            process = spawn(true);
+            auto run = Clock::now();
+            int status = 0;
+            for (;;) {
+                auto ended = waitpid(process, &status, WNOHANG);
+                if (ended == process) break;
+                if (ended < 0 && errno != EINTR) throw std::runtime_error("Cannot wait for compiler");
+                if ((cancel && cancel->load()) || elapsed(run) > 90000) {
+                    stop_process();
+                    throw std::runtime_error("Compilation cancelled or timed out");
+                }
+                std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            }
+            process = -1;
+            if (!WIFEXITED(status) || WEXITSTATUS(status))
+                throw std::runtime_error(options.compiler + " failed: " + error_log());
+            std::map<std::string, std::string> auxiliary;
+            for (const auto &entry : fs::recursive_directory_iterator(directory)) {
+                if (entry.is_regular_file() && words(".aux .toc .out .lof .lot .nav .snm .ptc")
+                    .count(entry.path().extension().string()))
+                    auxiliary[entry.path().lexically_relative(directory).string()] = read(entry.path());
+            }
+            if (passes > 0 && auxiliary == previous_aux) {
+                converged = true;
+                ++passes;
+                break;
+            }
+            previous_aux = std::move(auxiliary);
+        }
+        renderer.seed(directory / (stem + ".pdf"), {});
+        if (!renderer.pages()) throw std::runtime_error("The document produced no pages");
+        full_ready = true;
+        auto result = full_frame(page);
+        result["compileMs"] = elapsed(started) - result["renderMs"].get<double>();
+        result["pipelineMs"] = elapsed(started);
+        result["passes"] = passes;
+        if (!converged) result["warnings"].push_back({{"reason", "References did not stabilize after three passes."}});
+        return result;
+    }
+
   public:
     fs::path directory;
     Sources sources;
@@ -437,8 +521,20 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
     std::atomic<bool> *cancel = nullptr;
     Engine(fs::path p, fs::path a, fs::path r,
            const std::map<std::string, std::string> &overlays = {},
-           std::atomic<bool> *stop = nullptr)
-        : project(fs::canonical(p)), assets(std::move(a)), runtime(std::move(r)), cancel(stop) {
+           std::atomic<bool> *stop = nullptr, ProjectOptions config = {})
+        : project(fs::canonical(p)), assets(std::move(a)), runtime(std::move(r)), options(std::move(config)), cancel(stop) {
+        if (fs::path(options.main).filename() != options.main || options.main.empty())
+            throw std::runtime_error("Main file must be a filename in the project directory");
+        auto root = read(inside(project, options.main));
+        const bool fixture = options.main == "main.tex" && root.find("\\input{pages/page-001.tex}") != std::string::npos &&
+            root.find("\\newcommand{\\globalword}{global}") != std::string::npos &&
+            root.find("\\usepackage{tikz}") != std::string::npos;
+        if (!words("auto full incremental").count(options.mode) ||
+            !words("lualatex xelatex pdflatex").count(options.compiler))
+            throw std::runtime_error("Invalid preview mode or LaTeX compiler");
+        full = options.mode == "full" || (options.mode == "auto" && (!fixture || options.compiler != "lualatex"));
+        if (!full && (!fixture || options.compiler != "lualatex"))
+            throw std::runtime_error("Incremental preview requires the LuaLaTeX acceptance corpus. Use full mode for other projects.");
         internal = getenv("BAKO_CHECKPOINT_MODE") &&
                    std::string(getenv("BAKO_CHECKPOINT_MODE")) == "internal";
         char name[] = "/tmp/bakoma-cpp-XXXXXX";
@@ -481,6 +577,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         }
     }
     Json start(int page = 0) {
+        if (full) return full_start(page);
         auto started = Clock::now();
         process = spawn(true);
         auto start = Clock::now();
@@ -531,6 +628,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         return frame;
     }
     Json edit(const std::string &file, const std::string &source, int page) {
+        if (full) return update_files({{file, source}}, page);
         converged = false;
         auto started = Clock::now();
         std::smatch match;
@@ -560,6 +658,13 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         return result;
     }
     Json navigate(int page) {
+        if (full) {
+            if (!full_ready) throw std::runtime_error("The preview is stale. Fix the compilation error before changing pages.");
+            auto started = Clock::now();
+            auto result = full_frame(page);
+            result["pipelineMs"] = elapsed(started);
+            return result;
+        }
         auto started = Clock::now();
         Json result;
         if (available.count(page)) {
@@ -577,6 +682,16 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         result["ok"] = true;
         result["provisional"] = !converged;
         return result;
+    }
+    bool full_build() const { return full; }
+    Json update_files(const std::map<std::string, std::string> &overlays, int page) {
+        if (!full) throw std::runtime_error("Batch updates require full-build mode");
+        for (const auto &[file, source] : overlays) {
+            auto target = inside(directory, file);
+            fs::create_directories(target.parent_path());
+            write(target, source);
+        }
+        return full_start(page);
     }
 };
 } // namespace bako

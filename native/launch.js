@@ -11,11 +11,12 @@ function linuxPath(value){
   if(unc)return '/'+unc[1];
   throw new Error('The C++ backend currently requires a local drive or Ubuntu-22.04 WSL path.');
 }
-function launch(root,project,checkpoint=process.env.BAKO_CHECKPOINT_MODE||'fork'){
+function launch(root,project,checkpoint=process.env.BAKO_CHECKPOINT_MODE||'fork',options={}){
   const executable=path.join(root,'native/runtime/bakoma-backend');
   if(!fs.existsSync(executable))throw new Error('Build the C++ backend first: python scripts/build_cpp.py');
   if(!['internal','fork'].includes(checkpoint))throw new Error('Checkpoint mode must be internal or fork.');
-  const args=['--project',linuxPath(project),'--assets',linuxPath(path.join(root,'prototype')),'--checkpoint',checkpoint];
+  const args=['--project',linuxPath(project),'--assets',linuxPath(path.join(root,'prototype')),'--checkpoint',checkpoint,
+    '--main',options.main||'main.tex','--preview-mode',options.mode||'auto','--compiler',options.compiler||'lualatex'];
   return process.platform==='win32'
     ?spawn('wsl',['-d','Ubuntu-22.04','--exec',linuxPath(executable),...args],{windowsHide:true})
     :spawn(executable,args);
