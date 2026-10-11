@@ -1,0 +1,55 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.11.4",
+  "nativeLuaLaTeX": "This is LuaHBTeX, Version 1.22.0 (TeX Live 2025)",
+  "wslLuaLaTeX": "This is LuaHBTeX, Version 1.14.0 (TeX Live 2022/dev/Debian)",
+  "wslXeLaTeX": "XeTeX 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian)",
+  "cpu": "{\n    \"Name\":  \"13th Gen Intel(R) Core(TM) i9-13900K\",\n    \"NumberOfCores\":  24,\n    \"NumberOfLogicalProcessors\":  32\n}",
+  "memoryBytes": "137195053056",
+  "sourceSha256": {
+    "prototype\\__init__.py": "3e332c46975ee0aa4e327856dbcb4b1a40183fbfaaa875682d50a6f571471a7e",
+    "prototype\\bridge.py": "975adc9b0cdb3b000d325203a6c18b10ef94674cb739750832bd7a8b86073823",
+    "prototype\\converge.py": "85c6e390b575bd0414cacc4226160b2fcc38528dbb5ed6e668d77ba3d25e1885",
+    "prototype\\demo.py": "fa15381c5d81c9ab1f2c3bccbb719d3c342faf3713e698878fa60bd4a30bcd6f",
+    "prototype\\engine.py": "dc9d5411c78f2f20d4839f4ba7a7d3c0a154ba850e9d8d343b0e374ab236c9aa",
+    "prototype\\instrument.py": "315d131771ce757884525e4784b67321e0a0571aee35fccb5a7330c617169a6a",
+    "prototype\\page_stream.lua": "9180c758570ea2715c7a55238be59fc9421c194428bd858d3d2392757f5fe542",
+    "prototype\\page_stream.py": "4597b9d286d534e8c30dc07d154db93ee0666df0a8738a2e8ab514e3e1559dd9",
+    "prototype\\protocol.py": "2b4f97ea67ce8b8cb6397af71f1f6cfc87c9e85e4a4aeb79454f14fb3235c118",
+    "prototype\\provenance.lua": "cfebf04359a5a62fdca53e8b8a71fdac93dc8001a90513a4d40266168813ac7d",
+    "prototype\\snapshot.c": "87d1d04282a7966b370c138ca64c75b0608dceeba647a45bc573083b7d9095ee",
+    "prototype\\snapshot.lua": "6a6b30c1a2f51919631b8eb44e332329320f5e732ee2164947a5fb792d678561",
+    "prototype\\snapshot.py": "11b120465f19c2f5cf9be925078a42e7abf670920f0631b2979ac4f0bf3bece5",
+    "webview\\index.html": "f6160f9604ae857564b7742ce4ac9de2f5173659d2470e123a2ff956cd5ed9c7",
+    "webview\\viewer.css": "5b98cffb390429867e9eb7b50143b80645d8feaaa23a39a1d3e79bf4ad1e04f3",
+    "webview\\viewer.js": "384be1ecf1a826431f6a3acd71568ec74529ebe206127e0f971a4d7fcfe77a15",
+    "extension\\extension.js": "4c37069de6350efba3e26b2f02636e770dd39b8109695f93c1946acf4256a426",
+    "native\\.clang-format": "83568aa072c1291e07558c73ddf9d992e5ab9b884f6bfdbd3ccd3a63879a6bab",
+    "native\\common.hpp": "2ddbcf522ea30b77e95c433ceaa52a7bb77fb1fd9912cf10d86111d8356da291",
+    "native\\compiler.hpp": "4cffa4a285540d54787e7046f3ac9b389bd32b8921043a59e2f9c4c37e6c20e9",
+    "native\\demo.js": "ab1d2117b731f6db4d97814844e8b0c987b12e08c07701f767f06c2591cd1651",
+    "native\\internal_snapshot.cpp": "7b57d261c7be10a644d609d635fc7b64c9d6c47d3e2fba42da7b64a24bd9eea2",
+    "native\\launch.js": "28ff7a34648c03eb55b982d70a7d0e1c29e5681bcdb4b13a6814143056243807",
+    "native\\main.cpp": "b6999df674a4e672b26781b1b03aa73d23a4548feac287b83b2c977a5ec42cc1",
+    "native\\renderer.hpp": "7ec36ce51a9f415a1a178bbdaec0f850af32d5ce664d169dbed5b1b371d7d24f",
+    "native\\source.hpp": "6a2d550597df9da2a40f7dc6b234ab8276c6106cfa9c83146a390e87ae7b9133",
+    "native\\THIRD_PARTY.md": "4e4c95cc3b29cfd0d6b2f509f437b184375ce57c01baea991671c87c3f169059"
+  },
+  "native": {
+    "node": "v22.17.1",
+    "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "mupdf": "1.26.12",
+    "runtimeSha256": {
+      "bako_internal.so": "fa2cca22051bbcdd471c4162347cebb73464025f33f04efe14f405a8dbfb52e7",
+      "bako_snapshot.so": "3bd040234515e26bdd16c3ebb0ab49a621e5e79e59984a31bc8234efe32fbfc3",
+      "bakoma-backend": "01c5ff307d2ebc78e6bb9518405ad48422dac5701df1fd253f744860085f813c",
+      "libmupdf.so.26.12": "c3315dbed24b6f3025b43daafc40e98d4c24188cef31ced93566cf034fe6f933",
+      "MuPDF-COPYING": "57c8ff33c9c0cfc3ef00e650a1cc910d7ee479a8bc509f6c9209a7c2a11399d6"
+    }
+  },
+  "pythonPackages": {
+    "PyMuPDF": "1.26.7",
+    "Pillow": "12.0.0",
+    "zlib-ng": "1.0.0"
+  }
+}

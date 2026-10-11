@@ -1,0 +1,345 @@
+{
+  "url": "http://127.0.0.1:8792",
+  "checks": [
+    {
+      "name": "reverse repeated math x",
+      "region": {
+        "id": 1000116,
+        "rect": [
+          148.7760009765625,
+          121.11988830566406,
+          154.46466064453125,
+          131.08253479003906
+        ],
+        "file": "pages/page-001.tex",
+        "start": 165,
+        "end": 166,
+        "line": 4,
+        "column": 21,
+        "endLine": 4,
+        "endColumn": 22,
+        "text": "x",
+        "kind": "token"
+      },
+      "selection": {
+        "start": 165,
+        "end": 166,
+        "text": "x"
+      }
+    },
+    {
+      "name": "reverse repeated math x",
+      "region": {
+        "id": 1000118,
+        "rect": [
+          166.57899475097656,
+          121.11988830566406,
+          172.2676544189453,
+          131.08253479003906
+        ],
+        "file": "pages/page-001.tex",
+        "start": 167,
+        "end": 168,
+        "line": 4,
+        "column": 23,
+        "endLine": 4,
+        "endColumn": 24,
+        "text": "x",
+        "kind": "token"
+      },
+      "selection": {
+        "start": 167,
+        "end": 168,
+        "text": "x"
+      }
+    },
+    {
+      "name": "fraction numerator",
+      "selection": {
+        "start": 146,
+        "end": 147,
+        "text": "a"
+      }
+    },
+    {
+      "name": "subscript",
+      "selection": {
+        "start": 180,
+        "end": 181,
+        "text": "1"
+      }
+    },
+    {
+      "name": "Chinese character",
+      "selection": {
+        "start": 124,
+        "end": 125,
+        "text": "中"
+      }
+    },
+    {
+      "name": "TikZ math label",
+      "selection": {
+        "start": 464,
+        "end": 465,
+        "text": "x"
+      }
+    },
+    {
+      "name": "rotated TikZ math label",
+      "selection": {
+        "start": 507,
+        "end": 508,
+        "text": "y"
+      }
+    },
+    {
+      "name": "generated macro fallback",
+      "selection": {
+        "start": 310,
+        "end": 316,
+        "text": "\\fixed"
+      }
+    },
+    {
+      "name": "forward math navigation",
+      "ok": true
+    },
+    {
+      "name": "rendered text selection",
+      "ok": true
+    },
+    {
+      "name": "typing preserves scroll and restores preview caret",
+      "ok": true
+    },
+    {
+      "name": "invalid input retains visibly stale image",
+      "ok": true
+    },
+    {
+      "name": "automatic full-document convergence",
+      "ok": true
+    },
+    {
+      "name": "recovers after invalid input",
+      "ok": true
+    },
+    {
+      "name": "idle convergence restores far-page checkpoints",
+      "ok": true
+    }
+  ],
+  "initialPaint": {
+    "type": "paint",
+    "revision": 43,
+    "clientId": 1,
+    "page": 1,
+    "pipelineMs": 12.548104,
+    "visibleMs": 109,
+    "stale": false,
+    "at": 1791696586362,
+    "renderMs": 12.482404,
+    "renderStagesMs": {
+      "displayList": 0.8837,
+      "origins": 1.088101,
+      "png": 8.895603,
+      "raster": 0.846,
+      "text": 0.6804
+    },
+    "requestToPayloadMs": 12.799304008483887,
+    "outputMode": "retained-page"
+  },
+  "initialRegions": 1503,
+  "isolatedEdit": {
+    "type": "paint",
+    "revision": 44,
+    "clientId": 2,
+    "page": 1,
+    "pipelineMs": 401.376725,
+    "visibleMs": 480,
+    "stale": false,
+    "at": 1791696587551,
+    "prepareMs": 1.766801,
+    "compileMs": 382.931519,
+    "compilerStagesMs": {
+      "fork": 0,
+      "replaceChild": 0,
+      "restore": 341.597,
+      "shipoutAndPublish": 6.402,
+      "typeset": 34.275
+    },
+    "snapshot": {
+      "captureUs": 29889,
+      "filesUs": 246,
+      "mode": "internal",
+      "pid": 153847,
+      "restoredDirtyPages": 6866,
+      "restoredUndoBytes": 278905232,
+      "scanUs": 17371,
+      "shadowBytes": 543457280,
+      "snapshots": 1,
+      "undoBytes": 0,
+      "undoUs": 310949
+    },
+    "mapMs": 0.9236,
+    "renderMs": 12.847504,
+    "renderStagesMs": {
+      "displayList": 0.4971,
+      "origins": 1.1343,
+      "png": 9.397503,
+      "raster": 1.0729,
+      "text": 0.646301
+    },
+    "requestToPayloadMs": 410.68132799863815,
+    "resumedFrom": 1,
+    "outputMode": "page-stream",
+    "pageBytes": 12225
+  },
+  "continuousTyping": {
+    "lastFrameDuringTyping": {
+      "type": "paint",
+      "revision": 63,
+      "clientId": 21,
+      "page": 1,
+      "pipelineMs": 68.837621,
+      "visibleMs": null,
+      "stale": true,
+      "at": 1791696589983,
+      "prepareMs": 0.3572,
+      "compileMs": 53.306417,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 12.717,
+        "shipoutAndPublish": 6.002,
+        "typeset": 33.99
+      },
+      "snapshot": {
+        "captureUs": 29889,
+        "filesUs": 270,
+        "mode": "internal",
+        "pid": 153847,
+        "restoredDirtyPages": 3563,
+        "restoredUndoBytes": 0,
+        "scanUs": 8831,
+        "shadowBytes": 543457280,
+        "snapshots": 1,
+        "undoBytes": 0,
+        "undoUs": 1432
+      },
+      "mapMs": 0.6634,
+      "renderMs": 13.054004,
+      "renderStagesMs": {
+        "displayList": 0.5761,
+        "origins": 1.022,
+        "png": 10.051203,
+        "raster": 0.722701,
+        "text": 0.6076
+      },
+      "requestToPayloadMs": 76.63262398540974,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageBytes": 12210
+    },
+    "lastFrame": {
+      "type": "paint",
+      "revision": 64,
+      "clientId": 22,
+      "page": 1,
+      "pipelineMs": 66.055421,
+      "visibleMs": 137,
+      "stale": false,
+      "at": 1791696590100,
+      "prepareMs": 0.4355,
+      "compileMs": 51.432316,
+      "compilerStagesMs": {
+        "fork": 0,
+        "replaceChild": 0,
+        "restore": 11.715,
+        "shipoutAndPublish": 5.542,
+        "typeset": 33.471
+      },
+      "snapshot": {
+        "captureUs": 29889,
+        "filesUs": 192,
+        "mode": "internal",
+        "pid": 153847,
+        "restoredDirtyPages": 3563,
+        "restoredUndoBytes": 0,
+        "scanUs": 8183,
+        "shadowBytes": 543457280,
+        "snapshots": 1,
+        "undoBytes": 0,
+        "undoUs": 761
+      },
+      "mapMs": 0.672,
+      "renderMs": 12.041404,
+      "renderStagesMs": {
+        "displayList": 0.5155,
+        "origins": 0.9591,
+        "png": 9.202402,
+        "raster": 0.6551,
+        "text": 0.640501
+      },
+      "requestToPayloadMs": 73.57722298800945,
+      "resumedFrom": 1,
+      "outputMode": "page-stream",
+      "pageBytes": 12210
+    },
+    "eventBefore": 89,
+    "eventAfter": 129,
+    "frames": 20,
+    "durationMs": 2536,
+    "updatesPerSecond": 7.886435331230284,
+    "longestVisibleFreezeMs": 169,
+    "scrollStable": true,
+    "caretRestored": true
+  },
+  "afterConvergenceEdit": {
+    "type": "paint",
+    "revision": 68,
+    "clientId": 26,
+    "page": 100,
+    "pipelineMs": 76.679741,
+    "visibleMs": 169,
+    "stale": false,
+    "at": 1791696607380,
+    "prepareMs": 0.512325,
+    "compileMs": 62.259195,
+    "compilerStagesMs": {
+      "fork": 0,
+      "replaceChild": 0,
+      "restore": 19.666,
+      "shipoutAndPublish": 8.286,
+      "typeset": 33.871
+    },
+    "snapshot": {
+      "captureUs": 31232,
+      "filesUs": 854,
+      "mode": "internal",
+      "pid": 154225,
+      "restoredDirtyPages": 7605,
+      "restoredUndoBytes": 0,
+      "scanUs": 14446,
+      "shadowBytes": 543461376,
+      "snapshots": 100,
+      "undoBytes": 618320448,
+      "undoUs": 1758
+    },
+    "mapMs": 0.616734,
+    "renderMs": 11.846362,
+    "renderStagesMs": {
+      "displayList": 0.508201,
+      "origins": 1.432476,
+      "png": 8.407119,
+      "raster": 0.896775,
+      "text": 0.529467
+    },
+    "requestToPayloadMs": 83.59351800382137,
+    "resumedFrom": 100,
+    "outputMode": "page-stream",
+    "pageBytes": 12134
+  },
+  "browserErrors": []
+}

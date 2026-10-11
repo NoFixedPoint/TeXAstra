@@ -64,7 +64,7 @@ function M.setup(snapshot)
     local request_us,fork_us,restore_us,fork_start_us=snapshot.timings()
     local stages=string.format('"compilerStagesMs":{"replaceChild":%.3f,"fork":%.3f,"restore":%.3f,"typeset":%.3f,"shipoutAndPublish":%.3f},',
       (fork_start_us-request_us)/1000,(fork_us-fork_start_us)/1000,(restore_us-fork_us)/1000,(shipout_us-restore_us)/1000,(snapshot.now()-shipout_us)/1000)
-    snapshot.publish('{'..stages..'"pages":['..table.concat(records,',')..']}',table.concat(blocks))
+    snapshot.publish('{'..stages..'"snapshot":'..snapshot.stats()..',"pages":['..table.concat(records,',')..']}',table.concat(blocks))
   end
 end
 return M

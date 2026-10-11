@@ -1,0 +1,14 @@
+{
+  "version": "0.0.6",
+  "artifact": "artifacts/bakoma-revived-prototype-0.0.6.vsix",
+  "sha256": "31e39797ed8e7e16a77502ccb3ed1ff14ba39c1900e48d86431a01368261c249",
+  "bytes": 22356337,
+  "files": 75,
+  "defaultCheckpoint": "fork",
+  "experimentalCheckpoint": "internal",
+  "verifiedRuntime": [
+    "bako_internal.so",
+    "bakoma-backend",
+    "bako_snapshot.so"
+  ]
+}

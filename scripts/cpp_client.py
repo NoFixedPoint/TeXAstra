@@ -6,7 +6,8 @@ def linux(path):return '/mnt/'+path.drive[0].lower()+path.as_posix()[2:] if os.n
 class Client:
     def __init__(self,project=ROOT/'corpus'):
         prefix=['wsl','-d','Ubuntu-22.04','--exec'] if os.name=='nt' else []
-        self.process=subprocess.Popen(prefix+[linux(ROOT/'native/runtime/bakoma-backend'),'--project',linux(project),'--assets',linux(ROOT/'prototype'),'--sync'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8')
+        mode=['env','BAKO_CHECKPOINT_MODE='+os.environ['BAKO_CHECKPOINT_MODE']] if 'BAKO_CHECKPOINT_MODE' in os.environ else []
+        self.process=subprocess.Popen(prefix+mode+[linux(ROOT/'native/runtime/bakoma-backend'),'--project',linux(project),'--assets',linux(ROOT/'prototype'),'--sync'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8')
         self.responses=queue.Queue()
         def read():
             for line in self.process.stdout:self.responses.put(json.loads(line))

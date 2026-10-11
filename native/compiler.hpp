@@ -13,6 +13,7 @@ class Engine {
     std::string seed_pdf;
     unsigned revision = 0;
     bool converged = false;
+    bool internal = false;
     int log_fd = -1;
     static void kill_pid(pid_t pid) {
         if (pid > 0) {
@@ -36,9 +37,16 @@ class Engine {
         }
     }
     void cleanup_after(int index) {
-        kill_pid(active());
+        if (!internal) {
+            kill_pid(active());
+        }
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
+            if (internal && starts(name, "cp-") && entry.path().extension() == ".snap") {
+                if (std::stoi(name.substr(3)) > index) {
+                    fs::remove(entry.path());
+                }
+            }
             if (starts(name, "cp-") && entry.path().extension() == ".pid") {
                 int n = std::stoi(name.substr(3));
                 if (n > index) {
@@ -74,10 +82,23 @@ class Engine {
         std::vector<std::string> env;
         for (char **e = environ; *e; ++e) {
             if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=")) {
+                if (internal && !prime &&
+                    (starts(*e, "LD_PRELOAD=") || starts(*e, "LD_BIND_NOW=") ||
+                     starts(*e, "MALLOC_MMAP_MAX_=") || starts(*e, "MALLOC_TRIM_THRESHOLD_=") ||
+                     starts(*e, "MALLOC_TOP_PAD_="))) {
+                    continue;
+                }
                 env.emplace_back(*e);
             }
         }
         env.emplace_back("BAKO_PAGE_STREAM=1");
+        if (internal && !prime) {
+            env.emplace_back("LD_PRELOAD=" + (runtime / "bako_internal.so").string());
+            env.emplace_back("MALLOC_MMAP_MAX_=0");
+            env.emplace_back("MALLOC_TRIM_THRESHOLD_=-1");
+            env.emplace_back("MALLOC_TOP_PAD_=536870912");
+            env.emplace_back("LD_BIND_NOW=1");
+        }
         if (prime) {
             env.emplace_back("BAKO_SNAPSHOT_DISABLE=1");
         }
@@ -195,6 +216,7 @@ class Engine {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         return {{"streamed", true},
+                {"snapshot", metadata.value("snapshot", Json::object())},
                 {"compilerStagesMs", metadata.value("compilerStagesMs", Json::object())}};
     }
     Json wait_done(bool stream) {
@@ -202,6 +224,9 @@ class Engine {
         while (elapsed(start) < 90000) {
             if (cancel && cancel->load()) {
                 throw std::runtime_error("Build cancelled");
+            }
+            if (fs::exists(directory / "failed.json")) {
+                throw std::runtime_error("TeX compilation failed: " + error_log());
             }
             if (stream) {
                 auto value = receive();
@@ -220,6 +245,9 @@ class Engine {
                 }
             }
             if (elapsed(start) > 250) {
+                if (process > 0 && state(process) == 'Z') {
+                    throw std::runtime_error("Compiler process exited: " + error_log());
+                }
                 auto pid = active();
                 if (pid > 0 && state(pid) == 'Z') {
                     throw std::runtime_error("TeX compilation failed: " + error_log());
@@ -299,7 +327,7 @@ class Engine {
         int index = 0;
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
-            if (starts(name, "cp-") && entry.path().extension() == ".pid") {
+            if (starts(name, "cp-") && entry.path().extension() == (internal ? ".snap" : ".pid")) {
                 int n = std::stoi(name.substr(3));
                 if (n <= input) {
                     index = std::max(index, n);
@@ -314,10 +342,12 @@ class Engine {
             it = buffers.erase(it);
         }
         fs::remove(directory / "completed.json");
+        fs::remove(directory / "failed.json");
         Fd fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0));
         sockaddr_un address = {};
         address.sun_family = AF_UNIX;
-        auto path = (directory / page_name(index, "cp-", ".sock")).string();
+        auto path =
+            (directory / (internal ? "internal.sock" : page_name(index, "cp-", ".sock"))).string();
         if (path.size() >= sizeof(address.sun_path)) {
             throw std::runtime_error("Checkpoint socket path too long");
         }
@@ -325,7 +355,11 @@ class Engine {
         if (connect(fd.value, reinterpret_cast<sockaddr *>(&address), sizeof(address))) {
             throw std::runtime_error("Cannot connect to checkpoint");
         }
-        send_all(fd.value, std::to_string(page + 1));
+        send_all(fd.value,
+                 (internal ? std::to_string(index) + " " : "") + std::to_string(page + 1));
+        if (internal) {
+            kill(active(), SIGCONT);
+        }
         auto resumed = Clock::now();
         auto result = wait_done(true);
         result["compileMs"] = elapsed(resumed);
@@ -405,6 +439,8 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
            const std::map<std::string, std::string> &overlays = {},
            std::atomic<bool> *stop = nullptr)
         : project(fs::canonical(p)), assets(std::move(a)), runtime(std::move(r)), cancel(stop) {
+        internal = getenv("BAKO_CHECKPOINT_MODE") &&
+                   std::string(getenv("BAKO_CHECKPOINT_MODE")) == "internal";
         char name[] = "/tmp/bakoma-cpp-XXXXXX";
         auto path = mkdtemp(name);
         if (!path) {

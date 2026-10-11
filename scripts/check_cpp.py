@@ -1,11 +1,15 @@
 """Full differential checks of the persistent C++ backend through its protocol."""
-import base64,json,sys,time
+import argparse,base64,json,sys,time,os
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import fitz
 from cpp_client import Client,ROOT
 from prototype.converge import full_build
 from prototype.engine import render_page
+parser=argparse.ArgumentParser()
+parser.add_argument('--checkpoint',choices=['internal','fork'],default='internal')
+args=parser.parse_args()
+os.environ['BAKO_CHECKPOINT_MODE']=args.checkpoint
 
 report={'checks':[],'samples':[]};overlays={}
 def check(name,ok,**details):
@@ -64,5 +68,6 @@ try:
         expected=render_page(directory,1,metadata=metadata)
         check('adjacent reflow pixels',adjacent['ok'] and pixels(adjacent)==pixels(expected))
 finally:
-    (ROOT/'results/cpp-correctness.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+    output='internal-correctness.json' if os.environ.get('BAKO_CHECKPOINT_MODE','internal')=='internal' else 'cpp-correctness.json'
+    (ROOT/'results'/output).write_text(json.dumps(report,indent=2),encoding='utf-8')
 print('Passed',len(report['checks']),'C++ differential checks')

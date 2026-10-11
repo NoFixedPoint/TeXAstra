@@ -228,6 +228,14 @@ int main(int argc, char **argv) {
             return 0;
         }
         fs::path executable = fs::canonical("/proc/self/exe"), runtime = executable.parent_path();
+        std::string checkpoint =
+            args.count("--checkpoint")
+                ? args.at("--checkpoint")
+                : (getenv("BAKO_CHECKPOINT_MODE") ? getenv("BAKO_CHECKPOINT_MODE") : "fork");
+        if (checkpoint != "internal" && checkpoint != "fork") {
+            throw std::runtime_error("Use --checkpoint internal or fork");
+        }
+        setenv("BAKO_CHECKPOINT_MODE", checkpoint.c_str(), 1);
         fs::path project = fs::canonical(args.at("--project")),
                  assets = fs::canonical(args.at("--assets"));
         if (args.count("--sync")) {

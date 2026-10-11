@@ -23,7 +23,7 @@ function activate(context){
     html=html.replace('<script src=',`<script nonce="${nonce}" src=`);
     html=html.replace('<meta charset="utf-8">',`<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src ${web.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">`);
     try{
-      if(config.get('engine')==='cpp')backend=require('../native/launch').launch(context.extensionPath,project);
+      if(config.get('engine')==='cpp')backend=require('../native/launch').launch(context.extensionPath,project,config.get('checkpointMode','fork'));
       else backend=spawn(config.get('python'),['-u','-m','prototype.bridge','--project',project,'--engine',config.get('engine')],{cwd:context.extensionPath,windowsHide:true});
     }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));panel.dispose();panel=null;return;}
     backend.stderr.on('data',chunk=>output.append(chunk.toString()));

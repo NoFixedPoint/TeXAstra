@@ -1,0 +1,964 @@
+{
+  "checks": [
+    {
+      "name": "initial two-page state fixture",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "one retained compiler, no checkpoint children",
+      "ok": true
+    },
+    {
+      "name": "internal snapshot records",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 1",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 1",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 1",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 1",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 1",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 2",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 2",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 2",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 2",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 2",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 3",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 3",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 3",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 3",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 3",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 4",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 4",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 4",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 4",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 4",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 5",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 5",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 5",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 5",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 5",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 6",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 6",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 6",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 6",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 6",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 7",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 7",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 7",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 7",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 7",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 8",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 8",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 8",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 8",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 8",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 9",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 9",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 9",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 9",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 9",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 10",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 10",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 10",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 10",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 10",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 11",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 11",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 11",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 11",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 11",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 12",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 12",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 12",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 12",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 12",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 13",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 13",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 13",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 13",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 13",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 14",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 14",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 14",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 14",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 14",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 15",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 15",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 15",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 15",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 15",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 16",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 16",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 16",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 16",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 16",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 17",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 17",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 17",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 17",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 17",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 18",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 18",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 18",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 18",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 18",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 19",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 19",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 19",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 19",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 19",
+      "ok": true
+    },
+    {
+      "name": "repeated rollback 20",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "same compiler PID 20",
+      "ok": true
+    },
+    {
+      "name": "TeX output file rewind 20",
+      "ok": true
+    },
+    {
+      "name": "Lua append descriptor semantics 20",
+      "ok": true
+    },
+    {
+      "name": "bounded undo storage 20",
+      "ok": true
+    },
+    {
+      "name": "Lua GC and TeX register rollback pixels",
+      "ok": true
+    },
+    {
+      "name": "TeX error promptly reported",
+      "ok": true,
+      "seconds": 0.2008920000080252
+    },
+    {
+      "name": "TeX error restored same compiler",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "TeX error restored state and pixels",
+      "ok": true
+    },
+    {
+      "name": "Lua os.exit promptly reported",
+      "ok": true,
+      "seconds": 0.17701120000856463
+    },
+    {
+      "name": "Lua os.exit restored same compiler",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "Lua os.exit restored state and pixels",
+      "ok": true
+    },
+    {
+      "name": "earlier edit invalidates and rebuilds later snapshot",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "earlier edit rewinds output before replay",
+      "ok": true
+    },
+    {
+      "name": "earlier edit matches complete-build state and pixels",
+      "ok": true
+    },
+    {
+      "name": "rebuilt checkpoint retains upstream TeX and Lua state 1",
+      "ok": true
+    },
+    {
+      "name": "rebuilt checkpoint retains upstream TeX and Lua state 2",
+      "ok": true
+    },
+    {
+      "name": "rebuilt checkpoint retains upstream TeX and Lua state 3",
+      "ok": true
+    },
+    {
+      "name": "rebuilt checkpoint retains upstream TeX and Lua state 4",
+      "ok": true
+    },
+    {
+      "name": "still no checkpoint children",
+      "ok": true
+    }
+  ],
+  "samples": [
+    {
+      "pipelineMs": 164.811159,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 34.242,
+        "shipoutAndPublish": 5.067,
+        "typeset": 108.952
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 182,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 25135,
+        "restoredUndoBytes": 0,
+        "scanUs": 31595,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 846
+      }
+    },
+    {
+      "pipelineMs": 165.734334,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 28.692,
+        "shipoutAndPublish": 6.45,
+        "typeset": 114.004
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 224,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 25335,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1187
+      }
+    },
+    {
+      "pipelineMs": 175.907683,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 30.86,
+        "shipoutAndPublish": 5.615,
+        "typeset": 123.398
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 265,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 27612,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1028
+      }
+    },
+    {
+      "pipelineMs": 222.172214,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 30.68,
+        "shipoutAndPublish": 6.578,
+        "typeset": 168.748
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 264,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 27604,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1156
+      }
+    },
+    {
+      "pipelineMs": 154.976792,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 29.455,
+        "shipoutAndPublish": 5.267,
+        "typeset": 103.832
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 193,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 26471,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 756
+      }
+    },
+    {
+      "pipelineMs": 174.6854,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 30.179,
+        "shipoutAndPublish": 7.126,
+        "typeset": 120.621
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 168,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 27084,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1158
+      }
+    },
+    {
+      "pipelineMs": 164.896132,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 30.292,
+        "shipoutAndPublish": 7.291,
+        "typeset": 111.498
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 193,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 27152,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 956
+      }
+    },
+    {
+      "pipelineMs": 174.261893,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 37.768,
+        "shipoutAndPublish": 5.139,
+        "typeset": 115.938
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 230,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 33355,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 867
+      }
+    },
+    {
+      "pipelineMs": 201.108215,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 58.936,
+        "shipoutAndPublish": 6.131,
+        "typeset": 118.382
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 272,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 53236,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 2082
+      }
+    },
+    {
+      "pipelineMs": 152.986428,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 28.482,
+        "shipoutAndPublish": 5.412,
+        "typeset": 103.191
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 219,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 25168,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 952
+      }
+    },
+    {
+      "pipelineMs": 148.559845,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 27.562,
+        "shipoutAndPublish": 6.477,
+        "typeset": 97.84
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 196,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 24757,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 832
+      }
+    },
+    {
+      "pipelineMs": 160.543244,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 29.267,
+        "shipoutAndPublish": 6.213,
+        "typeset": 107.903
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 255,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21030,
+        "restoredUndoBytes": 0,
+        "scanUs": 25075,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1075
+      }
+    },
+    {
+      "pipelineMs": 180.359559,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 32.182,
+        "shipoutAndPublish": 7.263,
+        "typeset": 112.024
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 202,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 28691,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 938
+      }
+    },
+    {
+      "pipelineMs": 204.583665,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 43.45,
+        "shipoutAndPublish": 6.69,
+        "typeset": 137.421
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 311,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 38691,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1354
+      }
+    },
+    {
+      "pipelineMs": 180.489634,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 33.595,
+        "shipoutAndPublish": 6.854,
+        "typeset": 121.661
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 220,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 29922,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 905
+      }
+    },
+    {
+      "pipelineMs": 193.505559,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 36.992,
+        "shipoutAndPublish": 7.314,
+        "typeset": 129.759
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 269,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 33362,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1076
+      }
+    },
+    {
+      "pipelineMs": 198.750597,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 36.216,
+        "shipoutAndPublish": 7.818,
+        "typeset": 137.014
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 217,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 32541,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1578
+      }
+    },
+    {
+      "pipelineMs": 262.597076,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 82.417,
+        "shipoutAndPublish": 8.285,
+        "typeset": 152.586
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 246,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 77727,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1386
+      }
+    },
+    {
+      "pipelineMs": 202.288282,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 35.06,
+        "shipoutAndPublish": 7.87,
+        "typeset": 140.676
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 252,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 31104,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1654
+      }
+    },
+    {
+      "pipelineMs": 211.411181,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 42.253,
+        "shipoutAndPublish": 8.132,
+        "typeset": 141.656
+      },
+      "snapshot": {
+        "captureUs": 77556,
+        "filesUs": 320,
+        "mode": "internal",
+        "pid": 155152,
+        "restoredDirtyPages": 21029,
+        "restoredUndoBytes": 0,
+        "scanUs": 37154,
+        "shadowBytes": 543461376,
+        "snapshots": 2,
+        "undoBytes": 36685008,
+        "undoUs": 1960
+      }
+    }
+  ]
+}

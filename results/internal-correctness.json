@@ -1,0 +1,1547 @@
+{
+  "checks": [
+    {
+      "name": "page 1 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 1 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 1 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 2 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 2 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 2 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 3 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 3 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 3 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 4 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 4 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 4 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 5 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 5 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 5 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 6 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 6 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 6 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 7 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 7 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 7 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 8 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 8 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 8 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 9 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 9 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 9 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 10 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 10 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 10 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 11 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 11 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 11 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 12 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 12 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 12 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 13 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 13 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 13 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 14 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 14 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 14 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 15 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 15 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 15 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 16 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 16 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 16 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 17 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 17 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 17 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 18 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 18 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 18 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 19 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 19 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 19 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 20 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 20 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 20 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 21 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 21 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 21 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 22 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 22 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 22 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 23 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 23 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 23 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 24 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 24 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 24 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 25 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 25 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 25 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 26 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 26 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 26 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 27 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 27 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 27 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 28 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 28 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 28 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 29 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 29 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 29 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 30 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 30 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 30 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 31 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 31 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 31 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 32 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 32 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 32 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 33 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 33 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 33 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 34 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 34 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 34 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 35 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 35 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 35 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 36 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 36 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 36 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 37 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 37 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 37 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 38 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 38 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 38 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 39 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 39 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 39 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 40 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 40 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 40 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 41 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 41 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 41 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 42 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 42 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 42 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 43 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 43 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 43 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 44 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 44 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 44 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 45 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 45 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 45 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 46 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 46 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 46 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 47 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 47 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 47 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 48 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 48 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 48 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 49 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 49 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 49 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 50 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 50 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 50 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 51 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 51 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 51 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 52 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 52 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 52 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 53 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 53 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 53 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 54 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 54 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 54 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 55 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 55 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 55 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 56 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 56 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 56 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 57 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 57 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 57 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 58 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 58 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 58 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 59 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 59 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 59 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 60 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 60 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 60 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 61 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 61 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 61 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 62 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 62 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 62 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 63 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 63 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 63 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 64 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 64 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 64 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 65 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 65 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 65 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 66 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 66 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 66 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 67 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 67 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 67 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 68 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 68 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 68 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 69 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 69 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 69 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 70 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 70 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 70 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 71 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 71 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 71 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 72 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 72 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 72 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 73 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 73 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 73 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 74 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 74 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 74 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 75 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 75 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 75 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 76 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 76 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 76 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 77 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 77 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 77 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 78 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 78 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 78 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 79 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 79 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 79 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 80 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 80 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 80 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 81 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 81 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 81 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 82 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 82 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 82 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 83 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 83 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 83 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 84 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 84 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 84 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 85 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 85 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 85 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 86 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 86 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 86 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 87 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 87 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 87 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 88 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 88 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 88 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 89 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 89 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 89 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 90 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 90 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 90 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 91 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 91 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 91 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 92 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 92 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 92 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 93 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 93 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 93 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 94 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 94 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 94 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 95 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 95 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 95 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 96 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 96 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 96 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 97 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 97 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 97 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 98 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 98 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 98 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 99 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 99 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 99 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "page 100 exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "page 100 exact source regions",
+      "ok": true
+    },
+    {
+      "name": "page 100 exact selection text/geometry",
+      "ok": true
+    },
+    {
+      "name": "text-last output path",
+      "ok": true
+    },
+    {
+      "name": "text-last seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "text-last no finalization",
+      "ok": true
+    },
+    {
+      "name": "text-last exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "text-last exact source regions",
+      "ok": true
+    },
+    {
+      "name": "text-last exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "math-middle output path",
+      "ok": true
+    },
+    {
+      "name": "math-middle seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "math-middle no finalization",
+      "ok": true
+    },
+    {
+      "name": "math-middle exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "math-middle exact source regions",
+      "ok": true
+    },
+    {
+      "name": "math-middle exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "invalid input rejected",
+      "ok": true
+    },
+    {
+      "name": "error recovery",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ output path",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ no finalization",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ exact source regions",
+      "ok": true
+    },
+    {
+      "name": "rotated-TikZ exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "colored-TikZ output path",
+      "ok": true
+    },
+    {
+      "name": "colored-TikZ seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "colored-TikZ no finalization",
+      "ok": true
+    },
+    {
+      "name": "colored-TikZ exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "colored-TikZ exact source regions",
+      "ok": true
+    },
+    {
+      "name": "colored-TikZ exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "new-Chinese-glyph output path",
+      "ok": true
+    },
+    {
+      "name": "new-Chinese-glyph exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "new-Chinese-glyph exact source regions",
+      "ok": true
+    },
+    {
+      "name": "new-Chinese-glyph exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached output path",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached no finalization",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached exact source regions",
+      "ok": true
+    },
+    {
+      "name": "same-new-glyph-cached exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "reflow-first output path",
+      "ok": true
+    },
+    {
+      "name": "reflow-first seed unchanged",
+      "ok": true
+    },
+    {
+      "name": "reflow-first no finalization",
+      "ok": true
+    },
+    {
+      "name": "reflow-first exact RGB pixels",
+      "ok": true
+    },
+    {
+      "name": "reflow-first exact source regions",
+      "ok": true
+    },
+    {
+      "name": "reflow-first exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "adjacent reflow pixels",
+      "ok": true
+    }
+  ],
+  "samples": [
+    {
+      "case": "text-last",
+      "compileMs": 100.867619,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 37.975,
+        "shipoutAndPublish": 10.585,
+        "typeset": 51.431
+      },
+      "mapMs": 0.642033,
+      "outputMode": "page-stream",
+      "pipelineMs": 117.809636,
+      "prepareMs": 0.569708,
+      "renderMs": 14.152142,
+      "renderStagesMs": {
+        "displayList": 0.389492,
+        "origins": 1.584,
+        "png": 10.701351,
+        "raster": 0.838109,
+        "text": 0.522866
+      },
+      "resumedFrom": 100
+    },
+    {
+      "case": "math-middle",
+      "compileMs": 272.585807,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 214.379,
+        "shipoutAndPublish": 8.899,
+        "typeset": 48.387
+      },
+      "mapMs": 0.5731,
+      "outputMode": "page-stream",
+      "pipelineMs": 297.825008,
+      "prepareMs": 0.9183,
+      "renderMs": 22.121401,
+      "renderStagesMs": {
+        "displayList": 0.9678,
+        "origins": 1.5702,
+        "png": 16.9889,
+        "raster": 1.703501,
+        "text": 0.6037
+      },
+      "resumedFrom": 50
+    },
+    {
+      "case": "rotated-TikZ",
+      "compileMs": 70.664002,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 26.132,
+        "shipoutAndPublish": 6.554,
+        "typeset": 37.209
+      },
+      "mapMs": 1.1321,
+      "outputMode": "page-stream",
+      "pipelineMs": 89.598402,
+      "prepareMs": 0.6736,
+      "renderMs": 15.3216,
+      "renderStagesMs": {
+        "displayList": 0.6083,
+        "origins": 1.4142,
+        "png": 11.6489,
+        "raster": 0.9929,
+        "text": 0.5654
+      },
+      "resumedFrom": 50
+    },
+    {
+      "case": "colored-TikZ",
+      "compileMs": 57.460102,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 14.103,
+        "shipoutAndPublish": 6.417,
+        "typeset": 35.816
+      },
+      "mapMs": 0.5513,
+      "outputMode": "page-stream",
+      "pipelineMs": 74.672202,
+      "prepareMs": 0.4436,
+      "renderMs": 14.3391,
+      "renderStagesMs": {
+        "displayList": 0.4343,
+        "origins": 1.2924,
+        "png": 11.3072,
+        "raster": 0.619,
+        "text": 0.5832
+      },
+      "resumedFrom": 50
+    },
+    {
+      "case": "new-Chinese-glyph",
+      "compileMs": 54.570101,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 13.456,
+        "shipoutAndPublish": 5.334,
+        "typeset": 35.283
+      },
+      "mapMs": 0.544,
+      "outputMode": "resource-seed",
+      "pipelineMs": 135.737103,
+      "prepareMs": 0.379,
+      "renderMs": 18.1046,
+      "renderStagesMs": {
+        "displayList": 3.078,
+        "origins": 1.2769,
+        "png": 10.8921,
+        "raster": 2.1221,
+        "text": 0.5292
+      },
+      "resourceRefresh": "New font or glyph requires a resource refresh",
+      "resumedFrom": 50
+    },
+    {
+      "case": "same-new-glyph-cached",
+      "compileMs": 54.552851,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 17.743,
+        "shipoutAndPublish": 4.817,
+        "typeset": 31.404
+      },
+      "mapMs": 0.611508,
+      "outputMode": "page-stream",
+      "pipelineMs": 69.797019,
+      "prepareMs": 0.361534,
+      "renderMs": 12.958917,
+      "renderStagesMs": {
+        "displayList": 0.370792,
+        "origins": 1.018509,
+        "png": 10.079758,
+        "raster": 0.868817,
+        "text": 0.556416
+      },
+      "resumedFrom": 50
+    },
+    {
+      "case": "reflow-first",
+      "compileMs": 333.89191,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 266.852,
+        "shipoutAndPublish": 3.861,
+        "typeset": 62.336
+      },
+      "mapMs": 1.9356,
+      "outputMode": "page-stream",
+      "pipelineMs": 356.64751,
+      "prepareMs": 1.2666,
+      "renderMs": 16.9143,
+      "renderStagesMs": {
+        "displayList": 0.7783,
+        "origins": 2.0915,
+        "png": 10.9852,
+        "raster": 1.6194,
+        "text": 1.2596
+      },
+      "resumedFrom": 1
+    }
+  ]
+}

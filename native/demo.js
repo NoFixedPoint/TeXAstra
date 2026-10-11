@@ -3,15 +3,16 @@ const fs=require('fs'),path=require('path'),http=require('http'),readline=requir
 const {launch}=require('./launch');
 const {spawn}=require('child_process');
 const root=path.resolve(__dirname,'..');
-let port=8765,project=path.join(root,'corpus'),engine='cpp';
+let port=8765,project=path.join(root,'corpus'),engine='cpp',checkpoint=process.env.BAKO_CHECKPOINT_MODE||'fork';
 for(let i=2;i<process.argv.length;i++){
   if(process.argv[i]==='--port')port=Number(process.argv[++i]);
   else if(process.argv[i]==='--project')project=path.resolve(process.argv[++i]);
   else if(process.argv[i]==='--engine')engine=process.argv[++i];
+  else if(process.argv[i]==='--checkpoint')checkpoint=process.argv[++i];
   else throw new Error('Unknown argument '+process.argv[i]);
 }
 if(!['cpp','stream'].includes(engine))throw new Error('Use cpp or stream for the comparison');
-const backend=engine==='cpp'?launch(root,project):spawn(process.env.BAKOMA_PYTHON||'python',['-u','-m','prototype.bridge','--project',project,'--engine','stream'],{cwd:root,windowsHide:true});
+const backend=engine==='cpp'?launch(root,project,checkpoint):spawn(process.env.BAKOMA_PYTHON||'python',['-u','-m','prototype.bridge','--project',project,'--engine','stream'],{cwd:root,windowsHide:true});
 const messages=[],waiting=new Set(),overlays=new Map();
 let event=0,revision=0,closed=false;
 function output(res,status,data,kind='application/json'){
@@ -66,4 +67,4 @@ const server=http.createServer(async(req,res)=>{
 });
 function close(){if(!closed){backend.stdin.end('{"type":"close"}\n');closed=true;}server.close();}
 process.on('SIGINT',close);process.on('SIGTERM',close);
-server.listen(port,'127.0.0.1',()=>console.log(`Prototype: http://127.0.0.1:${port} (${engine})`));
+server.listen(port,'127.0.0.1',()=>console.log(`Prototype: http://127.0.0.1:${port} (${engine}${engine==='cpp'?'/'+checkpoint:''})`));

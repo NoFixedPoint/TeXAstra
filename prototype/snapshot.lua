@@ -28,8 +28,15 @@ luatexbase.add_to_callback('open_read_file',function(name)
   return {reader=function() return f:read('*l') end,close=function() f:close() end}
 end,'bako.buffered_input')
 luatexbase.add_to_callback(stream and 'wrapup_run' or 'stop_run',function()
+  if stream and finished==0 then
+    local f=assert(io.open('failed.json','w'))
+    f:write('{"failed":true}');f:close()
+    snapshot.park()
+    return
+  end
   if stream then snapshot.export_pdf() end
   local f=assert(io.open('completed.json','w'))
   f:write('{"limit":'..limit..',"compiledPages":'..(bako_stream_page_count or 0)..',"complete":true,"lastCheckpointUs":'..resumed..',"lastShipoutUs":'..shipped..',"pdfFinishedUs":'..finished..',"stoppedUs":'..snapshot.now()..'}')
   f:close()
+  snapshot.park()
 end,'bako.completed')

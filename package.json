@@ -2,7 +2,7 @@
   "name":"bakoma-revived-prototype",
   "displayName":"BaKoMa Revived — Feasibility Prototype",
   "description":"Experimental live LaTeX preview with token provenance and a LuaTeX checkpoint backend.",
-  "version":"0.0.5",
+  "version":"0.0.6",
   "publisher":"local-prototype",
   "engines":{"vscode":"^1.85.0"},
   "categories":["Other"],
@@ -13,6 +13,7 @@
     "commands":[{"command":"bakoma.openPreview","title":"BaKoMa: Open Experimental Preview"}],
     "configuration":{"title":"BaKoMa prototype","properties":{
       "bakoma.python":{"type":"string","default":"python","description":"Python interpreter with PyMuPDF installed."},
+      "bakoma.checkpointMode":{"type":"string","enum":["fork","internal"],"default":"fork","description":"C++ compiler checkpoints: fork (default) or experimental internal undo snapshots. Internal snapshots improve warm edits but currently have slower large backward rollbacks."},
       "bakoma.engine":{"type":"string","enum":["cpp","stream","snapshot","native"],"default":"cpp","description":"cpp runs source mapping, compiler control and rendering in C++ (Ubuntu-22.04 WSL on Windows); stream is the Python comparison; snapshot finalizes PDF per edit; native uses full LuaLaTeX builds."},
       "bakoma.mainFile":{"type":"string","default":"corpus/main.tex","description":"Root document relative to the workspace folder."}
     }}
@@ -22,6 +23,7 @@
     "build:cpp":"python scripts/build_cpp.py",
     "check:cpp":"python scripts/check_cpp.py",
     "check:cpp-mapper":"python scripts/check_cpp_mapper.py",
+    "check:internal":"python scripts/check_internal_snapshot.py",
     "demo:native":"python -m prototype.demo --engine native",
     "corpus":"python scripts/generate_corpus.py",
     "check:mapping":"python scripts/check_mapping.py 100",

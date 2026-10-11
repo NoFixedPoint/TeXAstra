@@ -85,7 +85,7 @@ async function receive(message){
   await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
   const visibleMs=message.sentAt&&!stale?Date.now()-message.sentAt:null;
   $('timing').textContent=`${Math.round(message.pipelineMs)} ms pipeline${visibleMs?` · ${Math.round(visibleMs)} ms to display`:''}`;
-  const stages=Object.fromEntries(['engineMs','prepareMs','compileMs','compilerStagesMs','mapMs','roundtripMs','renderMs','renderStagesMs','requestToPayloadMs','resumedFrom','outputMode','pageBytes','resourceRefresh'].filter(k=>message[k]!==undefined).map(k=>[k,message[k]]));
+  const stages=Object.fromEntries(['engineMs','prepareMs','compileMs','compilerStagesMs','snapshot','mapMs','roundtripMs','renderMs','renderStagesMs','requestToPayloadMs','resumedFrom','outputMode','pageBytes','resourceRefresh'].filter(k=>message[k]!==undefined).map(k=>[k,message[k]]));
   const measured={type:'paint',revision:message.revisionId,clientId:message.clientId,page:page+1,pipelineMs:message.pipelineMs,visibleMs,stale,at:Date.now(),...stages};
   window.lastPaint=measured;
   window.paintHistory.push(measured);

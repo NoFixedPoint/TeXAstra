@@ -92,3 +92,13 @@ measured 189/279 ms median/p95 for Python and 154.5/206 ms for C++. The underlyi
 LuaHBTeX compiler and POSIX checkpoint model remain; engine-managed state deltas,
 arbitrary rollback, and native Windows checkpointing are not implemented by this
 migration. See [the C++ report](docs/cpp-backend-20261011.md).
+
+The user then requested BaKoMa-style internal compiler snapshots. Prototype
+0.0.6 adds a C++ in-process undo journal, retained execution, and file/output
+restoration in one LuaHBTeX PID, without checkpoint or edit forks. It passes
+343 differential assertions, 118 internal-state checks, and 15 browser checks.
+The paired median improved from 155 to 137.5 ms, but p95 regressed from 185 to
+325 ms on large backward rollbacks. Internal snapshots therefore remain opt-in;
+fork remains the default. This is Linux compiler-memory rollback, not a portable
+TeX-object serializer or native Windows checkpoint implementation. See the
+[internal snapshot report](docs/internal-snapshots-20261011.md).
