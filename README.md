@@ -8,6 +8,8 @@ Version 0.0.8 made **Open Experimental Preview** start a live LuaHBTeX session f
 
 Internal differential snapshots have been removed to reduce maintenance. Fork checkpoints are the only supported implementation. The [historical snapshot report](docs/internal-snapshots-20261011.md) records why that experiment was retired.
 
+The shipping architecture is to bundle our preview engine and supporting runtime while using the user's existing LaTeX distribution for packages, classes, fonts, and supporting tools. Package installation and updates remain with that distribution's manager. Today the supported integration is TeX Live inside Ubuntu-22.04 WSL on Windows; distribution discovery, compatibility diagnostics, and environment reporting remain future work. See [the package ownership decision](docs/adr/0007-external-latex-distribution.md).
+
 The [BaKoMa binary investigation](docs/bakoma-binary-pipeline.md) motivated separating live page output from document finalization. Ordinary edits now send page drawing commands to the retained renderer without finalizing, transporting, or reopening a PDF. Complete PDFs still seed fonts/resources at startup, during convergence, and when an edit needs new resources. This is a page-buffer implementation using LuaTeX's PDF drawing language, not a DVI engine.
 
 ## Run the interactive demo

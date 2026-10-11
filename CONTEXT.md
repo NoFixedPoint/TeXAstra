@@ -4,6 +4,14 @@ The language of a LaTeX editing experience with a live rendered document and two
 
 ## Language
 
+**Preview engine**:
+The typesetting engine that provides live compilation and source origins for the preview.
+_Avoid_: LaTeX distribution
+
+**Package distribution**:
+The user's existing LaTeX installation that supplies packages, document classes, fonts, and supporting tools, with its own package maintenance workflow.
+_Avoid_: Preview engine
+
 **Live preview**:
 A rendered view of the LaTeX document that updates as its source is edited.
 _Avoid_: Export, static preview
