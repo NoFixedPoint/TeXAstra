@@ -18,7 +18,8 @@ GPL/AGPL obligations. The Windows compiler module uses the GPLv3 option of its
 GPL-2.0-or-later grant when combined with AGPLv3 components. Existing copyright and
 license notices must be preserved.
 
-Each binary release is accompanied by `texastra-sources.zip`, containing the
+Each binary release is accompanied by `texastra-sources.zip` (or the macOS
+architecture-specific `texastra-darwin-*-sources.zip`), containing the
 matching project source, build recipes, pinned upstream archives, and dependency
 notices. The VSIX packages also contain the project runtime source and dependency
 source materials. Source availability is not conditional on payment or registration.

@@ -26,6 +26,8 @@ def main():
     work.mkdir(parents=True, exist_ok=True)
     archive = work/'install-tl-unx.tar.gz'
     urllib.request.urlretrieve(REPOSITORY+'/'+archive.name, archive)
+    if hashlib.sha256(archive.read_bytes()).hexdigest() != 'bc9285e51bf3eec8e928fce78dd146e9418d20b2c3048148cfb28d95f76c4cb5':
+        raise RuntimeError('Historical installer checksum mismatch')
     with tarfile.open(archive) as source:
         source.extractall(work, filter='data')
     installer = next(work.glob('install-tl-*/install-tl'))

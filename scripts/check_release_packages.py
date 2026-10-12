@@ -79,6 +79,9 @@ def main():
                     previous = rendered
                     checks.append({'edit': label, 'matchesFullBuild': True})
                     print(platform, label, 'matches complete compile', flush=True)
+            if platform.startswith('darwin-'):
+                from check_posix_runtime import check
+                checks.append(check(runtime, extension/'texastra'))
             report['packages'].append({'platform': platform,
                 'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest(), 'checks': checks})
     (ROOT/('results/release-packages-'+args.target+'.json' if args.target else 'results/release-packages.json')).write_text(json.dumps(report, indent=2)+'\n')

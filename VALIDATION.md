@@ -35,3 +35,12 @@ source; the Mac build now restores the same SHA-256-pinned upstream dependency
 trees used by Windows. Local Linux controller rebuild and source-edit checks pass.
 The one-page demo is unsuitable for `check_live_mode.py`'s later-page checkpoint
 assertion; its render comparisons passed before that fixture-specific assertion.
+
+`python scripts/check_posix_runtime.py` passes on Linux/WSL: long nested paths,
+included-file edits resumed from a later-page checkpoint, exact fresh-render
+equality, syntax-error recovery, and source preservation. The Mac package check
+now runs the same fixture against the extracted release runtime.
+
+The second Mac build exposed a classic-Mac conditional in the historical bundled
+zlib under the modern Apple SDK. macOS now uses Apple's system zlib; other
+engine dependency libraries remain statically linked from pinned sources.

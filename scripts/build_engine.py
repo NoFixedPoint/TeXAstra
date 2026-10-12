@@ -75,7 +75,7 @@ def main():
  apply(source)
  if args.source_only:return
  flags=[f for f in FLAGS if not (mac and f.startswith('--with-system-'))]
- if mac:flags+=['--without-x']
+ if mac:flags+=['--without-x','--with-system-zlib']
  signature='\n'.join(flags)+('\n'+os.environ.get('MACOSX_DEPLOYMENT_TARGET','') if mac else '')
  if not (build/'.bako-configure').exists() or (build/'.bako-configure').read_text()!=signature:
   with (build/'configure.log').open('w') as log:subprocess.run([str(source/'configure'),*flags],cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
@@ -88,7 +88,7 @@ def main():
              'GRAPHITE2_INCLUDES=-I'+str(source/'libs/graphite2/graphite2-src/include'),
              'GRAPHITE2_LIBS='+str(build/'libs/graphite2/libgraphite2.a'),
              'ZZIPLIB_LIBS='+str(build/'libs/zziplib/libzzip.a')] if mac else []
-  subdirs=['CONF_SUBDIRS=zlib libpng zziplib graphite2 harfbuzz lua53 pplib','MAKE_SUBDIRS=zlib libpng zziplib graphite2 harfbuzz lua53 pplib'] if mac else []
+  subdirs=['CONF_SUBDIRS=libpng zziplib graphite2 harfbuzz lua53 pplib','MAKE_SUBDIRS=libpng zziplib graphite2 harfbuzz lua53 pplib'] if mac else []
   for command in [['make','all-local'],['make','-C','texk/kpathsea',jobs],['make','-C','texk/ptexenc',jobs],
                   ['make','-C','libs',jobs,*subdirs],['make','-C','texk','all-local'],
                   ['make','-C','texk/web2c',jobs,'luahbtex',*([] if mac else ['ZZIPLIB_LIBS=-lzzip'])]]:

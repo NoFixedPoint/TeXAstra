@@ -14,7 +14,9 @@
 
 Type in the source editor to update the document. Click rendered text to jump to its source; move the source cursor to find its output. Compile errors appear behind the collapsible header.
 
-Optional: set `texastra.mainFile` for a project with multiple roots, or run **TeXAstra: Show LaTeX Environment** to check your installation. TeX Live supplies packages and fonts; MiKTeX, macOS, and ARM are not supported.
+Optional: set `texastra.mainFile` for a project with multiple roots, or run **TeXAstra: Show LaTeX Environment** to check your installation. TeX Live supplies packages and fonts; MiKTeX is not supported. The native macOS
+preview targets macOS 15+ on Apple Silicon and Intel; see the
+[macOS build and installation guide](docs/macos.md) for its TeX Live 2021 requirement.
 
 [Build & test](BUILDING.md) · [Release notes](https://github.com/NoFixedPoint/TeXAstra/releases) · [Security](SECURITY.md)
 

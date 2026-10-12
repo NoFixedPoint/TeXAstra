@@ -11,7 +11,7 @@ import tarfile
 import zipfile
 
 from build_cpp import fetch
-from build_engine import ARCHIVES, URL
+from build_engine import ARCHIVES
 
 ROOT = Path(__file__).resolve().parents[1]
 WHEELS = {

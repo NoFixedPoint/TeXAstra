@@ -28,3 +28,15 @@ The build script pins dependency versions and download digests. C++ source, buil
 instructions, and reference tests accompany TeXAstra.
 `scripts/release_sources.py` adds the full MuPDF and PyMuPDF source archives and
 license texts to each release. See [the distribution licensing](../LICENSING.md).
+
+## macOS
+
+The macOS build uses the same engine and MuPDF versions. It restores the omitted
+TeX dependency sources from upstream revision r59705 (SHA-256 pinned) and links
+the engine libraries statically. The complete upstream archive and Ubuntu
+security patches accompany the package. The macOS MuPDF library comes from the
+architecture-matched PyMuPDF 1.26.7 wheel, with its source archive and wheel digest.
+libdeflate 1.19 (MIT) is linked statically; its source and license are included.
+Apple system libraries are linked from the OS and are not redistributed.
+The build audits dependencies to reject references to a developer's Homebrew tree.
+See `scripts/build_macos.py`, `scripts/build_engine.py`, and `docs/macos.md`.

@@ -70,7 +70,8 @@ node native/demo.js --project examples/demo --main main.tex
 
 The package check extracts the actual VSIX into a directory containing spaces,
 compiles the example, edits text/TikZ/figure/table content, and compares each
-rendered result against a fresh compilation. `check_macos.py` checks architecture,
+rendered result against a fresh compilation. It also exercises long nested paths,
+included-file checkpoints, syntax-error recovery and source preservation. `check_macos.py` checks architecture,
 ad-hoc signatures and dynamic dependencies; non-system libraries must be bundled.
 The source ZIP includes these validation reports.
 
