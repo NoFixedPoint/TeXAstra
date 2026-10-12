@@ -19,7 +19,7 @@ Install VS Code and TeX Live in your chosen environment. Download **one** packag
 
 Run **Extensions: Install from VSIX…**, reload VS Code, open a trusted LaTeX project, and run **TeXAstra: Open Document**.
 
-For macOS, use the bundled setup script to prepare the compatible isolated TeX Live 2021 tree and matching LuaHBTeX 1.14 formats; existing system MacTeX can remain separate. See the [macOS setup guide](https://github.com/NoFixedPoint/TeXAstra/blob/master/docs/macos.md) and [installation instructions](https://github.com/NoFixedPoint/TeXAstra#install).
+For macOS, use the bundled setup script to prepare the compatible isolated TeX Live 2021 tree and matching LuaHBTeX 1.14 formats; existing system MacTeX can remain separate. See the [macOS installation instructions](https://github.com/NoFixedPoint/TeXAstra#macos). Source builds for all platforms are covered in the [build guide](https://github.com/NoFixedPoint/TeXAstra/blob/master/BUILDING.md).
 
 Packages and external helper files come from the selected TeX installation. Automatic dependency installation and MiKTeX integration are not supported.
 

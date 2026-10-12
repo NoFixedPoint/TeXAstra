@@ -16,7 +16,7 @@
 
 Install one VSIX for your platform from [0.1.2](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.2).
 TeX Live supplies packages, fonts, bibliography tools, and indexes. Windows
-native runs without WSL or Python. See the [macOS setup guide](docs/macos.md)
+native runs without WSL or Python. See the [macOS installation instructions](README.md#macos)
 for its compatible TeX tree. Automatic dependency installation and MiKTeX
 integration are not supported.
 

@@ -11,7 +11,8 @@ from VSIX…** and reload VS Code.
 This release needs a compatible TeX Live package tree and LuaHBTeX 1.14 formats.
 The included setup script creates an isolated TeX Live 2021 installation with
 the matching bundled engine and formats. It leaves your system MacTeX separate.
-See the [macOS installation and build guide](https://github.com/NoFixedPoint/TeXAstra/blob/master/docs/macos.md).
+See the [macOS installation instructions](https://github.com/NoFixedPoint/TeXAstra#macos)
+or the [build guide](https://github.com/NoFixedPoint/TeXAstra/blob/master/BUILDING.md).
 
 The release is gated on native CI for both architectures: dependency/signature
 audits, extension unit checks, and extracted-VSIX rendering comparisons for text,
