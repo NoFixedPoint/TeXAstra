@@ -1,0 +1,15 @@
+{
+  "version": "0.1.5",
+  "checks": {
+    "extensionUnitSuite": "passed",
+    "pythonCompileall": "passed"
+  },
+  "pending": [
+    "extracted Windows and WSL packages",
+    "native macOS builds and extracted packages"
+  ],
+  "limitations": [
+    "No interactive VS Code GUI validation",
+    "No broad OS compatibility matrix"
+  ]
+}

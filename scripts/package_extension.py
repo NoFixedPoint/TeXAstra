@@ -36,7 +36,7 @@ for name in set(files):
     target=stage/name;target.parent.mkdir(parents=True,exist_ok=True)
     shutil.copyfile(source,target)
 destination=stage/'native/runtime/windows-x64' if windows else stage/'native/runtime'
-shutil.copytree(args.runtime.resolve(),destination,ignore=shutil.ignore_patterns('*.new','bako_internal.so','windows-x64','bakoma-*'))
+shutil.copytree(args.runtime.resolve(),destination,ignore=shutil.ignore_patterns('*.new','bako_internal.so','windows-x64','bakoma-*','pdftex-baseline'))
 manifest=json.loads((stage/'package.json').read_text(encoding='utf-8'))
 runtime_setting=manifest['contributes']['configuration']['properties']['texastra.runtimeMode']
 runtime_setting['default']='native' if windows or mac else 'wsl'
@@ -73,6 +73,7 @@ with zipfile.ZipFile(artifact) as archive:
 report={'version':version,'sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),
     'target':args.target,'defaultRuntimeMode':runtime_setting['default'],'verifiedPackagedFiles':checked,'runtimeSha256':hashlib.sha256((args.runtime/backend).read_bytes()).hexdigest()}
 if not windows:report['compilerSha256']=hashlib.sha256((args.runtime/'texastra-luahbtex').read_bytes()).hexdigest()
+if not windows and (args.runtime/'texastra-pdftex').exists():report['pdftexSha256']=hashlib.sha256((args.runtime/'texastra-pdftex').read_bytes()).hexdigest()
 if windows:report['nativeBinaries']=binaries
 if windows:
     standalone=ROOT/'artifacts'/f'texastra-backend-{version}-win32-x64.exe'

@@ -49,8 +49,12 @@ function resolveMain({configured='',workspace,active,read=file=>fs.readFileSync(
   return null;
 }
 
-function resolveCompiler(configured,source){
+function resolveCompiler(configured,source,log=''){
   if(configured&&configured!=='auto')return configured;
-  return source.match(/^\s*%\s*!\s*TEX\s+(?:program|TS-program)\s*=\s*(lualatex|xelatex|pdflatex)\s*$/im)?.[1].toLowerCase()||'lualatex';
+  const magic=source.match(/^\s*%\s*!\s*TEX\s+(?:program|TS-program)\s*=\s*(lualatex|xelatex|pdflatex)\s*$/im)?.[1].toLowerCase();
+  if(magic)return magic;
+  // The saved log is a compiler hint, never an input to the preview build.
+  const engine=/^This is (pdfTeX|XeTeX|Lua(?:HB)?TeX)\b/.exec(log)?.[1];
+  return ({pdfTeX:'pdflatex',XeTeX:'xelatex',LuaTeX:'lualatex',LuaHBTeX:'lualatex'})[engine]||'lualatex';
 }
 module.exports={contains,resolveMain,resolveCompiler,resolveProject,supportedFile};

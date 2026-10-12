@@ -11,7 +11,7 @@ Run the commands below from its root:
 ```sh
 git clone https://github.com/NoFixedPoint/TeXAstra.git
 cd TeXAstra
-git checkout v0.1.2
+git checkout v0.1.5
 ```
 
 Source downloads are pinned with SHA-256 checks and cached under `.work/` and
@@ -78,7 +78,7 @@ source files. `artifacts/darwin-arm64/` (or `artifacts/darwin-x64/`) contains th
 VSIX, matching source ZIP with validation reports, and SHA-256 checksums.
 
 The GitHub Actions matrix builds natively on `macos-15` (ARM64) and
-`macos-15-intel` (Intel), with publication gated on both jobs passing. The minimum
+`macos-15-intel` (Intel), with release preparation gated on both jobs passing. The minimum
 deployment target is macOS 15.0 for every bundled Mach-O component. Lowering it
 requires rebuilding and validating the entire runtime. Binaries are ad-hoc
 signed, not Developer ID signed or notarized. macOS uses file-backed checkpoints;
@@ -99,6 +99,10 @@ sudo apt-get install build-essential pkg-config texlive-full \
 python3 scripts/build_engine.py
 python3 scripts/build_cpp.py
 ```
+
+For matching PDFLaTeX character provenance on Linux/WSL, also run
+`python3 scripts/build_pdftex.py`. See [the pdfTeX engine notes](docs/pdftex-engine.md)
+for compatibility and validation. This is a separate build from LuaHBTeX.
 
 From Windows, run the same two scripts with `python` in PowerShell; they invoke
 the toolchain in the `Ubuntu-22.04` WSL distribution. TeX Live must be installed

@@ -123,5 +123,30 @@ public:
         return offset>=0&&offset<int(f->second->text.size())?&f->second->span(offset):nullptr;
     }
     Json warnings() const{return Json::array();}
+    Span range(int id, int length) const {
+        auto original=find(id);
+        if(!original)return {};
+        Span result=*original;
+        if(length<=0)return result;
+        auto &f=*slots.at(id/1000000);int offset=id%1000000;
+        if(size_t(offset)+size_t(length)>f.text.size())return {};
+        auto end=f.position(offset+length);
+        result.end=result.start+length;result.endLine=end.first;result.endColumn=end.second;
+        result.text=utf8(f.text.substr(offset,length));
+        result.kind=length>1&&f.text[offset]=='\\'?"macro-origin":"token";
+        return result;
+    }
+    Json source_line(const std::string &name, int line) const {
+        auto found=files.find(name);
+        if(found==files.end() || !found->second.mapped) return nullptr;
+        const auto &f=found->second;
+        if(line<0 || line>=int(f.lines.size())) return nullptr;
+        int start=f.lines[line], end=line+1<int(f.lines.size()) ? f.lines[line+1]-1 : int(f.text.size());
+        while(start<end && space(f.text[start])) ++start;
+        while(end>start && space(f.text[end-1])) --end;
+        const auto first=f.position(start), last=f.position(end);
+        return {{"file",name},{"start",start},{"end",end},{"line",first.first},{"column",first.second},
+            {"endLine",last.first},{"endColumn",last.second},{"text",utf8(f.text.substr(start,end-start))},{"kind","source-line"}};
+    }
 };
 } // namespace bako

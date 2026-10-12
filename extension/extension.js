@@ -6,7 +6,7 @@ const crypto=require('crypto');
 const {performance}=require('perf_hooks');
 const {configuration}=require('./configuration');
 const {createFrameDelivery}=require('./frame-delivery');
-const {contains,resolveMain,resolveProject,supportedFile}=require('./project');
+const {contains,resolveMain,resolveProject,supportedFile,resolveCompiler}=require('./project');
 function activate(context){
   let panel,backend,project,currentFrame,suppressSelection,visiblePage=0,serial=0,latestMutation=0,output=vscode.window.createOutputChannel('TeXAstra');
   let watcher,reloadTimer,frameDelivery,ready=false,selectedOptions={};
@@ -80,12 +80,17 @@ function activate(context){
     config=configuration(vscode.workspace,vscode.Uri.file(root));
     try{project=resolveProject({main:root,workspace:rootFolder?.uri.fsPath,configured:config.get('projectRoot','')});}
     catch(error){vscode.window.showErrorMessage(String(error));return;}
-    // Opening the document always starts our compiler, independently of the
-    // editor's previous XeLaTeX/pdfLaTeX settings or existing output files.
+    let compilerLog='';
+    try{
+      const descriptor=fs.openSync(root.replace(/\.tex$/i,'.log'),'r');
+      try{const buffer=Buffer.alloc(1024);compilerLog=buffer.toString('utf8',0,fs.readSync(descriptor,buffer,0,buffer.length,0));}
+      finally{fs.closeSync(descriptor);}
+    }catch{/* A document without a previous build uses its setting or magic comment. */}
+    const compiler=resolveCompiler(config.get('compiler','auto'),read(root),compilerLog);
     selectedOptions=distributionOptions(config);
-    const options={main:path.relative(project,root).replaceAll('\\','/'),mode:'auto',compiler:'lualatex',...selectedOptions};
+    const options={main:path.relative(project,root).replaceAll('\\','/'),mode:compiler==='lualatex'?'auto':'full',compiler,...selectedOptions};
     visiblePage=0;serial=0;latestMutation=0;currentFrame=null;
-    output.appendLine(`Opening ${root} with project root ${project}; resources and generated files stay in the user cache.`);
+    output.appendLine(`Opening ${root} with ${compiler} and project root ${project}; resources and generated files stay in the user cache.`);
     panel=vscode.window.createWebviewPanel('texastraDocument','TeXAstra',vscode.ViewColumn.Beside,{enableScripts:true,retainContextWhenHidden:true,localResourceRoots:[vscode.Uri.joinPath(context.extensionUri,'webview')]});
     const web=panel.webview;
     const delivery=createFrameDelivery(message=>web.postMessage(message),line=>output.appendLine(line));
@@ -154,7 +159,7 @@ function activate(context){
       }else if(message.type==='frame-ack'){delivery.acknowledge(message);}
       else if(message.type==='paint'){output.appendLine(JSON.stringify(message));}
       else if(message.type==='viewport'){visiblePage=message.page;}
-      else if(message.type==='page'||message.type==='sync-forward'){send(message);}
+      else if(message.type==='page'||message.type==='sync-forward'||message.type==='sync-backward'){send(message);}
     });
     panel.onDidDispose(()=>{stop();panel=null;});web.html=html;
   }),vscode.workspace.onDidChangeTextDocument(event=>{

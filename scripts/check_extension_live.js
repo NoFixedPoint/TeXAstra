@@ -2,7 +2,11 @@
 const assert=require('assert'),fs=require('fs'),path=require('path'),Module=require('module');
 const {EventEmitter}=require('events'),{PassThrough}=require('stream');
 const root=path.resolve(__dirname,'..'),project=path.join(root,'.work/extension-project'),main='paper/paper.tex';
+const pdfMode=process.argv.includes('--pdflatex');
 fs.mkdirSync(path.join(project,'paper'),{recursive:true});
+const log=path.join(project,'paper/paper.log');
+if(pdfMode)fs.writeFileSync(log,'This is pdfTeX, Version 3.141592653 (TeX Live)\n');
+else if(fs.existsSync(log))fs.unlinkSync(log);
 fs.writeFileSync(path.join(project,main),'\\documentclass{article}\n\\begin{document}Example.\\end{document}\n');
 const document={uri:{scheme:'file',fsPath:path.join(project,main)},isDirty:true,getText:()=>fs.readFileSync(path.join(project,main),'utf8')+'% unsaved\n'};
 const sibling={uri:{scheme:'file',fsPath:path.join(project,'shared/body.tex')},isDirty:true,getText:()=> 'Unsaved sibling.'};
@@ -34,7 +38,7 @@ Module._load=function(request,parent,...rest){
 (async()=>{
   require('../extension/extension').activate({subscriptions:[],extensionPath:root,extensionUri:{fsPath:root}});
   await command();await receiver({type:'ready'});
-  assert.deepStrictEqual(launchArgs.slice(1),[project,'auto',{main,mode:'auto',compiler:'lualatex',runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
+  assert.deepStrictEqual(launchArgs.slice(1),[project,'auto',{main,mode:pdfMode?'full':'auto',compiler:pdfMode?'pdflatex':'lualatex',runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
   await environmentCommand();assert.deepStrictEqual(environmentArgs,[root,{runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
   assert.equal(environmentDocument.language,'json');assert.equal(JSON.parse(environmentDocument.content).binDirectory,'/selected/bin');
   child.stdout.write(JSON.stringify({type:'environment',report:{ok:true,binDirectory:'/selected/bin'}})+'\n');
@@ -85,6 +89,10 @@ Module._load=function(request,parent,...rest){
   assert.equal(lookup.type,'sync-forward');assert.equal(lookup.file,'shared/body.tex');assert.equal(lookup.requestId,'sync-late');
   child.stdout.write(JSON.stringify({type:'sync',generation:1,requestId:'sync-late',location:{page:99}})+'\n');
   await new Promise(r=>setImmediate(r));assert.equal(webMessages.at(-1).location.page,99);
+  const backward={type:'sync-backward',page:1,x:40,y:100,generation:1,requestId:'reverse'};
+  await receiver(backward);
+  const reverseSent=JSON.parse(input.trim().split('\n').at(-1));
+  for(const [key,value] of Object.entries(backward))assert.equal(reverseSent[key],value);
   for(const suffix of ['bib','ist','bbx','cbx','lbx']){
     const file=`references.${suffix}`,source=`unsaved ${suffix}`;
     change({document:{uri:{scheme:'file',fsPath:path.join(project,file)},getText:()=>source},contentChanges:[{text:source}]});
@@ -106,5 +114,6 @@ Module._load=function(request,parent,...rest){
   diskChange(document.uri);disposed();await new Promise(r=>setTimeout(r,250));
   assert(watchDisposed);assert.equal(JSON.parse(input.trim().split('\n').at(-1)).type,'close');
   Module._load=original;
-  const result={checks:37,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
+  if(pdfMode)fs.unlinkSync(log);
+  const result={checks:38,ok:true};fs.writeFileSync(path.join(root,`results/extension-${pdfMode?'pdflatex':'live'}.json`),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(e=>{Module._load=original;console.error(e);process.exitCode=1;});

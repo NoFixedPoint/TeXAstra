@@ -429,7 +429,8 @@ class Renderer {
                 std::map<std::string,int> issues;
                 for (const auto &draw : mapping.draws) {
                     if (fz_is_empty_rect(fz_intersect_rect(draw.rect,bounds))) continue;
-                    const auto *span=draw.issue ? nullptr : sources.find(draw.source);
+                    auto ranged=sources.range(draw.source,draw.length);
+                    const auto *span=draw.issue || !ranged.id ? nullptr : &ranged;
                     if (span) {
                         auto row=span->row(rectangle(draw.rect));
                         if (draw.rule) {

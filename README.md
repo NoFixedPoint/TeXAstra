@@ -11,13 +11,13 @@
 ### Windows and WSL
 
 1. Install [VS Code](https://code.visualstudio.com/) and [TeX Live](https://www.tug.org/texlive/). For WSL, install TeX Live **inside Ubuntu 22.04** (`sudo apt install texlive-full`).
-2. Download **[Windows x64](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.2/texastra-windows-x64.vsix)** (no WSL needed) or **[WSL](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.2/texastra-wsl.vsix)**. In VS Code, run **Extensions: Install from VSIX…** and choose the file. Install one variant.
+2. Download **[Windows x64](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-windows-x64.vsix)** (no WSL needed) or **[WSL](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-wsl.vsix)**. In VS Code, run **Extensions: Install from VSIX…** and choose the file. Install one variant.
 3. Reload VS Code, open your trusted LaTeX project, and run **TeXAstra: Open Document**.
 
 ### macOS
 
 1. On **macOS 15+**, install [VS Code](https://code.visualstudio.com/) and Python **3.11.8+** (needed only for the one-time TeX setup).
-2. Download **[Apple Silicon](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.2/texastra-macos-arm64.vsix)** or **[Intel](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.2/texastra-macos-x64.vsix)**. In VS Code, run **Extensions: Install from VSIX…** and choose the file. Install one variant.
+2. Download **[Apple Silicon](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-macos-arm64.vsix)** or **[Intel](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-macos-x64.vsix)**. In VS Code, run **Extensions: Install from VSIX…** and choose the file. Install one variant.
 3. In Terminal, run the setup below, replacing `<extension-folder>` with the installed TeXAstra folder under `~/.vscode/extensions/`. In VS Code Settings, set `texastra.texBinDirectory` to the **absolute path printed by the script**.
 
    ```sh
@@ -32,6 +32,16 @@ The setup installs an isolated **TeX Live 2021** tree compatible with the bundle
 Type in the source editor to update the document. Click rendered text to jump to its source; move the source cursor to find its output. Compile errors appear behind the collapsible header.
 
 Optional: set `texastra.mainFile` for a project with multiple roots, or run **TeXAstra: Show LaTeX Environment** to check your installation. TeX Live supplies packages and fonts; MiKTeX is not supported.
+
+`texastra.compiler` defaults to `auto`: it follows the root file's
+`% !TEX program = pdflatex` comment, then its saved `.log` compiler header,
+and otherwise uses LuaLaTeX. You can explicitly select `pdflatex`, `xelatex`,
+or `lualatex`; reopen the document after changing this setting. Linux/WSL uses the provenance-enabled pdfTeX when the selected installation
+matches its 1.40.22 version, providing character navigation and retained compiler
+updates. Other PDFLaTeX versions/platforms and XeLaTeX use full compilation with
+SyncTeX source-line navigation. LuaLaTeX provides incremental updates and
+token-level navigation. Rendering
+depends on the selected TeX distribution's packages and fonts.
 
 [Build & test](BUILDING.md) · [Release notes](https://github.com/NoFixedPoint/TeXAstra/releases) · [Security](SECURITY.md)
 

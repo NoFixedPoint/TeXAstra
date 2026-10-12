@@ -53,6 +53,11 @@ inline void write(const fs::path &p, const std::string &data) {
         throw std::runtime_error("Cannot write " + p.string());
     }
 }
+inline bool getline_crlf(std::istream &input, std::string &line) {
+    if(!std::getline(input,line)) return false;
+    if(!line.empty() && line.back()=='\r') line.pop_back();
+    return true;
+}
 inline fs::path tool_path(const fs::path &bin, const std::string &name) {
 #ifdef _WIN32
     return bin / (name + ".exe");

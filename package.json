@@ -2,7 +2,7 @@
   "name": "texastra",
   "displayName": "TeXAstra",
   "description": "Interactive LaTeX editing with live typesetting and precise source navigation.",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "publisher": "texastra",
   "engines": {
     "vscode": "^1.85.0"
@@ -34,6 +34,12 @@
     "configuration": {
       "title": "TeXAstra",
       "properties": {
+        "texastra.compiler": {
+          "type": "string",
+          "enum": ["auto", "lualatex", "pdflatex", "xelatex"],
+          "default": "auto",
+          "description": "Auto follows the main file's TeX program comment, then its previous build log, otherwise LuaLaTeX. Matching pdfTeX 1.40.22 on Linux/WSL supports character navigation and retained updates. Other PDFLaTeX versions/platforms and XeLaTeX use full compilation with SyncTeX. LuaLaTeX supports incremental updates and token navigation. Reopen after changing."
+        },
         "texastra.mainFile": {
           "type": "string",
           "default": "",
@@ -87,6 +93,8 @@
     "check:browser": "python scripts/check_browser.py",
     "build:engine": "python scripts/build_engine.py",
     "check:origins": "python scripts/check_token_origins.py",
+    "check:beamer": "python scripts/check_beamer.py",
+    "check:citations": "python scripts/check_citations.py",
     "check:includes": "python scripts/check_included_edits.py",
     "check:checkpoints": "python scripts/check_engine_checkpoints.py",
     "check:viewer-latency": "python scripts/check_viewer_latency.py",

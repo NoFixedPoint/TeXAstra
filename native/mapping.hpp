@@ -9,9 +9,10 @@ struct SourceDraw {
     int source;
     bool rule;
     const char *issue;
+    int length = 0;
 };
 struct MappingTrace {
-    struct Scope { int source, expected; bool rule, own; size_t start; };
+    struct Scope { int source, expected; bool rule, own; size_t start; int length = 0; };
     std::vector<SourceDraw> draws;
     std::vector<Scope> scopes;
     int external = 0;
@@ -26,7 +27,7 @@ struct MappingTrace {
         if (rule && (external || !scope || !scope->rule)) return;
         int source = !external && scope ? scope->source : 0;
         draws.push_back({box, quad, source, rule, external ? "external-content" :
-                         source > 0 ? nullptr : scope ? "missing-origin" : "untagged-content"});
+                         source > 0 ? nullptr : scope ? "missing-origin" : "untagged-content", scope ? scope->length : 0});
     }
     void close_scope() {
         if (scopes.empty()) return;
@@ -60,6 +61,7 @@ inline void mapping_bdc(fz_context *ctx, pdf_processor *proc, const char *tag, p
         int count=pdf_to_int(ctx,pdf_dict_gets(ctx,props,"N"));
         bool valid=pdf_to_int(ctx,pdf_dict_gets(ctx,props,"V"))==1 && (rule||glyph) && source>=0 && count>=0;
         scope={valid ? source : 0,valid ? count : 0,valid && rule,true,m.draws.size()};
+        scope.length=valid ? pdf_to_int(ctx,pdf_dict_gets(ctx,props,"Length")) : 0;
     }
     m.scopes.push_back(scope);
     m.bdc(ctx,proc,tag,raw,cooked);

@@ -131,6 +131,13 @@ class Distribution {
         if(executable(bin/"lualatex")) {
             version=run(bin/"lualatex",{"--version"});report["distributionEngine"]=version.substr(0,version.find('\n'));
         }
+        if(compiler=="pdflatex" && executable(runtime/"texastra-pdftex")) {
+            auto bundled=run(runtime/"texastra-pdftex",{"--version"});
+            auto selected=run(bin/"pdflatex",{"--version"});
+            auto identity=[](const std::string &s){return s.substr(0,s.find(" ("));};
+            report["pdftexProvenanceCompatible"]=identity(bundled)==identity(selected);
+            report["pdftexProvenanceEngine"]=bundled.substr(0,bundled.find('\n'));
+        }
         if(compiler=="live") {
             std::string format;
             try {format=kpse({"--progname=lualatex","--engine=luahbtex","--format=fmt","lualatex.fmt"});}catch(const std::exception &){}

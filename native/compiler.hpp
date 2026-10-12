@@ -4,6 +4,8 @@
 #include "build_tools.hpp"
 #include "distribution.hpp"
 #include <functional>
+#include "synctex.hpp"
+#include "pdftex.hpp"
 extern char **environ;
 
 namespace bako {
@@ -17,6 +19,7 @@ class Engine {
     ProjectOptions options;
     bool full = false;
     bool full_ready = false;
+    bool pdftex_provenance = false;
     bool live = false;
     bool live_edit_failed = false;
     std::unique_ptr<BuildCache> cache;
@@ -28,6 +31,7 @@ class Engine {
     Fd listener, directory_fd;
     SocketDirectory socket_directory;
     Fd resource_channel;
+    std::unique_ptr<PdfTeXState> pdftex_state;
 #endif
     pid_t process = -1;
     std::map<int, PageBuffer> buffers;
@@ -109,7 +113,7 @@ class Engine {
         fs::path program;
         if (full) {
             program=options.distribution->tool(options.compiler);
-            arguments={"-no-shell-escape","-interaction=nonstopmode","-halt-on-error","-file-line-error","-recorder",
+            arguments={"-no-shell-escape","-synctex=1","-interaction=nonstopmode","-halt-on-error","-file-line-error","-recorder",
                        "./"+fs::path(options.main).filename().u8string()};
             env[L"openout_any"]=L"p";
         } else {
@@ -137,6 +141,7 @@ class Engine {
         std::vector<std::string> env;
         for (char **e = environ; *e; ++e) {
             if (full && starts(*e, "openout_any=")) continue;
+            if (starts(*e,"TEXASTRA_PDFTEX_")) continue;
             if (!starts(*e, "BAKO_PAGE_STREAM=") && !starts(*e, "BAKO_FONT_STREAM=") && !starts(*e, "BAKO_SOURCE_MARKERS=") && !starts(*e, "BAKO_SNAPSHOT_DISABLE=") && !starts(*e, "BAKO_LIVE_DOCUMENT=")) {
                 env.emplace_back(*e);
             }
@@ -146,6 +151,11 @@ class Engine {
         env.emplace_back("BAKO_SOURCE_MARKERS=1");
         if (live) env.emplace_back("BAKO_LIVE_DOCUMENT=1");
         if (full) env.emplace_back("openout_any=p");
+        if (pdftex_provenance) env.emplace_back("TEXASTRA_PDFTEX_SOURCES="+(directory/"bako-sources.tsv").string());
+        if (pdftex_provenance) {
+            env.emplace_back("TEXASTRA_PDFTEX_OWNER="+std::to_string(getpid()));
+            env.emplace_back("TEXASTRA_PDFTEX_MAIN="+(mirror/options.main).string());
+        }
         if (prime) {
             env.emplace_back("BAKO_SNAPSHOT_DISABLE=1");
         }
@@ -155,11 +165,15 @@ class Engine {
         }
         envp.push_back(nullptr);
         std::vector<std::string> arguments = full
-            ? std::vector<std::string>{options.distribution->tool(options.compiler).string(), "-no-shell-escape", "-interaction=nonstopmode",
+            ? std::vector<std::string>{options.distribution->tool(options.compiler).string(), "-no-shell-escape", "-synctex=1", "-interaction=nonstopmode",
                                        "-halt-on-error", "-file-line-error", "-recorder", "./" + fs::path(options.main).filename().string()}
             : std::vector<std::string>{(runtime / "texastra-luahbtex").string(), "--fmt="+options.distribution->format_path.string(), "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-recorder", "--jobname=main", live ? "bako-driver.tex" : "main.tex"};
         std::vector<char *> argv;
+        if(pdftex_provenance) {
+            arguments[0]=(runtime/"texastra-pdftex").string();
+            arguments.insert(arguments.begin()+1,{"--progname=pdflatex","--fmt=pdflatex"});
+        }
         for (auto &argument : arguments) argv.push_back(argument.data());
         argv.push_back(nullptr);
         pid_t pid = -1;
@@ -605,7 +619,7 @@ class Engine {
                 replace_all(data, "\r\n", "\n");
                 replace_all(data, "\r", "\n");
             }
-            if (!full && extension(file) == ".tex" && (live || name != options.main)) {
+            if (extension(file) == ".tex" && (full || live || name != options.main)) {
                 data = sources.index(data, name);
             }
             if (cache) {
@@ -616,7 +630,7 @@ class Engine {
         for (const auto &[name, data] : overlays) {
             auto target = inside(mirror, name);
             if (full || live) {
-                if (!full && extension(name)==".tex" && (live || name!=options.main)) sources.index(data,name);
+                if (extension(name)==".tex" && (full || live || name!=options.main)) sources.index(data,name);
                 fs::create_directories(target.parent_path());
                 if (cache) cache->put(name, data); else write(target, data);
             }
@@ -675,7 +689,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         auto report=options.distribution->report;
         report["projectDependencies"]=Json::object();
         std::istringstream recorder(read(directory/(stem+".fls")));std::string line;
-        while(std::getline(recorder,line))if(starts(line,"INPUT ")) {
+        while(getline_crlf(recorder,line))if(starts(line,"INPUT ")) {
             auto path=fs::weakly_canonical(directory/line.substr(6));
             auto relative=path.lexically_relative(mirror);
             if(!relative.empty()&&*relative.begin()==".."&&fs::is_regular_file(path))
@@ -684,11 +698,11 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         write(directory/"bako-environment.json",report.dump(2));
     }
     Json full_frame(int page) {
-        auto frame = renderer.render(page, sources, {}, false);
+        auto frame = renderer.render(page, sources, {}, pdftex_provenance);
         frame["ok"] = true;
         frame["provisional"] = !converged;
         frame["outputMode"] = "full-build";
-        frame["sourceSync"] = "unavailable";
+        frame["sourceSync"] = pdftex_provenance ? "token-and-macro-origin" : "synctex";
         frame["compiler"] = options.compiler;
         frame["session"] = directory.string();
         frame["environmentReport"] = (directory/"bako-environment.json").string();
@@ -697,6 +711,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
     }
 
     Json full_start(int page) {
+        if(pdftex_provenance) sources.manifest(directory/"bako-sources.tsv",mirror);
         build_tools->reset();
         auto started = Clock::now();
         auto stem = fs::path(options.main).stem().string();
@@ -705,9 +720,21 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         fs::remove(directory / (stem + ".pdf"));
         converged = false;
         int passes = 0;
+        int restored_pages=0,restored_serial=0;
         for (; passes < 6; ++passes) {
             auto previous_aux = build_tools->state();
+#ifndef _WIN32
+            pid_t resumed=pdftex_state&&passes==0 ? pdftex_state->resume() : -1;
+            if(resumed>0) {
+                restored_pages=pdftex_state->restored_pages;restored_serial=pdftex_state->restored_serial;
+                if(!pdftex_state->wait(resumed,cancel))throw std::runtime_error("pdfTeX retained update failed: "+error_log());
+            } else {
+                if(pdftex_state)pdftex_state->clear();
+#endif
             process = spawn(true);
+#ifndef _WIN32
+            if(pdftex_state)pdftex_state->track(process);
+#endif
             auto run = Clock::now();
             int status = 0;
             for (;;) {
@@ -723,6 +750,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             process = -1;
             if (!WIFEXITED(status) || WEXITSTATUS(status))
                 throw std::runtime_error(options.compiler + " failed: " + error_log());
+#ifndef _WIN32
+            }
+#endif
             bool tools_changed = build_tools->update(stem);
             if (!tools_changed && build_tools->state() == previous_aux) {
                 converged = true;
@@ -731,6 +761,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             }
         }
         renderer.seed(directory / (stem + ".pdf"), {});
+#ifndef _WIN32
+        if(pdftex_state)pdftex_state->remember(stem);
+#endif
         environment_report(stem);
         if (!renderer.pages()) throw std::runtime_error("The document produced no pages");
         full_ready = true;
@@ -738,6 +771,10 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         result["compileMs"] = elapsed(started) - result["renderMs"].get<double>();
         result["pipelineMs"] = elapsed(started);
         result["passes"] = passes;
+        if(pdftex_provenance) {
+            result["retainedState"]={{"restored",restored_serial>0},{"checkpoint",restored_serial},{"prefixPages",restored_pages}};
+            result["compilationMode"]=restored_serial>0?"retained-pdftex":"pdftex";
+        }
         return result;
     }
 
@@ -765,6 +802,10 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             !words("lualatex xelatex pdflatex").count(options.compiler))
             throw std::runtime_error("Invalid render mode or LaTeX compiler");
         full = options.mode == "full";
+#ifndef _WIN32
+        pdftex_provenance = full && options.compiler=="pdflatex" &&
+            options.distribution->report.value("pdftexProvenanceCompatible",false);
+#endif
         live = !full && !fixture;
         if (!full) options.compiler = "lualatex";
         if (live) {
@@ -781,7 +822,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             }
         } else {
 #ifdef _WIN32
-            mirror = windows::temporary_directory(fs::temp_directory_path(), "texastra-cpp-");
+            // TEMP may use an 8.3 username. Recorder and SyncTeX paths resolve
+            // to long names, so containment checks must use the same root.
+            mirror = fs::canonical(windows::temporary_directory(fs::temp_directory_path(), "texastra-cpp-"));
 #else
             char name[] = "/tmp/texastra-cpp-XXXXXX";
             auto path = mkdtemp(name);
@@ -793,6 +836,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         }
         try {
             prepare(overlays);
+#ifndef _WIN32
+            if(pdftex_provenance)pdftex_state=std::make_unique<PdfTeXState>(directory);
+#endif
             build_tools = std::make_unique<BuildTools>(directory, cancel, fs::path(options.main).stem().string(), options.distribution->bin);
             write(directory / "bako-environment.json", options.distribution->report.dump(2));
 #ifndef _WIN32
@@ -824,6 +870,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         }
     }
     ~Engine() {
+#ifndef _WIN32
+        pdftex_state.reset();
+#endif
         try {
             cleanup_after(0);
         } catch (...) {
@@ -833,12 +882,15 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             close(log_fd);
         }
     }
-    Json start(int page = 0) {
+    Json start(int page = 0, bool settle = true) {
         if (full) return full_start(page);
         auto started = Clock::now();
         const bool reuse = cache && cache->reusable(directory / "main.pdf", "lualatex");
         if (cache) cache->invalidate();
-        if (!reuse) {
+        // A live pass exports its PDF resources and retains checkpoints itself.
+        // Only the legacy corpus path needs a separate resource-priming pass.
+        const bool prime = !live && !reuse;
+        if (prime) {
         process = spawn(true);
         auto start = Clock::now();
         int status = 0;
@@ -866,8 +918,8 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         }
         Json result;
         converged = false;
-        build_tools->update("main");
-        int passes = reuse ? 0 : 1;
+        if (prime || reuse) build_tools->update("main");
+        int passes = prime ? 1 : 0;
         for (; passes < 6; ++passes) {
             auto aux = build_tools->state();
             fs::remove(directory / "completed.json");
@@ -883,17 +935,23 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
                 ++passes;
                 break;
             }
+            // Never expose the cold pass's missing citations. Defer only
+            // remaining layout convergence once references are resolved.
+            if (live && !settle && !tools_changed && !build_tools->unresolved("main")) { ++passes; break; }
             if (passes == 5) { ++passes; break; } // Keep the last complete PDF usable.
             cleanup_after(0);
             stop_process();
         }
         if (live) remember_inputs();
-        build_limited = !converged;
+        // Deferred convergence still has usable checkpoints. Only exhausting
+        // the convergence budget requires a full rebuild on the next edit.
+        const bool deferred = live && !settle && passes < 6 && !converged;
+        build_limited = !converged && !deferred;
         auto frame = display(page, result);
         frame["ok"] = true;
         frame["provisional"] = !converged;
         frame["passes"] = passes;
-        build_tools->annotate(frame, "main", converged);
+        build_tools->annotate(frame, "main", converged, deferred);
         frame["pipelineMs"] = elapsed(started);
         frame["session"] = directory.string();
         environment_report("main");
@@ -995,8 +1053,47 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
     bool full_build() const { return full; }
     bool live_document() const { return live; }
     Json layout() { return renderer.layout(); }
+    SyncTeX sync() {
+        return SyncTeX(mirror,directory,directory/(fs::path(options.main).stem().string()+".pdf"),sources,
+            [this](const std::vector<std::string> &args){return build_tools->synctex(args);});
+    }
+    Json backward(int page, double x, double y) {
+        if(!full || !full_ready || page<0 || page>=renderer.pages()) return nullptr;
+        if(pdftex_provenance) {
+            auto frame=full_frame(page);Json best=nullptr;double area=1e100;
+            for(const auto &row:frame.at("regionRows")) {
+                const auto &r=row[1];double a=r[0],b=r[1],c=r[2],d=r[3];
+                if(x<a||x>c||y<b||y>d||(c-a)*(d-b)>=area)continue;
+                best=Json::object();area=(c-a)*(d-b);
+                const auto &fields=frame.at("regionFields");
+                for(size_t i=0;i<fields.size();++i)best[fields[i].get<std::string>()]=row[i];
+                best["page"]=page;
+            }
+            if(!best.is_null())return best;
+        }
+        return sync().backward(page,x,y);
+    }
     Json forward(const std::string &file, int line, int column, int preferred_page = 0) {
-        if (full) return nullptr;
+        if (full) {
+            if(!full_ready)return nullptr;
+            auto fallback=sync().forward(file,line,column,preferred_page);
+            if(!pdftex_provenance)return fallback;
+            std::vector<int> candidates;
+            for(int i=0;i<renderer.pages();++i)candidates.push_back(i);
+            std::stable_sort(candidates.begin(),candidates.end(),[&](int a,int b){return std::abs(a-preferred_page)<std::abs(b-preferred_page);});
+            for(int page:candidates) {
+                auto frame=full_frame(page);
+                for(const auto &row:frame.at("regionRows")) {
+                    if(row[2]!=file||line<row[5].get<int>()||line>row[7].get<int>()||
+                       (line==row[5].get<int>()&&column<row[6].get<int>())||
+                       (line==row[7].get<int>()&&column>=row[8].get<int>()))continue;
+                    Json result=Json::object();const auto &fields=frame.at("regionFields");
+                    for(size_t i=0;i<fields.size();++i)result[fields[i].get<std::string>()]=row[i];
+                    result["page"]=page;return result;
+                }
+            }
+            return fallback;
+        }
         std::vector<int> candidates;
         for (const auto &[page, ids] : page_ids) candidates.push_back(page);
         std::stable_sort(candidates.begin(),candidates.end(),[&](int a,int b){return std::abs(a-preferred_page)<std::abs(b-preferred_page);});
@@ -1030,6 +1127,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         if (!full) throw std::runtime_error("Batch updates require full-build mode");
         for (const auto &[file, source] : overlays) {
             auto target = inside(mirror, file);
+            if(extension(file)==".tex") sources.index(source,file);
             fs::create_directories(target.parent_path());
             write(target, source);
         }

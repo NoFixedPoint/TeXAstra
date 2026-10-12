@@ -6,6 +6,7 @@ not replace third-party licenses or make the complete binary distribution MIT-on
 
 | Material | License |
 | --- | --- |
+| Optional bundled pdfTeX and linked xpdf library | GPL-2.0-or-later; matching TeX Live sources and pdfTeX notices accompany the build |
 | Original extension, webview, tools, and examples | MIT |
 | `native/renderer.hpp`, which adapts PyMuPDF geometry code | AGPL-3.0; Artifex Software and contributors retain their copyrights |
 | Patched LuaHBTeX and upstream material in `engine/patch.py` | GPL-2.0-or-later and upstream component licenses |

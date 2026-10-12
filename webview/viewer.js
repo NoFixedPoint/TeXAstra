@@ -5,6 +5,7 @@ const inputTimes=new Map();
 let frame=null,page=0,file='pages/page-001.tex',stale=true,after=0;
 let latestRequest=0,latestClient=0,clientSerial=0,generation=0,requestSerial=0;
 let pendingSelection=null,pendingHighlight=null,scrollScheduled=false,lastSyncRequest=null,documentCount=0;
+let lastBackwardRequest=null;
 let prefetchAfter=0,prefetchTimer=null;
 let activeFrame=null,queuedFrame=null,lastVisualPaintAt=null;
 window.frameDeliveryStats={received:0,replaced:0,painted:0,errors:0};
@@ -54,6 +55,10 @@ function createPage(index,width,height){
   element.addEventListener('click',e=>{
     if(stale||!item.frame||item.frame.generation!==generation||!pointer||Math.hypot(e.clientX-pointer[0],e.clientY-pointer[1])>4)return;
     const bounds=element.getBoundingClientRect(),x=(e.clientX-bounds.left)/bounds.width*item.width,y=(e.clientY-bounds.top)/bounds.height*item.height;
+    if(item.frame.sourceSync==='synctex'){
+      lastBackwardRequest=`backward-${++requestSerial}`;
+      send({type:'sync-backward',page:index,x,y,generation,requestId:lastBackwardRequest});return;
+    }
     const hits=item.frame.regions.filter(r=>regionHit(r,x,y));
     hits.sort((a,b)=>regionArea(a)-regionArea(b));
     // A precise unmapped hit takes precedence over a neighboring glyph's
@@ -207,6 +212,12 @@ async function receiveMessage(message){
     pendingPages.delete(message.requestId);if(message.type==='query-error')showError(message.error||'Unable to load the requested page.','Rendering error');return;
   }
   if(message.type==='sync'){
+    if(message.direction==='backward'){
+      if(!stale&&message.generation===generation&&message.requestId===lastBackwardRequest){
+        if(message.location){showRegion(message.location,false);loadSource(message.location.file,message.location);}
+        else $('location').textContent='No source line is available at this position.';
+      }return;
+    }
     if(!stale&&message.generation===generation&&message.requestId===lastSyncRequest){
       if(message.location)showRegion(message.location);else $('location').textContent='No rendered token is mapped at this source position.';
     }return;
@@ -238,7 +249,8 @@ async function receiveMessage(message){
   item.layer.append(fragment);item.previous=message.characters;item.displayWidth=width;if(message.page===page||!frame)frame=message;
   stale=message.isStale||message.revisionId<latestRequest||message.clientId<latestClient;document.body.classList.toggle('stale',stale);
   if(!query){
-    $('status').textContent=stale?'Updating · showing an earlier revision':message.provisional?'Document · updating later pages':'Document ready';
+    const compiler=({pdflatex:'PDFLaTeX',xelatex:'XeLaTeX'})[message.compiler];
+    $('status').textContent=stale?'Updating · showing an earlier revision':message.provisional?'Document · updating references and layout':compiler?`Document ready · ${compiler}`:'Document ready';
     if(!stale)showError('');
   }
   const installedAt=performance.now();

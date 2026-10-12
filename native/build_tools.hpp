@@ -156,6 +156,16 @@ class BuildTools {
 #endif
     }
     void reset() { events=Json::array(); diagnostics=nullptr; resolved.clear(); }
+    bool unresolved(const std::string &stem) const {
+        auto log=directory/(stem+".log");
+        auto data=fs::exists(log) ? read(log) : "";
+        return data.find("undefined references")!=std::string::npos ||
+            data.find("undefined citations")!=std::string::npos ||
+            (data.find("Citation")!=std::string::npos && data.find("undefined")!=std::string::npos);
+    }
+    std::string synctex(const std::vector<std::string> &args) {
+        return run(executable("synctex"), args);
+    }
     Json state() const {
         Json result=Json::object();
         for (const auto &entry : fs::recursive_directory_iterator(directory))
@@ -169,7 +179,7 @@ class BuildTools {
         std::set<std::string> outputs;
         std::istringstream recorder(read(directory/(stem+".fls")));
         std::string line;
-        while (std::getline(recorder,line)) if (starts(line,"OUTPUT ")) {
+        while (getline_crlf(recorder,line)) if (starts(line,"OUTPUT ")) {
             auto path=fs::weakly_canonical(directory/line.substr(7)).lexically_relative(directory);
             if (!path.empty() && *path.begin()!="..") outputs.insert(path.generic_string());
         }
@@ -215,7 +225,7 @@ class BuildTools {
         }
         return changed;
     }
-    void annotate(Json &frame, const std::string &stem, bool converged) {
+    void annotate(Json &frame, const std::string &stem, bool converged, bool deferred = false) {
         frame["buildTools"]=events;
         auto &warnings=frame["warnings"];
         if (!warnings.is_array()) warnings=Json::array();
@@ -223,7 +233,7 @@ class BuildTools {
         // neither reread changing logs nor invent a convergence-limit warning.
         if (diagnostics.is_null()) {
             diagnostics=Json::array();
-            if (!converged) diagnostics.push_back({{"code","convergence-limit"},
+            if (!converged && !deferred) diagnostics.push_back({{"code","convergence-limit"},
                 {"reason","References or generated files did not stabilize within six LaTeX passes. Check the LaTeX log for cyclic or changing auxiliary data."}});
             std::set<std::string> seen;
             for (const auto &event : events) if (event.contains("warning")) {
@@ -231,9 +241,7 @@ class BuildTools {
                 if (seen.insert(warning).second) diagnostics.push_back({{"code","auxiliary-tool-warning"},{"reason",warning}});
             }
             auto log=directory/(stem+".log");
-            auto data=fs::exists(log) ? read(log) : "";
-            if (data.find("undefined references")!=std::string::npos || data.find("undefined citations")!=std::string::npos ||
-                (data.find("Citation")!=std::string::npos && data.find("undefined")!=std::string::npos))
+            if (unresolved(stem))
                 diagnostics.push_back({{"code","unresolved-references"},
                     {"reason","Some citations or references remain undefined. Check citation keys, labels, and bibliography data in the LaTeX log: "+log.string()}});
         }

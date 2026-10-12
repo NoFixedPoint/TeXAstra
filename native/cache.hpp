@@ -92,7 +92,7 @@ class BuildCache {
         auto cwd = directory / working;
         std::istringstream recorder(read(cwd / (stem + ".fls")));
         std::string line;
-        while (std::getline(recorder, line)) if (starts(line, "INPUT ")) {
+        while (getline_crlf(recorder, line)) if (starts(line, "INPUT ")) {
             auto path = fs::weakly_canonical(cwd / line.substr(6));
             auto relative = path.lexically_relative(directory);
             if (!relative.empty() && *relative.begin() == ".." && fs::is_regular_file(path))

@@ -18,7 +18,32 @@ def apply(source):
     edit('tex/inputstack.h','    int synctex_tag_field;','    int bako_origin_field;\n    int synctex_tag_field;')
     edit('tex/inputstack.c','    istate = token_list;\n    istart = p;\n    token_type = (unsigned char) t;','    istate = token_list;\n    cur_input.bako_origin_field = bako_origin;\n    istart = p;\n    token_type = (unsigned char) t;')
     edit('tex/textoken.c','        /*tex current line not yet finished */\n        do_buffer_to_unichar(cur_chr, iloc);','        /*tex current line not yet finished */\n        bako_scan_begin();\n        do_buffer_to_unichar(cur_chr, iloc);',2)
-    edit('tex/textoken.c','    register halfword t = token_info(iloc);','    bako_origin = token_type == macro ? cur_input.bako_origin_field : bako_token_origin(iloc);\n    register halfword t = token_info(iloc);')
+    legacy_origin = '    bako_origin = token_type == macro ? cur_input.bako_origin_field : bako_token_origin(iloc);\n'
+    edit('tex/textoken.c',
+         (legacy_origin if legacy_origin in (base/'tex/textoken.c').read_text() else '') +
+         '    register halfword t = token_info(iloc);',
+         '    int stored_origin = bako_token_origin(iloc);\n'
+         '    bako_origin = token_type == macro && stored_origin <= 0\n'
+         '        ? cur_input.bako_origin_field : abs(stored_origin);\n'
+         '    register halfword t = token_info(iloc);')
+    # A literal replacement token is generated at the macro call. Tokens
+    # captured from an enclosing macro's arguments retain their own locations,
+    # even when a package stores them in another definition (Beamer frames).
+    edit('tex/scanning.c', 'halfword scan_toks(boolean macro_def, boolean xpand)\n{',
+         'halfword scan_toks(boolean macro_def, boolean xpand)\n{\n'
+         '    int bako_definition_origin = bako_origin;\n'
+         '    int bako_indirect_definition = istate == token_list;')
+    edit('tex/scanning.c',
+         '    if (hash_brace != 0)\n        store_new_token(hash_brace);\n    return p;',
+         '    if (hash_brace != 0)\n        store_new_token(hash_brace);\n'
+         '    if (macro_def && bako_attribute >= 0) {\n'
+         '        for (halfword r = token_link(def_ref); r != null; r = token_link(r)) {\n'
+         '            int origin = bako_token_origin(r);\n'
+         '            if (origin > 0 && (!bako_indirect_definition || origin == bako_definition_origin))\n'
+         '                bako_token_origins[r] = -origin;\n'
+         '        }\n'
+         '    }\n'
+         '    return p;')
     edit('tex/textoken.c','        if (!get_next_file())\n            goto RESTART;','        if (!get_next_file())\n            goto RESTART;\n        bako_scan_end();')
     edit('tex/texfileio.c','    full_source_filename_stack[in_open] = xstrdup(fullnameoffile);','    full_source_filename_stack[in_open] = xstrdup(fullnameoffile);\n    bako_source_open(fullnameoffile);')
     edit('tex/expand.c','void macro_call(void)\n{','void macro_call(void)\n{\n    int bako_call_origin = bako_origin;')

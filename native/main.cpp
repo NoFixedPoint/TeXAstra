@@ -191,10 +191,13 @@ class Preview {
                         emit({{"type","discard"},{"requestId",request.value("requestId",Json(nullptr))}});
                         continue;
                     }
-                    if (request.at("type")=="sync-forward") {
+                    if (request.at("type")=="sync-forward" || request.at("type")=="sync-backward") {
+                        const bool backward=request.at("type")=="sync-backward";
                         emit({{"type","sync"},{"revisionId",request.at("revision")},{"generation",engine->generation},
+                              {"direction",backward?"backward":"forward"},
                               {"requestId",request.value("requestId",Json(nullptr))},
-                              {"location",engine->forward(request.at("file"),request.at("line"),request.at("column"),page)}});
+                              {"location",backward ? engine->backward(page,request.at("x"),request.at("y")) :
+                                  engine->forward(request.at("file"),request.at("line"),request.at("column"),page)}});
                         continue;
                     }
                 }
@@ -237,7 +240,7 @@ class Preview {
                     engine.reset();
                     engine =
                         std::make_unique<Engine>(project, assets, runtime, overlays, &stopping, options);
-                    result = engine->start(page);
+                    result = engine->start(page, request.at("type") != "start");
                 } else if (!edits.empty()) {
                     result = engine->edit(*edits.begin(), overlays.at(*edits.begin()), page);
                 } else {
@@ -374,6 +377,8 @@ int main(int argc, char **argv) {
                         result = engine->edit(file, overlays.at(file), page);
                     } else if (kind == "sync-forward") {
                         result = {{"ok",true},{"location",engine->forward(request.at("file"),request.at("line"),request.at("column"),page)}};
+                    } else if (kind == "sync-backward") {
+                        result = {{"ok",true},{"location",engine->backward(page,request.at("x"),request.at("y"))}};
                     } else {
                         result = engine->navigate(page);
                     }

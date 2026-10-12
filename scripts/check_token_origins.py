@@ -25,6 +25,9 @@ cases={
  'after group': (r'{\aftergroup Q}', [('Q','Q')]),
  'after assignment': (r'\afterassignment Q\count0=1\relax', [('Q','Q')]),
  'future let': (r'\futurelet\next JQ', [('J','J'),('Q','Q')]),
+ 'stored argument': (r'\def\save#1{\def\saved{#1}}\save{Q}\saved', [('Q','Q')]),
+ 'stored mixed body': (r'\def\save#1{\def\saved{J#1}}\save{Q}\saved', [('J',r'\saved'),('Q','Q')]),
+ 'stored expanded argument': (r'\def\save#1{\edef\saved{#1}}\save{Q}\saved', [('Q','Q')]),
 }
 checks=[]
 def check(name,ok):

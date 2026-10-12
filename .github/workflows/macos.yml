@@ -58,28 +58,3 @@ jobs:
         with:
           path: ~/.cache/texastra-engine-*
           key: ${{ steps.engine-cache.outputs.cache-primary-key }}
-  release:
-    needs: build
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          pattern: texastra-darwin-*
-          path: artifacts/release
-          merge-multiple: true
-      - name: Publish macOS release after both native checks pass
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          version=$(node -p "require('./package.json').version")
-          tag="v${version}"
-          if gh release view "$tag" >/dev/null 2>&1; then
-            echo "Release $tag already exists; leaving published assets unchanged."
-            exit 0
-          fi
-          gh release create "$tag" --target "$GITHUB_SHA" --latest \
-            --title "TeXAstra $version - macOS" \
-            --notes-file .github/macos-release-notes.md artifacts/release/*

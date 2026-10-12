@@ -1,25 +1,22 @@
 # Release notes
 
-## 0.1.2 — First release
+## 0.1.5 - First release
 
-- Live LaTeX typesetting and precise source ↔ document navigation in VS Code.
-- Native Windows x64, Ubuntu 22.04 WSL, Apple Silicon macOS, and Intel macOS
-  packages in one release. macOS requires version 15 or later.
-- Incremental text, math, TikZ, figure and table updates; a white document canvas
-  and a persistent, collapsible compile-error header.
-- Fix `wstring_convert::from_bytes` when a valid UTF-8 document shares its folder
-  with an unrelated legacy-encoded TeX file. Original source bytes are preserved.
-- Matching source archives, licenses, checksums, and extracted-VSIX checks for
-  rendering, edits, source preservation, and the CV encoding regression.
-- Native macOS architecture/dependency audits and ad-hoc signing; a compatible
-  isolated TeX Live 2021 setup with matching LuaHBTeX formats.
+TeXAstra brings live LaTeX typesetting and precise source and document navigation
+to VS Code on Windows x64, Ubuntu 22.04 WSL, and macOS 15+ (Apple Silicon and Intel).
 
-Install one VSIX for your platform from [0.1.2](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.2).
-TeX Live supplies packages, fonts, bibliography tools, and indexes. Windows
-native runs without WSL or Python. See the [macOS installation instructions](README.md#macos)
-for its compatible TeX tree. Automatic dependency installation and MiKTeX
-integration are not supported.
+- Live text, math, TikZ, figure, table, and Beamer editing.
+- Source and document navigation and a collapsible compile-error header.
+- LuaLaTeX incremental compilation and token navigation.
+- PDFLaTeX character navigation and retained compiler updates on Linux/WSL with
+  matching pdfTeX 1.40.22; full compilation with SyncTeX for other PDFLaTeX
+  installations and XeLaTeX.
+- Bibliography processing through the selected TeX installation.
+- Platform packages, corresponding sources, licenses, and SHA-256 checksums.
 
-Editing happens in the source editor; the rendered page supports navigation
-and selection. See [validation](VALIDATION.md) and [licensing](LICENSING.md).
-The earlier platform-specific release entries have been consolidated here.
+Install one package from the [release](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.5).
+See [installation](README.md#install), [validation](VALIDATION.md), and
+[licensing](LICENSING.md). Editing takes place in the source editor; rendered
+pages support navigation and selection. TeX Live supplies document packages and
+fonts. macOS requires the compatible isolated TeX Live 2021 setup described in
+the installation guide.
