@@ -60,3 +60,9 @@ accepted-socket blocking fix. Python compileall also passes.
 The fifth ARM build reached final engine linking and exposed missing optional
 libpng NEON objects in the historical makefile. The Mac recipe now selects
 libpng's portable implementation. Syntax/diff validation passes.
+
+Apple Silicon engine compilation/linking now succeeds. The next stage rejected
+a truncated SHA-256 literal in the Mac MuPDF recipe; it is corrected against the
+GitHub release metadata and the existing verified source archive. The recursive
+engine make stages now use the configured job count. Python syntax and pinned
+digest-length checks pass.

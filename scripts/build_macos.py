@@ -46,7 +46,7 @@ def main():
     header = fetch('https://cdn.jsdelivr.net/gh/nlohmann/json@v3.12.0/single_include/nlohmann/json.hpp',
                    build/'json.hpp', 'aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63')
     mupdf = fetch('https://www.mupdf.com/downloads/archive/mupdf-1.26.12-source.tar.gz',
-                  build/'mupdf-1.26.12-source.tar.gz', '6baf910928f404167ba49be6340195dec340795724722b331f5aa0d01')
+                  build/'mupdf-1.26.12-source.tar.gz', '6baf910928f404167ba49be6340195dec340795724722b331f5a2143f5aa0d01')
     deflate = fetch('https://codeload.github.com/ebiggers/libdeflate/tar.gz/refs/tags/v1.19',
                     build/'libdeflate-1.19.tar.gz', '27bf62d71cd64728ff43a9feb92f2ac2f2bf748986d856133cc1e51992428c25')
     for archive in (mupdf, deflate):

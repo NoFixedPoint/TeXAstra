@@ -104,8 +104,8 @@ def main():
              'ZZIPLIB_LIBS='+str(build/'libs/zziplib/libzzip.a'),
              'luahbtex_LDFLAGS=-Wl,-export_dynamic'] if mac else []
   subdirs=['CONF_SUBDIRS=libpng zziplib graphite2 harfbuzz lua53 pplib','MAKE_SUBDIRS=libpng zziplib graphite2 harfbuzz lua53 pplib'] if mac else []
-  for command in [['make','all-local'],['make','-C','texk/kpathsea',jobs],['make','-C','texk/ptexenc',jobs],
-                  ['make','-C','libs',jobs,*subdirs],['make','-C','texk','all-local'],
+  for command in [['make',jobs,'all-local'],['make','-C','texk/kpathsea',jobs],['make','-C','texk/ptexenc',jobs],
+                  ['make','-C','libs',jobs,*subdirs],['make','-C','texk',jobs,'all-local'],
                   ['make','-C','texk/web2c',jobs,'luahbtex',*([] if mac else ['ZZIPLIB_LIBS=-lzzip'])]]:
    subprocess.run(command+libraries,cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
  runtime=args.runtime.resolve();runtime.mkdir(parents=True,exist_ok=True)
