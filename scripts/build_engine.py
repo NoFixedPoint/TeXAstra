@@ -70,6 +70,13 @@ def main():
      elif item.issym():
       target.parent.mkdir(parents=True,exist_ok=True);target.symlink_to(item.linkname)
    (source/'.bako-bundled-libraries').write_text(digest)
+ if mac:
+  # Apple now defines TARGET_OS_MAC through SDK headers; this old conditional
+  # means classic Mac OS, whose fp.h is absent from modern macOS.
+  png=source/'libs/libpng/libpng-src/pngpriv.h'
+  text=png.read_text()
+  if '!defined(__APPLE__)' not in text:text=text.replace('defined(TARGET_OS_MAC)', '(defined(TARGET_OS_MAC) && !defined(__APPLE__))')
+  if png.read_text()!=text:png.write_text(text)
  sys.path.insert(0,str(ROOT/'engine'))
  from patch import apply
  apply(source)
@@ -87,7 +94,8 @@ def main():
              'HARFBUZZ_LIBS='+str(build/'libs/harfbuzz/libharfbuzz.a'),
              'GRAPHITE2_INCLUDES=-I'+str(source/'libs/graphite2/graphite2-src/include'),
              'GRAPHITE2_LIBS='+str(build/'libs/graphite2/libgraphite2.a'),
-             'ZZIPLIB_LIBS='+str(build/'libs/zziplib/libzzip.a')] if mac else []
+             'ZZIPLIB_LIBS='+str(build/'libs/zziplib/libzzip.a'),
+             'luahbtex_LDFLAGS=-Wl,-export_dynamic'] if mac else []
   subdirs=['CONF_SUBDIRS=libpng zziplib graphite2 harfbuzz lua53 pplib','MAKE_SUBDIRS=libpng zziplib graphite2 harfbuzz lua53 pplib'] if mac else []
   for command in [['make','all-local'],['make','-C','texk/kpathsea',jobs],['make','-C','texk/ptexenc',jobs],
                   ['make','-C','libs',jobs,*subdirs],['make','-C','texk','all-local'],
@@ -95,7 +103,7 @@ def main():
    subprocess.run(command+libraries,cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
  runtime=args.runtime.resolve();runtime.mkdir(parents=True,exist_ok=True)
  temporary=runtime/'texastra-luahbtex.new';shutil.copyfile(build/'texk/web2c/luahbtex',temporary)
- subprocess.run(['strip',str(temporary)],check=True);temporary.chmod(0o755);os.replace(temporary,runtime/'texastra-luahbtex')
+ subprocess.run(['strip',*(['-S'] if mac else []),str(temporary)],check=True);temporary.chmod(0o755);os.replace(temporary,runtime/'texastra-luahbtex')
  # Ship complete upstream source plus distro patches and our own build recipe.
  for name in ARCHIVES:shutil.copyfile(cache/name,runtime/name)
  if mac:

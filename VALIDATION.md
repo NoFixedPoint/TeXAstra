@@ -44,3 +44,9 @@ now runs the same fixture against the extracted release runtime.
 The second Mac build exposed a classic-Mac conditional in the historical bundled
 zlib under the modern Apple SDK. macOS now uses Apple's system zlib; other
 engine dependency libraries remain statically linked from pinned sources.
+
+Mac SDK build follow-up: corrected the historical libpng classic-Mac detection,
+and retained exported engine symbols for the Lua checkpoint module. Inspection
+of the TeX Live 2021 Mac binary confirmed LuaHBTeX 1.13.2; the explicit isolated
+installer now installs our bundled 1.14 engine and regenerates its formats.
+Python compileall and diff checks pass; native CI is still in progress.

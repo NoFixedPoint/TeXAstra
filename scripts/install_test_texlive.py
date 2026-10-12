@@ -4,6 +4,8 @@ Explicit opt-in build/test utility; never called by the extension or runtime.
 """
 import argparse
 import hashlib
+import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -16,9 +18,18 @@ REPOSITORY = 'https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2021/tl
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--destination', type=Path, required=True)
+    parser.add_argument('--engine', type=Path, help='Bundled texastra-luahbtex (defaults to this checkout or installed VSIX)')
     args = parser.parse_args()
     if sys.platform != 'darwin':
         raise SystemExit('This installer is for macOS build/test machines')
+    root = Path(__file__).resolve().parents[1]
+    engine = args.engine or root/'native/runtime/texastra-luahbtex'
+    if not engine.is_file() and args.engine is None:
+        candidates = sorted((Path.home()/'.vscode/extensions').glob('texastra.texastra-*/native/runtime/texastra-luahbtex'))
+        if candidates: engine = candidates[-1]
+    if not engine.is_file():
+        raise SystemExit('Build or install the macOS VSIX first, or supply --engine /absolute/path/to/texastra-luahbtex')
+    engine = engine.resolve()
     destination = args.destination.resolve()
     if destination.exists():
         raise SystemExit('Choose a new empty destination: '+str(destination))
@@ -43,6 +54,12 @@ def main():
     subprocess.run(['perl', str(installer), '-profile', str(profile), '-repository', REPOSITORY], check=True)
     binary = destination/'bin/universal-darwin'
     subprocess.run([str(binary/'tlmgr'), 'install', 'pgf', 'booktabs', 'geometry', 'luaotfload', 'luatex', 'latex-bin'], check=True)
+    # The historical Mac distribution ships 1.13.2. This isolated installation
+    # needs the bundled 1.14 engine and matching formats, including full builds.
+    shutil.copy2(engine, binary/'luahbtex')
+    env = dict(os.environ, PATH=str(binary)+os.pathsep+os.environ.get('PATH', ''))
+    env['TEXMFCNF'] = subprocess.check_output([str(binary/'kpsewhich'), '--var-value=TEXMFCNF'], text=True).strip()
+    subprocess.run([str(binary/'fmtutil-sys'), '--byengine', 'luahbtex'], env=env, check=True)
     print('Set texastra.texBinDirectory to:', binary)
 
 

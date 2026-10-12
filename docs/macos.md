@@ -33,8 +33,11 @@ process's architecture; do not run an Intel Python under Rosetta for an ARM buil
 This project still bundles LuaHBTeX 1.14. A current MacTeX installation can have
 incompatible LuaLaTeX formats and packages. Use a separate **TeX Live 2021** tree
 for this release; you can keep your current MacTeX installation unchanged.
-The explicit installer below downloads the historical TeX Live distribution to
-a new user directory. It does not change the system TeX installation:
+The explicit installer below downloads historical packages to a new user
+directory, installs the bundled LuaHBTeX 1.14 in that isolated tree, and generates
+matching formats. (The original 2021 Mac binaries are LuaHBTeX 1.13.2.) It does
+not change the system TeX installation. Build the runtime or install the VSIX
+first; `--engine /path/to/texastra-luahbtex` can select its engine explicitly:
 
 ```sh
 python3 scripts/install_test_texlive.py --destination "$HOME/texastra-texlive-2021"
