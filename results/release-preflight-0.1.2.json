@@ -7,5 +7,6 @@
     "wslLegacyEncodingCompileAndEdit": "passed",
     "diffCheck": "passed"
   },
-  "macOSNativeBuildAndPackageChecks": "pending CI"
+  "macOSNativeBuildAndPackageChecks": "passed on Apple Silicon and Intel, macOS 15.7.9",
+  "ci": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/38226791788"
 }

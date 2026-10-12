@@ -1,15 +1,34 @@
 # Release validation
 
-## 0.1.2 - macOS release candidate
+## 0.1.2 - macOS
 
-Local extension unit checks, Python syntax compilation, source-index regression,
-and the WSL compile/edit regression for an unrelated legacy-encoded `.tex` file
-passed. See [the encoding fix](docs/source-encoding-20261012.md).
+Published as a regular release for Apple Silicon and Intel. Both native jobs
+passed on **macOS 15.7.9**, targeting macOS 15.0 or later.
 
-Publication is gated on new Apple Silicon and Intel macOS builds, runtime
-audits, and extracted-VSIX checks. Those package checks now include the exact CV
-failure pattern and assert that project files remain unchanged. Native results
-and published artifact identities will be recorded after both jobs pass.
+[CI run](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38226791788) |
+[Release](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.2)
+
+Both extracted VSIX packages passed the CV regression: a valid UTF-8 project
+compiles and retains source mappings with an unrelated non-UTF-8 TeX file in
+its folder. Text, TikZ, figure and table edits match fresh compilation, and
+project files remain unchanged. Long paths, included-file checkpoints, syntax
+error recovery, architecture, signatures and dependency audits also passed.
+
+The build commit is `675f0075f2bba4e0f24ad54c600147b6ebb53745`. GitHub's uploaded
+asset digests match the published checksum manifests; both VSIX digests match
+the native test reports. See [asset identities](results/macos-release-0.1.2.json),
+[Apple Silicon package checks](results/release-packages-darwin-arm64.json), and
+[Intel package checks](results/release-packages-darwin-x64.json). The dependency
+source archives also contain their corresponding validation reports.
+
+Local extension unit checks, Python syntax compilation, source-index tests,
+and the WSL compile/edit encoding regression passed before native CI.
+
+Limitations: no interactive VS Code GUI test, Developer ID signing,
+notarization, macOS 15.0-specific test, or broader OS matrix was performed.
+The compatible TeX Live 2021 setup remains required. This release adds no
+automatic dependency installation and contains macOS packages only;
+Windows/WSL downloads remain at 0.1.0.
 
 ## 0.1.1 - macOS preview
 

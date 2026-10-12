@@ -1,10 +1,14 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packages": [
     {
       "platform": "darwin-x64",
-      "sha256": "4e0a98ad50f4357696f02ebf5308c6884f8ecf5f7ea55c231570b9e34eef0427",
+      "sha256": "141660572e4ef1ee4522507b5b9f4fd62fb7d8d0d5d7d40fd20e03642f6d5b7e",
       "checks": [
+        {
+          "unrelatedLegacyEncoding": true,
+          "rootSourceMapped": true
+        },
         {
           "edit": "text",
           "matchesFullBuild": true
@@ -20,6 +24,9 @@
         {
           "edit": "table",
           "matchesFullBuild": true
+        },
+        {
+          "projectFilesUnchanged": true
         },
         {
           "ok": true,

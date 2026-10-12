@@ -1,0 +1,35 @@
+{
+  "release": "https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.2",
+  "buildCommit": "675f0075f2bba4e0f24ad54c600147b6ebb53745",
+  "ci": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/38226791788",
+  "status": "passed",
+  "prerelease": false,
+  "latest": true,
+  "publishedAssetDigestsVerified": true,
+  "assets": {
+    "SHA256SUMS-darwin-arm64": {
+      "sha256": "a78a7282d8047cc0c142e86a97719c0d16725cae2a0a126405957f39f30412fe",
+      "bytes": 192
+    },
+    "SHA256SUMS-darwin-x64": {
+      "sha256": "ad80e256be437f797d7bf00c759958dc6305fb24e931356b56a6ebf732754f81",
+      "bytes": 188
+    },
+    "texastra-darwin-arm64-sources.zip": {
+      "sha256": "fa6a95fae87e3c99966ce360ffc23911897571262682ee9d166bc0943bfbd77d",
+      "bytes": 262926024
+    },
+    "texastra-darwin-x64-sources.zip": {
+      "sha256": "17fc8a0d0a0d8e88db04031b684dbdceac2b87c4d9bb6f511e0fdc1992397121",
+      "bytes": 262926009
+    },
+    "texastra-macos-arm64.vsix": {
+      "sha256": "360af353a2d8ccee8efac400347485f38ea9eb4530284cf6330f1ce0793c8350",
+      "bytes": 303496212
+    },
+    "texastra-macos-x64.vsix": {
+      "sha256": "141660572e4ef1ee4522507b5b9f4fd62fb7d8d0d5d7d40fd20e03642f6d5b7e",
+      "bytes": 304300195
+    }
+  }
+}
