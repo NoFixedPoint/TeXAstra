@@ -31,8 +31,8 @@ def summary(values):
 def run(args):
     native_windows = os.name == 'nt' and args.runtime_mode == 'native'
     runtime = args.runtime or ROOT / ('native/runtime/windows-x64' if native_windows else 'native/runtime')
-    binaries = [runtime / name for name in (['bakoma-backend.exe', 'bakoma-engine.dll'] if native_windows else
-                                            ['bako_snapshot.so', 'bakoma-backend', 'bakoma-luahbtex'])]
+    binaries = [runtime / name for name in (['texastra-backend.exe', 'texastra-engine.dll'] if native_windows else
+                                            ['bako_snapshot.so', 'texastra-backend', 'texastra-luahbtex'])]
     project = ROOT/'.work/preview-benchmark'
     project.mkdir(parents=True, exist_ok=True)
     sources = {
@@ -58,8 +58,8 @@ def run(args):
         'targetMs': 150, 'samples': [], 'bursts': [], 'checks': [],
         'sourceSha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [ROOT/'webview/viewer.js', ROOT/'native/main.cpp', ROOT/'native/renderer.hpp',
-                                   ROOT/'native/mapping.hpp', ROOT/'prototype/provenance.lua',
-                                   ROOT/'native/compiler.hpp', ROOT/'prototype/snapshot.c', ROOT/'engine/resources.c',
+                                   ROOT/'native/mapping.hpp', ROOT/'texastra/provenance.lua',
+                                   ROOT/'native/compiler.hpp', ROOT/'texastra/snapshot.c', ROOT/'engine/resources.c',
                                    *binaries]}}
     output = ROOT/'results'/args.output
     log = (project/'server.log').open('w', encoding='utf-8')

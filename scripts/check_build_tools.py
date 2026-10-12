@@ -11,7 +11,7 @@ import fitz
 from cpp_client import Client, ROOT, linux
 
 report = {'checks': [],
-          'runtimeSha256': hashlib.sha256((ROOT/'native/runtime/bakoma-backend').read_bytes()).hexdigest(),
+          'runtimeSha256': hashlib.sha256((ROOT/'native/runtime/texastra-backend').read_bytes()).hexdigest(),
           'sourceHashes': {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
                            for name in ['native/build_tools.hpp', 'native/compiler.hpp', 'native/main.cpp']}}
 root = ROOT/'.work/build tools'

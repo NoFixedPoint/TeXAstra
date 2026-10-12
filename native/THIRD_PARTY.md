@@ -1,7 +1,7 @@
 # Native backend dependencies
 
 - LuaHBTeX 1.14, the LuaTeX team, GPL-2.0-or-later. The renamed
-  `runtime/bakoma-luahbtex` is built from the pinned Ubuntu TeX Live source and
+  `runtime/texastra-luahbtex` is built from the pinned Ubuntu TeX Live source and
   security patches listed in `scripts/build_engine.py`, with the metadata patch
   in `engine/patch.py`, `engine/origins.c`, and `engine/resources.c`. Both complete source archives and
   `LuaHBTeX-COPYING` accompany the runtime. This is a modified engine. Its source
@@ -25,5 +25,4 @@
   https://github.com/ebiggers/libdeflate and https://github.com/madler/zlib.
 
 The build script pins dependency versions and download digests. C++ source, build
-instructions, and reference tests accompany the local prototype. No BaKoMa binary
-or source is linked or distributed.
+instructions, and reference tests accompany TeXAstra.

@@ -25,8 +25,8 @@ def linux(p):
 class Client:
     def __init__(self,project,main,compiler='xelatex',sync=True,checkpoint='fork',mode='full'):
         prefix=['wsl','-d','Ubuntu-22.04','--exec'] if os.name=='nt' else []
-        self.p=subprocess.Popen(prefix+[linux(args.runtime/'bakoma-backend'),'--project',linux(project),
-            '--assets',linux(ROOT/'prototype'),'--main',main,'--preview-mode',mode,'--compiler',compiler,'--checkpoint',checkpoint]+(['--sync'] if sync else []),
+        self.p=subprocess.Popen(prefix+[linux(args.runtime/'texastra-backend'),'--project',linux(project),
+            '--assets',linux(ROOT/'texastra'),'--main',main,'--preview-mode',mode,'--compiler',compiler,'--checkpoint',checkpoint]+(['--sync'] if sync else []),
             stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8')
         self.q=queue.Queue()
         def read():

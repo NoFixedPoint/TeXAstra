@@ -236,7 +236,7 @@ int run_compiler_worker(const fs::path &module, int argc, char **argv) {
 int main(int argc, char **argv) {
     try {
         wchar_t path[32768]; GetModuleFileNameW(nullptr, path, 32768);
-        return run_compiler_worker(fs::path(path).parent_path() / "bakoma-engine.dll", argc, argv);
+        return run_compiler_worker(fs::path(path).parent_path() / "texastra-engine.dll", argc, argv);
     } catch (const std::exception &error) {
         std::cerr << error.what() << '\n'; return 1;
     }

@@ -1,4 +1,4 @@
-"""Small real-engine experiment: do token attributes survive text/math/TikZ?"""
+"""Check whether token attributes survive text, math, and TikZ rendering."""
 from pathlib import Path
 import subprocess
 import json

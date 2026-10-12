@@ -21,7 +21,7 @@ def main():
                                           'wslpath', '-a', str(Path(__file__).resolve())], text=True).strip()
         subprocess.run(['wsl', '-d', 'Ubuntu-22.04', '--exec', 'python3', script], check=True)
         return
-    cache = Path.home() / '.cache/bakoma-windows-engine'
+    cache = Path.home() / '.cache/texastra-windows-engine'
     packages = cache / 'packages'
     toolchain = cache / 'toolchain'
     source = cache / 'source'
@@ -41,7 +41,7 @@ def main():
     env['CXX'] = str(toolchain / 'usr/bin/x86_64-w64-mingw32-g++-posix')
     env['BUILDCC'] = 'gcc'
     env['BUILDCXX'] = 'g++'
-    original = Path.home() / '.cache/bakoma-engine/source'
+    original = Path.home() / '.cache/texastra-engine/source'
     if not source.exists():
         if not original.exists():
             subprocess.run([sys.executable, str(ROOT / 'scripts/build_engine.py'), '--source-only'], check=True)
@@ -132,13 +132,13 @@ def main():
     common_link = [env['CXX'], '-static', '-static-libgcc', '-static-libstdc++',
                    '-Wl,--stack,0x800000', *objects, '-Wl,--start-group', *libraries,
                    '-Wl,--end-group', '-lwsock32', '-lws2_32']
-    subprocess.run([*common_link, '-o', str(runtime / 'bakoma-luahbtex.exe')], cwd=web2c, env=env, check=True)
+    subprocess.run([*common_link, '-o', str(runtime / 'texastra-luahbtex.exe')], cwd=web2c, env=env, check=True)
     host_symbols = ['malloc', 'realloc', 'free', 'open', 'close', 'checkpoint', 'live',
                     'publish', 'park', 'now', 'stats', 'timings', 'io']
     host_def = build / 'host.def'
-    host_def.write_text('LIBRARY bakoma-backend.exe\nEXPORTS\n' +
+    host_def.write_text('LIBRARY texastra-backend.exe\nEXPORTS\n' +
                         '\n'.join('bako_host_' + name for name in host_symbols) + '\n')
-    host_lib = build / 'libbakoma-host.a'
+    host_lib = build / 'libtexastra-host.a'
     subprocess.run([str(toolchain / 'usr/bin/x86_64-w64-mingw32-dlltool'), '-d', str(host_def),
                     '-l', str(host_lib)], env=env, check=True)
     bridge = build / 'windows_bridge.o'
@@ -151,10 +151,10 @@ def main():
     wrapped += ['read', 'write']
     subprocess.run([*common_link, '-shared', str(bridge), str(host_lib), str(exports),
                     *['-Wl,--wrap=' + name for name in wrapped],
-                    '-o', str(runtime / 'bakoma-engine.dll')], cwd=web2c, env=env, check=True)
-    for name in ('bakoma-engine.dll', 'bakoma-luahbtex.exe'):
+                    '-o', str(runtime / 'texastra-engine.dll')], cwd=web2c, env=env, check=True)
+    for name in ('texastra-engine.dll', 'texastra-luahbtex.exe'):
         subprocess.run([str(toolchain / 'usr/bin/x86_64-w64-mingw32-strip'), str(runtime / name)], env=env, check=True)
-    print('Built', runtime / 'bakoma-luahbtex.exe', flush=True)
+    print('Built', runtime / 'texastra-luahbtex.exe', flush=True)
 
 
 if __name__ == '__main__':

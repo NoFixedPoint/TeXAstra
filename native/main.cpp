@@ -292,7 +292,7 @@ int main(int argc, char **argv) {
         fs::path executable=native_path, runtime=executable.parent_path();
         if(argc>1&&std::string(argv[1])=="--compiler-worker") {
             argv[1]=argv[0];
-            return run_compiler_worker(runtime/"bakoma-engine.dll",argc-1,argv+1);
+            return run_compiler_worker(runtime/"texastra-engine.dll",argc-1,argv+1);
         }
         _setmode(_fileno(stdin),_O_BINARY); _setmode(_fileno(stdout),_O_BINARY);
 #endif
@@ -332,7 +332,7 @@ int main(int argc, char **argv) {
         if (args.count("--preview-mode")) options.mode = args.at("--preview-mode");
         if (args.count("--compiler")) options.compiler = args.at("--compiler");
         if (!words("auto full incremental").count(options.mode) || !words("lualatex xelatex pdflatex").count(options.compiler))
-            throw std::runtime_error("Invalid preview mode or LaTeX compiler");
+            throw std::runtime_error("Invalid render mode or LaTeX compiler");
         options.distribution=std::make_shared<Distribution>(runtime,args.count("--tex-bin")?args.at("--tex-bin"):"",
             options.mode=="full"?options.compiler:"live");
         if(args.count("--environment")) {

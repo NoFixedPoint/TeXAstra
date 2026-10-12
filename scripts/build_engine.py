@@ -19,7 +19,7 @@ def main():
  if os.name=='nt':
   def linux(p):return subprocess.check_output(['wsl','-d','Ubuntu-22.04','--exec','wslpath','-a',str(p.resolve())],text=True).strip()
   subprocess.run(['wsl','-d','Ubuntu-22.04','--exec','python3',linux(Path(__file__)),'--runtime',linux(args.runtime)]+(['--source-only'] if args.source_only else []),check=True);return
- cache=Path.home()/'.cache/bakoma-engine';source=cache/'source';build=cache/'build'
+ cache=Path.home()/'.cache/texastra-engine';source=cache/'source';build=cache/'build'
  cache.mkdir(parents=True,exist_ok=True);build.mkdir(exist_ok=True)
  for name,digest in ARCHIVES.items():
   path=cache/name
@@ -64,10 +64,10 @@ def main():
                   ['make','-C','texk/web2c',jobs,'luahbtex','ZZIPLIB_LIBS=-lzzip']]:
    subprocess.run(command,cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
  runtime=args.runtime.resolve();runtime.mkdir(parents=True,exist_ok=True)
- temporary=runtime/'bakoma-luahbtex.new';shutil.copyfile(build/'texk/web2c/luahbtex',temporary)
- subprocess.run(['strip',str(temporary)],check=True);temporary.chmod(0o755);os.replace(temporary,runtime/'bakoma-luahbtex')
+ temporary=runtime/'texastra-luahbtex.new';shutil.copyfile(build/'texk/web2c/luahbtex',temporary)
+ subprocess.run(['strip',str(temporary)],check=True);temporary.chmod(0o755);os.replace(temporary,runtime/'texastra-luahbtex')
  # Ship complete upstream source plus distro patches and our own build recipe.
  for name in ARCHIVES:shutil.copyfile(cache/name,runtime/name)
  shutil.copyfile('/usr/share/common-licenses/GPL-2',runtime/'LuaHBTeX-COPYING')
- print('Built',runtime/'bakoma-luahbtex',flush=True)
+ print('Built',runtime/'texastra-luahbtex',flush=True)
 if __name__=='__main__':main()

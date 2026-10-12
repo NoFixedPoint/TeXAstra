@@ -1,4 +1,4 @@
-"""Windows-to-WSL adapter for the POSIX LuaTeX checkpoint experiment."""
+"""Windows-to-WSL adapter for the POSIX LuaTeX checkpoint service."""
 import base64,hashlib,json,os,queue,re,shutil,subprocess,threading,time,uuid
 from pathlib import Path
 from .engine import ROOT,prepare,render_page
@@ -12,7 +12,7 @@ class SnapshotEngine:
         if output=='stream':
             from .page_stream import PageRenderer
             self.renderer=PageRenderer()
-        self.linux='/tmp/bakoma-revived-'+uuid.uuid4().hex[:10]
+        self.linux='/tmp/texastra-'+uuid.uuid4().hex[:10]
         self.command_prefix=['wsl','-d',distro,'--'] if os.name=='nt' else []
         self.directory=Path(f'//wsl.localhost/{distro}')/self.linux.lstrip('/') if os.name=='nt' else Path(self.linux)
         self.directory.mkdir(parents=True)
@@ -22,9 +22,9 @@ class SnapshotEngine:
         self.mapper.file_slots={f:i+1 for i,f in enumerate(files)}
         self.mapper.spans=self.metadata['spans']
         for identifier,span in self.mapper.spans.items():self.mapper.file_ids.setdefault(span['file'],[]).append(identifier)
-        shutil.copyfile(ROOT/'prototype/snapshot.lua',self.directory/'snapshot.lua')
-        shutil.copyfile(ROOT/'prototype/snapshot.c',self.directory/'snapshot.c')
-        shutil.copyfile(ROOT/'prototype/page_stream.lua',self.directory/'page_stream.lua')
+        shutil.copyfile(ROOT/'texastra/snapshot.lua',self.directory/'snapshot.lua')
+        shutil.copyfile(ROOT/'texastra/snapshot.c',self.directory/'snapshot.c')
+        shutil.copyfile(ROOT/'texastra/page_stream.lua',self.directory/'page_stream.lua')
         subprocess.run(self.command_prefix+['gcc','-O2','-fPIC','-shared','-o',self.linux+'/bako_snapshot.so',self.linux+'/snapshot.c'],check=True,capture_output=True)
         self._root_source()
         shutil.copyfile(ROOT/'scripts/snapshot_worker.py',self.directory/'worker.py')
@@ -69,7 +69,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
         start=time.perf_counter()
         self.converged=False
         if not re.fullmatch(r'pages/page-\d{3}\.tex',file):
-            return dict(ok=False,error='This checkpoint experiment requires a full restart for preamble or structural edits.')
+            return dict(ok=False,error='The checkpoint service requires a full restart for preamble or structural edits.')
         self.metadata['sources'][file]=source
         rewritten=self.mapper.instrument(source,file)+RESET
         self.metadata['spans']=self.mapper.spans

@@ -10,7 +10,7 @@ from cpp_client import Client, ROOT
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--runtime', type=Path, default=ROOT/'native/runtime')
-parser.add_argument('--assets', type=Path, default=ROOT/'prototype')
+parser.add_argument('--assets', type=Path, default=ROOT/'texastra')
 parser.add_argument('--output', help='Report filename in results/')
 parser.add_argument('--case', choices=['hyperref', 'early-object', 'ordinary'])
 parser.add_argument('--project', type=Path)

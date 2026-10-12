@@ -4,8 +4,8 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import fitz
 from cpp_client import Client,ROOT
-from prototype.converge import full_build
-from prototype.engine import render_page
+from texastra.converge import full_build
+from texastra.engine import render_page
 parser=argparse.ArgumentParser()
 parser.add_argument('--checkpoint',choices=['fork'],default='fork')
 parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime')

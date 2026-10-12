@@ -153,7 +153,7 @@ class BuildTools {
 #else
         const char *cache=getenv("XDG_CACHE_HOME"), *home=getenv("HOME");
         store=(cache && *cache ? fs::path(cache) : fs::path(home ? home : "/tmp")/".cache")/
-            "bakoma-revived"/"auxiliary-v2";
+            "texastra"/"auxiliary-v2";
 #endif
     }
     void reset() { events=Json::array(); diagnostics=nullptr; resolved.clear(); }

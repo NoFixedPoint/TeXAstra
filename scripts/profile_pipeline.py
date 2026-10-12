@@ -2,8 +2,8 @@
 import argparse,gc,json,statistics,sys,time
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from prototype.snapshot import SnapshotEngine
-from prototype.engine import ROOT
+from texastra.snapshot import SnapshotEngine
+from texastra.engine import ROOT
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--output',default='pipeline-profile.json')

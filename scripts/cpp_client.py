@@ -13,13 +13,13 @@ class Client:
         if environment:
             mode = ['env']+mode[1:] if mode else ['env']
             mode += [key+'='+value for key,value in environment.items()]
-        executable=(runtime or ROOT/'native/runtime')/'bakoma-backend'
+        executable=(runtime or ROOT/'native/runtime')/'texastra-backend'
         path = str if native_windows else linux
         if native_windows:
             prefix, mode = [], []
-            executable = (runtime or ROOT/'native/runtime/windows-x64')/'bakoma-backend.exe'
+            executable = (runtime or ROOT/'native/runtime/windows-x64')/'texastra-backend.exe'
         env = dict(os.environ, **(environment or {})) if native_windows else None
-        self.process=subprocess.Popen(prefix+mode+[path(executable),'--project',path(project),'--assets',path(assets or ROOT/'prototype'),'--main',main,'--preview-mode',preview_mode,'--compiler',compiler]+(['--sync'] if sync else [])+(['--tex-bin',str(tex_bin)] if tex_bin else []),stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8',env=env)
+        self.process=subprocess.Popen(prefix+mode+[path(executable),'--project',path(project),'--assets',path(assets or ROOT/'texastra'),'--main',main,'--preview-mode',preview_mode,'--compiler',compiler]+(['--sync'] if sync else [])+(['--tex-bin',str(tex_bin)] if tex_bin else []),stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,encoding='utf-8',env=env)
         self.responses=queue.Queue()
         def read():
             for line in self.process.stdout:self.responses.put(json.loads(line))

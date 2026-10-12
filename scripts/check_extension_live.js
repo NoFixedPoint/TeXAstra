@@ -18,9 +18,9 @@ const defaults=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')
 const vscode={
   Uri:{file:fsPath=>({fsPath}),joinPath:(base,...s)=>({fsPath:path.join(base.fsPath,...s)})},ViewColumn:{Beside:2,One:1},
   RelativePattern:class {constructor(base,pattern){this.base=base;this.pattern=pattern;}},
-  commands:{registerCommand:(name,f)=>{if(name==='bakoma.showEnvironment')environmentCommand=f;else command=f;}},
+  commands:{registerCommand:(name,f)=>{if(name==='texastra.showEnvironment')environmentCommand=f;else command=f;}},
   workspace:{isTrusted:true,textDocuments:[document,sibling],workspaceFolders:[{uri:{fsPath:project}}],
-    getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(k,d)=>config[k]??defaults['bakoma.'+k]?.default??d}),
+    getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(k,d)=>config[k]??defaults['texastra.'+k]?.default??d}),
     onDidChangeTextDocument:f=>{change=f;},onDidSaveTextDocument(){},createFileSystemWatcher:p=>{watchPattern=p;return watcher;},openTextDocument:async options=>{environmentDocument=options;return options;}},
   window:{activeTextEditor:editor,createOutputChannel:()=>({append(){},appendLine:s=>outputLines.push(s)}),
     createWebviewPanel:()=>panel,onDidChangeTextEditorSelection:f=>{selectionChange=f;},showTextDocument:async()=>{},showErrorMessage:m=>{throw Error(m);}}

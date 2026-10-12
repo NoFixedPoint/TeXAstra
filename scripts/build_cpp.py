@@ -36,7 +36,6 @@ def main():
                 target=BUILD/Path(*parts[1:]);target.parent.mkdir(parents=True,exist_ok=True)
                 target.write_bytes(archive.extractfile(item).read())
     shutil.copyfile(BUILD/'COPYING',RUNTIME/'MuPDF-COPYING')
-    # Linux library and LuaTeX checkpoint requirements are explicit for now.
     def linux(path):
         if os.name!='nt':return str(path)
         return subprocess.check_output(['wsl','-d','Ubuntu-22.04','--exec','wslpath','-a',path.as_posix()],text=True).strip()
@@ -45,12 +44,12 @@ def main():
     if len(libs)!=1:raise RuntimeError('Expected one pinned MuPDF library')
     command=prefix+['g++','-std=c++17','-O2','-g','-pthread','-Wall','-Wextra',
         '-I'+linux(BUILD),'-I'+linux(BUILD/'include'),linux(ROOT/'native/main.cpp'),
-        linux(libs[0]),'-lz','-ldeflate','-Wl,-rpath,$ORIGIN','-o',linux(RUNTIME/'bakoma-backend.new')]
+        linux(libs[0]),'-lz','-ldeflate','-Wl,-rpath,$ORIGIN','-o',linux(RUNTIME/'texastra-backend.new')]
     subprocess.run(command,check=True)
-    try:os.replace(RUNTIME/'bakoma-backend.new',RUNTIME/'bakoma-backend')
-    except PermissionError:raise SystemExit('Close running C++ previews, then rebuild. Windows is holding the existing executable open; it has not been overwritten.')
-    subprocess.run(prefix+['gcc','-O2','-fPIC','-shared',linux(ROOT/'prototype/snapshot.c'),'-o',linux(RUNTIME/'bako_snapshot.so.new')],check=True)
+    try:os.replace(RUNTIME/'texastra-backend.new',RUNTIME/'texastra-backend')
+    except PermissionError:raise SystemExit('Close running C++ sessions, then rebuild. Windows is holding the existing executable open; it has not been overwritten.')
+    subprocess.run(prefix+['gcc','-O2','-fPIC','-shared',linux(ROOT/'texastra/snapshot.c'),'-o',linux(RUNTIME/'bako_snapshot.so.new')],check=True)
     os.replace(RUNTIME/'bako_snapshot.so.new',RUNTIME/'bako_snapshot.so')
-    print('Built',RUNTIME/'bakoma-backend',flush=True)
+    print('Built',RUNTIME/'texastra-backend',flush=True)
 
 if __name__=='__main__':main()

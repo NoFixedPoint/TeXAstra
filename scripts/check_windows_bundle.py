@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     binary, build_env, _, _ = toolchain()
-    source = ROOT / 'native/windows-bundle/bakoma-backend.exe'
+    source = ROOT / 'native/windows-bundle/texastra-backend.exe'
     imports = subprocess.check_output([str(binary / 'dumpbin.exe'), '/DEPENDENTS', str(source)], env=build_env, text=True)
     dlls = sorted(set(re.findall(r'^\s+([\w.-]+\.dll)\s*$', imports, re.MULTILINE | re.IGNORECASE)))
     assert {name.lower() for name in dlls} <= {'kernel32.dll', 'bcrypt.dll'}, dlls
@@ -22,7 +22,7 @@ def main():
     assert original['ok'], original
     with tempfile.TemporaryDirectory(prefix='one file 测试 ', dir=ROOT / '.work') as folder:
         root = Path(folder)
-        executable = root / 'bakoma-backend.exe'
+        executable = root / 'texastra-backend.exe'
         shutil.copyfile(source, executable)
         project = root / 'project'
         project.mkdir()
@@ -34,9 +34,9 @@ def main():
             if name.startswith('BAKO_'): env.pop(name)
         report = json.loads(subprocess.check_output([str(executable), '--environment', '--tex-bin', original['binDirectory']], env=env, encoding='utf-8', timeout=90))
         assert report['ok'], report
-        directories = list((root / 'cache/bakoma-revived/runtime').iterdir())
+        directories = list((root / 'cache/texastra/runtime').iterdir())
         assert len(directories) == 1
-        module = directories[0] / 'bakoma-engine.dll'
+        module = directories[0] / 'texastra-engine.dll'
         expected = hashlib.sha256(module.read_bytes()).hexdigest()
         module.write_bytes(b'damaged extraction')
         # A second invocation must detect and replace a damaged cached module.

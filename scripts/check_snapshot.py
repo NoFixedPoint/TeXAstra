@@ -1,8 +1,8 @@
 from pathlib import Path
 import json,sys,time,statistics
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from prototype.snapshot import SnapshotEngine
-from prototype.engine import ROOT
+from texastra.snapshot import SnapshotEngine
+from texastra.engine import ROOT
 
 report={'candidate':'LuaTeX POSIX input-boundary checkpoints','updates':[]}
 def brief(result):return {k:v for k,v in result.items() if k not in {'image','regions','characters','warnings'}}

@@ -4,7 +4,7 @@ from pathlib import Path
 from .engine import prepare,render_page
 
 def full_build(project,overlays=None,page=0,instrument=True):
-    linux='/tmp/bakoma-full-'+uuid.uuid4().hex[:10]
+    linux='/tmp/texastra-full-'+uuid.uuid4().hex[:10]
     directory=Path('//wsl.localhost/Ubuntu-22.04')/linux.lstrip('/') if os.name=='nt' else Path(linux)
     metadata=prepare(project,directory,overlays=overlays,instrument=instrument)
     prefix=['wsl','-d','Ubuntu-22.04','--cd',linux,'--'] if os.name=='nt' else []

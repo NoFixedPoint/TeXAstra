@@ -84,7 +84,7 @@ inline std::filesystem::path cache_root() {
     wchar_t path[32768];
     auto size = GetEnvironmentVariableW(L"LOCALAPPDATA", path, 32768);
     if (!size || size >= 32768) throw std::runtime_error("LOCALAPPDATA is unavailable");
-    return std::filesystem::path(path) / "bakoma-revived";
+    return std::filesystem::path(path) / "texastra";
 }
 inline void pause(unsigned milliseconds) {
     // Sleep(1) can wait a full 15.6 ms Windows clock tick on an idle desktop.

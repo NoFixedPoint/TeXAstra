@@ -3,8 +3,8 @@ import base64,json,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import fitz
-from prototype.engine import ROOT,preview_png
-from prototype.page_stream import PageRenderer
+from texastra.engine import ROOT,preview_png
+from texastra.page_stream import PageRenderer
 
 with fitz.open() as source:
     page=source.new_page(width=240,height=180)
@@ -30,7 +30,7 @@ try:
             assert result['characters']==expected
         checks.append(dict(shift=shift,ok=True))
     # Both the accelerated and stdlib fallback paths preserve RGB values.
-    import prototype.engine as engine
+    import texastra.engine as engine
     accelerated=engine.preview_zlib
     try:
         for codec in [accelerated,engine.zlib]:

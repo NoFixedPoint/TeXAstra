@@ -1,7 +1,4 @@
-/* Experimental POSIX checkpoints for a trusted LuaTeX fixture.
- * Uses actual process snapshots, not independent re-typesetting of page fragments.
- * NOT portable to native Windows; no claim of a production engine API.
- */
+/* POSIX process checkpoints for LuaTeX. */
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>

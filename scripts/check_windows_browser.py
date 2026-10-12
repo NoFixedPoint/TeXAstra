@@ -87,7 +87,7 @@ def main():
                 page.screenshot(path=str(ROOT / 'results/windows-preview.png'))
                 browser.close()
         finally:
-            # Close via the preview protocol before stopping the owned HTTP adapter.
+            # Close via the document protocol before stopping the owned HTTP adapter.
             import urllib.request
             try:
                 urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8778/action',

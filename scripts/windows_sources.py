@@ -32,13 +32,13 @@ def main():
         return
     target = ROOT / 'native/windows-bundle/sources'
     target.mkdir(parents=True, exist_ok=True)
-    compiler_cache = Path.home() / '.cache/bakoma-engine'
+    compiler_cache = Path.home() / '.cache/texastra-engine'
     for name, expected in ARCHIVES.items():
         data = (compiler_cache / name).read_bytes()
         if hashlib.sha256(data).hexdigest() != expected:
             raise RuntimeError('Compiler source checksum mismatch: ' + name)
         (target / name).write_bytes(data)
-    cache = Path.home() / '.cache/bakoma-windows-engine'
+    cache = Path.home() / '.cache/texastra-windows-engine'
     source = cache / 'source'
     # The Ubuntu archive removes bundled libraries. These exact upstream
     # sources supplement it; engine/ and the build recipes are in the VSIX.

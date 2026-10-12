@@ -1,6 +1,6 @@
 """Build/run the native Windows checkpoint proof with MSVC and static CRT.
 
-This produces a standalone validation executable, not the preview backend.
+This produces a standalone validation executable, not the document backend.
 No WSL, Python runtime, or non-system DLL is required by the resulting EXE.
 """
 import hashlib

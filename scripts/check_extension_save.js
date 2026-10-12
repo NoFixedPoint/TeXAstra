@@ -13,7 +13,7 @@ child.stdin.on('data',data=>{for(const line of data.toString().trim().split('\n'
 const web={cspSource:'test',asWebviewUri:u=>u.fsPath,postMessage:m=>messages.push(m),onDidReceiveMessage:f=>{receive=f;}};
 const panel={webview:web,onDidDispose:f=>{dispose=f;},reveal(){},dispose(){dispose?.();}};
 const vscode={Uri:{file:fsPath=>({fsPath}),joinPath:(base,...parts)=>({fsPath:path.join(base.fsPath,...parts)})},ViewColumn:{Beside:2},
-  RelativePattern:class {},commands:{registerCommand:(name,f)=>{if(name==='bakoma.openPreview')command=f;}},
+  RelativePattern:class {},commands:{registerCommand:(name,f)=>{if(name==='texastra.openDocument')command=f;}},
   workspace:{isTrusted:true,textDocuments:[document],workspaceFolders:[{uri:{fsPath:project}}],
     getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(key,fallback)=>key==='mainFile'?'paper.tex':fallback}),
     onDidChangeTextDocument:f=>{change=f;},onDidSaveTextDocument:f=>{save=f;},

@@ -1,0 +1,18 @@
+{
+  "version": "0.0.28",
+  "ok": true,
+  "installedFilesVerified": 121,
+  "manifestNormalization": "VS Code installation metadata excluded",
+  "configurationChecks": 15,
+  "extensionChecks": 37,
+  "projectChecks": 24,
+  "browserChecks": 27,
+  "compileChecks": 54,
+  "navigationChecks": 14,
+  "saveChecks": 18,
+  "deliveryChecks": 14,
+  "limitations": [
+    "Native Windows runtime was not rebuilt or exercised.",
+    "VS Code extension behavior was exercised with API mocks; no interactive Extension Host test was run."
+  ]
+}

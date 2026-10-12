@@ -9,7 +9,7 @@ function contains(project,file){
 function resolveProject({main,workspace,configured=''}){
   const project=configured ? path.resolve(workspace||path.dirname(main),configured)
     : workspace&&contains(workspace,main) ? workspace : path.dirname(main);
-  if(!contains(project,main))throw new Error('The main LaTeX file must be inside bakoma.projectRoot.');
+  if(!contains(project,main))throw new Error('The main LaTeX file must be inside texastra.projectRoot.');
   if(!fs.statSync(project).isDirectory())throw new Error('The LaTeX project root must be a directory.');
   return project;
 }

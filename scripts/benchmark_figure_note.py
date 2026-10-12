@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--assert-no-save-rebuild', action='store_true')
     parser.add_argument('--burst-edits', type=int, default=0, help='Also run repeats sustained typing bursts')
     parser.add_argument('--interval-ms', type=float, default=35)
-    parser.add_argument('--decode-delay-ms', type=float, default=0, help='Controlled slow-viewer experiment; not a natural latency measurement')
+    parser.add_argument('--decode-delay-ms', type=float, default=0, help='Controlled slow-viewer scenario; not a natural latency measurement')
     args = parser.parse_args()
     if args.repeats<1 or args.burst_edits<0 or args.interval_ms<=0 or args.decode_delay_ms<0:
         parser.error('Use positive repeats/interval and nonnegative burst/decode settings')
@@ -54,7 +54,7 @@ def main():
               'sourceSha256': hashlib.sha256(original).hexdigest(), 'sourceBytes': len(original),
               'extensionVersion': json.loads((args.extension/'package.json').read_text())['version'],
               'runtimeSha256': {name: hashlib.sha256((args.extension/name).read_bytes()).hexdigest()
-                                for name in ['native/runtime/bakoma-backend', 'native/runtime/bakoma-luahbtex',
+                                for name in ['native/runtime/texastra-backend', 'native/runtime/texastra-luahbtex',
                                              'native/runtime/bako_snapshot.so', 'webview/viewer.js', 'extension/extension.js']},
               'burstEdits': args.burst_edits, 'intervalMs': args.interval_ms, 'injectedDecodeDelayMs': args.decode_delay_ms,
               'samples': [], 'saveSamples': [], 'bursts': []}

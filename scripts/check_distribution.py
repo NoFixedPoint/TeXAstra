@@ -8,7 +8,7 @@ from pathlib import Path
 from cpp_client import Client, ROOT, linux
 
 prefix = ['wsl', '-d', 'Ubuntu-22.04', '--exec'] if os.name == 'nt' else []
-backend = linux(ROOT/'native/runtime/bakoma-backend')
+backend = linux(ROOT/'native/runtime/texastra-backend')
 report = {'checks': []}
 project = ROOT/'.work/distribution project'
 project.mkdir(parents=True, exist_ok=True)
@@ -35,7 +35,7 @@ def environment(selected=None, extra=(), settings=None):
     return result
 
 
-temporary = host('import tempfile; print(tempfile.mkdtemp(prefix="bakoma-distribution-"))')
+temporary = host('import tempfile; print(tempfile.mkdtemp(prefix="texastra-distribution-"))')
 settings = {'XDG_CACHE_HOME': temporary+'/cache'}
 
 
@@ -138,6 +138,6 @@ try:
     check('hung discovery process is bounded', not failed['ok'] and 'timed out' in failed['error'])
     check('preflight does not modify project sources', (project/'paper.tex').read_text() == source and sorted(p.name for p in project.iterdir()) == ['paper.tex', 'refs.bib'])
 finally:
-    report['runtimeSha256'] = hashlib.sha256((ROOT/'native/runtime/bakoma-backend').read_bytes()).hexdigest()
+    report['runtimeSha256'] = hashlib.sha256((ROOT/'native/runtime/texastra-backend').read_bytes()).hexdigest()
     (ROOT/'results/distribution.json').write_text(json.dumps(report, indent=2)+'\n')
-    host('import pathlib,shutil,sys;p=pathlib.Path(sys.argv[1]);assert p.parent==pathlib.Path("/tmp") and p.name.startswith("bakoma-distribution-");shutil.rmtree(p)', temporary)
+    host('import pathlib,shutil,sys;p=pathlib.Path(sys.argv[1]);assert p.parent==pathlib.Path("/tmp") and p.name.startswith("texastra-distribution-");shutil.rmtree(p)', temporary)

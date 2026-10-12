@@ -2,11 +2,11 @@
 import json,os,queue,re,shutil,signal,subprocess,sys,threading,time
 from pathlib import Path
 root=Path(__file__).resolve().parents[1]
-directory=Path('/tmp/bakoma-texpresso-corpus');directory.mkdir(exist_ok=True)
+directory=Path('/tmp/texastra-texpresso-corpus');directory.mkdir(exist_ok=True)
 for source in (root/'corpus').rglob('*.tex'):
     target=directory/source.relative_to(root/'corpus');target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
-binary=Path('/home/wenlan/.cache/bakoma-revived/texpresso/build/texpresso')
-env=dict(os.environ,SDL_VIDEODRIVER='dummy',SDL_RENDER_DRIVER='software',BAKO_TRACE='1',BAKO_CAPTURE='/tmp/bakoma-texpresso-frame.bmp')
+binary=Path('/home/wenlan/.cache/texastra/texpresso/build/texpresso')
+env=dict(os.environ,SDL_VIDEODRIVER='dummy',SDL_RENDER_DRIVER='software',BAKO_TRACE='1',BAKO_CAPTURE='/tmp/texastra-texpresso-frame.bmp')
 events=queue.Queue();logs=[]
 p=subprocess.Popen([str(binary),'-json','-texlive','main.tex'],cwd=directory,env=env,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,bufsize=1,start_new_session=True)
 def drain(stream):
@@ -53,5 +53,5 @@ finally:
     (root/'results').mkdir(exist_ok=True)
     (root/'results/texpresso.json').write_text(json.dumps(report,indent=2))
     (root/'.work/texpresso-session.log').write_text(''.join(logs))
-    capture=Path('/tmp/bakoma-texpresso-frame.bmp')
+    capture=Path('/tmp/texastra-texpresso-frame.bmp')
     if capture.exists():shutil.copyfile(capture,root/'.work/texpresso-frame.bmp')

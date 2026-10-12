@@ -28,7 +28,7 @@ if(process.platform==='win32'){
     check(native.host.runtime,'native');check(native.host.wslDistribution,null);
     assert(!native.binDirectory.startsWith('/'));checks++;
   }
-  const failed=await environment(root,{runtimeMode:'wsl',texBinDirectory:'/bakoma-missing-installation'});
+  const failed=await environment(root,{runtimeMode:'wsl',texBinDirectory:'/texastra-missing-installation'});
   check(failed.ok,false);assert(failed.error.includes('kpsewhich'));checks++;
   const result={checks,ok:true};fs.writeFileSync(path.join(root,'results/launcher.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -16,7 +16,7 @@ const web={cspSource:'self',asWebviewUri:u=>'/'+path.basename(u.fsPath),onDidRec
 const panel={webview:web,onDidDispose:f=>{dispose=f;},reveal(){},dispose(){dispose?.();}};
 const config={mainFile:main,runtimeMode:'wsl'};
 const vscode={Uri:{file:fsPath=>({fsPath}),joinPath:(base,...parts)=>({fsPath:path.join(base.fsPath,...parts)})},ViewColumn:{Beside:2},
-  RelativePattern:class {},commands:{registerCommand:(name,f)=>{if(name==='bakoma.openPreview')command=f;}},
+  RelativePattern:class {},commands:{registerCommand:(name,f)=>{if(name==='texastra.openDocument')command=f;}},
   workspace:{isTrusted:true,textDocuments:[document],workspaceFolders:[{uri:{fsPath:project}}],
     getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(name,fallback)=>config[name]??fallback}),
     onDidChangeTextDocument:f=>{change=f;},onDidSaveTextDocument:f=>{save=f;},createFileSystemWatcher:()=>({onDidCreate(){},onDidChange:f=>{diskChange=f;},onDidDelete(){},dispose(){}})},

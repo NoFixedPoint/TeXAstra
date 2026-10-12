@@ -3,9 +3,9 @@ from pathlib import Path
 import json,sys
 import fitz
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from prototype.snapshot import SnapshotEngine
-from prototype.converge import full_build
-from prototype.engine import ROOT
+from texastra.snapshot import SnapshotEngine
+from texastra.converge import full_build
+from texastra.engine import ROOT
 
 report={'sameEngine':'Linux LuaHBTeX / same installed packages and fonts','checks':[]}
 overlays={}

@@ -154,5 +154,5 @@ try:
             result = live.request(type='start')
             check('reject main outside root '+invalid, not result.get('ok') and ('project' in result['error'] or 'relative' in result['error']))
 finally:
-    report['runtimeSha256'] = hashlib.sha256((ROOT/'native/runtime/bakoma-backend').read_bytes()).hexdigest()
+    report['runtimeSha256'] = hashlib.sha256((ROOT/'native/runtime/texastra-backend').read_bytes()).hexdigest()
     (ROOT/'results/project-assets.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')

@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "version": "0.0.28",
+  "checks": [
+    "installed environment preflight",
+    "installed launcher and runtime compile",
+    "renamed compiler assets load",
+    "source mappings available",
+    "unsaved edit renders a newer revision",
+    "source file unchanged"
+  ]
+}

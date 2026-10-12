@@ -3,7 +3,7 @@ from pathlib import Path
 import sys,json,time,base64,io
 from PIL import Image
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from prototype.engine import prepare,compile_document,render_page,ROOT
+from texastra.engine import prepare,compile_document,render_page,ROOT
 import fitz
 
 limit=int(sys.argv[1]) if len(sys.argv)>1 else 1

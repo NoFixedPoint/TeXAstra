@@ -1,4 +1,4 @@
-"""Source-span experiment for an explicit subset of ordinary LaTeX.
+"""Source-span mapping for an explicit subset of ordinary LaTeX.
 
 This is NOT a general TeX parser. It never claims recovered engine provenance:
 it adds attributes to known output-producing tokens and leaves unsupported

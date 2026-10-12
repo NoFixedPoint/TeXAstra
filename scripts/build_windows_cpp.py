@@ -71,7 +71,7 @@ def main():
                     '/D_CRT_SECURE_NO_WARNINGS', '/I' + str(shared), '/I' + str(shared / 'include'),
                     '/I' + str(deflate_source), str(ROOT / 'native/main.cpp'),
                     str(ROOT / 'native/windows/compiler_worker.cpp'), '/Fo' + str(build) + '\\',
-                    '/Fe:' + str(runtime / 'bakoma-backend.exe'), '/link', '/STACK:8388608',
+                    '/Fe:' + str(runtime / 'texastra-backend.exe'), '/link', '/STACK:8388608',
                     '/MANIFEST:EMBED', '/MANIFESTINPUT:' + str(manifest), str(build / 'mupdf.lib'), str(deflate_lib)],
                    env=env, cwd=build, check=True)
     # The pinned MuPDF wheel uses Microsoft's redistributable C++ runtime.
@@ -80,7 +80,7 @@ def main():
         for dll in folder.glob('*.dll'):
             shutil.copyfile(dll, runtime / dll.name)
         break
-    print('Built', runtime / 'bakoma-backend.exe')
+    print('Built', runtime / 'texastra-backend.exe')
     print('libdeflate SHA256', hashlib.sha256(deflate.read_bytes()).hexdigest())
 
 

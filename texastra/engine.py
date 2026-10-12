@@ -53,7 +53,7 @@ def prepare(project, destination, overlays=None, instrument=True, page_limit=Non
                 source=mapper.instrument(source,rel)+RESET
             target.write_text(source,encoding='utf-8')
         else: shutil.copyfile(file,target)
-    if instrument: shutil.copyfile(ROOT/'prototype/provenance.lua',destination/'provenance.lua')
+    if instrument: shutil.copyfile(ROOT/'texastra/provenance.lua',destination/'provenance.lua')
     digest=hashlib.sha256(json.dumps(sources,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
     metadata=dict(revision=digest,spans=mapper.spans,warnings=mapper.warnings,sources=sources)
     (destination/'source-map.json').write_text(json.dumps(metadata,ensure_ascii=False),encoding='utf-8')

@@ -25,9 +25,9 @@ def main():
     fixture.mkdir(parents=True, exist_ok=True)
     env = environment()
     env.update(BAKO_PAGE_STREAM='1', BAKO_FONT_STREAM='1', BAKO_SOURCE_MARKERS='1',
-               BAKO_LIVE_DOCUMENT='1', BAKO_ENGINE_MODULE=(runtime / 'bakoma-engine.dll').as_posix())
+               BAKO_LIVE_DOCUMENT='1', BAKO_ENGINE_MODULE=(runtime / 'texastra-engine.dll').as_posix())
     for name in ('snapshot.lua', 'inputs.lua', 'provenance.lua', 'page_stream.lua'):
-        shutil.copyfile(ROOT / 'prototype' / name, fixture / name)
+        shutil.copyfile(ROOT / 'texastra' / name, fixture / name)
     original = r'''\documentclass{article}
 \begin{document}
 First page $x^2$.
@@ -52,10 +52,10 @@ Third page retained.
     os.set_inheritable(event_write, True)
     env['BAKO_COMMAND_HANDLE'] = str(msvcrt.get_osfhandle(command_read))
     env['BAKO_EVENT_HANDLE'] = str(msvcrt.get_osfhandle(event_write))
-    report = json.loads(subprocess.check_output([str(runtime / 'bakoma-backend.exe'), '--environment'], encoding='utf-8'))
+    report = json.loads(subprocess.check_output([str(runtime / 'texastra-backend.exe'), '--environment'], encoding='utf-8'))
     format_path = Path(report['format'])
     log = (fixture / 'engine-output.log').open('wb')
-    process = subprocess.Popen([str(runtime / 'bakoma-backend.exe'), '--compiler-worker', '--fmt=' + format_path.as_posix(),
+    process = subprocess.Popen([str(runtime / 'texastra-backend.exe'), '--compiler-worker', '--fmt=' + format_path.as_posix(),
                                 '--progname=lualatex', '--shell-escape', '--interaction=nonstopmode',
                                 '--halt-on-error', '--recorder', '--jobname=main', 'bako-driver.tex'],
                                cwd=fixture, env=env, stdout=log, stderr=subprocess.STDOUT, close_fds=False)

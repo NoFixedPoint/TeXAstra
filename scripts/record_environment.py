@@ -14,7 +14,7 @@ report={'platform':platform.platform(),'python':platform.python_version(),
         'wslXeLaTeX':command(['wsl','-d','Ubuntu-22.04','--','xelatex','--version']).splitlines()[0],
         'cpu':command(['powershell','-NoProfile','-Command','Get-CimInstance Win32_Processor | Select-Object Name,NumberOfCores,NumberOfLogicalProcessors | ConvertTo-Json']),
         'memoryBytes':command(['powershell','-NoProfile','-Command','(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory']),
-        'sourceSha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for folder in ['prototype','webview','extension','native'] for p in sorted((ROOT/folder).glob('*')) if p.is_file()}}
+        'sourceSha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for folder in ['texastra','webview','extension','native'] for p in sorted((ROOT/folder).glob('*')) if p.is_file()}}
 report['native']={'node':command(['node','--version']),
                   'compiler':command(['wsl','-d','Ubuntu-22.04','--exec','g++','--version']).splitlines()[0],
                   'mupdf':'1.26.12',

@@ -83,7 +83,7 @@ static fs::path extract() {
             throw std::runtime_error("Cannot install runtime cache file: " + name);
     }
     if (payload.cursor != payload.end) throw std::runtime_error("Unexpected runtime payload suffix");
-    return directory / "bakoma-backend.exe";
+    return directory / "texastra-backend.exe";
 }
 int wmain(int argc, wchar_t **argv) {
     try {

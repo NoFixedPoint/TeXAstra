@@ -3,8 +3,8 @@ from pathlib import Path
 import subprocess
 import re
 
-BASE='/home/wenlan/.cache/bakoma-revived/texpresso'
-UNC=Path(r'\\wsl.localhost\Ubuntu-22.04\home\wenlan\.cache\bakoma-revived\texpresso')
+BASE='/home/wenlan/.cache/texastra/texpresso'
+UNC=Path(r'\\wsl.localhost\Ubuntu-22.04\home\wenlan\.cache\texastra\texpresso')
 for path in (UNC/'src').rglob('*.c'):
     source=path.read_text()
     source=source.replace('#include <mupdf/fitz/buffer.h>','#include <mupdf/fitz.h>')

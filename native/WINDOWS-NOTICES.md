@@ -1,9 +1,9 @@
 # Windows runtime contents
 
-The Windows VSIX ships one native executable, `bakoma-backend.exe`. It embeds
+The Windows VSIX ships one native executable, `texastra-backend.exe`. It embeds
 the controller, patched compiler, renderer, required Microsoft runtime DLLs,
 and Lua helpers. At startup it verifies SHA-256 hashes and extracts them into
-`%LOCALAPPDATA%/bakoma-revived/runtime/<payload hash>`. The extracted compiler
+`%LOCALAPPDATA%/texastra/runtime/<payload hash>`. The extracted compiler
 module imports its allocator and checkpoint services from the controller.
 No WSL, Python, Node native addon, or installed Visual C++ redistributable is
 needed by the runtime. VS Code supplies Node for the extension itself.

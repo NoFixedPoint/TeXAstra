@@ -18,7 +18,7 @@ for(let i=2;i<process.argv.length;i++){
   else throw new Error('Unknown argument '+process.argv[i]);
 }
 if(!['cpp','stream'].includes(engine))throw new Error('Use cpp or stream for the comparison');
-const backend=engine==='cpp'?launch(root,project,checkpoint,options):spawn(process.env.BAKOMA_PYTHON||'python',['-u','-m','prototype.bridge','--project',project,'--engine','stream'],{cwd:root,windowsHide:true});
+const backend=engine==='cpp'?launch(root,project,checkpoint,options):spawn(process.env.TEXASTRA_PYTHON||'python',['-u','-m','texastra.bridge','--project',project,'--engine','stream'],{cwd:root,windowsHide:true});
 const messages=[],waiting=new Set(),overlays=new Map();
 let event=0,revision=0,closed=false;
 function output(res,status,data,kind='application/json'){
@@ -73,4 +73,4 @@ const server=http.createServer(async(req,res)=>{
 });
 function close(){if(!closed){backend.stdin.end('{"type":"close"}\n');closed=true;}server.close();}
 process.on('SIGINT',close);process.on('SIGTERM',close);
-server.listen(port,'127.0.0.1',()=>console.log(`Prototype: http://127.0.0.1:${port} (${engine}${engine==='cpp'?'/'+checkpoint:''})`));
+server.listen(port,'127.0.0.1',()=>console.log(`TeXAstra: http://127.0.0.1:${port} (${engine}${engine==='cpp'?'/'+checkpoint:''})`));

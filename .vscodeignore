@@ -8,3 +8,9 @@ corpus/**
 *.vsix
 native/runtime/*.new
 native/runtime/libmupdfcpp*
+docs/**
+CONTEXT.md
+AGENTS.md
+task*.md
+.vscode/**
+scripts/inspect_bakoma_*

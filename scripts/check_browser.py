@@ -1,4 +1,4 @@
-"""Real Chromium interaction checks against the local prototype server."""
+"""Real Chromium interaction checks against the local document server."""
 import json,sys,time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -56,7 +56,7 @@ with sync_playwright() as pw:
     report['isolatedEdit']=page.evaluate('window.lastPaint')
     assert page.evaluate('frame.characters.map(c=>c.text).join("").includes("omega")')
     # Sustained input is slower than human key repeat but faster than this
-    # prototype's compile/render pipeline, so intermediate progress is required.
+    # document's compile/render pipeline, so intermediate progress is required.
     before=page.evaluate('after')
     history_start=page.evaluate('paintHistory.length')
     typing_start=page.evaluate('Date.now()')
@@ -103,7 +103,7 @@ with sync_playwright() as pw:
     report['checks'].append(dict(name='idle convergence restores far-page checkpoints',ok=True))
     edit(far_original)
     page.wait_for_function('!lastPaint.stale&&lastPaint.clientId===latestClient',timeout=20000)
-    page.screenshot(path=str(ROOT/'results/prototype.png'),full_page=True)
+    page.screenshot(path=str(ROOT/'results/texastra.png'),full_page=True)
     report['browserErrors']=errors
     assert not errors
     browser.close()

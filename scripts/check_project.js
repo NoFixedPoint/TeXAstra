@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path');
 const {resolveMain,resolveCompiler,contains,resolveProject,supportedFile}=require('../extension/project');
-const directory=fs.mkdtempSync(path.join(os.tmpdir(),'bakoma-project-'));
+const directory=fs.mkdtempSync(path.join(os.tmpdir(),'texastra-project-'));
 const root=path.join(directory,'paper with spaces.tex'),chapter=path.join(directory,'chapter.tex');
 fs.writeFileSync(root,'\\documentclass{article}\n');
 fs.writeFileSync(chapter,'% !TEX root = paper with spaces.tex\nHello');

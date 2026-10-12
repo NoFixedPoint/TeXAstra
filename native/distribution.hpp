@@ -69,7 +69,7 @@ class Distribution {
             if(!executable(fs::path(requested)/"kpsewhich"))throw std::runtime_error("Selected TeX binary directory has no executable kpsewhich: "+requested+". Select an installed TeX Live binary directory.");
             bin=fs::canonical(requested);add(bin);
         } else {
-            if(report["candidates"].empty())throw std::runtime_error("No TeX Live installation found. Install TeX Live in the selected Linux/WSL environment, or set bakoma.texBinDirectory to its binary directory. BaKoMa does not install packages.");
+            if(report["candidates"].empty())throw std::runtime_error("No TeX Live installation found. Install TeX Live in the selected Linux/WSL environment, or set texastra.texBinDirectory to its binary directory. TeXAstra does not install packages.");
             bin=report["candidates"][0].get<std::string>();
         }
         report["binDirectory"]=bin.string();
@@ -90,7 +90,7 @@ class Distribution {
         report["texmfRoot"]=kpse({"--var-value=TEXMFROOT"});
         auto version=kpse({"--version"});report["kpathseaVersion"]=version.substr(0,version.find('\n'));
         if(report["kpathseaVersion"].get<std::string>().find("MiKTeX")!=std::string::npos)
-            throw std::runtime_error("MiKTeX integration is not supported by this Linux preview runtime. Select TeX Live.");
+            throw std::runtime_error("MiKTeX integration is not supported by this Linux document runtime. Select TeX Live.");
         Json identity={{"schema",1},{"bin",bin.string()},{"config",config},{"overrides",report["lookupOverrides"]},{"compiler",compiler}};
         // Recorder output starts after configuration lookup. Fingerprint these
         // separately, including newly added config files and filename databases.
@@ -111,8 +111,8 @@ class Distribution {
             report["tools"][name]=executable(path)?Json(path.string()):Json(nullptr);
             if(executable(path)){identity[name]=file_stamp(path);report["toolStamps"][name]=identity[name];}
         }
-        version=run(runtime/"bakoma-luahbtex",{"--version"});report["bundledEngine"]=version.substr(0,version.find('\n'));
-        identity["engine"]=digest(read(runtime/"bakoma-luahbtex"));
+        version=run(runtime/"texastra-luahbtex",{"--version"});report["bundledEngine"]=version.substr(0,version.find('\n'));
+        identity["engine"]=digest(read(runtime/"texastra-luahbtex"));
         report["bundledEngineSha256"]=identity["engine"];
         if(executable(bin/"lualatex")) {
             version=run(bin/"lualatex",{"--version"});report["distributionEngine"]=version.substr(0,version.find('\n'));
@@ -133,9 +133,9 @@ class Distribution {
             for(const auto &[file,stamp]:dependencies.items()) if(file_stamp(file)!=stamp)reused=false;
         }catch(const std::exception &){reused=false;}
         if(!reused) {
-            write(work/"check.tex","\\documentclass{article}\n\\begin{document}BaKoMa preflight: $x^2$.\\end{document}\n");
+            write(work/"check.tex","\\documentclass{article}\n\\begin{document}TeXAstra preflight: $x^2$.\\end{document}\n");
             std::vector<std::string> args={"--no-shell-escape","--interaction=nonstopmode","--halt-on-error","--recorder","check.tex"};
-            fs::path program=runtime/"bakoma-luahbtex";
+            fs::path program=runtime/"texastra-luahbtex";
             if(compiler=="live")args.insert(args.begin(),{"--fmt="+format_path.string(),"--progname=lualatex"});
             else program=tool(compiler);
             try {run(program,args,30);}
@@ -161,12 +161,12 @@ class Distribution {
   public:
     fs::path bin, format_path;
     Json report={{"schema",1},{"ok",false},{"candidates",Json::array()},
-                 {"packageMaintenance","Use the selected distribution's package manager; BaKoMa never installs or updates packages."}};
+                 {"packageMaintenance","Use the selected distribution's package manager; TeXAstra never installs or updates packages."}};
     Distribution(fs::path bundled, std::string selected, const std::string &compiler="live")
         :runtime(std::move(bundled)),requested(std::move(selected)) {
         try {
             const char *cache=getenv("XDG_CACHE_HOME"),*home=getenv("HOME");
-            auto root=(cache&&*cache?fs::path(cache):fs::path(home?home:"/tmp")/".cache")/"bakoma-revived"/"environment-v1";
+            auto root=(cache&&*cache?fs::path(cache):fs::path(home?home:"/tmp")/".cache")/"texastra"/"environment-v1";
             fs::create_directories(root);
             std::string pattern=(root/"probe-XXXXXX").string();std::vector<char> name(pattern.begin(),pattern.end());name.push_back(0);
             auto created=mkdtemp(name.data());if(!created)throw std::runtime_error("Cannot create isolated compatibility probe directory");

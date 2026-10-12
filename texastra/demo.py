@@ -58,7 +58,7 @@ def main():
                 return self.output(200,{'ok':True})
             return self.output(404,{})
     server=ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
-    print(f'Prototype: http://127.0.0.1:{args.port} ({args.engine})',flush=True)
+    print(f'TeXAstra: http://127.0.0.1:{args.port} ({args.engine})',flush=True)
     try:server.serve_forever()
     finally:server.server_close();service.close()
 

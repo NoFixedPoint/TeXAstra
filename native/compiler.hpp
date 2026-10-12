@@ -109,7 +109,7 @@ class Engine {
         std::map<std::wstring,std::wstring> env = {
             {L"BAKO_PAGE_STREAM",L"1"}, {L"BAKO_FONT_STREAM",L"1"}, {L"BAKO_SOURCE_MARKERS",L"1"},
             {L"BAKO_LIVE_DOCUMENT",live?L"1":L""}, {L"BAKO_SNAPSHOT_DISABLE",prime?L"1":L""},
-            {L"BAKO_ENGINE_MODULE",(runtime/"bakoma-engine.dll").native()}};
+            {L"BAKO_ENGINE_MODULE",(runtime/"texastra-engine.dll").native()}};
         std::vector<std::string> arguments;
         fs::path program;
         if (full) {
@@ -118,7 +118,7 @@ class Engine {
                        "./"+fs::path(options.main).filename().u8string()};
             env[L"openout_any"]=L"p";
         } else {
-            program=runtime/"bakoma-backend.exe";
+            program=runtime/"texastra-backend.exe";
             arguments={"--compiler-worker","--fmt="+options.distribution->format_path.u8string(),"--progname=lualatex",
                        "--shell-escape","-interaction=nonstopmode","-halt-on-error","-recorder","--jobname=main",
                        live?"bako-driver.tex":"main.tex"};
@@ -163,7 +163,7 @@ class Engine {
         std::vector<std::string> arguments = full
             ? std::vector<std::string>{options.distribution->tool(options.compiler).string(), "-no-shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-file-line-error", "-recorder", "./" + fs::path(options.main).filename().string()}
-            : std::vector<std::string>{(runtime / "bakoma-luahbtex").string(), "--fmt="+options.distribution->format_path.string(), "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
+            : std::vector<std::string>{(runtime / "texastra-luahbtex").string(), "--fmt="+options.distribution->format_path.string(), "--progname=lualatex", "--shell-escape", "-interaction=nonstopmode",
                                        "-halt-on-error", "-recorder", "--jobname=main", live ? "bako-driver.tex" : "main.tex"};
         std::vector<char *> argv;
         for (auto &argument : arguments) argv.push_back(argument.data());
@@ -643,9 +643,9 @@ class Engine {
                   "\\AtEndDocument{\\directlua{bako_live_end()}}%\n"
                   "\\input{\\detokenize{" + fs::path(options.main).filename().string() + "}}%\n");
 #ifdef _WIN32
-            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend.exe") + read(runtime / "bakoma-engine.dll"));
+            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "texastra-backend.exe") + read(runtime / "texastra-engine.dll"));
 #else
-            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "bakoma-backend") + read(runtime / "bakoma-luahbtex") + read(runtime / "bako_snapshot.so"));
+            cache->inputs["@runtime"] = digest(read(assets / "snapshot.lua") + read(assets / "provenance.lua") + read(assets / "page_stream.lua") + read(assets / "inputs.lua") + read(runtime / "texastra-backend") + read(runtime / "texastra-luahbtex") + read(runtime / "bako_snapshot.so"));
 #endif
             cache->inputs["@distribution"] = options.distribution->report.at("identity");
             cache->finish_inputs();
@@ -769,7 +769,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             root.find("\\usepackage{tikz}") != std::string::npos;
         if (!words("auto full incremental").count(options.mode) ||
             !words("lualatex xelatex pdflatex").count(options.compiler))
-            throw std::runtime_error("Invalid preview mode or LaTeX compiler");
+            throw std::runtime_error("Invalid render mode or LaTeX compiler");
         full = options.mode == "full";
         live = !full && !fixture;
         if (!full) options.compiler = "lualatex";
@@ -787,9 +787,9 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             }
         } else {
 #ifdef _WIN32
-            mirror = windows::temporary_directory(fs::temp_directory_path(), "bakoma-cpp-");
+            mirror = windows::temporary_directory(fs::temp_directory_path(), "texastra-cpp-");
 #else
-            char name[] = "/tmp/bakoma-cpp-XXXXXX";
+            char name[] = "/tmp/texastra-cpp-XXXXXX";
             auto path = mkdtemp(name);
             if (!path) throw std::runtime_error("Cannot create session");
             mirror = path;
@@ -973,7 +973,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
     }
     Json navigate(int page) {
         if (full) {
-            if (!full_ready) throw std::runtime_error("The preview is stale. Fix the compilation error before changing pages.");
+            if (!full_ready) throw std::runtime_error("The document is stale. Fix the compilation error before changing pages.");
             auto started = Clock::now();
             auto result = full_frame(page);
             result["pipelineMs"] = elapsed(started);

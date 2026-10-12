@@ -16,11 +16,11 @@ def main():
     runtime = ROOT / 'native/runtime/windows-x64'
     output = ROOT / 'native/windows-bundle'
     output.mkdir(parents=True, exist_ok=True)
-    names = ['bakoma-backend.exe', 'bakoma-engine.dll', 'mupdfcpp64.dll',
+    names = ['texastra-backend.exe', 'texastra-engine.dll', 'mupdfcpp64.dll',
              'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll']
     files = {name: runtime / name for name in names}
     for name in ('snapshot.lua', 'inputs.lua', 'provenance.lua', 'page_stream.lua'):
-        files[name] = ROOT / 'prototype' / name
+        files[name] = ROOT / 'texastra' / name
     payload = bytearray(b'BAKOWIN1' + struct.pack('<I', len(files)))
     for name, path in files.items():
         data = path.read_bytes()
@@ -36,11 +36,11 @@ def main():
     subprocess.run([str(binary / 'cl.exe'), '/nologo', '/std:c++17', '/EHsc', '/O2', '/MT', '/utf-8',
                     '/D_CRT_SECURE_NO_WARNINGS', '/I' + str(build), '/I' + str(build / 'libdeflate-1.19'),
                     str(ROOT / 'native/windows/bootstrap.cpp'), '/Fo' + str(build / 'bootstrap.obj'),
-                    '/Fe:' + str(output / 'bakoma-backend.exe'), '/link',
+                    '/Fe:' + str(output / 'texastra-backend.exe'), '/link',
                     str(build / 'payload.res'), str(build / 'deflate-build/deflatestatic.lib'), 'bcrypt.lib',
                     '/MANIFEST:EMBED', '/MANIFESTINPUT:' + str(build / 'backend.manifest')],
                    cwd=build, env=env, check=True)
-    print('Bundled', output / 'bakoma-backend.exe', 'payload', identity)
+    print('Bundled', output / 'texastra-backend.exe', 'payload', identity)
 
 
 if __name__ == '__main__':
