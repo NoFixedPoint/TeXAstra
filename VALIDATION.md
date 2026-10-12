@@ -10,6 +10,7 @@ Tested on Windows x64 with TeX Live and Ubuntu 22.04 under WSL.
 | Windows incremental vs. complete builds: 30 pages, TikZ, fonts, reflow, mappings, repeated edits | Passed |
 | Windows BibTeX, Biber, makeindex, PDF assets, concurrent sessions, crash recovery | 20 checks passed |
 | Windows bundle with restricted PATH, Unicode paths, damaged cache repair | Passed |
+| Windows compiler through Chromium: 100 pages, Chinese text, math, TikZ, navigation, error recovery | 26 checks passed |
 | README GIF: real text, TikZ, figure, and table source edits | Passed |
 
 Automated GitHub checks cover the extension and browser viewer. Full native

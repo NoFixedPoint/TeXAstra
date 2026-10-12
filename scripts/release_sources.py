@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 
 from build_cpp import fetch
+from build_engine import ARCHIVES
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -19,6 +20,10 @@ def main():
                     work/'pymupdf-1.26.7.tar.gz',
                     '71add8bdc8eb1aaa207c69a13400693f06ad9b927bea976f5d5ab9df0bb489c3')
     common = [mupdf, pymupdf, ROOT/'.work/cpp-build/json.hpp']
+    linux_sources = ROOT/'native/runtime/sources'
+    linux_sources.mkdir(parents=True, exist_ok=True)
+    for name in [*ARCHIVES, 'LuaHBTeX-COPYING']:
+        shutil.copyfile(ROOT/'native/runtime'/name, linux_sources/name)
     for destination in [ROOT/'native/runtime/sources', ROOT/'native/windows-bundle/sources']:
         destination.mkdir(parents=True, exist_ok=True)
         for source in common:

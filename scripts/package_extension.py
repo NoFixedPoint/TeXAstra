@@ -12,8 +12,13 @@ args=parser.parse_args()
 windows=args.target=='win32-x64'
 backend='texastra-backend.exe' if windows else 'texastra-backend'
 if not (args.runtime/backend).is_file():raise SystemExit('Build the selected native runtime before packaging')
-if windows and not (args.runtime/'sources/mupdf-1.26.12-source.tar.gz').is_file():
-    raise SystemExit('Prepare the Windows source/license kit first: python scripts/windows_sources.py')
+for required in ['mupdf-1.26.12-source.tar.gz', 'pymupdf-1.26.7.tar.gz',
+                 'AGPL-3.0.txt', 'GPL-3.0.txt',
+                 'texlive-bin_2021.20210626.59705.orig.tar.xz',
+                 'texlive-bin_2021.20210626.59705-1ubuntu0.3.debian.tar.xz']:
+    if not (args.runtime/'sources'/required).is_file():
+        raise SystemExit('Missing release source/license material: '+required+
+                         '. Run scripts/release_sources.py after the platform source-kit build.')
 if not windows and not (args.runtime/'texastra-luahbtex').is_file():raise SystemExit('Build the token-origin compiler first: python scripts/build_engine.py')
 version=json.loads((ROOT/'package.json').read_text(encoding='utf-8'))['version']
 stage=Path(tempfile.mkdtemp(prefix='package-',dir=ROOT/'.work'))
@@ -34,7 +39,7 @@ if windows:runtime_setting['description']='Windows: use the bundled native Windo
 suffix='' if args.target=='wsl' else '-'+args.target
 artifact=ROOT/'artifacts'/f'texastra-{version}{suffix}.vsix'
 target_args=[] if args.target=='wsl' else ['--target',args.target]
-subprocess.run([shutil.which('npx.cmd') or shutil.which('npx'),'--yes','@vscode/vsce','package',
+subprocess.run([shutil.which('npx.cmd') or shutil.which('npx'),'--yes','@vscode/vsce@4.0.0','package',
     '--no-rewrite-relative-links',*target_args,'--out',str(artifact)],cwd=stage,check=True)
 with zipfile.ZipFile(artifact) as archive:
     checked=0

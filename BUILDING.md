@@ -48,6 +48,7 @@ python scripts/check_windows_bundle.py
 python scripts/release_sources.py
 python scripts/package_extension.py
 python scripts/package_extension.py --target win32-x64 --runtime native/windows-bundle
+python scripts/check_release_packages.py
 python scripts/release_artifacts.py
 ```
 
