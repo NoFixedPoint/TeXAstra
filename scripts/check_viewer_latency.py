@@ -22,6 +22,7 @@ with sync_playwright() as pw:
     page.add_init_script('window.outbound=[];window.acquireVsCodeApi=()=>({postMessage:m=>outbound.push(m)});')
     page.goto((ROOT/'webview/index.html').as_uri())
     page.wait_for_function('outbound.some(m=>m.type==="ready")')
+    check('error panel is hidden on startup', not page.locator('#diagnostics').is_visible())
     page.evaluate('''async ()=>{
         const canvas=document.createElement('canvas');canvas.width=10;canvas.height=10;
         window.testFrame={type:'frame',purpose:'edit',clientId:1,revisionId:1,generation:1,
@@ -94,6 +95,25 @@ with sync_playwright() as pw:
     check('decode failure releases delivery and later frames still paint', page.evaluate('outbound.some(m=>m.type==="frame-ack"&&m.deliveryId===70&&m.outcome==="error") && lastPaint.clientId===71'))
     page.evaluate('receive({...testFrame,generation:1,deliveryId:72})')
     check('obsolete generations release delivery without decode', page.evaluate('outbound.some(m=>m.type==="frame-ack"&&m.deliveryId===72&&m.outcome==="discarded")'))
+    page.evaluate('receive({type:"status",state:"error",revision:72,clientId:72,error:"Undefined control sequence: <example>"})')
+    check('compile error opens with literal error text', page.locator('#diagnostics').is_visible() and
+          page.locator('#diagnostics').evaluate('e=>e.open') and
+          page.locator('#error').inner_text() == 'Undefined control sequence: <example>' and
+          page.locator('#error-title').inner_text() == 'Compile error')
+    page.locator('#error-title').click()
+    check('compile error can be collapsed', not page.locator('#diagnostics').evaluate('e=>e.open'))
+    page.evaluate('''async()=>{
+        await receive({type:'status',state:'building',revision:73,clientId:73});
+        await receive({...testFrame,clientId:71,revisionId:71,generation:71});
+    }''')
+    check('retry and stale frames retain compile error', page.locator('#diagnostics').is_visible() and
+          'Undefined control sequence' in page.locator('#error').text_content())
+    page.evaluate('receive({...testFrame,clientId:73,revisionId:73,generation:73,warnings:["Nonfatal warning"]})')
+    check('successful compile hides and clears errors even with warnings', not page.locator('#diagnostics').is_visible() and
+          page.locator('#error').text_content() == '')
+    page.evaluate('receive({type:"status",state:"error",revision:74,clientId:74})')
+    check('error without details still opens the panel', page.locator('#diagnostics').is_visible() and
+          page.locator('#diagnostics').evaluate('e=>e.open') and bool(page.locator('#error').inner_text()))
     check('no browser errors', not errors)
 
     # The demo must deliver the newer status while an older frame is painting,

@@ -22,3 +22,20 @@ Validation on 2026-10-11:
 
 These checks use browser fixtures. A live compiler session and the actual VS Code
 extension host were not rerun for this CSS-only appearance change.
+
+## Version 0.0.26: compile errors
+
+The permanent limitations footer is replaced by a hidden error panel. Compilation
+failures open it automatically with the compiler's error text; users can collapse
+it. Errors remain during retries and stale frame delivery, then clear after a
+current successful compile. Nonfatal warnings do not show the error panel.
+Preview rendering and connection failures use the same panel with distinct
+headings. Expanded errors occupy at most 35% of the window height and scroll
+without covering the preview controls.
+
+Validation: `python scripts/check_viewer_latency.py` passed all 25 checks,
+including initial hiding, literal error text, expansion/collapse, retaining errors
+during retry/stale output, successful recovery with warnings, and failures with
+no details. `node --check webview/viewer.js` and `git diff --check` passed. These
+checks use synthetic compiler messages in Chromium; live compiler and VS Code
+host interactions were not rerun.

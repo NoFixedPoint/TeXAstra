@@ -1,6 +1,10 @@
 {
   "checks": [
     {
+      "name": "error panel is hidden on startup",
+      "ok": true
+    },
+    {
       "name": "neighbor loading waits during edit activity",
       "ok": true
     },
@@ -62,6 +66,26 @@
     },
     {
       "name": "obsolete generations release delivery without decode",
+      "ok": true
+    },
+    {
+      "name": "compile error opens with literal error text",
+      "ok": true
+    },
+    {
+      "name": "compile error can be collapsed",
+      "ok": true
+    },
+    {
+      "name": "retry and stale frames retain compile error",
+      "ok": true
+    },
+    {
+      "name": "successful compile hides and clears errors even with warnings",
+      "ok": true
+    },
+    {
+      "name": "error without details still opens the panel",
       "ok": true
     },
     {

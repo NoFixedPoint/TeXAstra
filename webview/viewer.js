@@ -10,6 +10,13 @@ let activeFrame=null,queuedFrame=null,lastVisualPaintAt=null;
 window.frameDeliveryStats={received:0,replaced:0,painted:0,errors:0};
 window.paintHistory=[];
 if(vscode)document.body.classList.add('embedded');
+function showError(message,title='Compile error'){
+  const panel=$('diagnostics'),text=String(message||'');
+  const changed=panel.hidden||$('error').textContent!==text;
+  $('error').textContent=text;$('error-title').textContent=title;
+  panel.hidden=!text;
+  if(!text)panel.open=false;else if(changed)panel.open=true;
+}
 function send(message,inputAt=performance.now()){
   message.clientId=++clientSerial;message.sentAt=Date.now();message.requestId=message.requestId||`view-${++requestSerial}`;
   if(message.type==='edit'||message.type==='start'){
@@ -164,7 +171,7 @@ async function runFrame(entry){
   try{
     entry.message.viewerQueueMs=performance.now()-entry.received;
     outcome=await receiveMessage(entry.message)||outcome;
-  }catch(error){window.frameDeliveryStats.errors++;$('error').textContent='Preview update failed: '+error;outcome='error';}
+  }catch(error){window.frameDeliveryStats.errors++;showError('Preview update failed: '+error,'Preview error');outcome='error';}
   finally{
     finishFrame(entry,outcome);activeFrame=null;
     if(queuedFrame){const next=queuedFrame;queuedFrame=null;runFrame(next);}
@@ -195,10 +202,11 @@ async function receiveMessage(message){
   if(message.type==='forward'){forward(message);return;}
   if(message.type==='status'){
     latestRequest=Math.max(latestRequest,message.revision||0);latestClient=Math.max(latestClient,message.clientId||0);markStale();pendingPages.clear();
-    $('status').textContent=message.state==='error'?'Compile error · previous preview is stale':'Updating preview…';if(message.error)$('error').textContent=message.error;return;
+    $('status').textContent=message.state==='error'?'Compile error · previous preview is stale':'Updating preview…';
+    if(message.state==='error')showError(message.error||'Compilation failed. No error details were provided.');return;
   }
   if(message.type==='discard'||message.type==='query-error'){
-    pendingPages.delete(message.requestId);if(message.type==='query-error')$('error').textContent=message.error;return;
+    pendingPages.delete(message.requestId);if(message.type==='query-error')showError(message.error||'Unable to load the requested page.','Preview error');return;
   }
   if(message.type==='sync'){
     if(!stale&&message.generation===generation&&message.requestId===lastSyncRequest){
@@ -233,7 +241,7 @@ async function receiveMessage(message){
   stale=message.isStale||message.revisionId<latestRequest||message.clientId<latestClient;document.body.classList.toggle('stale',stale);
   if(!query){
     $('status').textContent=stale?'Updating · showing an earlier revision':message.provisional?'Live preview · updating later pages':'Live preview ready';
-    $('error').textContent=message.warnings?.length?JSON.stringify(message.warnings.slice(0,20),null,2):'';
+    if(!stale)showError('');
   }
   const installedAt=performance.now();
   await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
@@ -280,6 +288,6 @@ else (async()=>{
   const bootstrap=await(await fetch('/bootstrap')).json();after=bootstrap.event;file=bootstrap.sourceFile||file;await loadSource(file);send({type:'start',page:0});
   // Match VS Code's event delivery: decoding/painting an earlier payload must
   // not delay newer revisions or statuses. receive guards generation/sequence.
-  while(true){try{const events=await(await fetch('/events?after='+after)).json();for(const event of events){after=event.event;receive(event).catch(error=>{$('error').textContent='Preview update failed: '+error;});}if(!events.length)await new Promise(resolve=>setTimeout(resolve,25));}
-    catch(error){$('error').textContent='Preview connection interrupted: '+error;await new Promise(resolve=>setTimeout(resolve,500));}}
+  while(true){try{const events=await(await fetch('/events?after='+after)).json();for(const event of events){after=event.event;receive(event).catch(error=>{showError('Preview update failed: '+error,'Preview error');});}if(!events.length)await new Promise(resolve=>setTimeout(resolve,25));}
+    catch(error){showError('Preview connection interrupted: '+error,'Preview connection error');await new Promise(resolve=>setTimeout(resolve,500));}}
 })();

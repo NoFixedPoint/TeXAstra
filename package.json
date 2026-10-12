@@ -2,7 +2,7 @@
   "name": "bakoma-revived-prototype",
   "displayName": "BaKoMa Revived \u2014 Feasibility Prototype",
   "description": "Experimental live LaTeX preview with token provenance and a LuaTeX checkpoint backend.",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "publisher": "local-prototype",
   "engines": {
     "vscode": "^1.85.0"
