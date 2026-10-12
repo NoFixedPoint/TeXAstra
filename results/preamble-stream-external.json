@@ -1,0 +1,64 @@
+{
+  "checks": [
+    {
+      "name": "external project edit 1 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "external project edit 1 reuses a checkpoint",
+      "ok": true
+    },
+    {
+      "name": "external project edit 1 retains source mapping",
+      "ok": true
+    },
+    {
+      "name": "external project edit 2 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "external project edit 2 reuses a checkpoint",
+      "ok": true
+    },
+    {
+      "name": "external project edit 2 retains source mapping",
+      "ok": true
+    },
+    {
+      "name": "external project edit 3 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "external project edit 3 reuses a checkpoint",
+      "ok": true
+    },
+    {
+      "name": "external project edit 3 retains source mapping",
+      "ok": true
+    },
+    {
+      "name": "external source unchanged",
+      "ok": true
+    }
+  ],
+  "edits": [
+    {
+      "outputMode": "resource-seed",
+      "resumedFrom": 64,
+      "resourceRefresh": "External graphics resource requires a refresh",
+      "pipelineMs": 1133.782038
+    },
+    {
+      "outputMode": "resource-seed",
+      "resumedFrom": 64,
+      "resourceRefresh": "External graphics resource requires a refresh",
+      "pipelineMs": 1100.762695
+    },
+    {
+      "outputMode": "resource-seed",
+      "resumedFrom": 64,
+      "resourceRefresh": "External graphics resource requires a refresh",
+      "pipelineMs": 1135.367979
+    }
+  ]
+}

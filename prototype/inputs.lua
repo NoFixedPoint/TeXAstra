@@ -1,5 +1,12 @@
 -- Include every line delivered to TeX, even argument/macro read-ahead. EOF
 -- consumes one extra position so appending invalidates an observed file end.
+-- This bootstrap runs before the document and its packages. LuaTeX freezes
+-- PDF compression when the first object is written; hyperref can do that in
+-- the preamble, before snapshot.lua's document-start setup. The page-command
+-- transport requires uncompressed streams from that first object onward.
+if os.getenv('BAKO_PAGE_STREAM')=='1' then
+  pdf.setcompresslevel(0);pdf.setobjcompresslevel(0)
+end
 local journal=assert(io.open('bako-inputs.jsonl','w'))
 local active,positions={},{}
 bako_input_block=0 -- preamble/body phase in the open journal

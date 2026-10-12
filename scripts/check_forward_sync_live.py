@@ -22,7 +22,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix='forward-sync-', dir=ROOT/'.work') as folder:
         project = Path(folder)
         (project/'chapters').mkdir()
-        source = '\\documentclass{article}\n\\begin{document}\n'
+        source = '\\documentclass{article}\n\\usepackage{hyperref}\n\\begin{document}\n'
         for number in range(1, 30):
             source += f'Root page {number}. Token for forward synchronization.\n\\newpage\n'
         source += '\\input{chapters/late}\n\\end{document}\n'
@@ -80,6 +80,28 @@ def main():
                     check('forward synchronization preserves source revision', page.evaluate('latestRequest') == revision)
                     check('both selections reach backend as sync-forward',
                           len([r for r in requests if r['type'] == 'sync-forward']) == 2)
+                    for file, text, before, after in [('paper.tex', source, 'Root page 20.', 'Edited page 20.'),
+                                                      ('chapters/late.tex', included, 'Target token', 'Updated token')]:
+                        page.evaluate('name=>loadSource(name)', file)
+                        page.evaluate('n=>navigate(n)', 19 if file == 'paper.tex' else 29)
+                        page.locator('#source').evaluate('''(e,text)=>{e.value=text;
+                            e.dispatchEvent(new InputEvent('input',{bubbles:true}));}''', text.replace(before, after))
+                        page.wait_for_function('lastPaint.clientId===latestClient&&!lastPaint.stale&&!stale', timeout=30000)
+                        check(file+' edit with hyperref produces a fresh preview', page.evaluate('''text=>
+                            frame.characters.map(c=>c.text).join('').includes(text)''', after))
+                        check(file+' edit uses the incremental stream', page.evaluate('lastPaint.outputMode==="page-stream"'))
+                    page.evaluate('loadSource("paper.tex");navigate(19)')
+                    page.wait_for_function('file==="paper.tex"')
+                    valid = page.locator('#source').input_value()
+                    page.locator('#source').evaluate('''(e,text)=>{e.value=text;
+                        e.dispatchEvent(new InputEvent('input',{bubbles:true}));}''',
+                        valid.replace('Edited page 20.', r'\undefinedBrokenCommand'))
+                    page.wait_for_function('$("status").textContent.includes("Compile error")', timeout=30000)
+                    check('real invalid TeX marks the previous preview stale', page.evaluate('stale'))
+                    page.locator('#source').evaluate('''(e,text)=>{e.value=text;
+                        e.dispatchEvent(new InputEvent('input',{bubbles:true}));}''', valid)
+                    page.wait_for_function('lastPaint.clientId===latestClient&&!lastPaint.stale&&!stale', timeout=30000)
+                    check('corrected TeX restores a fresh preview', page.evaluate('frame.characters.map(c=>c.text).join("").includes("Edited page 20.")'))
                     check('no browser errors', not errors)
                     browser.close()
             finally:

@@ -2,6 +2,8 @@
 
 This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The 150 ms end-to-end target is not met for every workload, including typing bursts, new fonts and dense pages.** Native Windows and Linux use retained checkpoints; measurements and platform limits are documented in the [Windows report](docs/windows-native-20261011.md) and [Linux latency report](docs/preview-latency-20261011.md). The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
+Version **0.0.21** fixes edit-time compilation errors in documents using Hyperref or other preamble PDF initialization. The page-stream configuration is now applied before package loading. WSL remains the default. See [the diagnosis and validation](docs/preamble-stream-20261011.md).
+
 Version **0.0.20** fixes VS Code forward synchronization to pages that have never loaded, including late included chapters. The default VSIX uses WSL on Windows and bundles the Linux runtime. See [the diagnosis, validation, and installer](docs/forward-sync-20261011.md).
 
 Version **0.0.19** adds native Windows x64 preview support with retained compiler checkpoints. The separate native Windows VSIX ships one bundled executable, defaults to the native runtime, and needs an installed native TeX Live distribution. It does not need WSL at runtime. The executable verifies and extracts its embedded compiler/renderer DLLs into the user cache. See [Windows implementation, build instructions, validation, and limitations](docs/windows-native-20261011.md).
@@ -59,7 +61,7 @@ For the slower native full-build comparison, run `python -m prototype.demo --eng
 
 Open this repository in VS Code and press F5 using **Run BaKoMa prototype**. In the Extension Development Host, run **BaKoMa: Open Experimental Preview**. The extension discovers an active root document, its `% !TEX root` comment, `main.tex`, or the repository's `corpus/main.tex`; otherwise it prompts for a file. Set `bakoma.mainFile` to override discovery. The extension runs only in a trusted workspace.
 
-Alternatively, install the default WSL package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.20.vsix --force`, reload VS Code, and run the same preview command. It includes the Linux runtime and requires WSL with TeX Live when running on Windows. Build it with `python scripts/package_extension.py`. The separate native Windows package recipe remains available through `npm run package:windows`.
+Alternatively, install the default WSL package with `code --install-extension artifacts/bakoma-revived-prototype-0.0.21.vsix --force`, reload VS Code, and run the same preview command. It includes the Linux runtime and requires WSL with TeX Live when running on Windows. Build it with `python scripts/package_extension.py`. The separate native Windows package recipe remains available through `npm run package:windows`.
 
 For another project, open its folder and main `.tex` file, then run **BaKoMa: Open Experimental Preview**. Example workspace settings:
 

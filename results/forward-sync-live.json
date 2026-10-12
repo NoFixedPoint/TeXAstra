@@ -30,6 +30,30 @@
       "ok": true
     },
     {
+      "name": "paper.tex edit with hyperref produces a fresh preview",
+      "ok": true
+    },
+    {
+      "name": "paper.tex edit uses the incremental stream",
+      "ok": true
+    },
+    {
+      "name": "chapters/late.tex edit with hyperref produces a fresh preview",
+      "ok": true
+    },
+    {
+      "name": "chapters/late.tex edit uses the incremental stream",
+      "ok": true
+    },
+    {
+      "name": "real invalid TeX marks the previous preview stale",
+      "ok": true
+    },
+    {
+      "name": "corrected TeX restores a fresh preview",
+      "ok": true
+    },
+    {
       "name": "no browser errors",
       "ok": true
     }
