@@ -15,7 +15,8 @@ def check(name, passed):
 
 with sync_playwright() as pw:
     browser = pw.chromium.launch(headless=True)
-    page = browser.new_page(viewport={'width': 1440, 'height': 1000})
+    # Keep the next page within prefetch range with the full-width page layout.
+    page = browser.new_page(viewport={'width': 900, 'height': 1000})
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.add_init_script('window.outbound=[];window.acquireVsCodeApi=()=>({postMessage:m=>outbound.push(m)});')

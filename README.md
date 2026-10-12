@@ -85,6 +85,8 @@ Root and included-body text edits restore the latest retained engine checkpoint 
 
 The webview and browser demo share their renderer. The compiler service exchanges versioned source updates and page payloads over JSON lines. Its source mapping and compiler state do not depend on a separate native window.
 
+The preview uses a white background, compact controls, and a 4-pixel outer gutter. Pages fit the available panel width without a fixed width cap, with subtle outlines and 8-pixel spacing between pages. See the [appearance validation](docs/viewer-appearance-20261011.md).
+
 ## What the experiments establish
 
 - `scripts/generate_corpus.py` creates a deterministic 100-page, multi-file Chinese/English, math, macro, and TikZ corpus, plus edit scenarios.
