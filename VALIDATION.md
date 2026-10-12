@@ -1,95 +1,55 @@
 # Release validation
 
-## 0.1.2 - macOS
+## 0.1.2 ? Windows, WSL, and macOS
 
-Published as a regular release for Apple Silicon and Intel. Both native jobs
-passed on **macOS 15.7.9**, targeting macOS 15.0 or later.
+This is the first consolidated release. All four packages use extension version
+0.1.2 and include the fix for an unrelated legacy-encoded TeX file preventing a
+valid UTF-8 project from opening.
 
-[CI run](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38226791788) |
-[Release](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.2)
+### Packaged-runtime checks
 
-Both extracted VSIX packages passed the CV regression: a valid UTF-8 project
-compiles and retains source mappings with an unrelated non-UTF-8 TeX file in
-its folder. Text, TikZ, figure and table edits match fresh compilation, and
-project files remain unchanged. Long paths, included-file checkpoints, syntax
-error recovery, architecture, signatures and dependency audits also passed.
+Each VSIX is extracted into a path containing spaces. Its actual bundled runtime
+is checked for:
 
-The build commit is `675f0075f2bba4e0f24ad54c600147b6ebb53745`. GitHub's uploaded
-asset digests match the published checksum manifests; both VSIX digests match
-the native test reports. See [asset identities](results/macos-release-0.1.2.json),
-[Apple Silicon package checks](results/release-packages-darwin-arm64.json), and
-[Intel package checks](results/release-packages-darwin-x64.json). The dependency
-source archives also contain their corresponding validation reports.
+- Successful compilation and source mappings with an unrelated non-UTF-8 draft.
+- Text, TikZ, figure, and table edits that match a fresh compilation exactly.
+- Preservation of every original project file.
 
-Local extension unit checks, Python syntax compilation, source-index tests,
-and the WSL compile/edit encoding regression passed before native CI.
+[Windows/WSL package results](results/release-packages.json),
+[Apple Silicon results](results/release-packages-darwin-arm64.json), and
+[Intel macOS results](results/release-packages-darwin-x64.json) record the package
+hashes and individual checks. Windows/WSL packages are validated locally on
+Windows x64 and Ubuntu 22.04 WSL. Both macOS jobs passed on **macOS 15.7.9**,
+with a macOS 15.0 deployment target, in
+[the native CI run](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38226791788).
 
-Limitations: no interactive VS Code GUI test, Developer ID signing,
-notarization, macOS 15.0-specific test, or broader OS matrix was performed.
-The compatible TeX Live 2021 setup remains required. This release adds no
-automatic dependency installation and contains macOS packages only;
-Windows/WSL downloads remain at 0.1.0.
+The macOS checks also cover architecture, ad-hoc signatures, library dependencies,
+long paths, included-file checkpoints, syntax-error recovery, and source
+preservation. The macOS package bytes are unchanged from that successful run.
+The native build commit is `675f0075f2bba4e0f24ad54c600147b6ebb53745`.
 
-## 0.1.1 - macOS preview
+[Published asset identities](results/release-0.1.2.json) record the consolidated
+release's checksums and package versions. The supplied source archives contain
+the corresponding project and dependency sources. `SHA256SUMS` covers all four
+VSIX packages and all three source archives; architecture-specific macOS
+checksum files are retained as well.
 
-Both native jobs passed on **macOS 15.7.9**, using ARM64 and Intel x86-64
-GitHub runners. The deployment target is macOS 15.0.
+### Other validation
 
-[CI run](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38210954504) |
-[Published preview](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.1-macos)
+Extension unit tests, Python syntax checks, source-index tests, and the WSL
+compile/edit encoding regression passed during release preparation. Earlier
+platform acceptance also covered Windows bibliography/index tools, project
+assets, concurrent sessions, crash recovery, and Chromium document interaction.
+Those broader acceptance checks were not rerun for this consolidation.
 
-| Check | Apple Silicon | Intel |
-| --- | --- | --- |
-| Native engine, controller and checkpoint module build | Passed | Passed |
-| Architecture, ad-hoc signature and dynamic-library audit | Passed | Passed |
-| Isolated TeX Live 2021 with matching LuaHBTeX 1.14 formats | Passed | Passed |
-| Extension configuration, project discovery, editing, save and frame delivery | Passed | Passed |
-| Extracted VSIX: text, TikZ, figure and table edits equal fresh compilation | Passed | Passed |
-| Long nested paths and included-file edits resume a later-page checkpoint | Passed | Passed |
-| Syntax-error recovery and unchanged project source | Passed | Passed |
-| Published VSIX hashes match the tested packages | Passed | Passed |
+### Limits
 
-The release build is `de4e64b44d87d8536399d25c00875aab44834e1b`.
-[Published asset identities](results/macos-release-0.1.1.json),
-[ARM package results](results/release-packages-darwin-arm64.json),
-[Intel package results](results/release-packages-darwin-x64.json), and the
-[ARM](results/macos-runtime-arm64.json) / [Intel](results/macos-runtime-x64.json)
-dependency audits are recorded here. Package results and dependency audits
-also accompany the corresponding release source archives.
-All published VSIX/source-archive digests were checked against their checksum
-manifests; both VSIX identities match the native test reports.
+There is no clean-machine or broad OS compatibility matrix. Interactive VS Code
+GUI validation was not performed for the 0.1.2 packages. Windows binaries are
+unsigned; macOS binaries are ad-hoc signed, not Developer ID signed or notarized.
+macOS 15.0 itself was not tested. macOS still requires the compatible isolated
+TeX Live 2021 setup; newer MacTeX formats are not assumed compatible.
 
-Local regression checks also passed: Linux engine/controller builds, 31 Linux
-distribution checks, source-edit checks, the POSIX checkpoint fixture, extension
-unit tests, Python compileall, and diff validation. The macOS runtime has no
-Homebrew or Python runtime dependency.
-
-Limitations: no interactive VS Code GUI run, Developer ID signing, notarization,
-macOS 15.0-specific test, other macOS-version testing, or latency benchmark was
-performed. Newer MacTeX formats are not assumed compatible. The initial
-`check_live_mode.py` invocation against the one-page demo was unsuitable for its
-later-page assertion; the dedicated two-page checkpoint fixture passes instead.
-
-## 0.1.0 - Windows and WSL
-
-Tested on Windows x64 with TeX Live and Ubuntu 22.04 under WSL.
-
-| Check | Result |
-| --- | --- |
-| Extension configuration, project discovery, live edits, save handling, frame delivery | Passed |
-| Chromium rendering, queued frames, collapsible compile-error header | 27 checks passed |
-| WSL incremental vs. complete builds, including preamble PDF objects and error recovery | 54 checks passed |
-| Windows incremental vs. complete builds: 30 pages, TikZ, fonts, reflow, mappings, repeated edits | Passed |
-| Windows BibTeX, Biber, makeindex, PDF assets, concurrent sessions, crash recovery | 20 checks passed |
-| Windows bundle with restricted PATH, Unicode paths, damaged cache repair | Passed |
-| Windows compiler through Chromium: 100 pages, Chinese text, math, TikZ, navigation, error recovery | 26 checks passed |
-| README GIF: real text, TikZ, figure, and table source edits | Passed |
-
-Automated GitHub checks cover the extension and browser viewer. Full native
-compiler checks require the local toolchains and TeX Live; they are not run by
-GitHub Actions. These results do not establish compatibility with every LaTeX
-package, TeX Live version, Windows installation, or WSL distribution.
-
-The release includes SHA-256 checksums and the corresponding source materials.
-Binaries are unsigned. Signing and clean-machine installation coverage remain
-future release work.
+The selected TeX installation supplies packages and fonts. Automatic dependency
+installation and MiKTeX integration are not supported. Private CV/lecture sources
+and rendered documents are excluded from release materials.

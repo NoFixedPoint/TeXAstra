@@ -1,0 +1,12 @@
+{
+  "version": "0.1.2",
+  "sha256": "b667834f11e90f0a30e69b644b2baa9cd6669a381b4637123bd39fd1169435c4",
+  "target": "win32-x64",
+  "defaultRuntimeMode": "native",
+  "verifiedPackagedFiles": 154,
+  "runtimeSha256": "f3a6e9cbac434a48ec4182b2d8fb9c21330f2fba802ef4914582c9db5d9a18e2",
+  "nativeBinaries": [
+    "extension/native/runtime/windows-x64/texastra-backend.exe"
+  ],
+  "standalone": "texastra-backend-0.1.2-win32-x64.exe"
+}

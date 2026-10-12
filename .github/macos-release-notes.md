@@ -22,8 +22,7 @@ contain the validation reports; SHA-256 files cover the download assets.
 
 Binaries are ad-hoc signed, not Developer ID signed or notarized. No interactive
 VS Code GUI test or broad macOS-version compatibility claim is made.
-Windows/WSL packages remain available in the
-[0.1.0 release](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.0).
+Windows and WSL packages are included in this same 0.1.2 release.
 
 Package dependencies still come from the selected TeX installation; this release
 does not add automatic package installation or bundle Scientific Word helpers.

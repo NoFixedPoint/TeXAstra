@@ -15,7 +15,7 @@ to prepare the compatible TeX tree, then install the VSIX.
 For Windows/WSL:
 
 1. Install [VS Code](https://code.visualstudio.com/) and [TeX Live](https://www.tug.org/texlive/). For WSL, install TeX Live **inside Ubuntu 22.04** (`sudo apt install texlive-full`).
-2. Download **[Windows x64](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.0/texastra-windows-x64.vsix)** (no WSL needed) or **[WSL](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.0/texastra-wsl.vsix)**. In VS Code, run **Extensions: Install from VSIX…** and choose the file. Install one variant.
+2. Download **[Windows x64](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.2/texastra-windows-x64.vsix)** (no WSL needed) or **[WSL](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.2/texastra-wsl.vsix)**. In VS Code, run **Extensions: Install from VSIX…** and choose the file. Install one variant.
 3. Reload VS Code, open your trusted LaTeX project, and run **TeXAstra: Open Document**.
 
 Type in the source editor to update the document. Click rendered text to jump to its source; move the source cursor to find its output. Compile errors appear behind the collapsible header.

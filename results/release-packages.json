@@ -1,0 +1,63 @@
+{
+  "version": "0.1.2",
+  "packages": [
+    {
+      "platform": "wsl",
+      "sha256": "37963af705573ce1a5bc225f86394a497178485e816c02541acffe82c1f65eab",
+      "checks": [
+        {
+          "unrelatedLegacyEncoding": true,
+          "rootSourceMapped": true
+        },
+        {
+          "edit": "text",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "tikz",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "figure",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "table",
+          "matchesFullBuild": true
+        },
+        {
+          "projectFilesUnchanged": true
+        }
+      ]
+    },
+    {
+      "platform": "windows-x64",
+      "sha256": "b667834f11e90f0a30e69b644b2baa9cd6669a381b4637123bd39fd1169435c4",
+      "checks": [
+        {
+          "unrelatedLegacyEncoding": true,
+          "rootSourceMapped": true
+        },
+        {
+          "edit": "text",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "tikz",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "figure",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "table",
+          "matchesFullBuild": true
+        },
+        {
+          "projectFilesUnchanged": true
+        }
+      ]
+    }
+  ]
+}
