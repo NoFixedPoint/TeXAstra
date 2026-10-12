@@ -1,0 +1,66 @@
+{
+  "release": "https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.2",
+  "releaseId": 410420675,
+  "releaseIdUnchanged": true,
+  "macOSAssetsUnchanged": true,
+  "version": "0.1.2",
+  "allPublishedChecksumsVerified": true,
+  "windowsWSLSourceCommit": "19cdd71b8ac9ee20f28b811999bd3cc332d1c30f",
+  "macOSBuildCommit": "675f0075f2bba4e0f24ad54c600147b6ebb53745",
+  "assets": {
+    "SHA256SUMS": {
+      "bytes": 650,
+      "sha256": "c4cc8c1342060da054e85d4c38ff1f9f70ebef6cd1b4ff81aee5b149092b9c5a"
+    },
+    "SHA256SUMS-darwin-arm64": {
+      "bytes": 192,
+      "sha256": "a78a7282d8047cc0c142e86a97719c0d16725cae2a0a126405957f39f30412fe"
+    },
+    "SHA256SUMS-darwin-x64": {
+      "bytes": 188,
+      "sha256": "ad80e256be437f797d7bf00c759958dc6305fb24e931356b56a6ebf732754f81"
+    },
+    "texastra-darwin-arm64-sources.zip": {
+      "bytes": 262926024,
+      "sha256": "fa6a95fae87e3c99966ce360ffc23911897571262682ee9d166bc0943bfbd77d"
+    },
+    "texastra-darwin-x64-sources.zip": {
+      "bytes": 262926009,
+      "sha256": "17fc8a0d0a0d8e88db04031b684dbdceac2b87c4d9bb6f511e0fdc1992397121"
+    },
+    "texastra-macos-arm64.vsix": {
+      "bytes": 303496212,
+      "sha256": "360af353a2d8ccee8efac400347485f38ea9eb4530284cf6330f1ce0793c8350"
+    },
+    "texastra-macos-x64.vsix": {
+      "bytes": 304300195,
+      "sha256": "141660572e4ef1ee4522507b5b9f4fd62fb7d8d0d5d7d40fd20e03642f6d5b7e"
+    },
+    "texastra-sources.zip": {
+      "bytes": 350504972,
+      "sha256": "90fa401ecafa25d45bfad33f2678c083157660627fce420e259934c20dc677c0"
+    },
+    "texastra-windows-x64.vsix": {
+      "bytes": 193065541,
+      "sha256": "b667834f11e90f0a30e69b644b2baa9cd6669a381b4637123bd39fd1169435c4"
+    },
+    "texastra-wsl.vsix": {
+      "bytes": 219967082,
+      "sha256": "37963af705573ce1a5bc225f86394a497178485e816c02541acffe82c1f65eab"
+    }
+  },
+  "soleRelease": "v0.1.2",
+  "latest": true,
+  "prerelease": false,
+  "removedReleases": [
+    "v0.1.0",
+    "v0.1.1-macos"
+  ],
+  "historicalTagsPreserved": true,
+  "removedReleaseAssetBytes": 1899677374,
+  "packageValidation": {
+    "windowsAndWSL": "results/release-packages.json",
+    "macOSArm64": "results/release-packages-darwin-arm64.json",
+    "macOSIntel": "results/release-packages-darwin-x64.json"
+  }
+}
