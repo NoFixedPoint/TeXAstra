@@ -21,3 +21,11 @@ package, TeX Live version, Windows installation, or WSL distribution.
 The release includes SHA-256 checksums and the corresponding source materials.
 Binaries are unsigned. Signing and clean-machine installation coverage remain
 future release work.
+
+## macOS port ? 0.1.1
+
+Local Windows validation: Python compileall, the extension/viewer unit suite,
+and `git diff --check` pass. Native macOS compilation, dependency auditing,
+and extracted-VSIX edit/render comparisons are delegated to the macOS Actions
+matrix; results will be recorded after those jobs finish. No local Mac runtime
+or GUI extension-host validation has been performed.

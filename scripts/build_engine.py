@@ -1,5 +1,5 @@
 """Build the pinned LuaHBTeX token-origin patch on Linux (or Ubuntu-22.04 WSL)."""
-import argparse,hashlib,os,shutil,subprocess,sys,tarfile,urllib.request
+import argparse,hashlib,os,platform,shutil,subprocess,sys,tarfile,urllib.request
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 URL='https://archive.ubuntu.com/ubuntu/pool/main/t/texlive-bin/'
@@ -19,7 +19,8 @@ def main():
  if os.name=='nt':
   def linux(p):return subprocess.check_output(['wsl','-d','Ubuntu-22.04','--exec','wslpath','-a',str(p.resolve())],text=True).strip()
   subprocess.run(['wsl','-d','Ubuntu-22.04','--exec','python3',linux(Path(__file__)),'--runtime',linux(args.runtime)]+(['--source-only'] if args.source_only else []),check=True);return
- cache=Path.home()/'.cache/texastra-engine';source=cache/'source';build=cache/'build'
+ mac=sys.platform=='darwin'
+ cache=Path.home()/('.cache/texastra-engine-'+platform.machine() if mac else '.cache/texastra-engine');source=cache/'source';build=cache/'build'
  cache.mkdir(parents=True,exist_ok=True);build.mkdir(exist_ok=True)
  for name,digest in ARCHIVES.items():
   path=cache/name
@@ -52,22 +53,24 @@ def main():
  from patch import apply
  apply(source)
  if args.source_only:return
- signature='\n'.join(FLAGS)
+ flags=[f for f in FLAGS if not (mac and f.startswith('--with-system-'))]
+ if mac:flags+=['--without-x']
+ signature='\n'.join(flags)+('\n'+os.environ.get('MACOSX_DEPLOYMENT_TARGET','') if mac else '')
  if not (build/'.bako-configure').exists() or (build/'.bako-configure').read_text()!=signature:
-  with (build/'configure.log').open('w') as log:subprocess.run([str(source/'configure'),*FLAGS],cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
+  with (build/'configure.log').open('w') as log:subprocess.run([str(source/'configure'),*flags],cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
   (build/'.bako-configure').write_text(signature)
  print('Building LuaHBTeX; log:',build/'build.log',flush=True)
  with (build/'build.log').open('w') as log:
   jobs='-j'+str(min(os.cpu_count() or 2,12))
   for command in [['make','all-local'],['make','-C','texk/kpathsea',jobs],['make','-C','texk/ptexenc',jobs],
                   ['make','-C','libs',jobs],['make','-C','texk','all-local'],
-                  ['make','-C','texk/web2c',jobs,'luahbtex','ZZIPLIB_LIBS=-lzzip']]:
+                  ['make','-C','texk/web2c',jobs,'luahbtex',*([] if mac else ['ZZIPLIB_LIBS=-lzzip'])]]:
    subprocess.run(command,cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
  runtime=args.runtime.resolve();runtime.mkdir(parents=True,exist_ok=True)
  temporary=runtime/'texastra-luahbtex.new';shutil.copyfile(build/'texk/web2c/luahbtex',temporary)
  subprocess.run(['strip',str(temporary)],check=True);temporary.chmod(0o755);os.replace(temporary,runtime/'texastra-luahbtex')
  # Ship complete upstream source plus distro patches and our own build recipe.
  for name in ARCHIVES:shutil.copyfile(cache/name,runtime/name)
- shutil.copyfile('/usr/share/common-licenses/GPL-2',runtime/'LuaHBTeX-COPYING')
+ shutil.copyfile(ROOT/'licenses/GPL-2.0.txt',runtime/'LuaHBTeX-COPYING')
  print('Built',runtime/'texastra-luahbtex',flush=True)
 if __name__=='__main__':main()

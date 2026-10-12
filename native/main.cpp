@@ -309,7 +309,7 @@ int main(int argc, char **argv) {
             }
         }
 #ifndef _WIN32
-        fs::path executable = fs::canonical("/proc/self/exe"), runtime = executable.parent_path();
+        fs::path executable = executable_path(), runtime = executable.parent_path();
 #endif
 #ifdef _WIN32
         const char *default_checkpoint="windows";

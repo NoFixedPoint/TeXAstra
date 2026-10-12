@@ -181,7 +181,13 @@ struct Fd {
 inline void send_all(int fd, const std::string &s) {
     size_t sent = 0;
     while (sent < s.size()) {
+        #ifdef __APPLE__
+        int enabled = 1;
+        setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &enabled, sizeof(enabled));
+        auto n = ::send(fd, s.data() + sent, s.size() - sent, 0);
+#else
         auto n = ::send(fd, s.data() + sent, s.size() - sent, MSG_NOSIGNAL);
+#endif
         if (n < 0 && errno == EINTR) {
             continue;
         }
@@ -224,3 +230,7 @@ inline fs::path inside(const fs::path &root, const std::string &relative) {
     return p;
 }
 } // namespace bako
+
+#ifndef _WIN32
+#include "posix.hpp"
+#endif

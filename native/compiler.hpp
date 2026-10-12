@@ -26,6 +26,7 @@ class Engine {
     bool resource_available = false;
 #else
     Fd listener, directory_fd;
+    SocketDirectory socket_directory;
     Fd resource_channel;
 #endif
     pid_t process = -1;
@@ -57,14 +58,8 @@ class Engine {
             return -1;
         }
     }
-    static char state(pid_t pid) {
-        try {
-            auto s = read(fs::path("/proc") / std::to_string(pid) / "stat");
-            return s.at(s.rfind(") ") + 2);
-        } catch (...) {
-            return 'Z';
-        }
-    }
+    static char state(pid_t pid) { return process_state(pid); }
+
 #endif
     void cleanup_after(int index) {
 #ifndef _WIN32
@@ -136,10 +131,9 @@ class Engine {
         // inode was unlinked by a failed TeX run. They are not TeX inputs and
         // must never enter a compiler checkpoint's descriptor snapshot.
         posix_spawn_file_actions_addopen(&actions, 0, "/dev/null", O_RDONLY, 0);
-        posix_spawn_file_actions_addclosefrom_np(&actions, 3);
         posix_spawnattr_t attr;
         posix_spawnattr_init(&attr);
-        posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSID);
+        isolate_spawn(actions, attr);
         std::vector<std::string> env;
         for (char **e = environ; *e; ++e) {
             if (full && starts(*e, "openout_any=")) continue;
@@ -241,7 +235,7 @@ class Engine {
         auto channel=child.events.value;
         auto receive_bytes=[&](size_t size){return windows::receive_exact(channel,size,cancel);};
 #else
-        Fd client(accept4(listener.value, nullptr, nullptr, SOCK_CLOEXEC));
+        Fd client(accept_socket(listener.value));
         if (client.value < 0) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 return nullptr;
@@ -509,11 +503,11 @@ class Engine {
         windows::send_all(child.commands.value,"restore "+std::to_string(index)+" "+std::to_string(page+1)+"\n");
         resource_available=false;
 #else
-        Fd fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0));
+        Fd fd(unix_socket());
         sockaddr_un address = {};
         address.sun_family = AF_UNIX;
         auto path =
-            (fs::path("/proc/self/fd") / std::to_string(directory_fd.value) / page_name(index, "cp-", ".sock")).string();
+            socket_directory.path(directory, directory_fd.value, page_name(index, "cp-", ".sock"));
         if (path.size() >= sizeof(address.sun_path)) {
             throw std::runtime_error("Checkpoint socket path too long");
         }
@@ -802,14 +796,14 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             build_tools = std::make_unique<BuildTools>(directory, cancel, fs::path(options.main).stem().string(), options.distribution->bin);
             write(directory / "bako-environment.json", options.distribution->report.dump(2));
 #ifndef _WIN32
-            listener = Fd(socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0));
+            listener = Fd(unix_socket(true));
             sockaddr_un address = {};
             address.sun_family = AF_UNIX;
             // Resolve through a retained directory descriptor so deep project
             // paths do not overflow sockaddr_un's small pathname field.
-            directory_fd = Fd(open(directory.c_str(), O_PATH | O_DIRECTORY | O_CLOEXEC));
+            directory_fd = Fd(open(directory.c_str(), O_RDONLY | O_DIRECTORY | O_CLOEXEC));
             if (directory_fd.value < 0) throw std::runtime_error("Cannot open compiler directory");
-            auto socket_path = (fs::path("/proc/self/fd") / std::to_string(directory_fd.value) / "pages.sock").string();
+            auto socket_path = socket_directory.path(directory, directory_fd.value, "pages.sock");
             strcpy(address.sun_path, socket_path.c_str());
             if (listener.value < 0 ||
                 bind(listener.value, reinterpret_cast<sockaddr *>(&address), sizeof(address)) ||

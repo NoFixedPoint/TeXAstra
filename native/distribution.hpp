@@ -24,10 +24,9 @@ class Distribution {
         posix_spawn_file_actions_addopen(&actions,0,"/dev/null",O_RDONLY,0);
         posix_spawn_file_actions_adddup2(&actions,log.value,1);
         posix_spawn_file_actions_adddup2(&actions,log.value,2);
-        posix_spawn_file_actions_addclosefrom_np(&actions,3);
         posix_spawnattr_t attr;
         posix_spawnattr_init(&attr);
-        posix_spawnattr_setflags(&attr,POSIX_SPAWN_SETSID);
+        isolate_spawn(actions, attr);
         pid_t pid=-1;
         int error=posix_spawn(&pid,program.c_str(),&actions,&attr,argv.data(),environ);
         posix_spawn_file_actions_destroy(&actions);posix_spawnattr_destroy(&attr);
@@ -60,16 +59,26 @@ class Distribution {
         };
         std::istringstream paths(getenv("PATH")?getenv("PATH"):"");std::string part;
         while(std::getline(paths,part,':')) if(!part.empty())add(fs::absolute(part));
+#ifdef __APPLE__
+        add("/Library/TeX/texbin");
+#endif
         // Upstream TeX Live installations need not be on the inherited PATH.
         if(fs::is_directory("/usr/local/texlive")) for(const auto &entry:fs::directory_iterator("/usr/local/texlive"))
-            if(entry.is_directory())add(entry.path()/"bin/x86_64-linux");
+            if(entry.is_directory()) {
+#ifdef __APPLE__
+                add(entry.path()/"bin/universal-darwin");
+                add(entry.path()/"bin/x86_64-darwin");
+#else
+                add(entry.path()/"bin/x86_64-linux");
+#endif
+            }
         add("/usr/bin");
         if(!requested.empty()) {
-            if(!fs::path(requested).is_absolute())throw std::runtime_error("texBinDirectory / --tex-bin must be an absolute Linux directory in the selected WSL instance.");
+            if(!fs::path(requested).is_absolute())throw std::runtime_error("texBinDirectory / --tex-bin must be an absolute directory in the selected runtime.");
             if(!executable(fs::path(requested)/"kpsewhich"))throw std::runtime_error("Selected TeX binary directory has no executable kpsewhich: "+requested+". Select an installed TeX Live binary directory.");
             bin=fs::canonical(requested);add(bin);
         } else {
-            if(report["candidates"].empty())throw std::runtime_error("No TeX Live installation found. Install TeX Live in the selected Linux/WSL environment, or set texastra.texBinDirectory to its binary directory. TeXAstra does not install packages.");
+            if(report["candidates"].empty())throw std::runtime_error("No TeX Live installation found. Install compatible TeX Live (or MacTeX on macOS) in the selected environment, or set texastra.texBinDirectory to its binary directory. TeXAstra does not install packages.");
             bin=report["candidates"][0].get<std::string>();
         }
         report["binDirectory"]=bin.string();
@@ -90,7 +99,7 @@ class Distribution {
         report["texmfRoot"]=kpse({"--var-value=TEXMFROOT"});
         auto version=kpse({"--version"});report["kpathseaVersion"]=version.substr(0,version.find('\n'));
         if(report["kpathseaVersion"].get<std::string>().find("MiKTeX")!=std::string::npos)
-            throw std::runtime_error("MiKTeX integration is not supported by this Linux document runtime. Select TeX Live.");
+            throw std::runtime_error("MiKTeX integration is not supported by this document runtime. Select TeX Live.");
         Json identity={{"schema",1},{"bin",bin.string()},{"config",config},{"overrides",report["lookupOverrides"]},{"compiler",compiler}};
         // Recorder output starts after configuration lookup. Fingerprint these
         // separately, including newly added config files and filename databases.
