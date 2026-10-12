@@ -1,6 +1,6 @@
 # Release validation
 
-## 0.1.2 ? Windows, WSL, and macOS
+## 0.1.2 — Windows, WSL, and macOS
 
 This is the first consolidated release. All four packages use extension version
 0.1.2 and include the fix for an unrelated legacy-encoded TeX file preventing a

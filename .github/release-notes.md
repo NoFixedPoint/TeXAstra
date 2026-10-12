@@ -1,4 +1,4 @@
-TeXAstra brings live LaTeX typesetting and precise source ? document navigation to VS Code.
+TeXAstra brings live LaTeX typesetting and precise source ↔ document navigation to VS Code.
 
 **0.1.2 is the first consolidated release for Windows, WSL, and macOS.**
 
@@ -17,7 +17,7 @@ Install VS Code and TeX Live in your chosen environment. Download **one** packag
 | `texastra-macos-arm64.vsix` | Native Apple Silicon VS Code; macOS 15+ |
 | `texastra-macos-x64.vsix` | Intel VS Code; macOS 15+ |
 
-Run **Extensions: Install from VSIX?**, reload VS Code, open a trusted LaTeX project, and run **TeXAstra: Open Document**.
+Run **Extensions: Install from VSIX…**, reload VS Code, open a trusted LaTeX project, and run **TeXAstra: Open Document**.
 
 For macOS, use the bundled setup script to prepare the compatible isolated TeX Live 2021 tree and matching LuaHBTeX 1.14 formats; existing system MacTeX can remain separate. See the [macOS setup guide](https://github.com/NoFixedPoint/TeXAstra/blob/master/docs/macos.md) and [installation instructions](https://github.com/NoFixedPoint/TeXAstra#install).
 

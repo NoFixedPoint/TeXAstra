@@ -1,8 +1,8 @@
 # Release notes
 
-## 0.1.2 ? First release
+## 0.1.2 — First release
 
-- Live LaTeX typesetting and precise source ? document navigation in VS Code.
+- Live LaTeX typesetting and precise source ↔ document navigation in VS Code.
 - Native Windows x64, Ubuntu 22.04 WSL, Apple Silicon macOS, and Intel macOS
   packages in one release. macOS requires version 15 or later.
 - Incremental text, math, TikZ, figure and table updates; a white document canvas
