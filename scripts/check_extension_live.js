@@ -21,7 +21,7 @@ const vscode={
   commands:{registerCommand:(name,f)=>{if(name==='bakoma.showEnvironment')environmentCommand=f;else command=f;}},
   workspace:{isTrusted:true,textDocuments:[document,sibling],workspaceFolders:[{uri:{fsPath:project}}],
     getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(k,d)=>config[k]??defaults['bakoma.'+k]?.default??d}),
-    onDidChangeTextDocument:f=>{change=f;},createFileSystemWatcher:p=>{watchPattern=p;return watcher;},openTextDocument:async options=>{environmentDocument=options;return options;}},
+    onDidChangeTextDocument:f=>{change=f;},onDidSaveTextDocument(){},createFileSystemWatcher:p=>{watchPattern=p;return watcher;},openTextDocument:async options=>{environmentDocument=options;return options;}},
   window:{activeTextEditor:editor,createOutputChannel:()=>({append(){},appendLine:s=>outputLines.push(s)}),
     createWebviewPanel:()=>panel,onDidChangeTextEditorSelection:f=>{selectionChange=f;},showTextDocument:async()=>{},showErrorMessage:m=>{throw Error(m);}}
 };

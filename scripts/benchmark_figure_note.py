@@ -1,6 +1,7 @@
 """Measure real extension edit events through Chromium paint; editor APIs are mocked.
 
-The project is read only: edits live in the test editor buffer and backend cache.
+By default edits live in the test editor buffer and backend cache. Save tests
+require an isolated project under .work and restore its source afterward.
 Reports contain timings and source hashes, never document contents.
 """
 import argparse
@@ -27,7 +28,11 @@ def main():
     parser.add_argument('--repeats', type=int, default=6)
     parser.add_argument('--output', default='figure-note.json')
     parser.add_argument('--assert-stream', action='store_true')
+    parser.add_argument('--save-after-edit', action='store_true', help='Save only an isolated project copy under .work; restore its source afterward')
+    parser.add_argument('--assert-no-save-rebuild', action='store_true')
     args = parser.parse_args()
+    if args.save_after_edit and not (args.project/args.main).resolve().is_relative_to((ROOT/'.work').resolve()):
+        parser.error('Save tests require a source copy under .work')
     original = (args.project/args.main).read_bytes()
     source = original.decode('utf-8').replace('\r\n', '\n').replace('\r', '\n')
     offset = source.index(args.token)
@@ -44,10 +49,11 @@ def main():
               'runtimeSha256': {name: hashlib.sha256((args.extension/name).read_bytes()).hexdigest()
                                 for name in ['native/runtime/bakoma-backend', 'native/runtime/bakoma-luahbtex',
                                              'native/runtime/bako_snapshot.so', 'webview/viewer.js', 'extension/extension.js']},
-              'samples': []}
+              'samples': [], 'saveSamples': []}
     with (ROOT/'.work/figure-note.log').open('w', encoding='utf-8') as log:
         server = subprocess.Popen(['node', str(ROOT/'scripts/extension_benchmark_host.js'), '--project', str(args.project),
-                                   '--main', args.main, '--extension', str(args.extension), '--port', str(port)],
+                                   '--main', args.main, '--extension', str(args.extension), '--port', str(port),
+                                   '--allow-save', 'yes' if args.save_after_edit else 'no'],
                                   cwd=ROOT, stdout=log, stderr=log)
         try:
             with sync_playwright() as pw:
@@ -87,16 +93,32 @@ def main():
                     else:
                         report['firstEdit'] = sample
                     current = replacement
+                    if args.save_after_edit:
+                        saved = page.evaluate('async ()=>(await fetch("/save",{method:"POST",body:"{}"})).json()')
+                        page.wait_for_timeout(350)
+                        requests = page.evaluate('async ()=>(await fetch("/requests")).json()')
+                        reloads = [r for r in requests[saved['requestCount']:] if r['type'] == 'reload']
+                        save_sample = {'reloadRequests': len(reloads), 'observationMs': 350, 'saveToRebuiltPaintMs': None}
+                        if reloads:
+                            client = reloads[-1]['clientId']
+                            page.wait_for_function('id=>paintHistory.some(p=>p.clientId===id&&!p.stale)', arg=client, timeout=120000)
+                            painted = page.evaluate('id=>paintHistory.find(p=>p.clientId===id&&!p.stale)', client)
+                            save_sample['saveToRebuiltPaintMs'] = painted['at']-saved['savedAt']
+                        report['saveSamples'].append(save_sample)
+                        print('save', json.dumps(save_sample), flush=True)
                 assert not errors, errors
                 browser.close()
             report['medianDisplayMs'] = statistics.median(s['visibleMs'] for s in report['samples'])
             report['maxDisplayMs'] = max(s['visibleMs'] for s in report['samples'])
-            report['checks'] = ['Matching edited note visible', 'Current revision painted', 'No browser errors', 'Original source unchanged']
-            assert (args.project/args.main).read_bytes() == original
+            report['checks'] = ['Matching edited note visible', 'Current revision painted', 'No browser errors']
+            if not args.save_after_edit:
+                assert (args.project/args.main).read_bytes() == original
+                report['checks'].append('Original source unchanged')
             if args.assert_stream:
                 assert all(s['outputMode'] == 'page-stream' for s in report['samples']), 'Figure edits still finalize the whole document'
+            if args.assert_no_save_rebuild:
+                assert report['saveSamples'] and all(s['reloadRequests'] == 0 for s in report['saveSamples']), 'Save discards the incremental session'
         finally:
-            (ROOT/'results'/args.output).write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
             try:
                 request = urllib.request.Request(url+'/close', data=b'{}', method='POST')
                 urllib.request.urlopen(request, timeout=5).close()
@@ -104,6 +126,10 @@ def main():
             except Exception:
                 server.terminate()
                 server.wait(timeout=15)
+            if args.save_after_edit and args.project.resolve().is_relative_to((ROOT/'.work').resolve()):
+                (args.project/args.main).write_bytes(original)
+                report['savedFixtureRestored'] = (args.project/args.main).read_bytes() == original
+            (ROOT/'results'/args.output).write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
 
 
 if __name__ == '__main__':

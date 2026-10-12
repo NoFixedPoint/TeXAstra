@@ -1,0 +1,9 @@
+{
+  "version": "0.0.23",
+  "sha256": "20866f6f7b2789ee645e4aea002801b24419a329c37100bf898906345d3b8e9a",
+  "target": "wsl",
+  "defaultRuntimeMode": "wsl",
+  "verifiedPackagedFiles": 157,
+  "runtimeSha256": "5ac186a8e5c22d40881143180e06729a98e385a4732e0ed9a2683e7712ceaae5",
+  "compilerSha256": "d818aa7f3fdab0c6344e3fd6e3bc92300965115fc0cf6cddd5469d74a49ba7d7"
+}

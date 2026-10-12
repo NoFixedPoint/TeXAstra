@@ -2,11 +2,38 @@ const vscode=require('vscode');
 const fs=require('fs');
 const path=require('path');
 const readline=require('readline');
+const crypto=require('crypto');
 const {contains,resolveMain,resolveProject,supportedFile}=require('./project');
 function activate(context){
   let panel,backend,project,currentFrame,suppressSelection,visiblePage=0,serial=0,latestMutation=0,output=vscode.window.createOutputChannel('BaKoMa prototype');
   let watcher,reloadTimer,ready=false,selectedOptions={};
   const editBases=new Map();
+  const submittedBuffers=new Map(),savedContents=new Map();
+  const fileKey=file=>process.platform==='win32'?path.resolve(file).toLowerCase():path.resolve(file);
+  const fingerprint=text=>crypto.createHash('sha256').update(text.replace(/^\uFEFF/,'')).digest('hex');
+  const rememberBuffers=overlays=>{
+    submittedBuffers.clear();savedContents.clear();
+    for(const doc of vscode.workspace.textDocuments){
+      if(doc.uri.scheme!=='file'||!supportedFile(project,doc.uri.fsPath))continue;
+      const relative=path.relative(project,doc.uri.fsPath).replaceAll('\\','/');
+      if(!doc.isDirty||Object.hasOwn(overlays,relative))submittedBuffers.set(fileKey(doc.uri.fsPath),{document:doc,version:doc.version});
+    }
+  };
+  const alreadySubmitted=async file=>{
+    const key=fileKey(file);
+    if(!savedContents.has(key)&&!submittedBuffers.has(key))return false;
+    try{
+      const disk=fingerprint(await fs.promises.readFile(file,'utf8'));
+      if(disk===savedContents.get(key))return true;
+      const known=submittedBuffers.get(key),doc=known?.document;
+      // Checking bytes also handles watcher-before-save ordering and atomic
+      // saves. An open document alone is not proof that an external edit is known.
+      if(doc&&!doc.isClosed&&doc.version===known.version&&disk===fingerprint(doc.getText())){
+        savedContents.set(key,disk);return true;
+      }
+    }catch{/* Missing or unreadable inputs must still invalidate the preview. */}
+    return false;
+  };
   const distributionOptions=config=>Object.fromEntries(['runtimeMode','wslDistribution','texBinDirectory'].map(name=>[name,config.get(name,'')]).filter(([,value])=>value));
   context.subscriptions.push(vscode.commands.registerCommand('bakoma.showEnvironment',async()=>{
     if(!vscode.workspace.isTrusted)return;
@@ -17,12 +44,12 @@ function activate(context){
       await vscode.window.showTextDocument(document,{preview:false});
     }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));}
   }));
-  const stop=()=>{ready=false;editBases.clear();clearTimeout(reloadTimer);watcher?.dispose();watcher=null;if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
+  const stop=()=>{ready=false;editBases.clear();submittedBuffers.clear();savedContents.clear();clearTimeout(reloadTimer);watcher?.dispose();watcher=null;if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
   const dirtyBuffers=()=>Object.fromEntries(vscode.workspace.textDocuments
     .filter(doc=>doc.isDirty&&doc.uri.scheme==='file'&&contains(project,doc.uri.fsPath))
     .map(doc=>[path.relative(project,doc.uri.fsPath).replaceAll('\\','/'),doc.getText()]));
   const send=message=>{if(backend&&!backend.killed){
-    if(message.type==='start'||message.type==='reload')editBases.clear();
+    if(message.type==='start'||message.type==='reload'){editBases.clear();rememberBuffers(message.overlays||{});}
     const clientId=++serial;
     if(message.type==='start'||message.type==='edit'||message.type==='reload'){
       latestMutation=clientId;currentFrame=null;
@@ -71,18 +98,25 @@ function activate(context){
     backend.on('error',error=>{output.appendLine(String(error));web.postMessage({type:'status',state:'error',error:String(error)});});
     backend.on('exit',code=>{if(code)web.postMessage({type:'status',state:'error',error:`Backend exited (${code}). ${runtimeError} See Output → BaKoMa prototype.`});});
     watcher=vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(project,'**/*'));
+    const watchedBackend=backend,pendingDisk=new Map();let diskSequence=0;
+    // These are output PDFs already excluded from the compiler's input mirror.
+    const outputPdfs=new Set([root.replace(/\.tex$/i,'.pdf'),path.join(path.dirname(root),'main.pdf')].map(fileKey));
     const diskChanged=uri=>{
-      if(!ready||!supportedFile(project,uri.fsPath))return;
+      if(!ready||!supportedFile(project,uri.fsPath)||outputPdfs.has(fileKey(uri.fsPath)))return;
+      pendingDisk.set(fileKey(uri.fsPath),uri.fsPath);const sequence=++diskSequence;
       clearTimeout(reloadTimer);
-      reloadTimer=setTimeout(()=>{
-        if(ready)send({type:'reload',page:visiblePage,overlays:dirtyBuffers()});
+      reloadTimer=setTimeout(async()=>{
+        const known=await Promise.all([...pendingDisk.values()].map(alreadySubmitted));
+        if(!ready||backend!==watchedBackend||sequence!==diskSequence)return;
+        pendingDisk.clear();
+        if(known.some(value=>!value))send({type:'reload',page:visiblePage,overlays:dirtyBuffers()});
       },200);
     };
     watcher.onDidCreate(diskChanged);watcher.onDidChange(diskChanged);watcher.onDidDelete(diskChanged);
     readline.createInterface({input:backend.stdout}).on('line',line=>{
       try{const message=JSON.parse(line);if(message.type==='environment'){
         output.appendLine(JSON.stringify({...message.report,host:backend?.bakomaEnvironment},null,2));return;
-      }if(message.error){editBases.clear();output.appendLine(String(message.error));}if(message.type==='frame'){
+      }if(message.error){editBases.clear();submittedBuffers.clear();savedContents.clear();output.appendLine(String(message.error));}if(message.type==='frame'){
         if(message.environmentReport)output.appendLine(`Build environment report: ${message.environmentReport}`);
         if(message.clientId<latestMutation)message.isStale=true;
         if(!message.isStale&&(!currentFrame||message.generation>=currentFrame.generation))currentFrame=message;
@@ -126,6 +160,11 @@ function activate(context){
     }
     editBases.set(relative,{document:doc,version,length});
     send({type:'edit',file:relative,...message,sourceVersion:version,page:visiblePage,sentAt});
+    submittedBuffers.set(fileKey(doc.uri.fsPath),{document:doc,version});
+  }),vscode.workspace.onDidSaveTextDocument(doc=>{
+    if(!ready||doc.uri.scheme!=='file')return;
+    const key=fileKey(doc.uri.fsPath),known=submittedBuffers.get(key);
+    if(known?.document===doc&&known.version===doc.version)savedContents.set(key,fingerprint(doc.getText()));
   }),vscode.window.onDidChangeTextEditorSelection(event=>{
     if(!panel)return;
     const relative=path.relative(project,event.textEditor.document.uri.fsPath).replaceAll('\\','/');

@@ -1,0 +1,76 @@
+{
+  "checks": [
+    {
+      "name": "saving unchanged initial source sends no rebuild",
+      "ok": true
+    },
+    {
+      "name": "saving an already submitted edit sends no rebuild",
+      "ok": true
+    },
+    {
+      "name": "save preserves the current preview state",
+      "ok": true
+    },
+    {
+      "name": "first edit after saving retains its delta base",
+      "ok": true
+    },
+    {
+      "name": "typing after Save before watcher delivery sends no rebuild",
+      "ok": true
+    },
+    {
+      "name": "delayed duplicate save notifications send no rebuild",
+      "ok": true
+    },
+    {
+      "name": "watcher arriving before save callback sends no rebuild",
+      "ok": true
+    },
+    {
+      "name": "atomic-save delete/create events send no rebuild",
+      "ok": true
+    },
+    {
+      "name": "generated document PDFs do not trigger reloads",
+      "ok": true
+    },
+    {
+      "name": "late save notification after editor closes sends no rebuild",
+      "ok": true
+    },
+    {
+      "name": "different external source content still reloads",
+      "ok": true
+    },
+    {
+      "name": "external reload preserves unsaved editor text",
+      "ok": true
+    },
+    {
+      "name": "figure PDF updates mixed with Save still reload",
+      "ok": true
+    },
+    {
+      "name": "actual source deletion still reloads",
+      "ok": true
+    },
+    {
+      "name": "new input files still reload",
+      "ok": true
+    },
+    {
+      "name": "backend errors invalidate save suppression",
+      "ok": true
+    },
+    {
+      "name": "already submitted bibliography Save avoids a second rebuild",
+      "ok": true
+    },
+    {
+      "name": "closing preview cancels pending reloads",
+      "ok": true
+    }
+  ]
+}
