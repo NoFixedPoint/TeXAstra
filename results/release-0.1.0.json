@@ -1,0 +1,35 @@
+{
+  "version": "0.1.0",
+  "repository": "https://github.com/NoFixedPoint/TeXAstra",
+  "release": "https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.0",
+  "publicCommit": "5a9602005c31a63e6e4c2feea229afe379006300",
+  "ci": {
+    "status": "success",
+    "url": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/38207648103"
+  },
+  "isolatedVSCodeInstalls": {
+    "wsl": "0.1.0",
+    "windows-x64": "0.1.0"
+  },
+  "verifiedUploadDigests": 4,
+  "verifiedPublicReadmeLinks": 3,
+  "packagedEditComparisons": 8,
+  "demo": {
+    "editTypes": [
+      "text",
+      "tikz",
+      "figure",
+      "table"
+    ],
+    "frames": 185,
+    "seconds": 18.5,
+    "accelerated": false
+  },
+  "limitations": [
+    "Unsigned binaries",
+    "Native compiler checks run locally, not in GitHub Actions",
+    "Tested on one Windows x64 machine with Ubuntu 22.04 WSL",
+    "No macOS, ARM, or MiKTeX support"
+  ],
+  "licensing": "MIT for original source except identified upstream material; GPL/AGPL bundled components retain their licenses"
+}

@@ -14,3 +14,6 @@ AGENTS.md
 task*.md
 .vscode/**
 scripts/inspect_bakoma_*
+assets/**
+examples/**
+.github/**

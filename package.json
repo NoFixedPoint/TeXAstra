@@ -2,7 +2,7 @@
   "name": "texastra",
   "displayName": "TeXAstra",
   "description": "Interactive LaTeX editing with live typesetting and precise source navigation.",
-  "version": "0.0.28",
+  "version": "0.1.0",
   "publisher": "texastra",
   "engines": {
     "vscode": "^1.85.0"
@@ -102,6 +102,16 @@
     "check:build-tools": "python scripts/check_build_tools.py",
     "check:project-assets": "python scripts/check_project_assets.py",
     "check:distribution": "python scripts/check_distribution.py",
-    "check:configuration": "node scripts/check_configuration.js"
+    "check:configuration": "node scripts/check_configuration.js",
+    "test": "node scripts/check_unit.js"
+  },
+  "license": "SEE LICENSE IN LICENSING.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NoFixedPoint/TeXAstra.git"
+  },
+  "homepage": "https://github.com/NoFixedPoint/TeXAstra#readme",
+  "bugs": {
+    "url": "https://github.com/NoFixedPoint/TeXAstra/issues"
   }
 }

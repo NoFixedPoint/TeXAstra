@@ -25,8 +25,11 @@ Components and source locations:
 - Microsoft Visual C++ runtime (`msvcp140.dll`, `vcruntime140.dll`,
   `vcruntime140_1.dll`), unmodified redistributable files supplied by the installed
   Visual Studio toolchain. Microsoft license terms apply to these components.
+  [Runtime license terms](https://visualstudio.microsoft.com/license-terms/vs2022-cruntime/)
+  and [distributable code list](https://aka.ms/vs/17/redist.txt).
 
-`scripts/windows_sources.py` assembles the source kit beside the bundle;
+`scripts/windows_sources.py` followed by `scripts/release_sources.py` assembles
+the complete source kit beside the bundle;
 `scripts/package_extension.py --target win32-x64` includes it in the VSIX.
 The engine build recovers its library sources from pinned upstream commit
 `7652969578ab227a3ae1774f0530f175e4a5abe2`. To reconstruct that source tree offline,

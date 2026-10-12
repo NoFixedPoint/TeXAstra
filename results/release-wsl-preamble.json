@@ -1,0 +1,220 @@
+{
+  "checks": [
+    {
+      "name": "hyperref initial pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 1 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 1 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 1 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 1 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 1 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 2 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 2 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 2 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 2 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 2 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 3 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 3 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 3 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 3 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "hyperref edit 3 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "hyperref real TeX error is still rejected",
+      "ok": true
+    },
+    {
+      "name": "hyperref valid edit recovers after an error",
+      "ok": true
+    },
+    {
+      "name": "early-object initial pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 1 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 1 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 1 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 1 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 1 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 2 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 2 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 2 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 2 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 2 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 3 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 3 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 3 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 3 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "early-object edit 3 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "early-object real TeX error is still rejected",
+      "ok": true
+    },
+    {
+      "name": "early-object valid edit recovers after an error",
+      "ok": true
+    },
+    {
+      "name": "ordinary initial pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 1 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 1 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 1 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 1 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 1 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 2 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 2 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 2 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 2 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 2 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 3 compiles: ok",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 3 streams without full export",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 3 pixels match full build",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 3 selection matches full build",
+      "ok": true
+    },
+    {
+      "name": "ordinary edit 3 retains token mapping",
+      "ok": true
+    },
+    {
+      "name": "ordinary real TeX error is still rejected",
+      "ok": true
+    },
+    {
+      "name": "ordinary valid edit recovers after an error",
+      "ok": true
+    }
+  ]
+}

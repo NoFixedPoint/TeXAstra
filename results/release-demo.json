@@ -1,0 +1,22 @@
+[
+  {
+    "edit": "text",
+    "source": "The result is beautiful.",
+    "rendered": true
+  },
+  {
+    "edit": "tikz",
+    "source": "{Ideas};",
+    "rendered": true
+  },
+  {
+    "edit": "figure",
+    "source": "width=0.95",
+    "rendered": true
+  },
+  {
+    "edit": "table",
+    "source": "TeXAstra & 99",
+    "rendered": true
+  }
+]

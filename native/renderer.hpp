@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Geometry adapted from PyMuPDF; copyright Artifex Software and contributors.
 #pragma once
 #include "source.hpp"
 #include <mupdf/fitz.h>

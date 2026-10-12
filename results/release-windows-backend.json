@@ -1,0 +1,464 @@
+{
+  "platform": "win32-x64",
+  "pages": 30,
+  "checks": [
+    {
+      "name": "native complete document",
+      "ok": true
+    },
+    {
+      "name": "Windows session path",
+      "ok": true
+    },
+    {
+      "name": "late text streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "late text retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "late text skips earlier pages",
+      "ok": true
+    },
+    {
+      "name": "late text exact pixels",
+      "ok": true
+    },
+    {
+      "name": "late text exact selection",
+      "ok": true
+    },
+    {
+      "name": "late text exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "middle math streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "middle math retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "middle math skips earlier pages",
+      "ok": true
+    },
+    {
+      "name": "middle math exact pixels",
+      "ok": true
+    },
+    {
+      "name": "middle math exact selection",
+      "ok": true
+    },
+    {
+      "name": "middle math exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "invalid TeX reports error",
+      "ok": true
+    },
+    {
+      "name": "checkpoint recovery after TeX error",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "rotated TikZ retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ skips earlier pages",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ exact pixels",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ exact selection",
+      "ok": true
+    },
+    {
+      "name": "rotated TikZ exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "new font glyph streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "new font glyph retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "new font glyph skips earlier pages",
+      "ok": true
+    },
+    {
+      "name": "new font glyph exact pixels",
+      "ok": true
+    },
+    {
+      "name": "new font glyph exact selection",
+      "ok": true
+    },
+    {
+      "name": "new font glyph exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "first-page reflow streams checkpoint output",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "first-page reflow retains compiler process",
+      "ok": true
+    },
+    {
+      "name": "first-page reflow exact pixels",
+      "ok": true
+    },
+    {
+      "name": "first-page reflow exact selection",
+      "ok": true
+    },
+    {
+      "name": "first-page reflow exact source mapping",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 0",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 1",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 2",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 3",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 4",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 5",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 6",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 7",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 8",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 9",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 10",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 11",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 12",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 13",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 14",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 15",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 16",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 17",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 18",
+      "ok": true
+    },
+    {
+      "name": "repeat edit 19",
+      "ok": true
+    },
+    {
+      "name": "forward source navigation",
+      "ok": true
+    }
+  ],
+  "samples": [
+    {
+      "case": "late text",
+      "roundTripMs": 63.59739997424185,
+      "checkpointMs": 13.1392,
+      "compileMs": 39.899,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 25.639,
+        "shipoutAndPublish": 3.1,
+        "typeset": 9.946
+      },
+      "pipelineMs": 63.0784,
+      "prepareMs": 4.4688,
+      "renderMs": 3.7324,
+      "renderStagesMs": {
+        "displayList": 0.1329,
+        "origins": 0.108,
+        "png": 2.7991,
+        "raster": 0.5876,
+        "text": 0.0236
+      },
+      "resumedFrom": 30,
+      "sourceUpdateMs": 0.7678
+    },
+    {
+      "case": "middle math",
+      "roundTripMs": 89.69559997785836,
+      "checkpointMs": 26.9051,
+      "compileMs": 23.3767,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 9.961,
+        "shipoutAndPublish": 1.538,
+        "typeset": 10.164
+      },
+      "fontRefreshMs": 18.316,
+      "fontResourceBytes": 31094,
+      "pipelineMs": 88.8015,
+      "prepareMs": 11.2803,
+      "renderMs": 6.2709,
+      "renderStagesMs": {
+        "displayList": 0.9877,
+        "origins": 0.1862,
+        "png": 4.0676,
+        "raster": 0.8904,
+        "text": 0.0299
+      },
+      "resumedFrom": 16,
+      "sourceUpdateMs": 1.3536
+    },
+    {
+      "case": "rotated TikZ",
+      "roundTripMs": 65.77879999531433,
+      "checkpointMs": 21.3126,
+      "compileMs": 27.5037,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 7.272,
+        "shipoutAndPublish": 2.277,
+        "typeset": 15.053
+      },
+      "pipelineMs": 64.8753,
+      "prepareMs": 8.1398,
+      "renderMs": 5.0953,
+      "renderStagesMs": {
+        "displayList": 0.1359,
+        "origins": 0.1529,
+        "png": 4.1194,
+        "raster": 0.551,
+        "text": 0.0299
+      },
+      "resumedFrom": 16,
+      "sourceUpdateMs": 1.2805
+    },
+    {
+      "case": "new font glyph",
+      "roundTripMs": 96.16570000071079,
+      "checkpointMs": 21.9438,
+      "compileMs": 28.2553,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 7.771,
+        "shipoutAndPublish": 2.477,
+        "typeset": 16.019
+      },
+      "fontRefreshMs": 27.8336,
+      "fontResourceBytes": 31504,
+      "pipelineMs": 95.245,
+      "prepareMs": 8.1542,
+      "renderMs": 6.4168,
+      "renderStagesMs": {
+        "displayList": 1.0302,
+        "origins": 0.1893,
+        "png": 4.1867,
+        "raster": 0.8008,
+        "text": 0.0892
+      },
+      "resumedFrom": 16,
+      "sourceUpdateMs": 1.3501
+    },
+    {
+      "case": "first-page reflow",
+      "roundTripMs": 691.1314000026323,
+      "checkpointMs": 20.3961,
+      "compileMs": 272.9886,
+      "compilerStagesMs": {
+        "fork": 0.0,
+        "replaceChild": 0.0,
+        "restore": 19.875,
+        "shipoutAndPublish": 1.804,
+        "typeset": 175.635
+      },
+      "fontRefreshMs": 233.838,
+      "fontResourceBytes": 4867,
+      "pipelineMs": 670.1934,
+      "prepareMs": 10.5077,
+      "renderMs": 31.0241,
+      "renderStagesMs": {
+        "displayList": 7.9417,
+        "origins": 10.8962,
+        "png": 6.3359,
+        "raster": 2.2517,
+        "text": 2.547
+      },
+      "resumedFrom": 1,
+      "sourceUpdateMs": 1.4442
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 471.66729997843504,
+      "pipelineMs": 452.4103
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 476.7128999810666,
+      "pipelineMs": 456.0035
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 474.428200017428,
+      "pipelineMs": 455.3429
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 470.63269998761825,
+      "pipelineMs": 451.5218
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 472.499900002731,
+      "pipelineMs": 452.6487
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 471.88930000993423,
+      "pipelineMs": 452.0289
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 473.7139000208117,
+      "pipelineMs": 454.188
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 477.5128999899607,
+      "pipelineMs": 450.3749
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 473.7578999774996,
+      "pipelineMs": 454.3091
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 482.48700000112876,
+      "pipelineMs": 463.2228
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 473.6038999981247,
+      "pipelineMs": 453.9089
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 501.74870001501404,
+      "pipelineMs": 481.8688
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 472.63690002728254,
+      "pipelineMs": 453.2657
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 492.6174000138417,
+      "pipelineMs": 472.4968
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 474.10110000055283,
+      "pipelineMs": 454.3919
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 481.1187000013888,
+      "pipelineMs": 453.3238
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 473.4488000103738,
+      "pipelineMs": 453.879
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 473.11019999324344,
+      "pipelineMs": 452.7253
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 474.66750000603497,
+      "pipelineMs": 455.421
+    },
+    {
+      "case": "repeated early edit",
+      "roundTripMs": 474.0303999860771,
+      "pipelineMs": 454.5326
+    }
+  ],
+  "latency": {
+    "medianMs": 473.89414998178836,
+    "p95Ms": 492.6174000138417
+  }
+}

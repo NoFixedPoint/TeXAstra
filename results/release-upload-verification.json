@@ -1,0 +1,22 @@
+[
+  {
+    "name": "SHA256SUMS",
+    "ok": true,
+    "bytes": 266
+  },
+  {
+    "name": "texastra-sources.zip",
+    "ok": true,
+    "bytes": 350474637
+  },
+  {
+    "name": "texastra-windows-x64.vsix",
+    "ok": true,
+    "bytes": 193050276
+  },
+  {
+    "name": "texastra-wsl.vsix",
+    "ok": true,
+    "bytes": 219945165
+  }
+]

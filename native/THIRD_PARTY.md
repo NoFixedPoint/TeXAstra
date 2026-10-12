@@ -26,3 +26,5 @@
 
 The build script pins dependency versions and download digests. C++ source, build
 instructions, and reference tests accompany TeXAstra.
+`scripts/release_sources.py` adds the full MuPDF and PyMuPDF source archives and
+license texts to each release. See [the distribution licensing](../LICENSING.md).

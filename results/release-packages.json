@@ -1,0 +1,49 @@
+{
+  "version": "0.1.0",
+  "packages": [
+    {
+      "platform": "wsl",
+      "sha256": "9145dc7390626efd8c8d6ff0073ea05ce3c30097bf9d4bb7e51740038ece7694",
+      "checks": [
+        {
+          "edit": "text",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "tikz",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "figure",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "table",
+          "matchesFullBuild": true
+        }
+      ]
+    },
+    {
+      "platform": "windows-x64",
+      "sha256": "34f373b088506215b6e4b3397e1db33221feedc28607821eeb4da16aa76f03ea",
+      "checks": [
+        {
+          "edit": "text",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "tikz",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "figure",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "table",
+          "matchesFullBuild": true
+        }
+      ]
+    }
+  ]
+}
