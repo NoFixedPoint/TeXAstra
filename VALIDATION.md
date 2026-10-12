@@ -56,3 +56,7 @@ MetaPost/MFLua targets pulling in Cairo. The Mac configuration now disables thos
 targets explicitly and invalidates cached sub-configurations when flags change.
 The Linux controller rebuild and POSIX checkpoint fixture still pass after the
 accepted-socket blocking fix. Python compileall also passes.
+
+The fifth ARM build reached final engine linking and exposed missing optional
+libpng NEON objects in the historical makefile. The Mac recipe now selects
+libpng's portable implementation. Syntax/diff validation passes.

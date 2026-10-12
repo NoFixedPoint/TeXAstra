@@ -5,6 +5,24 @@ and Intel (`darwin-x64`). The initial deployment target is **macOS 15 or later**
 The release workflow compiles and validates on both architectures. Until it passes,
 these are development build instructions, not a claim of a tested binary release.
 
+## Install a prebuilt preview
+
+Install the VSIX matching your VS Code architecture from the macOS preview
+release, then reload VS Code. If you need the compatible TeX tree, install
+Python 3.11.8+ and run the setup script bundled inside the extension. For example
+(the extension folder name can include an architecture suffix):
+
+```sh
+ls -d "$HOME"/.vscode/extensions/texastra.texastra-*
+python3 "$HOME/.vscode/extensions/texastra.texastra-0.1.1-darwin-arm64/scripts/install_test_texlive.py" \
+  --destination "$HOME/texastra-texlive-2021"
+```
+
+Use the actual folder shown by `ls`. Set `texastra.texBinDirectory` to the absolute
+path printed by the installer. Python is needed only for this setup, not to run
+the installed extension. If you already have a compatible engine/format/package
+combination, select that TeX Live directory instead.
+
 ## Build on your Mac
 
 Install Xcode Command Line Tools (`xcode-select --install`), native Python 3.11+
@@ -12,6 +30,7 @@ Install Xcode Command Line Tools (`xcode-select --install`), native Python 3.11+
 
 ```sh
 brew install python@3.11 node@22 cmake
+export PATH="$(brew --prefix python@3.11)/libexec/bin:$(brew --prefix node@22)/bin:$PATH"
 git clone https://github.com/NoFixedPoint/TeXAstra.git
 cd TeXAstra
 git checkout macos-distribution

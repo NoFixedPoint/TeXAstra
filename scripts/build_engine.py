@@ -76,6 +76,9 @@ def main():
   png=source/'libs/libpng/libpng-src/pngpriv.h'
   text=png.read_text()
   if '!defined(__APPLE__)' not in text:text=text.replace('defined(TARGET_OS_MAC)', '(defined(TARGET_OS_MAC) && !defined(__APPLE__))')
+  # This historical makefile omits libpng's ARM NEON implementation objects.
+  if '#define PNG_ARM_NEON_OPT 0' not in text:
+   text=text.replace('#define PNGPRIV_H', '#define PNGPRIV_H\n#define PNG_ARM_NEON_OPT 0', 1)
   if png.read_text()!=text:png.write_text(text)
  sys.path.insert(0,str(ROOT/'engine'))
  from patch import apply
