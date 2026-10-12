@@ -33,10 +33,9 @@ class BuildTools {
         posix_spawn_file_actions_adddup2(&actions, log.value, 1);
         posix_spawn_file_actions_adddup2(&actions, log.value, 2);
         posix_spawn_file_actions_addopen(&actions, 0, "/dev/null", O_RDONLY, 0);
-        posix_spawn_file_actions_addclosefrom_np(&actions, 3);
         posix_spawnattr_t attr;
         posix_spawnattr_init(&attr);
-        posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSID);
+        isolate_spawn(actions, attr);
         pid_t pid = -1;
         int error = posix_spawn(&pid, program.c_str(), &actions, &attr, argv.data(), environ);
         posix_spawn_file_actions_destroy(&actions);

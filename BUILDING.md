@@ -21,6 +21,12 @@ python3 scripts/build_cpp.py
 On Windows, run the same scripts with `python`; they use Ubuntu-22.04 in WSL.
 They cache pinned source downloads under `.work/` and the user's cache directory.
 
+## macOS (Apple Silicon and Intel)
+
+See [the macOS build and release guide](docs/macos.md). The macOS distribution
+uses native builds for `darwin-arm64` and `darwin-x64`, with macOS 15 as its
+initial minimum. It requires a compatible TeX Live 2021 installation.
+
 ## Native Windows x64
 
 Install TeX Live, Visual Studio Build Tools with C++ x64 tools and a Windows SDK,

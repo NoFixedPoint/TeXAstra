@@ -1,0 +1,37 @@
+{
+  "version": "0.1.1",
+  "packages": [
+    {
+      "platform": "darwin-arm64",
+      "sha256": "1769e9d22a2c9f5c655c526537971fdc26841337d07024c52ab520aa34b46c19",
+      "checks": [
+        {
+          "edit": "text",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "tikz",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "figure",
+          "matchesFullBuild": true
+        },
+        {
+          "edit": "table",
+          "matchesFullBuild": true
+        },
+        {
+          "ok": true,
+          "checks": [
+            "long nested path",
+            "included file checkpoint",
+            "fresh compile equality",
+            "syntax error recovery",
+            "source preservation"
+          ]
+        }
+      ]
+    }
+  ]
+}

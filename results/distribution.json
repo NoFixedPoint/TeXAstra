@@ -1,0 +1,129 @@
+{
+  "checks": [
+    {
+      "name": "discovers installed kpathsea",
+      "ok": true
+    },
+    {
+      "name": "reports engine distribution format and dependencies",
+      "ok": true
+    },
+    {
+      "name": "initial compatibility compile is cold",
+      "ok": true
+    },
+    {
+      "name": "unchanged preflight reuses verified dependencies",
+      "ok": true
+    },
+    {
+      "name": "configuration and filename databases are fingerprinted",
+      "ok": true
+    },
+    {
+      "name": "inherited lookup overrides are explicit in report",
+      "ok": true
+    },
+    {
+      "name": "custom configuration participates in fingerprint",
+      "ok": true
+    },
+    {
+      "name": "configuration changes invalidate preflight cache",
+      "ok": true
+    },
+    {
+      "name": "explicit installation overrides PATH",
+      "ok": true
+    },
+    {
+      "name": "all auxiliary tools belong to selected directory",
+      "ok": true
+    },
+    {
+      "name": "different installation changes cache identity",
+      "ok": true
+    },
+    {
+      "name": "discovers installation from PATH first",
+      "ok": true
+    },
+    {
+      "name": "invalid explicit selection is actionable relative/bin",
+      "ok": true
+    },
+    {
+      "name": "invalid explicit selection is actionable /tmp/texastra-distribution-b2y31ywk/absent",
+      "ok": true
+    },
+    {
+      "name": "missing format explains distribution maintenance",
+      "ok": true
+    },
+    {
+      "name": "full comparison checks its own compiler without Lua format",
+      "ok": true
+    },
+    {
+      "name": "incompatible format fails actual bundled engine probe",
+      "ok": true
+    },
+    {
+      "name": "compatibility probe leaves selected format untouched",
+      "ok": true
+    },
+    {
+      "name": "compatible copied format compiles",
+      "ok": true
+    },
+    {
+      "name": "copied format cache is reusable",
+      "ok": true
+    },
+    {
+      "name": "format changes invalidate compatibility cache",
+      "ok": true
+    },
+    {
+      "name": "unused optional tools do not block preflight",
+      "ok": true
+    },
+    {
+      "name": "required missing tool cannot fall back to PATH",
+      "ok": true
+    },
+    {
+      "name": "selected tool executes on real bibliography build",
+      "ok": true
+    },
+    {
+      "name": "build report includes actual external dependencies",
+      "ok": true
+    },
+    {
+      "name": "missing package names file installation and remedy",
+      "ok": true
+    },
+    {
+      "name": "selected project builds",
+      "ok": true
+    },
+    {
+      "name": "same distribution reuses project cache",
+      "ok": true
+    },
+    {
+      "name": "distribution switch invalidates project cache",
+      "ok": true
+    },
+    {
+      "name": "hung discovery process is bounded",
+      "ok": true
+    },
+    {
+      "name": "preflight does not modify project sources",
+      "ok": true
+    }
+  ],
+  "runtimeSha256": "e0aeec7612f6e1f0e3e57d368b41bed3e636cd1b3bd2c1d08bffcddfaee853a3"
+}

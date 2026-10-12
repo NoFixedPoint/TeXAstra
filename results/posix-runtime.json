@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "checks": [
+    "long nested path",
+    "included file checkpoint",
+    "fresh compile equality",
+    "syntax error recovery",
+    "source preservation"
+  ]
+}

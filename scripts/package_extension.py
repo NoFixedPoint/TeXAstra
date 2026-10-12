@@ -6,10 +6,16 @@ ROOT=Path(__file__).resolve().parents[1]
 for directory in ('.work','results','artifacts'):(ROOT/directory).mkdir(exist_ok=True)
 parser=argparse.ArgumentParser()
 parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime')
-parser.add_argument('--target',choices=['wsl','linux-x64','win32-x64'],default='wsl',
+parser.add_argument('--target',choices=['wsl','linux-x64','win32-x64','darwin-x64','darwin-arm64'],default='wsl',
                     help='wsl produces a VSIX installable in Windows VS Code with the bundled Linux runtime')
 args=parser.parse_args()
 windows=args.target=='win32-x64'
+mac=args.target.startswith('darwin-')
+if mac:
+    metadata=json.loads((args.runtime/'macos-build.json').read_text())
+    if metadata['target']!=args.target:raise SystemExit('Runtime architecture does not match requested VSIX target')
+    unexpected=list(args.runtime.glob('libmupdf.so*'))+list(args.runtime.glob('*.exe'))+list(args.runtime.glob('*.dll'))
+    if unexpected:raise SystemExit('Mixed-platform runtime directory; build macOS in a fresh checkout: '+str(unexpected))
 backend='texastra-backend.exe' if windows else 'texastra-backend'
 if not (args.runtime/backend).is_file():raise SystemExit('Build the selected native runtime before packaging')
 for required in ['mupdf-1.26.12-source.tar.gz', 'pymupdf-1.26.7.tar.gz',
@@ -33,7 +39,7 @@ destination=stage/'native/runtime/windows-x64' if windows else stage/'native/run
 shutil.copytree(args.runtime.resolve(),destination,ignore=shutil.ignore_patterns('*.new','bako_internal.so','windows-x64','bakoma-*'))
 manifest=json.loads((stage/'package.json').read_text(encoding='utf-8'))
 runtime_setting=manifest['contributes']['configuration']['properties']['texastra.runtimeMode']
-runtime_setting['default']='native' if windows else 'wsl'
+runtime_setting['default']='native' if windows or mac else 'wsl'
 if windows:runtime_setting['description']='Windows: use the bundled native Windows backend by default. WSL requires a separately installed Linux runtime. Reopen the document after changing.'
 (stage/'package.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
 suffix='' if args.target=='wsl' else '-'+args.target
@@ -55,7 +61,7 @@ with zipfile.ZipFile(artifact) as archive:
     assert json.loads(archive.read('extension/package.json'))['version']==version
     assert not any('bakoma' in name.lower() or '/prototype/' in name for name in archive.namelist())
     assert not any(name.startswith('extension/docs/') for name in archive.namelist())
-    assert json.loads(archive.read('extension/package.json'))['contributes']['configuration']['properties']['texastra.runtimeMode']['default']==('native' if windows else 'wsl')
+    assert json.loads(archive.read('extension/package.json'))['contributes']['configuration']['properties']['texastra.runtimeMode']['default']==('native' if windows or mac else 'wsl')
     if args.target=='wsl':assert b'TargetPlatform=' not in archive.read('extension.vsixmanifest')
     assert 'extension/native/runtime/bako_internal.so' not in archive.namelist()
     if windows:

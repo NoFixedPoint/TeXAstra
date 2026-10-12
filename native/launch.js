@@ -24,7 +24,7 @@ function linuxPath(value,distribution='Ubuntu-22.04'){
   throw new Error(`The C++ backend requires a local drive or a WSL path in ${distribution}.`);
 }
 function command(root,project,options={}){
-  if(!['win32','linux'].includes(process.platform))throw new Error('The document runtime requires Linux x86-64 or native Windows x64. Native macOS is not supported.');
+  if(!['win32','linux','darwin'].includes(process.platform))throw new Error('The document runtime requires Linux, Windows, or macOS.');
   if(options.runtimeMode&&!['native','wsl'].includes(options.runtimeMode))throw new Error('runtimeMode must be native or wsl.');
   if(process.platform==='win32'&&options.runtimeMode!=='wsl'){
     if(process.arch!=='x64')throw new Error('The native Windows runtime currently requires an x64 extension host.');
@@ -32,6 +32,7 @@ function command(root,project,options={}){
     if(!fs.existsSync(executable))throw new Error(`Native Windows runtime is missing: ${executable}. Install the Windows VSIX or build scripts/build_windows_engine.py and scripts/build_windows_cpp.py.`);
     return {program:executable,prefix:[],args:options.texBinDirectory?['--tex-bin',options.texBinDirectory]:[],distribution:null,nativeWindows:true};
   }
+  if(process.platform==='darwin'&&!['x64','arm64'].includes(process.arch))throw new Error('The macOS runtime requires an Intel or Apple Silicon extension host.');
   const executable=path.join(options.runtime||path.join(root,'native/runtime'),'texastra-backend');
   for(const file of [executable,path.join(path.dirname(executable),'texastra-luahbtex')])
     if(!fs.existsSync(file))throw new Error(`Bundled runtime file is missing: ${file}. Reinstall the extension, or rebuild the runtime from source.`);
@@ -55,7 +56,7 @@ function launch(root,project,checkpoint=process.env.BAKO_CHECKPOINT_MODE||'auto'
   const args=[...chosen.prefix,...chosen.args,'--project',convert(project),'--assets',convert(path.join(root,'texastra')),'--checkpoint',checkpoint,
     '--main',options.main||'main.tex','--preview-mode',options.mode||'auto','--compiler',options.compiler||'lualatex'];
   const child=spawn(chosen.program,args,{windowsHide:true});
-  child.texastraEnvironment={platform:process.platform,wslDistribution:chosen.distribution,runtime:chosen.nativeWindows?'native':'linux'};
+  child.texastraEnvironment={platform:process.platform,wslDistribution:chosen.distribution,runtime:chosen.nativeWindows?'native':process.platform==='darwin'?'macos':'linux'};
   return child;
 }
 function environment(root,options={}){
@@ -66,7 +67,7 @@ function environment(root,options={}){
     child.stdout.on('data',data=>stdout+=data);child.stderr.on('data',data=>stderr+=data);
     child.on('error',reject);
     child.on('close',code=>{
-      try{resolve({...JSON.parse(stdout),host:{platform:process.platform,wslDistribution:chosen.distribution,runtime:chosen.nativeWindows?'native':'linux'}});}
+      try{resolve({...JSON.parse(stdout),host:{platform:process.platform,wslDistribution:chosen.distribution,runtime:chosen.nativeWindows?'native':process.platform==='darwin'?'macos':'linux'}});}
       catch{reject(new Error(`Cannot run the selected document runtime (exit ${code}). ${stderr||stdout}`));}
     });
   });

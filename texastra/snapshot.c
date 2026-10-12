@@ -29,7 +29,26 @@ extern int lua_gettop(lua_State*);
 extern void lua_settop(lua_State*,int);
 extern const char *lua_tolstring(lua_State*,int,size_t*);
 extern int lua_pcallk(lua_State*,int,int,int,intptr_t,int (*)(lua_State*,int,intptr_t));
-/* Exported by the pinned Linux LuaHBTeX 1.14 backend. No private struct layout
+#ifdef __APPLE__
+/* Darwin has no memfd_create. Font bundles use an unlinked session-local file. */
+static int temporary_fd(void) {
+  char name[]="bako-font-XXXXXX";
+  int fd=mkstemp(name);
+  if(fd>=0){unlink(name);fcntl(fd,F_SETFD,FD_CLOEXEC);}
+  return fd;
+}
+#define memfd_create(name,flags) temporary_fd()
+#define MFD_CLOEXEC 0
+#endif
+static int readable_fd(int fd) {
+#ifdef __APPLE__
+  return dup(fd); /* Writable checkpoint files are upgraded to O_RDWR below. */
+#else
+  char link[64];snprintf(link,sizeof(link),"/proc/self/fd/%d",fd);
+  return open(link,O_RDONLY);
+#endif
+}
+/* Exported by the pinned POSIX LuaHBTeX 1.14 backend. No private struct layout
  * is used. The page-stream adapter checks the engine before loading this code. */
 extern void *static_pdf;
 extern void pdf_flush(void*);
@@ -119,7 +138,13 @@ static int export_pdf(lua_State *L) {
   close(out);if(rename("main.pdf.tmp","main.pdf"))return luaL_error(L,"PDF resource export rename failed");return 0;
 }
 static int send_all(int fd,const char *data,size_t size) {
-  while(size){ssize_t n=send(fd,data,size,MSG_NOSIGNAL);if(n<0&&errno==EINTR)continue;if(n<=0)return -1;data+=n;size-=n;}return 0;
+#ifdef __APPLE__
+  int enabled=1;setsockopt(fd,SOL_SOCKET,SO_NOSIGPIPE,&enabled,sizeof(enabled));
+  const int flags=0;
+#else
+  const int flags=MSG_NOSIGNAL;
+#endif
+  while(size){ssize_t n=send(fd,data,size,flags);if(n<0&&errno==EINTR)continue;if(n<=0)return -1;data+=n;size-=n;}return 0;
 }
 static void font_bundle(int channel,const int *fonts,int count) {
   int fd=memfd_create("bako-font-bundle",MFD_CLOEXEC),status=0;
@@ -201,12 +226,28 @@ static int checkpoint(lua_State *L) {
     struct stat st;
     if(fstat(fd,&st)||!S_ISREG(st.st_mode))continue;
     off_t pos=lseek(fd,0,SEEK_CUR); if(pos<0)continue;
-    char link[64];snprintf(link,sizeof(link),"/proc/self/fd/%d",fd);
     struct saved_fd *s=&saved[count];
+#ifdef __APPLE__
+    if(fcntl(fd,F_GETPATH,s->path)<0)continue;
+#else
+    char link[64];snprintf(link,sizeof(link),"/proc/self/fd/%d",fd);
     ssize_t n=readlink(link,s->path,sizeof(s->path)-1);
-    if(n<0)continue;s->path[n]=0;s->fd=fd;s->pos=pos;s->flags=fcntl(fd,F_GETFL);
+    if(n<0)continue;s->path[n]=0;
+#endif
+    s->fd=fd;s->pos=pos;s->flags=fcntl(fd,F_GETFL);
     if((s->flags&O_ACCMODE)!=O_RDONLY && strncmp(s->path,"/memfd:bako-page-output",23) && (strncmp(s->path,session_path,strlen(session_path)) || s->path[strlen(session_path)]!='/'))
       return luaL_error(L,"Checkpoint cannot restore a writable file outside its generated session: %s",s->path);
+#ifdef __APPLE__
+    /* Keep a readable handle to the inode even if TeX unlinks a failed PDF.
+     * Only generated session files reach here, after the confinement check. */
+    if((s->flags&O_ACCMODE)==O_WRONLY) {
+      int fresh=open(s->path,O_RDWR);
+      if(fresh<0||lseek(fresh,pos,SEEK_SET)<0||dup2(fresh,fd)<0)
+        return luaL_error(L,"Cannot retain checkpoint output: %s",s->path);
+      if(fresh!=fd)close(fresh);
+      s->flags=(s->flags&~O_ACCMODE)|O_RDWR;
+    }
+#endif
     count++;
   }
   char sockpath[100],pidpath[100];
@@ -256,10 +297,13 @@ static int checkpoint(lua_State *L) {
         size_t path_length=strlen(s->path);
         int use_memory=live&&getenv("BAKO_PAGE_STREAM")&&mode!=O_RDONLY&&
           ((path_length>=9&&!strcmp(s->path+path_length-9,"/main.pdf"))||!strncmp(s->path,"/memfd:bako-page-output",23));
+#ifdef __APPLE__
+        /* File-backed PDF checkpoints retain correctness without Linux memfd. */
+        use_memory=0;
+#endif
         int fresh=use_memory?memfd_create("bako-page-output",MFD_CLOEXEC):open(s->path,mode);
         if(use_memory){
-          char link[64];snprintf(link,sizeof(link),"/proc/self/fd/%d",s->fd);
-          int original=open(link,O_RDONLY);
+          int original=readable_fd(s->fd);
           if(fresh<0||original<0||copy_prefix(original,fresh,s->pos)){dprintf(2,"In-memory checkpoint restore failed: %s\n",strerror(errno));_exit(4);}
           close(original);
           memory_pdf=dup(fresh);if(memory_pdf<0)_exit(4);
@@ -269,9 +313,8 @@ static int checkpoint(lua_State *L) {
         if(fresh<0&&errno==ENOENT&&mode!=O_RDONLY) {
           fresh=open(s->path,mode|O_CREAT|O_EXCL,0600);
           if(fresh<0)_exit(4);
-          char link[64],buffer[65536];
-          snprintf(link,sizeof(link),"/proc/self/fd/%d",s->fd);
-          int original=open(link,O_RDONLY);if(original<0)_exit(4);
+          char buffer[65536];
+          int original=readable_fd(s->fd);if(original<0)_exit(4);
           off_t offset=0;
           while(offset<s->pos) {
             size_t size=s->pos-offset<(off_t)sizeof(buffer)?(size_t)(s->pos-offset):sizeof(buffer);

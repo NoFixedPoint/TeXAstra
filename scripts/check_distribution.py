@@ -85,7 +85,7 @@ try:
     check('discovers installation from PATH first', via_path['binDirectory'] == selected)
     for selected_bad in ['relative/bin', temporary+'/absent']:
         failed = environment(selected_bad, settings=settings)
-        check('invalid explicit selection is actionable '+selected_bad, not failed['ok'] and ('absolute Linux' in failed['error'] or 'kpsewhich' in failed['error']))
+        check('invalid explicit selection is actionable '+selected_bad, not failed['ok'] and ('absolute directory' in failed['error'] or 'kpsewhich' in failed['error']))
     missing = install('missing format', '#!/bin/sh\nfor arg do\n if [ "$arg" = lualatex.fmt ]; then exit 1; fi\ndone\nexec /usr/bin/kpsewhich "$@"\n')
     failed = environment(missing, settings=settings)
     check('missing format explains distribution maintenance', not failed['ok'] and 'lualatex.fmt is missing' in failed['error'])
