@@ -1,7 +1,7 @@
 {
   "checks": [
     {
-      "name": "error panel is hidden on startup",
+      "name": "error header is visible and collapsed on startup",
       "ok": true
     },
     {
@@ -69,7 +69,15 @@
       "ok": true
     },
     {
-      "name": "compile error opens with literal error text",
+      "name": "compile error colors header red without expanding",
+      "ok": true
+    },
+    {
+      "name": "user can expand compile error details",
+      "ok": true
+    },
+    {
+      "name": "new errors preserve user-expanded panel",
       "ok": true
     },
     {
@@ -77,15 +85,15 @@
       "ok": true
     },
     {
-      "name": "retry and stale frames retain compile error",
+      "name": "retry and stale frames retain collapsed compile error",
       "ok": true
     },
     {
-      "name": "successful compile hides and clears errors even with warnings",
+      "name": "successful compile clears red state and preserves user expansion",
       "ok": true
     },
     {
-      "name": "error without details still opens the panel",
+      "name": "error without details stays collapsed with fallback text",
       "ok": true
     },
     {

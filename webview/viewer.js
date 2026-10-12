@@ -12,10 +12,8 @@ window.paintHistory=[];
 if(vscode)document.body.classList.add('embedded');
 function showError(message,title='Compile error'){
   const panel=$('diagnostics'),text=String(message||'');
-  const changed=panel.hidden||$('error').textContent!==text;
-  $('error').textContent=text;$('error-title').textContent=title;
-  panel.hidden=!text;
-  if(!text)panel.open=false;else if(changed)panel.open=true;
+  $('error').textContent=text;$('error-title').textContent=text?title:'Compile errors';
+  panel.classList.toggle('has-error',!!text);
 }
 function send(message,inputAt=performance.now()){
   message.clientId=++clientSerial;message.sentAt=Date.now();message.requestId=message.requestId||`view-${++requestSerial}`;

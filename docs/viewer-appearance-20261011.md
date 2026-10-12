@@ -39,3 +39,16 @@ during retry/stale output, successful recovery with warnings, and failures with
 no details. `node --check webview/viewer.js` and `git diff --check` passed. These
 checks use synthetic compiler messages in Chromium; live compiler and VS Code
 host interactions were not rerun.
+
+## Version 0.0.27: user-controlled error details
+
+The compile-error header is always visible and starts collapsed. It is neutral
+when there are no errors and red while an error is present. Error updates and
+successful compilation never change the user's expanded/collapsed choice.
+Successful compilation clears the error text and restores the neutral header.
+
+Validation: all 27 checks in `python scripts/check_viewer_latency.py` passed,
+including computed header colors, manual expansion/collapse, preserving that
+choice across errors and recovery, and fallback error text. JavaScript syntax
+validation and `git diff --check` passed. Browser fixtures were used; live
+compiler and VS Code host interaction were not rerun.
