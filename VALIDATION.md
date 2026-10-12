@@ -29,3 +29,9 @@ and `git diff --check` pass. Native macOS compilation, dependency auditing,
 and extracted-VSIX edit/render comparisons are delegated to the macOS Actions
 matrix; results will be recorded after those jobs finish. No local Mac runtime
 or GUI extension-host validation has been performed.
+
+The first macOS CI attempt exposed missing libraries in Ubuntu's repacked TeX
+source; the Mac build now restores the same SHA-256-pinned upstream dependency
+trees used by Windows. Local Linux controller rebuild and source-edit checks pass.
+The one-page demo is unsuitable for `check_live_mode.py`'s later-page checkpoint
+assertion; its render comparisons passed before that fixture-specific assertion.

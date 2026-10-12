@@ -3,6 +3,7 @@
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #include <sys/sysctl.h>
+#include <sys/proc.h>
 #endif
 
 namespace bako {

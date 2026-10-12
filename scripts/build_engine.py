@@ -49,6 +49,27 @@ def main():
     if name.startswith('CVE-'):
      subprocess.run(['patch','-p1','--batch'],cwd=source,input=archive.extractfile('debian/patches/'+name).read(),check=True)
   (source/'.bako-upstream').write_text(upstream)
+ if mac:
+  # Ubuntu's repack omits dependency trees. Restore the matching upstream
+  # revision, as in the native Windows build, and link those libraries statically.
+  dependency=cache/'upstream-r59705.tar.gz'
+  if not dependency.exists():urllib.request.urlretrieve('https://codeload.github.com/TeX-Live/texlive-source/tar.gz/7652969578ab227a3ae1774f0530f175e4a5abe2',dependency)
+  digest='d759b7f1ec7f70bd48d0c2479046b7dab87c41f9a0d2d642e6d5900b73ab2856'
+  if hashlib.sha256(dependency.read_bytes()).hexdigest()!=digest:raise RuntimeError('Upstream dependency source checksum mismatch')
+  if not (source/'.bako-bundled-libraries').exists():
+   existing={p.name for p in (source/'libs').iterdir()}
+   with tarfile.open(dependency) as archive:
+    for item in archive:
+     parts=Path(item.name).parts[1:]
+     if len(parts)<2 or parts[0]!='libs' or parts[1] in existing:continue
+     target=source.joinpath(*parts)
+     if not target.resolve().is_relative_to(source.resolve()):raise RuntimeError('Archive path escapes source')
+     if item.isdir():target.mkdir(parents=True,exist_ok=True)
+     elif item.isfile():
+      target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(archive.extractfile(item).read());target.chmod(item.mode)
+     elif item.issym():
+      target.parent.mkdir(parents=True,exist_ok=True);target.symlink_to(item.linkname)
+   (source/'.bako-bundled-libraries').write_text(digest)
  sys.path.insert(0,str(ROOT/'engine'))
  from patch import apply
  apply(source)
@@ -62,15 +83,24 @@ def main():
  print('Building LuaHBTeX; log:',build/'build.log',flush=True)
  with (build/'build.log').open('w') as log:
   jobs='-j'+str(min(os.cpu_count() or 2,12))
+  libraries=['HARFBUZZ_INCLUDES=-I'+str(source/'libs/harfbuzz/harfbuzz-src/src')+' -I'+str(build/'libs/harfbuzz'),
+             'HARFBUZZ_LIBS='+str(build/'libs/harfbuzz/libharfbuzz.a'),
+             'GRAPHITE2_INCLUDES=-I'+str(source/'libs/graphite2/graphite2-src/include'),
+             'GRAPHITE2_LIBS='+str(build/'libs/graphite2/libgraphite2.a'),
+             'ZZIPLIB_LIBS='+str(build/'libs/zziplib/libzzip.a')] if mac else []
+  subdirs=['CONF_SUBDIRS=zlib libpng zziplib graphite2 harfbuzz lua53 pplib','MAKE_SUBDIRS=zlib libpng zziplib graphite2 harfbuzz lua53 pplib'] if mac else []
   for command in [['make','all-local'],['make','-C','texk/kpathsea',jobs],['make','-C','texk/ptexenc',jobs],
-                  ['make','-C','libs',jobs],['make','-C','texk','all-local'],
+                  ['make','-C','libs',jobs,*subdirs],['make','-C','texk','all-local'],
                   ['make','-C','texk/web2c',jobs,'luahbtex',*([] if mac else ['ZZIPLIB_LIBS=-lzzip'])]]:
-   subprocess.run(command,cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
+   subprocess.run(command+libraries,cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
  runtime=args.runtime.resolve();runtime.mkdir(parents=True,exist_ok=True)
  temporary=runtime/'texastra-luahbtex.new';shutil.copyfile(build/'texk/web2c/luahbtex',temporary)
  subprocess.run(['strip',str(temporary)],check=True);temporary.chmod(0o755);os.replace(temporary,runtime/'texastra-luahbtex')
  # Ship complete upstream source plus distro patches and our own build recipe.
  for name in ARCHIVES:shutil.copyfile(cache/name,runtime/name)
+ if mac:
+  (runtime/'sources').mkdir(exist_ok=True)
+  shutil.copyfile(dependency,runtime/'sources'/dependency.name)
  shutil.copyfile(ROOT/'licenses/GPL-2.0.txt',runtime/'LuaHBTeX-COPYING')
  print('Built',runtime/'texastra-luahbtex',flush=True)
 if __name__=='__main__':main()
