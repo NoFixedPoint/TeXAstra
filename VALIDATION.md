@@ -50,3 +50,9 @@ and retained exported engine symbols for the Lua checkpoint module. Inspection
 of the TeX Live 2021 Mac binary confirmed LuaHBTeX 1.13.2; the explicit isolated
 installer now installs our bundled 1.14 engine and regenerates its formats.
 Python compileall and diff checks pass; native CI is still in progress.
+
+The fourth Mac attempt reached engine compilation; it exposed unrelated optional
+MetaPost/MFLua targets pulling in Cairo. The Mac configuration now disables those
+targets explicitly and invalidates cached sub-configurations when flags change.
+The Linux controller rebuild and POSIX checkpoint fixture still pass after the
+accepted-socket blocking fix. Python compileall also passes.

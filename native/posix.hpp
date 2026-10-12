@@ -27,7 +27,12 @@ inline int unix_socket(bool nonblocking = false) {
 }
 inline int accept_socket(int listener) {
     int fd = accept(listener, nullptr, nullptr);
-    if (fd >= 0) fcntl(fd, F_SETFD, FD_CLOEXEC);
+    if (fd >= 0) {
+        fcntl(fd, F_SETFD, FD_CLOEXEC);
+        // Darwin inherits the listener's nonblocking flag; receive_exact
+        // consumes a complete message and requires a blocking accepted socket.
+        fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~O_NONBLOCK);
+    }
     return fd;
 }
 inline char process_state(pid_t pid) {

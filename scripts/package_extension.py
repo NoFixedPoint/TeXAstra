@@ -14,6 +14,8 @@ mac=args.target.startswith('darwin-')
 if mac:
     metadata=json.loads((args.runtime/'macos-build.json').read_text())
     if metadata['target']!=args.target:raise SystemExit('Runtime architecture does not match requested VSIX target')
+    unexpected=list(args.runtime.glob('libmupdf.so*'))+list(args.runtime.glob('*.exe'))+list(args.runtime.glob('*.dll'))
+    if unexpected:raise SystemExit('Mixed-platform runtime directory; build macOS in a fresh checkout: '+str(unexpected))
 backend='texastra-backend.exe' if windows else 'texastra-backend'
 if not (args.runtime/backend).is_file():raise SystemExit('Build the selected native runtime before packaging')
 for required in ['mupdf-1.26.12-source.tar.gz', 'pymupdf-1.26.7.tar.gz',

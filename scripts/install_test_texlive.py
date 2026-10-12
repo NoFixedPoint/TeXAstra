@@ -44,7 +44,7 @@ def main():
     installer = next(work.glob('install-tl-*/install-tl'))
     profile = work/'macos.profile'
     profile.write_text('\n'.join([
-        'selected_scheme scheme-small', 'binary_universal-darwin 1',
+        'selected_scheme scheme-basic', 'binary_universal-darwin 1',
         'TEXDIR '+str(destination), 'TEXMFCONFIG '+str(destination/'texmf-config'),
         'TEXMFVAR '+str(destination/'texmf-var'), 'TEXMFHOME '+str(destination/'texmf-home'),
         'TEXMFLOCAL '+str(destination/'texmf-local'),
@@ -53,7 +53,7 @@ def main():
     ])+'\n')
     subprocess.run(['perl', str(installer), '-profile', str(profile), '-repository', REPOSITORY], check=True)
     binary = destination/'bin/universal-darwin'
-    subprocess.run([str(binary/'tlmgr'), 'install', 'pgf', 'booktabs', 'geometry', 'luaotfload', 'luatex', 'latex-bin'], check=True)
+    subprocess.run([str(binary/'tlmgr'), 'install', 'pgf', 'booktabs', 'geometry', 'luaotfload', 'luatex', 'luahbtex', 'latex-bin'], check=True)
     # The historical Mac distribution ships 1.13.2. This isolated installation
     # needs the bundled 1.14 engine and matching formats, including full builds.
     shutil.copy2(engine, binary/'luahbtex')

@@ -32,6 +32,8 @@ def main():
         raise SystemExit('Run on an Apple Silicon or Intel Mac with native Python 3.11+ and Xcode Command Line Tools.')
     if sys.version_info < (3, 11):
         raise SystemExit('Python 3.11+ is required')
+    if int(platform.mac_ver()[0].split('.')[0]) < 15:
+        raise SystemExit('This release requires macOS 15 or later to build and run')
     # First release deliberately targets the OS used by both CI runners.
     os.environ['MACOSX_DEPLOYMENT_TARGET'] = '15.0'
     os.environ.setdefault('CFLAGS', '-O2 -Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types')

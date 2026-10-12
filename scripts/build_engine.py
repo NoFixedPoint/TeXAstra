@@ -82,9 +82,13 @@ def main():
  apply(source)
  if args.source_only:return
  flags=[f for f in FLAGS if not (mac and f.startswith('--with-system-'))]
- if mac:flags+=['--without-x','--with-system-zlib']
+ if mac:flags+=['--without-x','--with-system-zlib','--disable-pmp','--disable-upmp','--disable-mflua','--disable-web-progs']
  signature='\n'.join(flags)+('\n'+os.environ.get('MACOSX_DEPLOYMENT_TARGET','') if mac else '')
  if not (build/'.bako-configure').exists() or (build/'.bako-configure').read_text()!=signature:
+  if mac and (build/'.bako-configure').exists():
+   # Nested autoconf projects otherwise retain stale options from cached builds.
+   if build.resolve().parent!=cache.resolve():raise RuntimeError('Unexpected engine build directory')
+   shutil.rmtree(build);build.mkdir()
   with (build/'configure.log').open('w') as log:subprocess.run([str(source/'configure'),*flags],cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
   (build/'.bako-configure').write_text(signature)
  print('Building LuaHBTeX; log:',build/'build.log',flush=True)
