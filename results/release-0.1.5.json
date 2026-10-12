@@ -1,0 +1,41 @@
+{
+  "version": "0.1.5",
+  "nativeBuildCommit": "8446548cc8e512d11e197ebd95d472b09851466a",
+  "nativeCi": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/38321363874",
+  "allFourPlatformPackagesValidated": true,
+  "assets": {
+    "texastra-wsl.vsix": {
+      "sha256": "00f1de1cb7aa871eb10a64ab0fbd9ba6689b32a85865c07986d60e123b9a2353",
+      "bytes": 221482166
+    },
+    "texastra-windows-x64.vsix": {
+      "sha256": "cb389a6f31eb683b7224dd4d21ecfc45756013f6f59b2b00d263c2840b5f78aa",
+      "bytes": 193103891
+    },
+    "texastra-macos-arm64.vsix": {
+      "sha256": "c85ca6c3b08f00d68b4a363305bd9252e3801a241ce7f88a2a97fd26add402ee",
+      "bytes": 303557331
+    },
+    "texastra-macos-x64.vsix": {
+      "sha256": "5b23429a0588b39ad9db31851e7b991d6c01fa4031cfafe50dd17ed550e5f965",
+      "bytes": 304367810
+    },
+    "texastra-sources.zip": {
+      "sha256": "a5269cb3aee327926f0cbcf8eea6e3cc966022cf0cdee3be4ee10e13d19b22d3",
+      "bytes": 350543627
+    },
+    "texastra-darwin-arm64-sources.zip": {
+      "sha256": "dd795e5e190b4b9619a6529e42a570550d8bcdb85a0762291cfc6b3abd97cd02",
+      "bytes": 262960213
+    },
+    "texastra-darwin-x64-sources.zip": {
+      "sha256": "b3753d0e4dcc2a6ba2a8b53f9148d4ced83d1870a409e89d461abc326ea5edb2",
+      "bytes": 262960204
+    }
+  },
+  "limitations": [
+    "No interactive VS Code GUI validation",
+    "No clean-machine or broad OS compatibility matrix",
+    "XeLaTeX rendering not independently tested"
+  ]
+}

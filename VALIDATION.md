@@ -49,3 +49,11 @@ compatible. The selected TeX installation supplies document packages and fonts.
 Automatic dependency installation and MiKTeX integration are not supported.
 
 Private project sources and rendered documents are excluded from release materials.
+
+### Release evidence
+
+Both native macOS jobs passed in [GitHub Actions](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38321363874).
+[Release preflight](results/release-preflight-0.1.5.json),
+[Windows/WSL package checks](results/release-packages.json),
+[Apple Silicon checks](results/release-packages-darwin-arm64.json), and
+[Intel checks](results/release-packages-darwin-x64.json) record the tested package identities.

@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "target": "darwin-arm64",
+  "minimumMacOS": "15.0",
+  "testedMacOS": "15.7.9",
+  "dependencies": {
+    "texastra-backend": [
+      "@rpath/libmupdf.dylib",
+      "/usr/lib/libz.1.dylib",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib"
+    ],
+    "texastra-luahbtex": [
+      "/usr/lib/libz.1.dylib",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib"
+    ],
+    "bako_snapshot.so": [
+      "/usr/lib/libSystem.B.dylib"
+    ],
+    "libmupdf.dylib": [
+      "@rpath/libmupdf.dylib",
+      "/usr/lib/libSystem.B.dylib",
+      "/usr/lib/libc++.1.dylib"
+    ]
+  }
+}

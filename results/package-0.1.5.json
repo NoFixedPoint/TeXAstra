@@ -1,0 +1,10 @@
+{
+  "version": "0.1.5",
+  "sha256": "00f1de1cb7aa871eb10a64ab0fbd9ba6689b32a85865c07986d60e123b9a2353",
+  "target": "wsl",
+  "defaultRuntimeMode": "wsl",
+  "verifiedPackagedFiles": 165,
+  "runtimeSha256": "5b21d73cc9e0dc809d62a967985820fed396c1ee16106823324e61deaeab2be9",
+  "compilerSha256": "586685e9b759f08e01e0551c94d8c4b3c9d50143c5421047152d55749a22a464",
+  "pdftexSha256": "2ffc0ab67ed6ab2f799151f88690f5ac730dc0275ce2362bc17060c5994e98e2"
+}

@@ -1,9 +1,9 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.5",
   "packages": [
     {
       "platform": "wsl",
-      "sha256": "37963af705573ce1a5bc225f86394a497178485e816c02541acffe82c1f65eab",
+      "sha256": "00f1de1cb7aa871eb10a64ab0fbd9ba6689b32a85865c07986d60e123b9a2353",
       "checks": [
         {
           "unrelatedLegacyEncoding": true,
@@ -32,7 +32,7 @@
     },
     {
       "platform": "windows-x64",
-      "sha256": "b667834f11e90f0a30e69b644b2baa9cd6669a381b4637123bd39fd1169435c4",
+      "sha256": "cb389a6f31eb683b7224dd4d21ecfc45756013f6f59b2b00d263c2840b5f78aa",
       "checks": [
         {
           "unrelatedLegacyEncoding": true,

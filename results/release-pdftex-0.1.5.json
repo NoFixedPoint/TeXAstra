@@ -1,0 +1,182 @@
+{
+  "checks": [
+    {
+      "name": "real pdfTeX provenance enabled",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "Zebra source characters",
+      "ok": true
+    },
+    {
+      "name": "Quokka source characters",
+      "ok": true
+    },
+    {
+      "name": "Lion source characters",
+      "ok": true
+    },
+    {
+      "name": "Tiger source characters",
+      "ok": true
+    },
+    {
+      "name": "Walrus source characters",
+      "ok": true
+    },
+    {
+      "name": "Rabbit source characters",
+      "ok": true
+    },
+    {
+      "name": "Otter source characters",
+      "ok": true
+    },
+    {
+      "name": "ligature carries complete source span",
+      "ok": true
+    },
+    {
+      "name": "included file has character origins",
+      "ok": true
+    },
+    {
+      "name": "explicit rule retains command origin",
+      "ok": true
+    },
+    {
+      "name": "forward selects the second repeated word character",
+      "ok": true
+    },
+    {
+      "name": "reverse returns that same character",
+      "ok": true
+    },
+    {
+      "name": "math x origin",
+      "ok": true
+    },
+    {
+      "name": "math y origin",
+      "ok": true
+    },
+    {
+      "name": "math a origin",
+      "ok": true
+    },
+    {
+      "name": "math b origin",
+      "ok": true
+    },
+    {
+      "name": "copied math field c origin",
+      "ok": true
+    },
+    {
+      "name": "copied math field d origin",
+      "ok": true
+    },
+    {
+      "name": "copied math field w origin",
+      "ok": true
+    },
+    {
+      "name": "copied math field v origin",
+      "ok": true
+    },
+    {
+      "name": "stock pdfTeX page count",
+      "ok": true
+    },
+    {
+      "name": "stock pdfTeX identical pixels page 1",
+      "ok": true
+    },
+    {
+      "name": "stock pdfTeX identical pixels page 2",
+      "ok": true
+    },
+    {
+      "name": "late edit succeeds",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "late edit checkpoint decision",
+      "ok": true,
+      "state": {
+        "checkpoint": 17,
+        "prefixPages": 0,
+        "restored": true
+      },
+      "compileMs": 62.910895
+    },
+    {
+      "name": "late edit page count",
+      "ok": true
+    },
+    {
+      "name": "late edit identical pixels page 1",
+      "ok": true
+    },
+    {
+      "name": "late edit identical pixels page 2",
+      "ok": true
+    },
+    {
+      "name": "earlier edit after late edit succeeds",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "earlier edit after late edit checkpoint decision",
+      "ok": true,
+      "state": {
+        "checkpoint": 7,
+        "prefixPages": 0,
+        "restored": true
+      },
+      "compileMs": 83.864893
+    },
+    {
+      "name": "earlier edit after late edit page count",
+      "ok": true
+    },
+    {
+      "name": "earlier edit after late edit identical pixels page 1",
+      "ok": true
+    },
+    {
+      "name": "earlier edit after late edit identical pixels page 2",
+      "ok": true
+    },
+    {
+      "name": "preamble edit succeeds",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "preamble edit checkpoint decision",
+      "ok": true,
+      "state": {
+        "checkpoint": 0,
+        "prefixPages": 0,
+        "restored": false
+      },
+      "compileMs": 287.822478
+    },
+    {
+      "name": "preamble edit page count",
+      "ok": true
+    },
+    {
+      "name": "preamble edit identical pixels page 1",
+      "ok": true
+    },
+    {
+      "name": "preamble edit identical pixels page 2",
+      "ok": true
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.5",
   "packages": [
     {
       "platform": "darwin-arm64",
-      "sha256": "360af353a2d8ccee8efac400347485f38ea9eb4530284cf6330f1ce0793c8350",
+      "sha256": "c85ca6c3b08f00d68b4a363305bd9252e3801a241ce7f88a2a97fd26add402ee",
       "checks": [
         {
           "unrelatedLegacyEncoding": true,

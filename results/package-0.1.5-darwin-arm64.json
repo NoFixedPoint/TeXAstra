@@ -1,0 +1,9 @@
+{
+  "version": "0.1.5",
+  "sha256": "c85ca6c3b08f00d68b4a363305bd9252e3801a241ce7f88a2a97fd26add402ee",
+  "target": "darwin-arm64",
+  "defaultRuntimeMode": "native",
+  "verifiedPackagedFiles": 164,
+  "runtimeSha256": "387f30082a60401129768cabe3cc13c11b53c7432b29a2d88162fcd820e70afc",
+  "compilerSha256": "a6520f929f9799b40a9a29f8392ab44d3e520509f932d48752dee56b4c8533fc"
+}

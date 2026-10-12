@@ -1,0 +1,78 @@
+{
+  "checks": [
+    {
+      "name": "lualatex first displayed slide has resolved citation variants",
+      "ok": true,
+      "text": "Literature\u25b6Example et al., 2025. Example, Author, and Writer [2025].Example, Author, and Writer [2025].\u25b6Example, Author, and Writer, 2025. [Example et al., 2025].",
+      "warnings": [],
+      "passes": 3
+    },
+    {
+      "name": "lualatex no unresolved or false convergence-limit warning",
+      "ok": true
+    },
+    {
+      "name": "pdflatex first displayed slide has resolved citation variants",
+      "ok": true,
+      "text": "Literature\u25b6Example et al., 2025. Example, Author, and Writer [2025].Example, Author, and Writer [2025].\u25b6Example, Author, and Writer, 2025. [Example et al., 2025].",
+      "warnings": [],
+      "passes": 3
+    },
+    {
+      "name": "pdflatex no unresolved or false convergence-limit warning",
+      "ok": true
+    },
+    {
+      "name": "PDFLaTeX mode advertises available source navigation",
+      "ok": true
+    },
+    {
+      "name": "page count equals independent PDFLaTeX",
+      "ok": true
+    },
+    {
+      "name": "page 1 matches independent PDFLaTeX pixels",
+      "ok": true
+    },
+    {
+      "name": "page 2 matches independent PDFLaTeX pixels",
+      "ok": true
+    },
+    {
+      "name": "page 3 matches independent PDFLaTeX pixels",
+      "ok": true
+    },
+    {
+      "name": "included source forward navigation",
+      "ok": true
+    },
+    {
+      "name": "included source reverse navigation",
+      "ok": true
+    },
+    {
+      "name": "browser click resolves through advertised navigation",
+      "ok": true
+    },
+    {
+      "name": "browser sends resolved source navigation",
+      "ok": true
+    },
+    {
+      "name": "stale SyncTeX response cannot navigate",
+      "ok": true
+    },
+    {
+      "name": "browser has no errors",
+      "ok": true
+    },
+    {
+      "name": "unsaved edits refresh navigation",
+      "ok": true
+    },
+    {
+      "name": "project sources unchanged",
+      "ok": true
+    }
+  ]
+}

@@ -2,14 +2,19 @@
   "version": "0.1.5",
   "checks": {
     "extensionUnitSuite": "passed",
-    "pythonCompileall": "passed"
+    "pythonCompileall": "passed",
+    "extractedWindowsAndWslPackages": "passed",
+    "pdftexProvenance": "passed",
+    "pdftexRetainedState": "passed",
+    "citationsAndNavigationWindows": "passed",
+    "citationsAndNavigationWsl": "passed",
+    "nativeMacosArm64": "passed",
+    "nativeMacosX64": "passed"
   },
-  "pending": [
-    "extracted Windows and WSL packages",
-    "native macOS builds and extracted packages"
-  ],
+  "pending": [],
   "limitations": [
     "No interactive VS Code GUI validation",
     "No broad OS compatibility matrix"
-  ]
+  ],
+  "nativeCi": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/38321363874"
 }

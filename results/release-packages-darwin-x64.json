@@ -1,9 +1,9 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.5",
   "packages": [
     {
       "platform": "darwin-x64",
-      "sha256": "141660572e4ef1ee4522507b5b9f4fd62fb7d8d0d5d7d40fd20e03642f6d5b7e",
+      "sha256": "5b23429a0588b39ad9db31851e7b991d6c01fa4031cfafe50dd17ed550e5f965",
       "checks": [
         {
           "unrelatedLegacyEncoding": true,
