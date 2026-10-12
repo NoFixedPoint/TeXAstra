@@ -35,4 +35,6 @@ Optional: set `texastra.mainFile` for a project with multiple roots, or run **Te
 
 [Build & test](BUILDING.md) · [Release notes](https://github.com/NoFixedPoint/TeXAstra/releases) · [Security](SECURITY.md)
 
+Motivated by [BaKoMa-Tex](https://bakoma-tex.daniel-aldrich.ca/) and [TexPresso](https://github.com/let-def/texpresso).
+
 Original code is [MIT](LICENSE); bundled GPL/AGPL components retain their licenses. See [licensing and source availability](LICENSING.md).
