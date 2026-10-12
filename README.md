@@ -2,6 +2,8 @@
 
 This repository contains a runnable experiment, not a finished replacement for BaKoMa. It combines retained LuaTeX compiler state with token-source metadata, a selectable preview, and a VS Code webview. **The 150 ms end-to-end target is not met for every workload, including typing bursts, new fonts and dense pages.** Native Windows and Linux use retained checkpoints; measurements and platform limits are documented in the [Windows report](docs/windows-native-20261011.md) and [Linux latency report](docs/preview-latency-20261011.md). The original scope and confirmed decisions are in [the task brief](task20261010_bakoma_revived.md).
 
+Version **0.0.24** bounds preview delivery during typing to one in-flight frame and the newest pending frame. It adds transport, queue and frame-age diagnostics. Slow-viewer tests demonstrate continued updates, but ordinary typing benchmarks do not establish a latency improvement. See [the measurements and tradeoffs](docs/typing-delivery-20261011.md).
+
 Version **0.0.23** preserves the live compiler session when saving source changes already sent by the editor. Save notifications and generated document PDFs no longer force a second complete build; external source and figure changes still refresh. See [the save regression and validation](docs/save-latency-20261011.md).
 
 Version **0.0.22** makes note edits beside unchanged PNG/JPEG figures stream the changed page without finishing the document. VS Code sends versioned text changes after its first buffer update, source spans are materialized on demand, and neighboring pages wait until editing settles after paint. See [the figure-note measurements and validation](docs/figure-note-latency-20261011.md).

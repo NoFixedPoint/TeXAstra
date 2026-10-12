@@ -1,0 +1,185 @@
+{
+  "measurement": "Real extension document-change callback to Chromium image decode, text layer and two animation frames; mocked VS Code APIs and HTTP webview bridge.",
+  "sourceSha256": "62a87b4d9cb7701126dba09f95b07ebf1605fb49074b64d299877503e8c9c278",
+  "sourceBytes": 358948,
+  "extensionVersion": "0.0.23",
+  "runtimeSha256": {
+    "native/runtime/bakoma-backend": "5ac186a8e5c22d40881143180e06729a98e385a4732e0ed9a2683e7712ceaae5",
+    "native/runtime/bakoma-luahbtex": "d818aa7f3fdab0c6344e3fd6e3bc92300965115fc0cf6cddd5469d74a49ba7d7",
+    "native/runtime/bako_snapshot.so": "c3a966e1a7fff4cc9e01978e140c0602bf6093d0918a5a3868cc673eb97e5a53",
+    "webview/viewer.js": "8b7c86e07551c261b4593df7288928e38284ed32f669adb655452c9a1a0a5ab7",
+    "extension/extension.js": "6c25db561c5e48e16aeb8369f745c46f3f67447cd48dcf0b416715dbbb5b0d1b"
+  },
+  "burstEdits": 40,
+  "intervalMs": 35,
+  "injectedDecodeDelayMs": 180.0,
+  "samples": [
+    {
+      "type": "paint",
+      "revision": 3,
+      "clientId": 9,
+      "page": 15,
+      "generation": 3,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 106.5093,
+      "visibleMs": 343,
+      "stale": false,
+      "at": 1791772977795,
+      "browserStagesMs": {
+        "prepare": 0.9000000059604645,
+        "decode": 186,
+        "install": 1.2000000178813934,
+        "paintWait": 32.5
+      },
+      "deliveryMs": 10.811000972986221,
+      "compileMs": 76.12,
+      "prepareMs": 1.6031,
+      "checkpointMs": 2.894,
+      "sourceUpdateMs": 4.2252,
+      "compilerStagesMs": {
+        "fork": 2.663,
+        "replaceChild": 46.33,
+        "restore": 1.034,
+        "shipoutAndPublish": 9.267,
+        "typeset": 14.206
+      },
+      "snapshot": {
+        "mode": "fork",
+        "pid": 724859
+      },
+      "renderMs": 13.7382,
+      "renderStagesMs": {
+        "displayList": 1.5986,
+        "origins": 2.0755,
+        "png": 6.2074,
+        "raster": 3.2267,
+        "text": 0.4892
+      },
+      "queueMs": 0.08489999175071716,
+      "requestToPayloadMs": 111.58899900317192,
+      "resumedFrom": 14,
+      "outputMode": "page-stream",
+      "compilationMode": "live",
+      "sentAt": 1791772977452,
+      "bytes": 224,
+      "delta": true
+    }
+  ],
+  "saveSamples": [],
+  "bursts": [
+    {
+      "inputs": 40,
+      "durationMs": 1370,
+      "displayedUpdates": 1,
+      "updatesDuringTyping": 0,
+      "finalInputDisplayMs": 424,
+      "p95FrameAgeMs": 424,
+      "maxUpdateIntervalMs": null,
+      "paints": [
+        {
+          "type": "paint",
+          "revision": 43,
+          "clientId": 49,
+          "page": 15,
+          "generation": 19,
+          "purpose": "edit",
+          "phase": "preview",
+          "pipelineMs": 104.863699,
+          "visibleMs": 424,
+          "stale": false,
+          "at": 1791772979612,
+          "browserStagesMs": {
+            "prepare": 0.5999999940395355,
+            "decode": 182.80000001192093,
+            "install": 0.5,
+            "paintWait": 21.30000001192093
+          },
+          "deliveryMs": 11.836802005767822,
+          "compileMs": 73.366099,
+          "prepareMs": 1.6241,
+          "checkpointMs": 2.949,
+          "sourceUpdateMs": 5.2198,
+          "compilerStagesMs": {
+            "fork": 2.185,
+            "replaceChild": 44.014,
+            "restore": 1.058,
+            "shipoutAndPublish": 9.077,
+            "typeset": 14.371
+          },
+          "snapshot": {
+            "mode": "fork",
+            "pid": 724883
+          },
+          "renderMs": 13.7984,
+          "renderStagesMs": {
+            "displayList": 1.5595,
+            "origins": 2.1791,
+            "png": 6.3114,
+            "raster": 2.9984,
+            "text": 0.5815
+          },
+          "queueMs": 96.32159897685051,
+          "requestToPayloadMs": 206.96319797635078,
+          "resumedFrom": 14,
+          "outputMode": "page-stream",
+          "compilationMode": "live",
+          "frameAgeMs": 424
+        }
+      ]
+    }
+  ],
+  "pages": 85,
+  "editedPage": 15,
+  "firstEdit": {
+    "type": "paint",
+    "revision": 2,
+    "clientId": 8,
+    "page": 15,
+    "generation": 2,
+    "purpose": "edit",
+    "phase": "preview",
+    "pipelineMs": 136.445499,
+    "visibleMs": 399,
+    "stale": false,
+    "at": 1791772977427,
+    "browserStagesMs": {
+      "prepare": 0.9000000059604645,
+      "decode": 185.59999999403954,
+      "install": 1.5,
+      "paintWait": 23.69999998807907
+    },
+    "deliveryMs": 47.9431009888649,
+    "compileMs": 91.135699,
+    "prepareMs": 4.8321,
+    "checkpointMs": 8.7867,
+    "sourceUpdateMs": 9.7833,
+    "compilerStagesMs": {
+      "fork": 2.269,
+      "replaceChild": 61.623,
+      "restore": 1.068,
+      "shipoutAndPublish": 8.694,
+      "typeset": 14.51
+    },
+    "snapshot": {
+      "mode": "fork",
+      "pid": 724857
+    },
+    "renderMs": 13.6359,
+    "renderStagesMs": {
+      "displayList": 1.5727,
+      "origins": 2.0572,
+      "png": 6.1998,
+      "raster": 3.1574,
+      "text": 0.4994
+    },
+    "queueMs": 0.1152999997138977,
+    "requestToPayloadMs": 139.35689902305603,
+    "resumedFrom": 14,
+    "outputMode": "page-stream",
+    "compilationMode": "live",
+    "sentAt": 1791772977028,
+    "bytes": 374483,
+    "delta": false
+  }
+}

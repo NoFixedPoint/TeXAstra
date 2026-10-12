@@ -66,6 +66,17 @@ Module._load=function(request,parent,...rest){
   assert.equal(JSON.parse(input.trim().split('\n').at(-1)).source,document.getText(),'Skipped versions resynchronize with the full buffer');
   child.stdout.write(JSON.stringify({type:'frame',clientId:1,generation:1,revisionId:1,isStale:false})+'\n');
   await new Promise(r=>setImmediate(r));assert.equal(webMessages.at(-1).isStale,true);
+  // A slow/hidden webview must not accumulate full PNG messages while typing.
+  for(let i=0;i<20;i++)child.stdout.write(JSON.stringify({type:'frame',purpose:'edit',clientId:100+i,generation:100+i,revisionId:100+i,isStale:false})+'\n');
+  await new Promise(r=>setImmediate(r));
+  assert.equal(webMessages.filter(m=>m.type==='frame').length,1,'Only one frame may cross the bridge before the viewer acknowledges it');
+  const firstDelivery=webMessages.find(m=>m.type==='frame').deliveryId;
+  await receiver({type:'frame-ack',deliveryId:firstDelivery,outcome:'painted'});
+  const newest=webMessages.filter(m=>m.type==='frame').at(-1);
+  assert.equal(newest.clientId,119,'The next delivery is the newest completed frame');
+  await receiver({type:'frame-ack',deliveryId:firstDelivery});
+  assert.equal(webMessages.filter(m=>m.type==='frame').length,2,'Duplicate acknowledgements do not release a different frame');
+  await receiver({type:'frame-ack',deliveryId:newest.deliveryId,outcome:'painted'});
   child.stdout.write(JSON.stringify({type:'status',state:'error',error:'Incomplete \\iffalse'})+'\n');
   await new Promise(r=>setImmediate(r));assert(outputLines.includes('Incomplete \\iffalse'));
   assert.equal(webMessages.at(-1).state,'error');
@@ -95,5 +106,5 @@ Module._load=function(request,parent,...rest){
   diskChange(document.uri);disposed();await new Promise(r=>setTimeout(r,250));
   assert(watchDisposed);assert.equal(JSON.parse(input.trim().split('\n').at(-1)).type,'close');
   Module._load=original;
-  const result={checks:33,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
+  const result={checks:37,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(e=>{Module._load=original;console.error(e);process.exitCode=1;});

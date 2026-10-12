@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "checks": [
+    "hidden or slow viewer holds one in-flight payload",
+    "unrelated acknowledgement cannot release a payload",
+    "active stale paint makes progress then newest completed revision follows",
+    "replaced frame count and monotonic queue timing are reported",
+    "replaced page requests are explicitly released",
+    "page query cannot replace pending edit of the same generation",
+    "decode error acknowledgement releases the next frame",
+    "acknowledgement timing is recorded without payload contents",
+    "reloaded viewer resumes without an acknowledgement from its old document",
+    "old document acknowledgement cannot release new document work",
+    "disposing drops pending work and ignores late acknowledgements",
+    "postMessage false releases pending work",
+    "postMessage rejection releases pending work",
+    "disposal before deferred post prevents delivery to an old panel"
+  ]
+}

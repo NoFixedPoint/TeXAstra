@@ -6,6 +6,8 @@ let frame=null,page=0,file='pages/page-001.tex',stale=true,after=0;
 let latestRequest=0,latestClient=0,clientSerial=0,generation=0,requestSerial=0;
 let pendingSelection=null,pendingHighlight=null,scrollScheduled=false,lastSyncRequest=null,documentCount=0;
 let prefetchAfter=0,prefetchTimer=null;
+let activeFrame=null,queuedFrame=null,lastVisualPaintAt=null;
+window.frameDeliveryStats={received:0,replaced:0,painted:0,errors:0};
 window.paintHistory=[];
 if(vscode)document.body.classList.add('embedded');
 function send(message,inputAt=performance.now()){
@@ -151,7 +153,44 @@ function forward(location){
   // that envelope cannot overwrite the backend's sync-forward request type.
   lastSyncRequest=`sync-${++requestSerial}`;send({type:'sync-forward',file:location.file,line:location.line,column:location.column,page,generation,requestId:lastSyncRequest});
 }
-async function receive(message){
+function finishFrame(entry,outcome){
+  if(entry.message.purpose==='page'&&outcome!=='painted')pendingPages.delete(entry.message.requestId);
+  if(vscode&&entry.message.deliveryId!==undefined)vscode.postMessage({type:'frame-ack',deliveryId:entry.message.deliveryId,outcome});
+  entry.resolve();
+}
+async function runFrame(entry){
+  activeFrame=entry;
+  let outcome='discarded';
+  try{
+    entry.message.viewerQueueMs=performance.now()-entry.received;
+    outcome=await receiveMessage(entry.message)||outcome;
+  }catch(error){window.frameDeliveryStats.errors++;$('error').textContent='Preview update failed: '+error;outcome='error';}
+  finally{
+    finishFrame(entry,outcome);activeFrame=null;
+    if(queuedFrame){const next=queuedFrame;queuedFrame=null;runFrame(next);}
+  }
+}
+function receive(message){
+  // Status/navigation must remain immediate while a frame decodes or awaits
+  // presentation. Finish active work to make progress even during nonstop edits.
+  if(message.type!=='frame')return receiveMessage(message);
+  const received=performance.now();
+  if(message.hostDispatchAt!==undefined)message.webviewDeliveryMs=Date.now()-message.hostDispatchAt;
+  window.frameDeliveryStats.received++;
+  return new Promise(resolve=>{
+    const entry={message,received,resolve};
+    if(!activeFrame){runFrame(entry);return;}
+    if(queuedFrame){
+      if(message.generation<queuedFrame.message.generation||
+        (message.generation===queuedFrame.message.generation&&message.purpose==='page'&&queuedFrame.message.purpose!=='page')){
+        window.frameDeliveryStats.replaced++;finishFrame(entry,'replaced');return;
+      }
+      window.frameDeliveryStats.replaced++;finishFrame(queuedFrame,'replaced');
+    }
+    queuedFrame=entry;
+  });
+}
+async function receiveMessage(message){
   const receivedAt=performance.now();
   if(message.type==='forward'){forward(message);return;}
   if(message.type==='status'){
@@ -204,15 +243,20 @@ async function receive(message){
   // interval at the fresh paint so neighbor replay cannot delay the next key.
   if(!query&&message.purpose==='edit'&&!paintStale)prefetchAfter=Math.max(prefetchAfter,paintedAt+200);
   const inputAt=inputTimes.get(message.clientId);
-  const visibleMs=message.sentAt&&!paintStale?(inputAt!==undefined?paintedAt-inputAt:Date.now()-message.sentAt):null;
+  const frameAgeMs=message.sentAt?(inputAt!==undefined?paintedAt-inputAt:Date.now()-message.sentAt):null;
+  const visibleMs=paintStale?null:frameAgeMs;
   if(!query)$('timing').textContent=`${Math.round(message.pipelineMs)} ms pipeline${visibleMs?` · ${visibleMs} ms to display`:''}`;
   const stages=Object.fromEntries(['compileMs','prepareMs','checkpointMs','sourceUpdateMs','compilerStagesMs','snapshot','mapMs','renderMs','renderStagesMs','resourceRefreshMs','fontRefreshMs','fontResourceBytes','queueMs','requestToPayloadMs','resumedFrom','outputMode','compilationMode','cacheReused'].filter(k=>message[k]!==undefined).map(k=>[k,message[k]]));
   const browserStagesMs={prepare:decodeAt-receivedAt,decode:decodedAt-decodeAt,install:installedAt-decodedAt,paintWait:paintedAt-installedAt};
-  const deliveryMs=visibleMs===null||message.requestToPayloadMs===undefined?null:visibleMs-(paintedAt-receivedAt)-message.requestToPayloadMs;
-  const measured={type:'paint',revision:message.revisionId,clientId:message.clientId,page:message.page+1,generation:message.generation,purpose:message.purpose,phase:message.phase||'preview',pipelineMs:message.pipelineMs,visibleMs,stale:paintStale,at:Date.now(),browserStagesMs,deliveryMs,...stages};
-  if(!query){window.lastPaint=measured;window.paintHistory.push(measured);if(vscode)vscode.postMessage(measured);else fetch('/paint',{method:'POST',body:JSON.stringify(measured)});}
+  const viewerQueueMs=message.viewerQueueMs||0;
+  const deliveryMs=visibleMs===null||message.requestToPayloadMs===undefined?null:visibleMs-(paintedAt-receivedAt)-viewerQueueMs-message.requestToPayloadMs;
+  const transport=Object.fromEntries(['deliveryId','hostReceivedAt','hostDispatchAt','hostStagesMs','webviewDeliveryMs','payloadBytes','imageEncodedBytes','nonImageBytes','replacedFrames'].filter(k=>message[k]!==undefined).map(k=>[k,message[k]]));
+  const measured={type:'paint',revision:message.revisionId,clientId:message.clientId,page:message.page+1,generation:message.generation,purpose:message.purpose,phase:message.phase||'preview',pipelineMs:message.pipelineMs,visibleMs,frameAgeMs,revisionLag:Math.max(0,latestRequest-message.revisionId),updateIntervalMs:lastVisualPaintAt===null?null:paintedAt-lastVisualPaintAt,stale:paintStale,at:Date.now(),browserStagesMs,viewerQueueMs,deliveryMs,...transport,...stages};
+  window.frameDeliveryStats.painted++;
+  if(!query){lastVisualPaintAt=paintedAt;window.lastPaint=measured;window.paintHistory.push(measured);if(window.paintHistory.length>256)window.paintHistory.shift();if(vscode)vscode.postMessage(measured);else fetch('/paint',{method:'POST',body:JSON.stringify(measured)});}
   if(pendingHighlight?.page===message.page&&!stale)showRegion(pendingHighlight);
   if(pendingSelection&&!stale){const location=pendingSelection;pendingSelection=null;forward(location);}scheduleVisible();
+  return paintStale?'painted-stale':'painted';
 }
 function navigate(target){
   const index=Math.max(0,Math.min(documentCount-1,target)),item=pages.get(index);if(!item)return;

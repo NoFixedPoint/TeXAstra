@@ -33,6 +33,38 @@
       "ok": true
     },
     {
+      "name": "typing burst starts only one image decode",
+      "ok": true
+    },
+    {
+      "name": "replaced frames are acknowledged without decoding",
+      "ok": true
+    },
+    {
+      "name": "status delivery stays immediate during slow decode",
+      "ok": true
+    },
+    {
+      "name": "active frame paints during typing instead of starving",
+      "ok": true
+    },
+    {
+      "name": "only newest pending frame decodes and final text is installed",
+      "ok": true
+    },
+    {
+      "name": "final frame reports queue wait and update interval",
+      "ok": true
+    },
+    {
+      "name": "decode failure releases delivery and later frames still paint",
+      "ok": true
+    },
+    {
+      "name": "obsolete generations release delivery without decode",
+      "ok": true
+    },
+    {
       "name": "no browser errors",
       "ok": true
     },

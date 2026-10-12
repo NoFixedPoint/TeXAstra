@@ -30,8 +30,21 @@ class Preview {
     bool needs_convergence = false;
     void emit(const Json &message) {
         std::lock_guard<std::mutex> lock(output_mutex);
-        std::cout << message.dump(-1, ' ', false, Json::error_handler_t::replace) << '\n'
-                  << std::flush;
+        auto started = Clock::now();
+        auto payload = message.dump(-1, ' ', false, Json::error_handler_t::replace);
+        const double serialize_ms = elapsed(started);
+        auto writing = Clock::now();
+        std::cout << payload << '\n' << std::flush;
+        const double write_ms = elapsed(writing);
+        if (message.value("type", "") == "frame") {
+            // The write duration is known only after the payload has left this
+            // process. Send a small correlated record, not a second full dump.
+            Json timing = {{"type", "frame-transport"}, {"clientId", message.value("clientId", 0)},
+                {"revision", message.value("revisionId", 0)}, {"generation", message.value("generation", 0)},
+                {"purpose", message.value("purpose", "")}, {"phase", message.value("phase", "preview")},
+                {"payloadBytes", payload.size()}, {"serializeMs", serialize_ms}, {"writeMs", write_ms}};
+            std::cout << timing.dump() << '\n' << std::flush;
+        }
     }
     void frame(Json result, const Json &request, bool converged = false) {
         result["type"] = "frame";

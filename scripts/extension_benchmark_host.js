@@ -6,6 +6,7 @@ const root=path.resolve(options['--extension']||path.join(__dirname,'..'));
 const project=path.resolve(options['--project']),main=options['--main'],port=Number(options['--port']);
 let command,change,save,diskChange,receiver,dispose,backend,lastEdit,events=[],stream;
 const requests=[];
+const diagnostics=[];
 const workspaceRelative=path.relative(fs.realpathSync(path.resolve(__dirname,'../.work')),fs.realpathSync(path.join(project,main)));
 const allowSave=options['--allow-save']==='yes'&&workspaceRelative!==''&&!workspaceRelative.startsWith('..')&&!path.isAbsolute(workspaceRelative);
 const document={uri:{scheme:'file',fsPath:path.join(project,main)},isDirty:false,version:1,
@@ -19,7 +20,9 @@ const vscode={Uri:{file:fsPath=>({fsPath}),joinPath:(base,...parts)=>({fsPath:pa
   workspace:{isTrusted:true,textDocuments:[document],workspaceFolders:[{uri:{fsPath:project}}],
     getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(name,fallback)=>config[name]??fallback}),
     onDidChangeTextDocument:f=>{change=f;},onDidSaveTextDocument:f=>{save=f;},createFileSystemWatcher:()=>({onDidCreate(){},onDidChange:f=>{diskChange=f;},onDidDelete(){},dispose(){}})},
-  window:{activeTextEditor:{document},createOutputChannel:()=>({append(){},appendLine(){}}),createWebviewPanel:()=>panel,
+  window:{activeTextEditor:{document},createOutputChannel:()=>({append(){},appendLine(line){
+    try{const item=JSON.parse(line);if(['paint','frame-transport','frame-delivery'].includes(item.type))diagnostics.push(item);}catch{}
+  }}),createWebviewPanel:()=>panel,
     onDidChangeTextEditorSelection(){},showErrorMessage:m=>{throw Error(m);}}};
 const original=Module._load;
 Module._load=function(name,parent,...rest){
@@ -27,7 +30,7 @@ Module._load=function(name,parent,...rest){
   const value=original.call(this,name,parent,...rest);
   if(name==='../native/launch')return {...value,launch:(...args)=>{
     backend=value.launch(...args);const write=backend.stdin.write.bind(backend.stdin);
-    backend.stdin.write=(data,...args)=>{const request=JSON.parse(data);requests.push({type:request.type,clientId:request.clientId,sentAt:request.sentAt});if(request.type==='edit')lastEdit={clientId:request.clientId,bytes:Buffer.byteLength(data),delta:!('source' in request)};return write(data,...args);};
+    backend.stdin.write=(data,...args)=>{const request=JSON.parse(data);requests.push({type:request.type,clientId:request.clientId,sentAt:request.sentAt});if(request.type==='edit')lastEdit={clientId:request.clientId,sentAt:request.sentAt,bytes:Buffer.byteLength(data),delta:!('source' in request)};return write(data,...args);};
     return backend;
   }};
   return value;
@@ -41,6 +44,7 @@ function output(res,data){res.writeHead(200,{'Content-Type':'application/json'})
       if(req.headers.host!==`127.0.0.1:${port}`){res.writeHead(403);res.end();return;}
       if(req.method==='GET'){
         if(req.url==='/requests'){output(res,requests);return;}
+        if(req.url==='/diagnostics'){output(res,diagnostics);return;}
         if(req.url==='/events'){
           stream=res;res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-store'});res.write(': ready\n\n');
           for(const event of events)res.write('data: '+JSON.stringify(event)+'\n\n');events=[];

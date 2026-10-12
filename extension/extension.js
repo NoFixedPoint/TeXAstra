@@ -3,10 +3,12 @@ const fs=require('fs');
 const path=require('path');
 const readline=require('readline');
 const crypto=require('crypto');
+const {performance}=require('perf_hooks');
+const {createFrameDelivery}=require('./frame-delivery');
 const {contains,resolveMain,resolveProject,supportedFile}=require('./project');
 function activate(context){
   let panel,backend,project,currentFrame,suppressSelection,visiblePage=0,serial=0,latestMutation=0,output=vscode.window.createOutputChannel('BaKoMa prototype');
-  let watcher,reloadTimer,ready=false,selectedOptions={};
+  let watcher,reloadTimer,frameDelivery,ready=false,selectedOptions={};
   const editBases=new Map();
   const submittedBuffers=new Map(),savedContents=new Map();
   const fileKey=file=>process.platform==='win32'?path.resolve(file).toLowerCase():path.resolve(file);
@@ -44,7 +46,7 @@ function activate(context){
       await vscode.window.showTextDocument(document,{preview:false});
     }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));}
   }));
-  const stop=()=>{ready=false;editBases.clear();submittedBuffers.clear();savedContents.clear();clearTimeout(reloadTimer);watcher?.dispose();watcher=null;if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
+  const stop=()=>{ready=false;frameDelivery?.dispose();frameDelivery=null;editBases.clear();submittedBuffers.clear();savedContents.clear();clearTimeout(reloadTimer);watcher?.dispose();watcher=null;if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
   const dirtyBuffers=()=>Object.fromEntries(vscode.workspace.textDocuments
     .filter(doc=>doc.isDirty&&doc.uri.scheme==='file'&&contains(project,doc.uri.fsPath))
     .map(doc=>[path.relative(project,doc.uri.fsPath).replaceAll('\\','/'),doc.getText()]));
@@ -85,6 +87,8 @@ function activate(context){
     output.appendLine(`Opening ${root} with project root ${project}; resources and generated files stay in the user cache.`);
     panel=vscode.window.createWebviewPanel('bakomaPreview','BaKoMa · prototype',vscode.ViewColumn.Beside,{enableScripts:true,retainContextWhenHidden:true,localResourceRoots:[vscode.Uri.joinPath(context.extensionUri,'webview')]});
     const web=panel.webview;
+    const delivery=createFrameDelivery(message=>web.postMessage(message),line=>output.appendLine(line));
+    frameDelivery=delivery;
     let html=fs.readFileSync(path.join(context.extensionPath,'webview/index.html'),'utf8');
     for(const asset of ['viewer.css','viewer.js'])html=html.replace(asset,web.asWebviewUri(vscode.Uri.joinPath(context.extensionUri,'webview',asset)).toString());
     const nonce=require('crypto').randomBytes(16).toString('hex');
@@ -114,16 +118,26 @@ function activate(context){
     };
     watcher.onDidCreate(diskChanged);watcher.onDidChange(diskChanged);watcher.onDidDelete(diskChanged);
     readline.createInterface({input:backend.stdout}).on('line',line=>{
-      try{const message=JSON.parse(line);if(message.type==='environment'){
+      if(backend!==watchedBackend)return;
+      const received=performance.now(),hostReceivedAt=Date.now();
+      try{const message=JSON.parse(line),parseMs=performance.now()-received;if(message.type==='environment'){
         output.appendLine(JSON.stringify({...message.report,host:backend?.bakomaEnvironment},null,2));return;
+      }if(message.type==='frame-transport'){output.appendLine(JSON.stringify(message));return;
       }if(message.error){editBases.clear();submittedBuffers.clear();savedContents.clear();output.appendLine(String(message.error));}if(message.type==='frame'){
         if(message.environmentReport)output.appendLine(`Build environment report: ${message.environmentReport}`);
         if(message.clientId<latestMutation)message.isStale=true;
         if(!message.isStale&&(!currentFrame||message.generation>=currentFrame.generation))currentFrame=message;
+        const imageEncodedBytes=message.image?.length||0;
+        message.payloadBytes=Buffer.byteLength(line);message.imageEncodedBytes=imageEncodedBytes;
+        message.nonImageBytes=message.payloadBytes-imageEncodedBytes;
+        message.hostReceivedAt=hostReceivedAt;message.hostStagesMs={parse:parseMs};
+        delivery.enqueue(message,performance.now());return;
       }else if(message.state)currentFrame=null;web.postMessage(message);}catch(error){output.appendLine(String(error));}
     });
     web.onDidReceiveMessage(async message=>{
+      if(frameDelivery!==delivery)return;
       if(message.type==='ready'){
+        delivery.reset();
         ready=true;
         send({type:'start',page:0,overlays:dirtyBuffers()});
       }else if(message.type==='navigate'){
@@ -136,7 +150,8 @@ function activate(context){
         const selection=new vscode.Selection(message.line,message.column,message.endLine,message.endColumn);
         suppressSelection={file,line:message.line,column:message.column};
         editor.selection=selection;editor.revealRange(selection,vscode.TextEditorRevealType.InCenterIfOutsideViewport);
-      }else if(message.type==='paint'){output.appendLine(JSON.stringify(message));}
+      }else if(message.type==='frame-ack'){delivery.acknowledge(message);}
+      else if(message.type==='paint'){output.appendLine(JSON.stringify(message));}
       else if(message.type==='viewport'){visiblePage=message.page;}
       else if(message.type==='page'||message.type==='sync-forward'){send(message);}
     });

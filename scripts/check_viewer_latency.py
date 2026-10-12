@@ -36,7 +36,7 @@ with sync_playwright() as pw:
     check('paint includes backend and browser stages', sample['purpose'] == 'edit' and
           sample['visibleMs'] > 0 and set(sample['browserStagesMs']) == {'prepare', 'decode', 'install', 'paintWait'})
     check('delivery residual accounts for the measured total', abs(sample['visibleMs']-
-          sum(sample['browserStagesMs'].values())-sample['deliveryMs']-sample['requestToPayloadMs']) < .001)
+          sum(sample['browserStagesMs'].values())-sample['viewerQueueMs']-sample['deliveryMs']-sample['requestToPayloadMs']) < .001)
     page.evaluate('''async ()=>{
         prefetchAfter=performance.now()-1;
         await receive({...testFrame,sentAt:Date.now()-500});
@@ -61,6 +61,38 @@ with sync_playwright() as pw:
     check('revision superseded during paint is excluded from latency', page.evaluate('lastPaint.clientId===2 && lastPaint.stale && lastPaint.visibleMs===null'))
     page.evaluate('receive({...testFrame,clientId:3,revisionId:3,generation:3,phase:"converged",sentAt:null})')
     check('idle convergence is excluded from edit latency', page.evaluate('lastPaint.phase==="converged" && lastPaint.visibleMs===null'))
+    page.evaluate('''()=>{
+        window.realDecode=Image.prototype.decode;window.decodeReleases=[];
+        window.decodeCalls=0;window.activeDecodes=0;window.maxDecodes=0;
+        Image.prototype.decode=async function(){
+            decodeCalls++;activeDecodes++;maxDecodes=Math.max(maxDecodes,activeDecodes);
+            await new Promise(resolve=>decodeReleases.push(resolve));
+            try{await realDecode.call(this);}finally{activeDecodes--;}
+        };
+        window.burstDone=Promise.all(Array.from({length:20},(_,i)=>receive({...testFrame,
+            pageCount:1,clientId:50+i,revisionId:50+i,generation:50+i,deliveryId:50+i,
+            characters:[{text:String(50+i),rect:[0,0,10,10]}],sentAt:Date.now()})));
+        receive({type:'status',state:'building',revision:69,clientId:69});
+    }''')
+    check('typing burst starts only one image decode', page.evaluate('decodeCalls===1 && queuedFrame.message.clientId===69'))
+    check('replaced frames are acknowledged without decoding', page.evaluate('outbound.filter(m=>m.type==="frame-ack"&&m.outcome==="replaced").length===18'))
+    check('status delivery stays immediate during slow decode', page.evaluate('latestClient===69 && stale'))
+    page.evaluate('decodeReleases.shift()()')
+    page.wait_for_function('decodeCalls===2')
+    check('active frame paints during typing instead of starving', page.evaluate('lastPaint.clientId===50 && lastPaint.stale && lastPaint.frameAgeMs>=0 && lastPaint.visibleMs===null'))
+    page.evaluate('decodeReleases.shift()()')
+    page.evaluate('burstDone')
+    check('only newest pending frame decodes and final text is installed', page.evaluate('decodeCalls===2 && maxDecodes===1 && lastPaint.clientId===69 && !lastPaint.stale && pages.get(0).layer.textContent==="69"'))
+    check('final frame reports queue wait and update interval', page.evaluate('lastPaint.viewerQueueMs>0 && lastPaint.updateIntervalMs>0 && lastPaint.revisionLag===0'))
+    page.evaluate('''async()=>{
+        Image.prototype.decode=function(){return Promise.reject(new Error('test decode failure'));};
+        await receive({...testFrame,clientId:70,revisionId:70,generation:70,deliveryId:70});
+        Image.prototype.decode=realDecode;
+        await receive({...testFrame,clientId:71,revisionId:71,generation:71,deliveryId:71});
+    }''')
+    check('decode failure releases delivery and later frames still paint', page.evaluate('outbound.some(m=>m.type==="frame-ack"&&m.deliveryId===70&&m.outcome==="error") && lastPaint.clientId===71'))
+    page.evaluate('receive({...testFrame,generation:1,deliveryId:72})')
+    check('obsolete generations release delivery without decode', page.evaluate('outbound.some(m=>m.type==="frame-ack"&&m.deliveryId===72&&m.outcome==="discarded")'))
     check('no browser errors', not errors)
 
     # The demo must deliver the newer status while an older frame is painting,
