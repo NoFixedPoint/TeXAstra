@@ -70,16 +70,16 @@ jobs:
           pattern: texastra-darwin-*
           path: artifacts/release
           merge-multiple: true
-      - name: Publish macOS preview after both native checks pass
+      - name: Publish macOS release after both native checks pass
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           version=$(node -p "require('./package.json').version")
-          tag="v${version}-macos"
+          tag="v${version}"
           if gh release view "$tag" >/dev/null 2>&1; then
             echo "Release $tag already exists; leaving published assets unchanged."
             exit 0
           fi
-          gh release create "$tag" --target "$GITHUB_SHA" --prerelease \
-            --title "TeXAstra $version - macOS preview" \
+          gh release create "$tag" --target "$GITHUB_SHA" --latest \
+            --title "TeXAstra $version - macOS" \
             --notes-file .github/macos-release-notes.md artifacts/release/*

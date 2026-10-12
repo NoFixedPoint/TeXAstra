@@ -26,6 +26,7 @@ class Sources {
         std::vector<int> lines, supplementary;
         mutable std::map<int,Span> spans;
         std::string name;
+        bool mapped = true;
         int base_offset=0, base_line=0, base_column=0;
         int slot=0;
         std::pair<int,int> position(int offset) const {
@@ -58,13 +59,25 @@ public:
         (void)live;
         auto identity=key.empty()?file:key;
         auto it=files.find(identity);
+        std::u32string next;
+        try { next=unicode(source); }
+        catch(const std::range_error &) {
+            // Project discovery also visits unrelated, legacy-encoded drafts.
+            // Leave their bytes intact for TeX, but do not invent UTF-8 offsets.
+            // Keep an existing slot reserved so other files' IDs stay stable.
+            if(it!=files.end()) {
+                it->second.text.clear();it->second.spans.clear();
+                it->second.mapped=false;
+            }
+            return source;
+        }
         if(it==files.end()) {
             if(files.size()>=2146) throw std::runtime_error("Too many source files/blocks");
             File f;f.slot=int(files.size())+1;
             it=files.emplace(identity,std::move(f)).first;slots[it->second.slot]=&it->second;
         }
         current=&it->second;
-        auto next=unicode(source);
+        current->mapped=true;
         if(next.size()>=1000000) throw std::runtime_error("Source file/block exceeds one million characters");
         size_t prefix=0;
         while(prefix<next.size() && prefix<current->text.size() && next[prefix]==current->text[prefix]) ++prefix;
@@ -100,7 +113,8 @@ public:
     }
     void manifest(const fs::path &path, const fs::path &root = {}) const {
         std::string out;
-        for(const auto &[name,f]:files) out+=std::to_string(f.slot)+"\t"+(root / name).generic_string()+"\n";
+        for(const auto &[name,f]:files) if(f.mapped)
+            out+=std::to_string(f.slot)+"\t"+(root / name).generic_string()+"\n";
         write(path,out);
     }
     const Span *find(int id) const {

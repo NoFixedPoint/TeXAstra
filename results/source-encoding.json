@@ -1,0 +1,16 @@
+{
+  "checks": [
+    {
+      "name": "unrelated non-UTF-8 draft does not block preview",
+      "ok": true
+    },
+    {
+      "name": "edits remain rendered and mapped",
+      "ok": true
+    },
+    {
+      "name": "fixture files unchanged",
+      "ok": true
+    }
+  ]
+}

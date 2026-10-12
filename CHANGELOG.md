@@ -1,5 +1,18 @@
 # Release notes
 
+## 0.1.2 - macOS
+
+- Regular macOS release for Apple Silicon and Intel, targeting macOS 15+.
+- Fix `wstring_convert::from_bytes` when a valid UTF-8 document shares its
+  project folder with an unrelated legacy-encoded `.tex` file, as in the CV
+  reproduction. Preserve source bytes and omit unsupported token mappings.
+- Test the encoding regression, live edits, and unchanged project files using
+  the runtime extracted from each architecture's actual release VSIX.
+
+The compatible TeX Live 2021 setup and ad-hoc signing requirements remain as
+documented in the [macOS guide](docs/macos.md). Windows/WSL downloads remain
+available in [0.1.0](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.0).
+
 ## 0.1.1 - macOS preview
 
 - Native Apple Silicon and Intel macOS VSIX builds, targeting macOS 15+.

@@ -22,6 +22,19 @@ int main(int argc,char **argv) {
     assert(sources.find(1000000)->text=="\\command");
     sources.index("\\cmd changed","paper.tex");
     assert(sources.find(1000000)->text=="\\");
+    // An unrelated legacy-encoded draft must not prevent indexing the project.
+    // Preserve its bytes for TeX and retire any previous navigation mappings.
+    const std::string legacy = "% legacy draft\n\xff\n";
+    assert(sources.index(legacy,"paper.tex")==legacy);
+    assert(!sources.find(1000000));
+    sources.manifest(argv[1]);
+    assert(read(argv[1]).find("paper.tex")==std::string::npos);
+    sources.index("Other document", "other.tex");
+    sources.index("Recovered", "paper.tex");
+    assert(sources.find(1000000)->text=="R");
+    assert(sources.find(2000000)->text=="O");
+    sources.manifest(argv[1]);
+    assert(read(argv[1]).find("paper.tex")!=std::string::npos);
     std::map<std::string,std::string> buffers;std::map<std::string,int> versions;
     apply_source_edit(buffers,versions,{{"file","a"},{"source",u8"a😀bé\r\nx"},{"sourceVersion",1}});
     Json edit={{"file","a"},{"baseVersion",1},{"sourceVersion",2},{"baseLength",8},

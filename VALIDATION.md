@@ -1,5 +1,16 @@
 # Release validation
 
+## 0.1.2 - macOS release candidate
+
+Local extension unit checks, Python syntax compilation, source-index regression,
+and the WSL compile/edit regression for an unrelated legacy-encoded `.tex` file
+passed. See [the encoding fix](docs/source-encoding-20261012.md).
+
+Publication is gated on new Apple Silicon and Intel macOS builds, runtime
+audits, and extracted-VSIX checks. Those package checks now include the exact CV
+failure pattern and assert that project files remain unchanged. Native results
+and published artifact identities will be recorded after both jobs pass.
+
 ## 0.1.1 - macOS preview
 
 Both native jobs passed on **macOS 15.7.9**, using ARM64 and Intel x86-64

@@ -2,7 +2,7 @@
   "name": "texastra",
   "displayName": "TeXAstra",
   "description": "Interactive LaTeX editing with live typesetting and precise source navigation.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "texastra",
   "engines": {
     "vscode": "^1.85.0"

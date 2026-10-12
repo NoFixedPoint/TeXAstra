@@ -13,4 +13,5 @@ subprocess.run(prefix+[linux(binary), linux(ROOT/'.work/source-edit-ranges.txt')
 (ROOT/'results/source-edits.json').write_text(json.dumps({'ok': True, 'checks': [
     'Unicode line and UTF-16 column positions', 'Empty and shortened buffers',
     'Retained command ranges and intersecting edits', 'UTF-16 multi-cursor changes with CRLF',
-    'Atomic rejection of invalid version, length, surrogate and bounds']}, indent=2)+'\n')
+    'Atomic rejection of invalid version, length, surrogate and bounds',
+    'Legacy-encoded sources preserve bytes without stale mappings or slot collisions']}, indent=2)+'\n')

@@ -5,16 +5,16 @@ and Intel (`darwin-x64`). The initial deployment target is **macOS 15 or later**
 The release workflow compiles and validates on both architectures. Publication
 is gated on both native jobs passing.
 
-## Install a prebuilt preview
+## Install a prebuilt release
 
-Install the VSIX matching your VS Code architecture from the [macOS preview
-release](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.1-macos), then reload VS Code. If you need the compatible TeX tree, install
+Install the VSIX matching your VS Code architecture from the [macOS
+release](https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.2), then reload VS Code. If you need the compatible TeX tree, install
 Python 3.11.8+ and run the setup script bundled inside the extension. For example
 (the extension folder name can include an architecture suffix):
 
 ```sh
 ls -d "$HOME"/.vscode/extensions/texastra.texastra-*
-python3 "$HOME/.vscode/extensions/texastra.texastra-0.1.1-darwin-arm64/scripts/install_test_texlive.py" \
+python3 "$HOME/.vscode/extensions/texastra.texastra-0.1.2-darwin-arm64/scripts/install_test_texlive.py" \
   --destination "$HOME/texastra-texlive-2021"
 ```
 
@@ -33,7 +33,7 @@ brew install python@3.11 node@22 cmake
 export PATH="$(brew --prefix python@3.11)/libexec/bin:$(brew --prefix node@22)/bin:$PATH"
 git clone https://github.com/NoFixedPoint/TeXAstra.git
 cd TeXAstra
-git checkout v0.1.1-macos
+git checkout v0.1.2
 python3 scripts/build_macos.py
 python3 scripts/check_macos.py
 ```
@@ -93,7 +93,8 @@ node native/demo.js --project examples/demo --main main.tex
 The package check extracts the actual VSIX into a directory containing spaces,
 compiles the example, edits text/TikZ/figure/table content, and compares each
 rendered result against a fresh compilation. It also exercises long nested paths,
-included-file checkpoints, syntax-error recovery and source preservation. `check_macos.py` checks architecture,
+included-file checkpoints, syntax-error recovery, source preservation, and a UTF-8
+project containing an unrelated legacy-encoded TeX file (the CV crash regression). `check_macos.py` checks architecture,
 ad-hoc signatures and dynamic dependencies; non-system libraries must be bundled.
 The source ZIP includes these validation reports.
 

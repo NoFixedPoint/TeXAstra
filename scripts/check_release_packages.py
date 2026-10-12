@@ -55,11 +55,21 @@ def main():
             assert (runtime/'sources/pymupdf-1.26.7.tar.gz').is_file()
             project = location/'project'
             shutil.copytree(ROOT/'examples/demo', project)
+            # The CV crash was caused by indexing an unrelated legacy-encoded
+            # draft before compiling the valid UTF-8 root. Exercise that exact
+            # project shape with the backend extracted from each release VSIX.
+            legacy = b'% Unrelated legacy draft\n\xff\n'
+            (project/'unrelated-legacy.tex').write_bytes(legacy)
+            original_files = {p.relative_to(project): p.read_bytes()
+                              for p in project.rglob('*') if p.is_file()}
             source = (project/'main.tex').read_text(encoding='utf-8')
             checks = []
             with Client(project, runtime=runtime, assets=extension/'texastra') as live:
                 initial = live.request(type='start', page=0)
                 assert initial.get('ok') and initial['pageCount'] == 1, initial.get('error')
+                assert initial['regionRows'], 'UTF-8 root has no source mapping'
+                checks.append({'unrelatedLegacyEncoding': True, 'rootSourceMapped': True})
+                print(platform, 'unrelated legacy-encoded TeX file does not block preview', flush=True)
                 previous = pixels(initial)
                 for label, before, after in [
                     ('text', 'The result is clear.', 'The result is beautiful.'),
@@ -79,6 +89,9 @@ def main():
                     previous = rendered
                     checks.append({'edit': label, 'matchesFullBuild': True})
                     print(platform, label, 'matches complete compile', flush=True)
+            assert original_files == {p.relative_to(project): p.read_bytes()
+                                      for p in project.rglob('*') if p.is_file()}
+            checks.append({'projectFilesUnchanged': True})
             if platform.startswith('darwin-'):
                 from check_posix_runtime import check
                 checks.append(check(runtime, extension/'texastra'))

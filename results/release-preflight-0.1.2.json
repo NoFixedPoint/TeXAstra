@@ -1,0 +1,11 @@
+{
+  "version": "0.1.2",
+  "checks": {
+    "extensionUnitTests": "passed",
+    "pythonCompileall": "passed",
+    "sourceIndexRegression": "passed",
+    "wslLegacyEncodingCompileAndEdit": "passed",
+    "diffCheck": "passed"
+  },
+  "macOSNativeBuildAndPackageChecks": "pending CI"
+}
