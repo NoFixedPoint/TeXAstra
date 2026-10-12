@@ -1,0 +1,17 @@
+.work/
+node_modules/
+__pycache__/
+*.vsix
+.venv/
+*.py[cod]
+.env
+.env.*
+!.env.example
+native/runtime/
+native/windows-bundle/
+artifacts/*.exe
+artifacts/*.zip
+artifacts/SHA256SUMS
+assets/*.webm
+results/
+corpus/

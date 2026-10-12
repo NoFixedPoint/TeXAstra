@@ -1,0 +1,117 @@
+{
+  "name": "texastra",
+  "displayName": "TeXAstra",
+  "description": "Interactive LaTeX editing with live typesetting and precise source navigation.",
+  "version": "0.1.0",
+  "publisher": "texastra",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./extension/extension.js",
+  "activationEvents": [
+    "onCommand:texastra.openDocument",
+    "onCommand:texastra.showEnvironment"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "texastra.openDocument",
+        "title": "TeXAstra: Open Document"
+      },
+      {
+        "command": "texastra.showEnvironment",
+        "title": "TeXAstra: Show LaTeX Environment"
+      }
+    ],
+    "configuration": {
+      "title": "TeXAstra",
+      "properties": {
+        "texastra.mainFile": {
+          "type": "string",
+          "default": "",
+          "description": "Main .tex path relative to the workspace, or absolute. Empty discovers the active document, its % !TEX root comment, main.tex, or prompts."
+        },
+        "texastra.projectRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Directory containing the main document and shared project assets. Relative to the workspace (or main-file directory without a workspace). Empty uses the containing workspace folder, otherwise the main-file directory."
+        },
+        "texastra.runtimeMode": {
+          "type": "string",
+          "enum": [
+            "native",
+            "wsl"
+          ],
+          "default": "wsl",
+          "description": "Windows: use Linux/WSL by default. The separately packaged native Windows backend requires runtimeMode=native. Reopen the document after changing."
+        },
+        "texastra.wslDistribution": {
+          "type": "string",
+          "default": "",
+          "description": "Used only with texastra.runtimeMode=wsl. Select the installed WSL distribution hosting TeX Live. Empty uses a WSL path owner, otherwise Ubuntu-22.04 when installed, otherwise the first listed distribution."
+        },
+        "texastra.texBinDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute TeX Live binary directory for the selected runtime, such as C:\\texlive\\2025\\bin\\windows on native Windows or /usr/bin in Linux/WSL. Empty discovers kpsewhich on PATH, then conventional TeX Live locations. Reopen the document after changing."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "check:windows-checkpoint": "python scripts/check_windows_checkpoint.py",
+    "build:windows-engine": "python scripts/build_windows_engine.py",
+    "build:windows": "python scripts/build_windows_cpp.py",
+    "bundle:windows": "python scripts/bundle_windows.py",
+    "package:windows": "python scripts/package_extension.py --target win32-x64 --runtime native/windows-bundle",
+    "check:windows": "python scripts/check_windows_backend.py",
+    "check:windows-browser": "python scripts/check_windows_browser.py",
+    "check:windows-projects": "python scripts/check_windows_projects.py",
+    "demo": "node native/demo.js",
+    "build:cpp": "python scripts/build_cpp.py",
+    "check:cpp": "python scripts/check_cpp.py",
+    "demo:native": "python -m texastra.demo --engine native",
+    "corpus": "python scripts/generate_corpus.py",
+    "check:mapping": "python scripts/check_mapping.py 100",
+    "check:snapshot": "python scripts/check_snapshot.py",
+    "check:stream": "python scripts/check_page_stream.py",
+    "check:renderer": "python scripts/check_renderer.py",
+    "check:browser": "python scripts/check_browser.py",
+    "build:engine": "python scripts/build_engine.py",
+    "check:origins": "python scripts/check_token_origins.py",
+    "check:includes": "python scripts/check_included_edits.py",
+    "check:checkpoints": "python scripts/check_engine_checkpoints.py",
+    "check:viewer-latency": "python scripts/check_viewer_latency.py",
+    "benchmark:preview": "python scripts/benchmark_preview.py",
+    "benchmark:figure-note": "python scripts/benchmark_figure_note.py",
+    "check:figure-resources": "python scripts/check_figure_resources.py",
+    "check:source-edits": "python scripts/check_source_edits.py",
+    "check:extension-save": "node scripts/check_extension_save.js",
+    "check:frame-delivery": "node scripts/check_frame_delivery.js",
+    "check:font-resources": "python scripts/check_font_resources.py",
+    "check:source-mapping": "python scripts/check_source_mapping.py",
+    "check:mapping-browser": "python scripts/check_mapping_browser.py",
+    "check:build-tools": "python scripts/check_build_tools.py",
+    "check:project-assets": "python scripts/check_project_assets.py",
+    "check:distribution": "python scripts/check_distribution.py",
+    "check:configuration": "node scripts/check_configuration.js",
+    "test": "node scripts/check_unit.js"
+  },
+  "license": "SEE LICENSE IN LICENSING.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NoFixedPoint/TeXAstra.git"
+  },
+  "homepage": "https://github.com/NoFixedPoint/TeXAstra#readme",
+  "bugs": {
+    "url": "https://github.com/NoFixedPoint/TeXAstra/issues"
+  }
+}
