@@ -2,7 +2,7 @@
   "name": "bakoma-revived-prototype",
   "displayName": "BaKoMa Revived \u2014 Feasibility Prototype",
   "description": "Experimental live LaTeX preview with token provenance and a LuaTeX checkpoint backend.",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "publisher": "local-prototype",
   "engines": {
     "vscode": "^1.85.0"
@@ -88,8 +88,8 @@
         "bakoma.runtimeMode": {
           "type": "string",
           "enum": ["native", "wsl"],
-          "default": "native",
-          "description": "Windows: use the native Windows backend (default), or explicitly select the Linux/WSL comparison runtime. Reopen preview after changing."
+          "default": "wsl",
+          "description": "Windows: use Linux/WSL by default. The separately packaged native Windows backend requires runtimeMode=native. Reopen preview after changing."
         },
         "bakoma.wslDistribution": {
           "type": "string",

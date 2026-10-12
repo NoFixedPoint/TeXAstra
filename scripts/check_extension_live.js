@@ -6,7 +6,7 @@ fs.mkdirSync(path.join(project,'paper'),{recursive:true});
 fs.writeFileSync(path.join(project,main),'\\documentclass{article}\n\\begin{document}Example.\\end{document}\n');
 const document={uri:{scheme:'file',fsPath:path.join(project,main)},isDirty:true,getText:()=>fs.readFileSync(path.join(project,main),'utf8')+'% unsaved\n'};
 const sibling={uri:{scheme:'file',fsPath:path.join(project,'shared/body.tex')},isDirty:true,getText:()=> 'Unsaved sibling.'};
-const editor={document};let command,environmentCommand,environmentArgs,environmentDocument,receiver,change,launchArgs,disposed,webMessages=[],outputLines=[];
+const editor={document};let command,environmentCommand,environmentArgs,environmentDocument,receiver,change,selectionChange,launchArgs,disposed,webMessages=[],outputLines=[];
 const child=new EventEmitter();child.stdin=new PassThrough();child.stdout=new PassThrough();child.stderr=new PassThrough();
 let input='';child.stdin.on('data',c=>input+=c);
 const web={cspSource:'test',asWebviewUri:u=>u.fsPath,postMessage:m=>{webMessages.push(m);},onDidReceiveMessage:f=>{receiver=f;}};
@@ -14,15 +14,16 @@ const panel={webview:web,onDidDispose:f=>{disposed=f;},reveal(){},dispose(){disp
 let diskChange,diskCreate,diskDelete,watchDisposed=false,watchPattern;
 const watcher={onDidChange:f=>{diskChange=f;},onDidCreate:f=>{diskCreate=f;},onDidDelete:f=>{diskDelete=f;},dispose:()=>{watchDisposed=true;}};
 const config={checkpointMode:'internal',mainFile:main,engine:'native',previewMode:'full',latexCompiler:'xelatex',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'};
+const defaults=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).contributes.configuration.properties;
 const vscode={
   Uri:{file:fsPath=>({fsPath}),joinPath:(base,...s)=>({fsPath:path.join(base.fsPath,...s)})},ViewColumn:{Beside:2,One:1},
   RelativePattern:class {constructor(base,pattern){this.base=base;this.pattern=pattern;}},
   commands:{registerCommand:(name,f)=>{if(name==='bakoma.showEnvironment')environmentCommand=f;else command=f;}},
   workspace:{isTrusted:true,textDocuments:[document,sibling],workspaceFolders:[{uri:{fsPath:project}}],
-    getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(k,d)=>config[k]??d}),
+    getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(k,d)=>config[k]??defaults['bakoma.'+k]?.default??d}),
     onDidChangeTextDocument:f=>{change=f;},createFileSystemWatcher:p=>{watchPattern=p;return watcher;},openTextDocument:async options=>{environmentDocument=options;return options;}},
   window:{activeTextEditor:editor,createOutputChannel:()=>({append(){},appendLine:s=>outputLines.push(s)}),
-    createWebviewPanel:()=>panel,onDidChangeTextEditorSelection:()=>{},showTextDocument:async()=>{},showErrorMessage:m=>{throw Error(m);}}
+    createWebviewPanel:()=>panel,onDidChangeTextEditorSelection:f=>{selectionChange=f;},showTextDocument:async()=>{},showErrorMessage:m=>{throw Error(m);}}
 };
 const original=Module._load;
 Module._load=function(request,parent,...rest){
@@ -33,8 +34,8 @@ Module._load=function(request,parent,...rest){
 (async()=>{
   require('../extension/extension').activate({subscriptions:[],extensionPath:root,extensionUri:{fsPath:root}});
   await command();await receiver({type:'ready'});
-  assert.deepStrictEqual(launchArgs.slice(1),[project,'auto',{main,mode:'auto',compiler:'lualatex',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
-  await environmentCommand();assert.deepStrictEqual(environmentArgs,[root,{wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
+  assert.deepStrictEqual(launchArgs.slice(1),[project,'auto',{main,mode:'auto',compiler:'lualatex',runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
+  await environmentCommand();assert.deepStrictEqual(environmentArgs,[root,{runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
   assert.equal(environmentDocument.language,'json');assert.equal(JSON.parse(environmentDocument.content).binDirectory,'/selected/bin');
   child.stdout.write(JSON.stringify({type:'environment',report:{ok:true,binDirectory:'/selected/bin'}})+'\n');
   await new Promise(r=>setImmediate(r));assert(outputLines.some(line=>line.includes('/selected/bin')));
@@ -42,6 +43,8 @@ Module._load=function(request,parent,...rest){
   assert.equal(sent[0].overlays[main],document.getText());
   assert.equal(sent[0].overlays['shared/body.tex'],sibling.getText());
   assert(web.html.includes('id="pages"'));
+  selectionChange({textEditor:{document:sibling},selections:[{active:{line:120,character:3}}]});
+  assert.deepStrictEqual(webMessages.at(-1),{type:'forward',file:'shared/body.tex',line:120,column:3});
   const now=Date.now,getText=document.getText;let clock=1000;
   Date.now=()=>clock;document.getText=()=>{clock+=50;return getText();};
   try{change({document,contentChanges:[{text:'x'}]});}
@@ -54,6 +57,11 @@ Module._load=function(request,parent,...rest){
   child.stdout.write(JSON.stringify({type:'status',state:'error',error:'Incomplete \\iffalse'})+'\n');
   await new Promise(r=>setImmediate(r));assert(outputLines.includes('Incomplete \\iffalse'));
   assert.equal(webMessages.at(-1).state,'error');
+  await receiver({type:'sync-forward',file:'shared/body.tex',line:120,column:3,generation:1,requestId:'sync-late'});
+  const lookup=JSON.parse(input.trim().split('\n').at(-1));
+  assert.equal(lookup.type,'sync-forward');assert.equal(lookup.file,'shared/body.tex');assert.equal(lookup.requestId,'sync-late');
+  child.stdout.write(JSON.stringify({type:'sync',generation:1,requestId:'sync-late',location:{page:99}})+'\n');
+  await new Promise(r=>setImmediate(r));assert.equal(webMessages.at(-1).location.page,99);
   for(const suffix of ['bib','ist','bbx','cbx','lbx']){
     const file=`references.${suffix}`,source=`unsaved ${suffix}`;
     change({document:{uri:{scheme:'file',fsPath:path.join(project,file)},getText:()=>source},contentChanges:[{text:source}]});
@@ -75,5 +83,5 @@ Module._load=function(request,parent,...rest){
   diskChange(document.uri);disposed();await new Promise(r=>setTimeout(r,250));
   assert(watchDisposed);assert.equal(JSON.parse(input.trim().split('\n').at(-1)).type,'close');
   Module._load=original;
-  const result={checks:22,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
+  const result={checks:25,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(e=>{Module._load=original;console.error(e);process.exitCode=1;});

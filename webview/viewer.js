@@ -147,7 +147,9 @@ function forward(location){
     const matches=item.frame.regions.filter(r=>containsSource(r,location)).sort((a,b)=>(a.end-a.start)-(b.end-b.start));
     if(matches.length){showRegion({...matches[0],page:index});return;}
   }
-  lastSyncRequest=`sync-${++requestSerial}`;send({type:'sync-forward',...location,page,generation,requestId:lastSyncRequest});
+  // VS Code selections carry type:'forward'. Copy only the source position so
+  // that envelope cannot overwrite the backend's sync-forward request type.
+  lastSyncRequest=`sync-${++requestSerial}`;send({type:'sync-forward',file:location.file,line:location.line,column:location.column,page,generation,requestId:lastSyncRequest});
 }
 async function receive(message){
   const receivedAt=performance.now();

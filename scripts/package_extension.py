@@ -5,7 +5,8 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
 parser.add_argument('--runtime',type=Path,default=ROOT/'native/runtime')
-parser.add_argument('--target',choices=['linux-x64','win32-x64'],default='linux-x64')
+parser.add_argument('--target',choices=['wsl','linux-x64','win32-x64'],default='wsl',
+                    help='wsl produces a VSIX installable in Windows VS Code with the bundled Linux runtime')
 args=parser.parse_args()
 windows=args.target=='win32-x64'
 backend='bakoma-backend.exe' if windows else 'bakoma-backend'
@@ -24,10 +25,16 @@ for name in set(files):
     shutil.copyfile(source,target)
 destination=stage/'native/runtime/windows-x64' if windows else stage/'native/runtime'
 shutil.copytree(args.runtime.resolve(),destination,ignore=shutil.ignore_patterns('*.new','bako_internal.so','windows-x64'))
-suffix='-win32-x64' if windows else ''
+manifest=json.loads((stage/'package.json').read_text(encoding='utf-8'))
+runtime_setting=manifest['contributes']['configuration']['properties']['bakoma.runtimeMode']
+runtime_setting['default']='native' if windows else 'wsl'
+if windows:runtime_setting['description']='Windows: use the bundled native Windows backend by default. WSL requires a separately installed Linux runtime. Reopen preview after changing.'
+(stage/'package.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
+suffix='' if args.target=='wsl' else '-'+args.target
 artifact=ROOT/'artifacts'/f'bakoma-revived-prototype-{version}{suffix}.vsix'
+target_args=[] if args.target=='wsl' else ['--target',args.target]
 subprocess.run([shutil.which('npx.cmd') or shutil.which('npx'),'--yes','@vscode/vsce','package',
-    '--allow-missing-repository','--no-rewrite-relative-links','--skip-license','--target',args.target,'--out',str(artifact)],cwd=stage,check=True)
+    '--allow-missing-repository','--no-rewrite-relative-links','--skip-license',*target_args,'--out',str(artifact)],cwd=stage,check=True)
 with zipfile.ZipFile(artifact) as archive:
     checked=0
     for name in archive.namelist():
@@ -40,13 +47,17 @@ with zipfile.ZipFile(artifact) as archive:
                 assert archive.read(name)==source.read_bytes(),name
                 checked+=1
     assert json.loads(archive.read('extension/package.json'))['version']==version
+    assert json.loads(archive.read('extension/package.json'))['contributes']['configuration']['properties']['bakoma.runtimeMode']['default']==('native' if windows else 'wsl')
+    if args.target=='wsl':assert b'TargetPlatform=' not in archive.read('extension.vsixmanifest')
     assert 'extension/native/runtime/bako_internal.so' not in archive.namelist()
     if windows:
         binaries=[name for name in archive.namelist() if name.lower().endswith(('.exe','.dll','.so','.lib','.exp','.pdb'))]
         assert binaries==['extension/native/runtime/windows-x64/bakoma-backend.exe'],binaries
-    else:assert 'extension/native/runtime/bakoma-luahbtex' in archive.namelist()
+    else:
+        assert 'extension/native/runtime/bakoma-luahbtex' in archive.namelist()
+        assert not any(name.endswith(('.exe','.dll')) for name in archive.namelist())
 report={'version':version,'sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),
-    'target':args.target,'verifiedPackagedFiles':checked,'runtimeSha256':hashlib.sha256((args.runtime/backend).read_bytes()).hexdigest()}
+    'target':args.target,'defaultRuntimeMode':runtime_setting['default'],'verifiedPackagedFiles':checked,'runtimeSha256':hashlib.sha256((args.runtime/backend).read_bytes()).hexdigest()}
 if not windows:report['compilerSha256']=hashlib.sha256((args.runtime/'bakoma-luahbtex').read_bytes()).hexdigest()
 if windows:report['nativeBinaries']=binaries
 if windows:

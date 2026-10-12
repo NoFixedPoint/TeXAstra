@@ -1,0 +1,37 @@
+{
+  "runtime": "wsl",
+  "checks": [
+    {
+      "name": "30-page document loads on WSL",
+      "ok": true
+    },
+    {
+      "name": "page 20 has never loaded",
+      "ok": true
+    },
+    {
+      "name": "page 20 loads, scrolls and highlights the exact token",
+      "ok": true
+    },
+    {
+      "name": "page 30 has never loaded",
+      "ok": true
+    },
+    {
+      "name": "page 30 loads, scrolls and highlights the exact token",
+      "ok": true
+    },
+    {
+      "name": "forward synchronization preserves source revision",
+      "ok": true
+    },
+    {
+      "name": "both selections reach backend as sync-forward",
+      "ok": true
+    },
+    {
+      "name": "no browser errors",
+      "ok": true
+    }
+  ]
+}

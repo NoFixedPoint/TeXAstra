@@ -1,0 +1,47 @@
+{
+  "checks": [
+    {
+      "name": "late page has never loaded",
+      "ok": true
+    },
+    {
+      "name": "VS Code selection requests backend lookup for never-loaded page",
+      "ok": true
+    },
+    {
+      "name": "lookup result requests the late page",
+      "ok": true
+    },
+    {
+      "name": "loaded late page scrolls to the highlighted source",
+      "ok": true
+    },
+    {
+      "name": "already-loaded page highlights without a backend lookup",
+      "ok": true
+    },
+    {
+      "name": "selection waits while preview is stale",
+      "ok": true
+    },
+    {
+      "name": "deferred VS Code selection keeps the backend request type",
+      "ok": true
+    },
+    {
+      "name": "no browser errors",
+      "ok": true
+    }
+  ],
+  "request": {
+    "type": "sync-forward",
+    "file": "chapters/late.tex",
+    "line": 12,
+    "column": 3,
+    "page": 0,
+    "generation": 1,
+    "requestId": "sync-1",
+    "clientId": 1,
+    "sentAt": 1791764203982
+  }
+}
