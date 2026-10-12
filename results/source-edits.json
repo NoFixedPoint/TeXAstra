@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "checks": [
+    "Unicode line and UTF-16 column positions",
+    "Empty and shortened buffers",
+    "Retained command ranges and intersecting edits",
+    "UTF-16 multi-cursor changes with CRLF",
+    "Atomic rejection of invalid version, length, surrogate and bounds"
+  ]
+}

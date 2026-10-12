@@ -1,0 +1,165 @@
+{
+  "characters": 757947,
+  "pages": 100,
+  "deltas": true,
+  "samples": [
+    {
+      "wallMs": 50.2320000086911,
+      "checkpointMs": 2.213101,
+      "compileMs": 11.255001,
+      "compilerStagesMs": {
+        "fork": 4.185,
+        "replaceChild": 0.006,
+        "restore": 0.311,
+        "shipoutAndPublish": 0.544,
+        "typeset": 5.961
+      },
+      "fontRefreshMs": 16.104402,
+      "outputMode": "page-stream",
+      "pipelineMs": 44.711106,
+      "prepareMs": 0.6753,
+      "renderMs": 6.537301,
+      "renderStagesMs": {
+        "displayList": 0.504701,
+        "origins": 0.0935,
+        "png": 5.5184,
+        "raster": 0.3736,
+        "text": 0.0169
+      },
+      "resumedFrom": 90,
+      "sourceUpdateMs": 7.694701
+    },
+    {
+      "wallMs": 46.18909998680465,
+      "checkpointMs": 1.9286,
+      "compileMs": 11.507402,
+      "compilerStagesMs": {
+        "fork": 4.328,
+        "replaceChild": 0.006,
+        "restore": 0.344,
+        "shipoutAndPublish": 0.511,
+        "typeset": 6.116
+      },
+      "fontRefreshMs": 13.470302,
+      "outputMode": "page-stream",
+      "pipelineMs": 41.580206,
+      "prepareMs": 0.6737,
+      "renderMs": 6.741301,
+      "renderStagesMs": {
+        "displayList": 0.4866,
+        "origins": 0.0975,
+        "png": 5.653901,
+        "raster": 0.462,
+        "text": 0.0177
+      },
+      "resumedFrom": 90,
+      "sourceUpdateMs": 7.031601
+    },
+    {
+      "wallMs": 47.00380002032034,
+      "checkpointMs": 2.144801,
+      "compileMs": 11.928901,
+      "compilerStagesMs": {
+        "fork": 4.787,
+        "replaceChild": 0.006,
+        "restore": 0.34,
+        "shipoutAndPublish": 0.485,
+        "typeset": 6.073
+      },
+      "fontRefreshMs": 13.432802,
+      "outputMode": "page-stream",
+      "pipelineMs": 41.999106,
+      "prepareMs": 0.679901,
+      "renderMs": 6.792401,
+      "renderStagesMs": {
+        "displayList": 0.5128,
+        "origins": 0.1248,
+        "png": 5.747701,
+        "raster": 0.3664,
+        "text": 0.0176
+      },
+      "resumedFrom": 90,
+      "sourceUpdateMs": 6.7913
+    },
+    {
+      "wallMs": 50.1020000083372,
+      "checkpointMs": 1.9778,
+      "compileMs": 11.346302,
+      "compilerStagesMs": {
+        "fork": 4.335,
+        "replaceChild": 0.008,
+        "restore": 0.336,
+        "shipoutAndPublish": 0.465,
+        "typeset": 5.973
+      },
+      "fontRefreshMs": 12.790202,
+      "outputMode": "page-stream",
+      "pipelineMs": 44.069106,
+      "prepareMs": 0.6956,
+      "renderMs": 6.781301,
+      "renderStagesMs": {
+        "displayList": 0.5347,
+        "origins": 0.0936,
+        "png": 5.732201,
+        "raster": 0.382,
+        "text": 0.0176
+      },
+      "resumedFrom": 90,
+      "sourceUpdateMs": 10.217001
+    },
+    {
+      "wallMs": 45.98189998068847,
+      "checkpointMs": 1.994501,
+      "compileMs": 11.443601,
+      "compilerStagesMs": {
+        "fork": 4.42,
+        "replaceChild": 0.006,
+        "restore": 0.33,
+        "shipoutAndPublish": 0.491,
+        "typeset": 5.906
+      },
+      "fontRefreshMs": 13.145102,
+      "outputMode": "page-stream",
+      "pipelineMs": 41.028506,
+      "prepareMs": 0.6873,
+      "renderMs": 6.662001,
+      "renderStagesMs": {
+        "displayList": 0.5406,
+        "origins": 0.0938,
+        "png": 5.613101,
+        "raster": 0.368,
+        "text": 0.018
+      },
+      "resumedFrom": 90,
+      "sourceUpdateMs": 6.853801
+    },
+    {
+      "wallMs": 47.85279999487102,
+      "checkpointMs": 2.2337,
+      "compileMs": 12.139902,
+      "compilerStagesMs": {
+        "fork": 4.867,
+        "replaceChild": 0.002,
+        "restore": 0.345,
+        "shipoutAndPublish": 0.475,
+        "typeset": 6.165
+      },
+      "fontRefreshMs": 12.973501,
+      "outputMode": "page-stream",
+      "pipelineMs": 42.510005,
+      "prepareMs": 0.714,
+      "renderMs": 6.807701,
+      "renderStagesMs": {
+        "displayList": 0.5341,
+        "origins": 0.0978,
+        "png": 5.671901,
+        "raster": 0.4678,
+        "text": 0.0183
+      },
+      "resumedFrom": 90,
+      "sourceUpdateMs": 7.402701
+    }
+  ],
+  "medianMs": 47.42830000759568,
+  "passes150ms": true
+}

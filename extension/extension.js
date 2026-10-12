@@ -6,6 +6,7 @@ const {contains,resolveMain,resolveProject,supportedFile}=require('./project');
 function activate(context){
   let panel,backend,project,currentFrame,suppressSelection,visiblePage=0,serial=0,latestMutation=0,output=vscode.window.createOutputChannel('BaKoMa prototype');
   let watcher,reloadTimer,ready=false,selectedOptions={};
+  const editBases=new Map();
   const distributionOptions=config=>Object.fromEntries(['runtimeMode','wslDistribution','texBinDirectory'].map(name=>[name,config.get(name,'')]).filter(([,value])=>value));
   context.subscriptions.push(vscode.commands.registerCommand('bakoma.showEnvironment',async()=>{
     if(!vscode.workspace.isTrusted)return;
@@ -16,11 +17,12 @@ function activate(context){
       await vscode.window.showTextDocument(document,{preview:false});
     }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));}
   }));
-  const stop=()=>{ready=false;clearTimeout(reloadTimer);watcher?.dispose();watcher=null;if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
+  const stop=()=>{ready=false;editBases.clear();clearTimeout(reloadTimer);watcher?.dispose();watcher=null;if(backend){backend.stdin.end('{"type":"close"}\n');backend=null;}currentFrame=null;};
   const dirtyBuffers=()=>Object.fromEntries(vscode.workspace.textDocuments
     .filter(doc=>doc.isDirty&&doc.uri.scheme==='file'&&contains(project,doc.uri.fsPath))
     .map(doc=>[path.relative(project,doc.uri.fsPath).replaceAll('\\','/'),doc.getText()]));
   const send=message=>{if(backend&&!backend.killed){
+    if(message.type==='start'||message.type==='reload')editBases.clear();
     const clientId=++serial;
     if(message.type==='start'||message.type==='edit'||message.type==='reload'){
       latestMutation=clientId;currentFrame=null;
@@ -80,7 +82,7 @@ function activate(context){
     readline.createInterface({input:backend.stdout}).on('line',line=>{
       try{const message=JSON.parse(line);if(message.type==='environment'){
         output.appendLine(JSON.stringify({...message.report,host:backend?.bakomaEnvironment},null,2));return;
-      }if(message.error)output.appendLine(String(message.error));if(message.type==='frame'){
+      }if(message.error){editBases.clear();output.appendLine(String(message.error));}if(message.type==='frame'){
         if(message.environmentReport)output.appendLine(`Build environment report: ${message.environmentReport}`);
         if(message.clientId<latestMutation)message.isStale=true;
         if(!message.isStale&&(!currentFrame||message.generation>=currentFrame.generation))currentFrame=message;
@@ -111,7 +113,19 @@ function activate(context){
     const relative=path.relative(project,event.document.uri.fsPath).replaceAll('\\','/');
     if(event.document.uri.scheme!=='file'||!contains(project,event.document.uri.fsPath)||! /\.(tex|sty|cls|bib|bst|bbx|cbx|lbx|ist|csv|dat|txt|lua)$/i.test(relative))return;
     currentFrame=null;
-    send({type:'edit',file:relative,source:event.document.getText(),page:visiblePage,sentAt});
+    const doc=event.document,base=editBases.get(relative),version=doc.version;
+    const changes=event.contentChanges.map(({rangeOffset,rangeLength,text})=>({rangeOffset,rangeLength,text}));
+    const canPatch=base&&base.document===doc&&version===base.version+1&&changes.every(c=>
+      Number.isInteger(c.rangeOffset)&&Number.isInteger(c.rangeLength)&&c.rangeOffset>=0&&c.rangeLength>=0&&c.rangeOffset+c.rangeLength<=base.length);
+    let message,length;
+    if(canPatch){
+      length=base.length+changes.reduce((n,c)=>n+c.text.length-c.rangeLength,0);
+      message={changes,baseVersion:base.version,baseLength:base.length};
+    }else{
+      const source=doc.getText();length=source.length;message={source};
+    }
+    editBases.set(relative,{document:doc,version,length});
+    send({type:'edit',file:relative,...message,sourceVersion:version,page:visiblePage,sentAt});
   }),vscode.window.onDidChangeTextEditorSelection(event=>{
     if(!panel)return;
     const relative=path.relative(project,event.textEditor.document.uri.fsPath).replaceAll('\\','/');

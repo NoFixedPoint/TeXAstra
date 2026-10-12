@@ -37,6 +37,11 @@ with sync_playwright() as pw:
           sample['visibleMs'] > 0 and set(sample['browserStagesMs']) == {'prepare', 'decode', 'install', 'paintWait'})
     check('delivery residual accounts for the measured total', abs(sample['visibleMs']-
           sum(sample['browserStagesMs'].values())-sample['deliveryMs']-sample['requestToPayloadMs']) < .001)
+    page.evaluate('''async ()=>{
+        prefetchAfter=performance.now()-1;
+        await receive({...testFrame,sentAt:Date.now()-500});
+    }''')
+    check('slow edit gets a new quiet interval after paint', page.evaluate('prefetchAfter-performance.now()>100'))
     page.evaluate('navigate(1)')
     check('explicit navigation bypasses the quiet interval', page.evaluate('outbound.some(m=>m.type==="page" && m.page===1)'))
     page.evaluate('''async ()=>{

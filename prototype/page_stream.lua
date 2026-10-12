@@ -40,9 +40,20 @@ function M.setup(snapshot)
     local entries={}
     for value in pairs(coverage) do entries[#entries+1]=quote(value) end
     table.sort(entries)
+    local images={}
+    if pdf.bakoimageresources then
+      for name,info in pairs(pdf.bakoimageresources()) do
+        local image=io.open(info.path,'rb')
+        if image then
+          local bytes=image:read('*a');image:close()
+          images[#images+1]=quote(name)..':'..quote(info.path..'|'..info.properties..'|'..info.settings..'|'..md5.sumhexa(bytes))
+        end
+      end
+    end
+    table.sort(images)
     local record='{"page":'..(page-1)..',"pageObject":'..pdf.getpageref(page)..
       ',"width":'..(tex.pagewidth/65781.76)..',"height":'..(tex.pageheight/65781.76)..
-      ',"coverage":['..table.concat(entries,',')..']}'
+      ',"coverage":['..table.concat(entries,',')..'],"images":{'..table.concat(images,',')..'}}'
     local bytes=snapshot.page_bytes()
     local f=assert(io.open(string.format('resources-%03d.json',page),'w'))
     f:write(record);f:close()

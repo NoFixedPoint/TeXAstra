@@ -336,261 +336,283 @@
   "edits": [
     {
       "name": "new OpenType font",
-      "compileMs": 38.968099,
+      "checkpointMs": 0.908967,
+      "compileMs": 40.563782,
       "compilerStagesMs": {
-        "fork": 2.575,
-        "replaceChild": 0.006,
-        "restore": 0.66,
-        "shipoutAndPublish": 7.618,
-        "typeset": 26.028
+        "fork": 2.998,
+        "replaceChild": 0.003,
+        "restore": 0.489,
+        "shipoutAndPublish": 8.127,
+        "typeset": 26.515
       },
-      "fontRefreshMs": 41.052299,
+      "fontRefreshMs": 39.658115,
       "fontResourceBytes": 31637,
       "outputMode": "page-stream",
-      "pipelineMs": 108.502498,
-      "prepareMs": 0.5885,
-      "renderMs": 15.6704,
+      "pipelineMs": 104.980422,
+      "prepareMs": 0.601975,
+      "renderMs": 13.2649,
       "renderStagesMs": {
-        "displayList": 3.0671,
-        "origins": 2.5899,
-        "png": 7.8716,
-        "raster": 1.3587,
-        "text": 0.6083
-      }
+        "displayList": 2.714433,
+        "origins": 2.529267,
+        "png": 6.165041,
+        "raster": 1.219992,
+        "text": 0.496833
+      },
+      "sourceUpdateMs": 0.694283
     },
     {
       "name": "new glyph in imported subset",
-      "compileMs": 35.105308,
+      "checkpointMs": 0.760375,
+      "compileMs": 35.093849,
       "compilerStagesMs": {
-        "fork": 2.415,
-        "replaceChild": 0.004,
-        "restore": 0.774,
-        "shipoutAndPublish": 6.596,
-        "typeset": 23.624
+        "fork": 2.613,
+        "replaceChild": 0.003,
+        "restore": 0.495,
+        "shipoutAndPublish": 7.311,
+        "typeset": 22.621
       },
-      "fontRefreshMs": 36.840375,
+      "fontRefreshMs": 39.344249,
       "fontResourceBytes": 31682,
       "outputMode": "page-stream",
-      "pipelineMs": 96.787532,
-      "prepareMs": 0.50325,
-      "renderMs": 13.4046,
+      "pipelineMs": 98.984139,
+      "prepareMs": 0.45265,
+      "renderMs": 13.393508,
       "renderStagesMs": {
-        "displayList": 2.806375,
-        "origins": 2.517991,
-        "png": 6.106467,
-        "raster": 1.217059,
-        "text": 0.593908
-      }
+        "displayList": 2.718009,
+        "origins": 2.42715,
+        "png": 6.312625,
+        "raster": 1.236675,
+        "text": 0.530108
+      },
+      "sourceUpdateMs": 0.763308
     },
     {
       "name": "reuse imported glyphs",
-      "compileMs": 34.51415,
+      "checkpointMs": 0.8393,
+      "compileMs": 43.365207,
       "compilerStagesMs": {
-        "fork": 2.57,
+        "fork": 3.526,
         "replaceChild": 0.006,
-        "restore": 0.58,
-        "shipoutAndPublish": 6.579,
-        "typeset": 22.963
+        "restore": 0.538,
+        "shipoutAndPublish": 8.168,
+        "typeset": 29.171
       },
       "outputMode": "page-stream",
-      "pipelineMs": 60.03195,
-      "prepareMs": 0.455033,
-      "renderMs": 12.486833,
+      "pipelineMs": 67.520839,
+      "prepareMs": 0.623516,
+      "renderMs": 11.482167,
       "renderStagesMs": {
-        "displayList": 1.925092,
-        "origins": 2.4805,
-        "png": 6.620625,
-        "raster": 0.7469,
-        "text": 0.561641
-      }
+        "displayList": 1.804092,
+        "origins": 2.435033,
+        "png": 5.950175,
+        "raster": 0.6831,
+        "text": 0.467959
+      },
+      "sourceUpdateMs": 0.879816
     },
     {
       "name": "rollback to different font",
-      "compileMs": 36.2054,
+      "checkpointMs": 0.749742,
+      "compileMs": 36.72469,
       "compilerStagesMs": {
-        "fork": 2.197,
-        "replaceChild": 0.007,
-        "restore": 0.509,
-        "shipoutAndPublish": 7.08,
-        "typeset": 24.468
+        "fork": 3.51,
+        "replaceChild": 0.006,
+        "restore": 0.54,
+        "shipoutAndPublish": 7.279,
+        "typeset": 23.603
       },
-      "fontRefreshMs": 38.672149,
+      "fontRefreshMs": 40.446449,
       "fontResourceBytes": 31412,
       "outputMode": "page-stream",
-      "pipelineMs": 99.901266,
-      "prepareMs": 0.503341,
-      "renderMs": 13.428799,
+      "pipelineMs": 101.48453,
+      "prepareMs": 0.505908,
+      "renderMs": 13.393324,
       "renderStagesMs": {
-        "displayList": 2.81325,
-        "origins": 2.3298,
-        "png": 6.402275,
-        "raster": 1.172141,
-        "text": 0.577959
-      }
+        "displayList": 2.638533,
+        "origins": 2.558508,
+        "png": 6.301166,
+        "raster": 1.213025,
+        "text": 0.522959
+      },
+      "sourceUpdateMs": 0.541475
     },
     {
       "name": "TrueType and new Unicode glyphs",
-      "compileMs": 47.207508,
+      "checkpointMs": 0.770458,
+      "compileMs": 50.998748,
       "compilerStagesMs": {
-        "fork": 2.527,
-        "replaceChild": 0.006,
-        "restore": 0.538,
-        "shipoutAndPublish": 9.784,
-        "typeset": 30.779
+        "fork": 2.788,
+        "replaceChild": 0.007,
+        "restore": 0.477,
+        "shipoutAndPublish": 13.71,
+        "typeset": 31.28
       },
-      "fontRefreshMs": 40.14945,
+      "fontRefreshMs": 43.956457,
       "fontResourceBytes": 62115,
       "outputMode": "page-stream",
-      "pipelineMs": 112.63184,
-      "prepareMs": 0.478042,
-      "renderMs": 13.676116,
+      "pipelineMs": 118.677163,
+      "prepareMs": 0.493809,
+      "renderMs": 12.699225,
       "renderStagesMs": {
-        "displayList": 2.79235,
-        "origins": 2.882091,
-        "png": 6.037166,
-        "raster": 1.235666,
-        "text": 0.6039
-      }
+        "displayList": 2.771908,
+        "origins": 2.421375,
+        "png": 5.765558,
+        "raster": 1.145558,
+        "text": 0.481342
+      },
+      "sourceUpdateMs": 0.539184
     },
     {
       "name": "Type1 font",
-      "compileMs": 26.667941,
+      "checkpointMs": 0.8129,
+      "compileMs": 23.995858,
       "compilerStagesMs": {
-        "fork": 3.403,
-        "replaceChild": 0.007,
-        "restore": 0.671,
-        "shipoutAndPublish": 10.042,
-        "typeset": 10.147
+        "fork": 2.694,
+        "replaceChild": 0.006,
+        "restore": 0.546,
+        "shipoutAndPublish": 6.809,
+        "typeset": 12.098
       },
-      "fontRefreshMs": 30.985258,
+      "fontRefreshMs": 33.550182,
       "fontResourceBytes": 32043,
       "outputMode": "page-stream",
-      "pipelineMs": 83.017916,
-      "prepareMs": 0.505908,
-      "renderMs": 13.3287,
+      "pipelineMs": 80.809939,
+      "prepareMs": 0.475017,
+      "renderMs": 12.812891,
       "renderStagesMs": {
-        "displayList": 2.741108,
-        "origins": 2.4563,
-        "png": 6.07145,
-        "raster": 1.342367,
-        "text": 0.548258
-      }
+        "displayList": 2.519183,
+        "origins": 2.489484,
+        "png": 6.055775,
+        "raster": 1.152525,
+        "text": 0.476666
+      },
+      "sourceUpdateMs": 0.597941
     },
     {
       "name": "font size aliases",
-      "compileMs": 70.959533,
+      "checkpointMs": 0.811342,
+      "compileMs": 75.195997,
       "compilerStagesMs": {
-        "fork": 2.246,
-        "replaceChild": 0.006,
-        "restore": 0.495,
-        "shipoutAndPublish": 4.504,
-        "typeset": 63.175
+        "fork": 2.739,
+        "replaceChild": 0.007,
+        "restore": 0.457,
+        "shipoutAndPublish": 6.562,
+        "typeset": 64.736
       },
-      "fontRefreshMs": 44.7788,
+      "fontRefreshMs": 46.651457,
       "fontResourceBytes": 34128,
       "outputMode": "page-stream",
-      "pipelineMs": 141.849949,
-      "prepareMs": 0.53955,
-      "renderMs": 14.37865,
+      "pipelineMs": 145.246012,
+      "prepareMs": 0.509759,
+      "renderMs": 12.460525,
       "renderStagesMs": {
-        "displayList": 3.242158,
-        "origins": 2.534767,
-        "png": 6.507874,
-        "raster": 1.339341,
-        "text": 0.584467
-      }
+        "displayList": 2.759075,
+        "origins": 2.458774,
+        "png": 5.560133,
+        "raster": 1.079191,
+        "text": 0.489317
+      },
+      "sourceUpdateMs": 0.564483
     },
     {
       "name": "earlier rollback with later font",
-      "compileMs": 262.728947,
+      "checkpointMs": 0.818491,
+      "compileMs": 276.085485,
       "compilerStagesMs": {
-        "fork": 2.203,
-        "replaceChild": 203.225,
-        "restore": 1.049,
-        "shipoutAndPublish": 7.36,
-        "typeset": 24.528
+        "fork": 2.987,
+        "replaceChild": 212.89,
+        "restore": 0.66,
+        "shipoutAndPublish": 7.587,
+        "typeset": 27.07
       },
       "outputMode": "page-stream",
-      "pipelineMs": 289.14783,
-      "prepareMs": 0.797225,
-      "renderMs": 11.967633,
+      "pipelineMs": 301.557265,
+      "prepareMs": 0.743049,
+      "renderMs": 11.800982,
       "renderStagesMs": {
-        "displayList": 1.874033,
-        "origins": 2.440167,
-        "png": 6.16715,
-        "raster": 0.801075,
-        "text": 0.565308
-      }
+        "displayList": 1.805191,
+        "origins": 2.4959,
+        "png": 6.086666,
+        "raster": 0.796583,
+        "text": 0.480425
+      },
+      "sourceUpdateMs": 0.907042
     },
     {
       "name": "recovery after font import",
-      "compileMs": 56.415974,
+      "checkpointMs": 0.788058,
+      "compileMs": 56.640735,
       "compilerStagesMs": {
-        "fork": 3.201,
-        "replaceChild": 0.006,
-        "restore": 0.592,
-        "shipoutAndPublish": 7.192,
-        "typeset": 24.288
+        "fork": 2.435,
+        "replaceChild": 0.005,
+        "restore": 0.492,
+        "shipoutAndPublish": 7.311,
+        "typeset": 23.317
       },
       "outputMode": "page-stream",
-      "pipelineMs": 82.272299,
-      "prepareMs": 0.501784,
-      "renderMs": 12.064067,
+      "pipelineMs": 80.951191,
+      "prepareMs": 0.524333,
+      "renderMs": 11.576857,
       "renderStagesMs": {
-        "displayList": 1.92885,
-        "origins": 2.417433,
-        "png": 6.443158,
-        "raster": 0.59345,
-        "text": 0.56045
-      }
+        "displayList": 1.884483,
+        "origins": 2.488933,
+        "png": 5.839166,
+        "raster": 0.767984,
+        "text": 0.485008
+      },
+      "sourceUpdateMs": 0.536067
     },
     {
       "name": "unsupported font attributes fallback",
-      "compileMs": 242.628464,
+      "checkpointMs": 0.882108,
+      "compileMs": 236.522797,
       "compilerStagesMs": {
-        "fork": 2.45,
-        "replaceChild": 206.801,
-        "restore": 0.604,
-        "shipoutAndPublish": 7.928,
-        "typeset": 9.747
+        "fork": 3.724,
+        "replaceChild": 198.567,
+        "restore": 0.574,
+        "shipoutAndPublish": 8.861,
+        "typeset": 8.883
       },
       "outputMode": "resource-seed",
-      "pipelineMs": 388.841472,
-      "prepareMs": 0.785859,
-      "renderMs": 14.105667,
+      "pipelineMs": 374.047714,
+      "prepareMs": 0.924367,
+      "renderMs": 13.237124,
       "renderStagesMs": {
-        "displayList": 2.897309,
-        "origins": 2.474909,
-        "png": 6.73695,
-        "raster": 1.273341,
-        "text": 0.573283
+        "displayList": 2.717825,
+        "origins": 2.383792,
+        "png": 6.040283,
+        "raster": 1.344475,
+        "text": 0.524241
       },
       "resourceRefresh": "Font export is unsupported for this page",
-      "resourceRefreshMs": 100.013924
+      "resourceRefreshMs": 90.882631,
+      "sourceUpdateMs": 0.78595
     },
     {
       "name": "external graphics fallback",
-      "compileMs": 35.42385,
+      "checkpointMs": 0.846175,
+      "compileMs": 34.468496,
       "compilerStagesMs": {
-        "fork": 2.072,
-        "replaceChild": 0.006,
-        "restore": 0.568,
-        "shipoutAndPublish": 8.221,
-        "typeset": 10.109
+        "fork": 2.602,
+        "replaceChild": 0.003,
+        "restore": 0.626,
+        "shipoutAndPublish": 7.619,
+        "typeset": 9.141
       },
       "outputMode": "resource-seed",
-      "pipelineMs": 148.811116,
-      "prepareMs": 0.541383,
-      "renderMs": 14.813975,
+      "pipelineMs": 149.282083,
+      "prepareMs": 0.5192,
+      "renderMs": 12.69684,
       "renderStagesMs": {
-        "displayList": 3.461975,
-        "origins": 2.378567,
-        "png": 6.802492,
-        "raster": 1.4003,
-        "text": 0.571083
+        "displayList": 2.562908,
+        "origins": 2.231625,
+        "png": 6.091524,
+        "raster": 1.095691,
+        "text": 0.450267
       },
-      "resourceRefresh": "External graphics resource requires a refresh",
-      "resourceRefreshMs": 92.293024
+      "resourceRefresh": "New or changed graphics resource requires a refresh",
+      "resourceRefreshMs": 92.191539,
+      "sourceUpdateMs": 0.697767
     }
   ]
 }

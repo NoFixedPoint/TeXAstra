@@ -1,0 +1,60 @@
+{
+  "characters": 757947,
+  "pages": 100,
+  "samples": [
+    {
+      "wallMs": 160.8231000136584,
+      "checkpointMs": 2.0371,
+      "compileMs": 12.764502,
+      "compilerStagesMs": {
+        "fork": 4.866,
+        "replaceChild": 0.012,
+        "restore": 0.321,
+        "shipoutAndPublish": 0.575,
+        "typeset": 6.699
+      },
+      "fontRefreshMs": 12.594202,
+      "outputMode": "page-stream",
+      "pipelineMs": 43.242006,
+      "prepareMs": 0.6995,
+      "renderMs": 6.475601,
+      "renderStagesMs": {
+        "displayList": 0.4845,
+        "origins": 0.0936,
+        "png": 5.501301,
+        "raster": 0.354,
+        "text": 0.0178
+      },
+      "resumedFrom": 90,
+      "sourceUpdateMs": 8.397101
+    },
+    {
+      "wallMs": 168.16440000548027,
+      "checkpointMs": 2.790901,
+      "compileMs": 11.854202,
+      "compilerStagesMs": {
+        "fork": 3.702,
+        "replaceChild": 0.005,
+        "restore": 0.339,
+        "shipoutAndPublish": 0.553,
+        "typeset": 6.979
+      },
+      "fontRefreshMs": 12.566002,
+      "outputMode": "page-stream",
+      "pipelineMs": 49.162408,
+      "prepareMs": 0.8218,
+      "renderMs": 6.709901,
+      "renderStagesMs": {
+        "displayList": 0.4812,
+        "origins": 0.1007,
+        "png": 5.604801,
+        "raster": 0.4799,
+        "text": 0.021
+      },
+      "resumedFrom": 90,
+      "sourceUpdateMs": 14.156402
+    }
+  ],
+  "medianMs": 164.49375000956934,
+  "passes150ms": false
+}

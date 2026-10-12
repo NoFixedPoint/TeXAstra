@@ -361,18 +361,20 @@ class Engine {
     void seed(const Json &result) {
         seed_pdf = read(directory / "main.pdf");
         std::set<std::string> coverage;
+        std::map<int,Json> images;
         int count = result.value("compiledPages", 10000);
         for (const auto &entry : fs::directory_iterator(directory)) {
             auto name = entry.path().filename().string();
             if (starts(name, "resources-") && entry.path().extension() == ".json" &&
                 std::stoi(name.substr(10)) <= count) {
                 auto record = Json::parse(read(entry.path()));
+                images[record.at("page").get<int>()]=record.value("images",Json::object());
                 for (const auto &value : record.at("coverage")) {
                     coverage.insert(value.get<std::string>());
                 }
             }
         }
-        renderer.seed(directory / "main.pdf", std::move(coverage));
+        renderer.seed(directory / "main.pdf", std::move(coverage), std::move(images));
         available.clear();
         buffers.clear();
         page_ids.clear();
@@ -925,15 +927,19 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             size_t changed = 0;
             while (changed < previous.size() && changed < source.size() && previous[changed] == source[changed]) ++changed;
             int checkpoint = checkpoint_before(file, changed);
+            auto selected = Clock::now();
             live_edit_failed = true;
             cache->invalidate(); cache->put(file,source);
             sources.index(source, file);
             sources.manifest(directory / "bako-sources.tsv", mirror);
+            auto indexed = Clock::now();
             available.erase(available.lower_bound(checkpoint-1), available.end());
             auto result = resume(checkpoint, std::max(page,checkpoint-1));
             live_edit_failed = false;
             converged = false;
             result["pipelineMs"] = elapsed(started); result["ok"] = true; result["provisional"] = true;
+            result["checkpointMs"] = std::chrono::duration<double, std::milli>(selected-started).count();
+            result["sourceUpdateMs"] = std::chrono::duration<double, std::milli>(indexed-selected).count();
             result["compilationMode"] = "live"; result["sourceSync"] = "token-and-macro-origin";
             return result;
         }

@@ -52,6 +52,18 @@ Module._load=function(request,parent,...rest){
   sent=input.trim().split('\n').map(JSON.parse);assert.equal(sent[1].type,'edit');assert.equal(sent[1].source,document.getText());
   assert.equal(sent[1].sentAt,1000,'Latency begins before reading the editor buffer');
   assert.equal(webMessages.at(-1).state,'building');
+  document.version=2;
+  change({document,contentChanges:[{rangeOffset:0,rangeLength:0,text:'x'}]});
+  assert.equal(JSON.parse(input.trim().split('\n').at(-1)).source,document.getText(),'First versioned event establishes the complete buffer');
+  const baseLength=document.getText().length;
+  document.version=3;document.getText=()=>{throw Error('Delta edits must not read the whole buffer');};
+  change({document,contentChanges:[{rangeOffset:5,rangeLength:1,text:'xyz'},{rangeOffset:1,rangeLength:0,text:'😀'}]});
+  const delta=JSON.parse(input.trim().split('\n').at(-1));
+  assert(!('source' in delta));assert.equal(delta.baseVersion,2);assert.equal(delta.sourceVersion,3);
+  assert.equal(delta.baseLength,baseLength);assert.equal(delta.changes.length,2);
+  document.getText=getText;document.version=5;
+  change({document,contentChanges:[{rangeOffset:0,rangeLength:0,text:'x'}]});
+  assert.equal(JSON.parse(input.trim().split('\n').at(-1)).source,document.getText(),'Skipped versions resynchronize with the full buffer');
   child.stdout.write(JSON.stringify({type:'frame',clientId:1,generation:1,revisionId:1,isStale:false})+'\n');
   await new Promise(r=>setImmediate(r));assert.equal(webMessages.at(-1).isStale,true);
   child.stdout.write(JSON.stringify({type:'status',state:'error',error:'Incomplete \\iffalse'})+'\n');
@@ -83,5 +95,5 @@ Module._load=function(request,parent,...rest){
   diskChange(document.uri);disposed();await new Promise(r=>setTimeout(r,250));
   assert(watchDisposed);assert.equal(JSON.parse(input.trim().split('\n').at(-1)).type,'close');
   Module._load=original;
-  const result={checks:25,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
+  const result={checks:33,ok:true};fs.writeFileSync(path.join(root,'results/extension-live.json'),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(e=>{Module._load=original;console.error(e);process.exitCode=1;});

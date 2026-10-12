@@ -77,6 +77,10 @@ def apply(source):
     if '#include "origins.c"' not in s:p.write_text(s+'\n#include "origins.c"\n')
     p=base/'pdf/pdfgen.c';s=p.read_text()
     if '#include "../resources.c"' not in s:p.write_text(s+'\n#include "../resources.c"\n')
+    edit('lua/lpdflib.c','static const struct luaL_Reg pdflib[] = {',
+         'extern int bako_page_image_resources(lua_State *L);\nstatic const struct luaL_Reg pdflib[] = {')
+    edit('lua/lpdflib.c','    { "getpageref", getpdfpageref },',
+         '    { "getpageref", getpdfpageref },\n    { "bakoimageresources", bako_page_image_resources },')
 
 if __name__=='__main__':
     import sys

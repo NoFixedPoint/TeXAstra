@@ -1,0 +1,375 @@
+{
+  "measurement": "Real extension document-change callback to Chromium image decode, text layer and two animation frames; mocked VS Code APIs and HTTP webview bridge.",
+  "sourceSha256": "62a87b4d9cb7701126dba09f95b07ebf1605fb49074b64d299877503e8c9c278",
+  "sourceBytes": 358948,
+  "extensionVersion": "0.0.22",
+  "runtimeSha256": {
+    "native/runtime/bakoma-backend": "5ac186a8e5c22d40881143180e06729a98e385a4732e0ed9a2683e7712ceaae5",
+    "native/runtime/bakoma-luahbtex": "d818aa7f3fdab0c6344e3fd6e3bc92300965115fc0cf6cddd5469d74a49ba7d7",
+    "native/runtime/bako_snapshot.so": "c3a966e1a7fff4cc9e01978e140c0602bf6093d0918a5a3868cc673eb97e5a53",
+    "webview/viewer.js": "8b7c86e07551c261b4593df7288928e38284ed32f669adb655452c9a1a0a5ab7",
+    "extension/extension.js": "578c9e3add95ed8722d63053ab404f08b321ba0322d7dad8047f8626d88d81ec"
+  },
+  "samples": [
+    {
+      "type": "paint",
+      "revision": 3,
+      "clientId": 8,
+      "page": 15,
+      "generation": 3,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 101.324194,
+      "visibleMs": 143,
+      "stale": false,
+      "at": 1791766263429,
+      "browserStagesMs": {
+        "prepare": 0.8999999761581421,
+        "decode": 1.800000011920929,
+        "install": 1.5,
+        "paintWait": 21.80000001192093
+      },
+      "deliveryMs": 11.380205988883972,
+      "compileMs": 69.932595,
+      "prepareMs": 1.6091,
+      "checkpointMs": 2.9439,
+      "sourceUpdateMs": 4.405,
+      "compilerStagesMs": {
+        "fork": 2.308,
+        "replaceChild": 42.286,
+        "restore": 1.122,
+        "shipoutAndPublish": 8.206,
+        "typeset": 13.431
+      },
+      "snapshot": {
+        "mode": "fork",
+        "pid": 722052
+      },
+      "renderMs": 13.895999,
+      "renderStagesMs": {
+        "displayList": 1.6268,
+        "origins": 2.4376,
+        "png": 6.2716,
+        "raster": 2.960099,
+        "text": 0.4691
+      },
+      "queueMs": 0.11040002107620239,
+      "requestToPayloadMs": 105.61979401111603,
+      "resumedFrom": 14,
+      "outputMode": "page-stream",
+      "compilationMode": "live",
+      "bytes": 224,
+      "delta": true
+    },
+    {
+      "type": "paint",
+      "revision": 4,
+      "clientId": 9,
+      "page": 15,
+      "generation": 4,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 101.532494,
+      "visibleMs": 143,
+      "stale": false,
+      "at": 1791766263596,
+      "browserStagesMs": {
+        "prepare": 1.2000000178813934,
+        "decode": 4.799999982118607,
+        "install": 1.4000000059604645,
+        "paintWait": 18.099999994039536
+      },
+      "deliveryMs": 11.864605993032455,
+      "compileMs": 70.116396,
+      "prepareMs": 1.6285,
+      "checkpointMs": 2.9214,
+      "sourceUpdateMs": 4.452099,
+      "compilerStagesMs": {
+        "fork": 2.266,
+        "replaceChild": 43.312,
+        "restore": 1.167,
+        "shipoutAndPublish": 7.352,
+        "typeset": 13.555
+      },
+      "snapshot": {
+        "mode": "fork",
+        "pid": 722054
+      },
+      "renderMs": 14.1994,
+      "renderStagesMs": {
+        "displayList": 1.607,
+        "origins": 2.255,
+        "png": 6.6081,
+        "raster": 3.0548,
+        "text": 0.5037
+      },
+      "queueMs": 0.11100000143051147,
+      "requestToPayloadMs": 105.63539400696754,
+      "resumedFrom": 14,
+      "outputMode": "page-stream",
+      "compilationMode": "live",
+      "bytes": 224,
+      "delta": true
+    },
+    {
+      "type": "paint",
+      "revision": 5,
+      "clientId": 10,
+      "page": 15,
+      "generation": 5,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 100.143493,
+      "visibleMs": 144,
+      "stale": false,
+      "at": 1791766263763,
+      "browserStagesMs": {
+        "prepare": 0.5999999940395355,
+        "decode": 1.699999988079071,
+        "install": 1.0999999940395355,
+        "paintWait": 22.600000023841858
+      },
+      "deliveryMs": 12.690307021141052,
+      "compileMs": 69.575596,
+      "prepareMs": 1.6393,
+      "checkpointMs": 2.885299,
+      "sourceUpdateMs": 4.4776,
+      "compilerStagesMs": {
+        "fork": 2.251,
+        "replaceChild": 41.909,
+        "restore": 1.126,
+        "shipoutAndPublish": 8.209,
+        "typeset": 13.467
+      },
+      "snapshot": {
+        "mode": "fork",
+        "pid": 722056
+      },
+      "renderMs": 13.352199,
+      "renderStagesMs": {
+        "displayList": 1.5733,
+        "origins": 2.0193,
+        "png": 6.226099,
+        "raster": 2.9096,
+        "text": 0.4945
+      },
+      "queueMs": 0.12159997224807739,
+      "requestToPayloadMs": 105.30969297885895,
+      "resumedFrom": 14,
+      "outputMode": "page-stream",
+      "compilationMode": "live",
+      "bytes": 225,
+      "delta": true
+    },
+    {
+      "type": "paint",
+      "revision": 6,
+      "clientId": 11,
+      "page": 15,
+      "generation": 6,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 99.776194,
+      "visibleMs": 145,
+      "stale": false,
+      "at": 1791766263930,
+      "browserStagesMs": {
+        "prepare": 0.699999988079071,
+        "decode": 1.699999988079071,
+        "install": 1.100000023841858,
+        "paintWait": 25.399999976158142
+      },
+      "deliveryMs": 11.509107023477554,
+      "compileMs": 69.613896,
+      "prepareMs": 1.5856,
+      "checkpointMs": 2.9105,
+      "sourceUpdateMs": 4.2048,
+      "compilerStagesMs": {
+        "fork": 2.228,
+        "replaceChild": 43.223,
+        "restore": 1.131,
+        "shipoutAndPublish": 7.5,
+        "typeset": 13.101
+      },
+      "snapshot": {
+        "mode": "fork",
+        "pid": 722058
+      },
+      "renderMs": 13.529999,
+      "renderStagesMs": {
+        "displayList": 1.5828,
+        "origins": 2.1231,
+        "png": 6.172499,
+        "raster": 3.0732,
+        "text": 0.4382
+      },
+      "queueMs": 0.08019998669624329,
+      "requestToPayloadMs": 104.5908930003643,
+      "resumedFrom": 14,
+      "outputMode": "page-stream",
+      "compilationMode": "live",
+      "bytes": 225,
+      "delta": true
+    },
+    {
+      "type": "paint",
+      "revision": 7,
+      "clientId": 12,
+      "page": 15,
+      "generation": 7,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 99.696194,
+      "visibleMs": 145,
+      "stale": false,
+      "at": 1791766264097,
+      "browserStagesMs": {
+        "prepare": 0.699999988079071,
+        "decode": 2,
+        "install": 1.699999988079071,
+        "paintWait": 25.700000017881393
+      },
+      "deliveryMs": 10.18190598487854,
+      "compileMs": 69.385095,
+      "prepareMs": 1.5709,
+      "checkpointMs": 2.9093,
+      "sourceUpdateMs": 3.9922,
+      "compilerStagesMs": {
+        "fork": 2.338,
+        "replaceChild": 42.193,
+        "restore": 1.077,
+        "shipoutAndPublish": 7.904,
+        "typeset": 13.083
+      },
+      "snapshot": {
+        "mode": "fork",
+        "pid": 722060
+      },
+      "renderMs": 13.707699,
+      "renderStagesMs": {
+        "displayList": 1.6009,
+        "origins": 2.130199,
+        "png": 6.223,
+        "raster": 2.9565,
+        "text": 0.6528
+      },
+      "queueMs": 0.08270001411437988,
+      "requestToPayloadMs": 104.71809402108192,
+      "resumedFrom": 14,
+      "outputMode": "page-stream",
+      "compilationMode": "live",
+      "bytes": 225,
+      "delta": true
+    },
+    {
+      "type": "paint",
+      "revision": 8,
+      "clientId": 13,
+      "page": 15,
+      "generation": 8,
+      "purpose": "edit",
+      "phase": "preview",
+      "pipelineMs": 100.069694,
+      "visibleMs": 142,
+      "stale": false,
+      "at": 1791766264262,
+      "browserStagesMs": {
+        "prepare": 0.5999999940395355,
+        "decode": 1.699999988079071,
+        "install": 1.300000011920929,
+        "paintWait": 22.599999994039536
+      },
+      "deliveryMs": 11.015606015920639,
+      "compileMs": 69.672296,
+      "prepareMs": 1.5718,
+      "checkpointMs": 2.9036,
+      "sourceUpdateMs": 4.349899,
+      "compilerStagesMs": {
+        "fork": 2.419,
+        "replaceChild": 43.137,
+        "restore": 1.146,
+        "shipoutAndPublish": 7.269,
+        "typeset": 13.142
+      },
+      "snapshot": {
+        "mode": "fork",
+        "pid": 722062
+      },
+      "renderMs": 13.6228,
+      "renderStagesMs": {
+        "displayList": 1.7737,
+        "origins": 2.0983,
+        "png": 6.146,
+        "raster": 3.0711,
+        "text": 0.4225
+      },
+      "queueMs": 0.125900000333786,
+      "requestToPayloadMs": 104.78439399600029,
+      "resumedFrom": 14,
+      "outputMode": "page-stream",
+      "compilationMode": "live",
+      "bytes": 225,
+      "delta": true
+    }
+  ],
+  "pages": 85,
+  "editedPage": 15,
+  "firstEdit": {
+    "type": "paint",
+    "revision": 2,
+    "clientId": 7,
+    "page": 15,
+    "generation": 2,
+    "purpose": "edit",
+    "phase": "preview",
+    "pipelineMs": 133.113092,
+    "visibleMs": 216,
+    "stale": false,
+    "at": 1791766263263,
+    "browserStagesMs": {
+      "prepare": 0.800000011920929,
+      "decode": 5.199999988079071,
+      "install": 1.5999999940395355,
+      "paintWait": 21.099999994039536
+    },
+    "deliveryMs": 51.24860900640488,
+    "compileMs": 81.322995,
+    "prepareMs": 9.9904,
+    "checkpointMs": 8.5947,
+    "sourceUpdateMs": 10.772699,
+    "compilerStagesMs": {
+      "fork": 2.234,
+      "replaceChild": 53.135,
+      "restore": 1.1,
+      "shipoutAndPublish": 7.396,
+      "typeset": 14.108
+    },
+    "snapshot": {
+      "mode": "fork",
+      "pid": 722050
+    },
+    "renderMs": 13.973399,
+    "renderStagesMs": {
+      "displayList": 1.6833,
+      "origins": 2.1752,
+      "png": 6.229899,
+      "raster": 3.2782,
+      "text": 0.456
+    },
+    "queueMs": 0.0861000120639801,
+    "requestToPayloadMs": 136.05139100551605,
+    "resumedFrom": 14,
+    "outputMode": "page-stream",
+    "compilationMode": "live",
+    "bytes": 374483,
+    "delta": false
+  },
+  "medianDisplayMs": 143.5,
+  "maxDisplayMs": 145,
+  "checks": [
+    "Matching edited note visible",
+    "Current revision painted",
+    "No browser errors",
+    "Original source unchanged"
+  ]
+}

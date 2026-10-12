@@ -23,8 +23,30 @@ struct Span {
 class Sources {
     struct File {
         std::u32string text;
-        std::vector<Span> spans;
+        std::vector<int> lines, supplementary;
+        mutable std::map<int,Span> spans;
+        std::string name;
+        int base_offset=0, base_line=0, base_column=0;
         int slot=0;
+        std::pair<int,int> position(int offset) const {
+            auto line=std::upper_bound(lines.begin(),lines.end(),offset)-lines.begin()-1;
+            int start=lines[line];
+            int extra=int(std::lower_bound(supplementary.begin(),supplementary.end(),offset)-
+                          std::lower_bound(supplementary.begin(),supplementary.end(),start));
+            return {base_line+int(line),offset-start+extra+(line==0?base_column:0)};
+        }
+        Span &span(int offset) const {
+            auto [it,inserted]=spans.try_emplace(offset);
+            auto &s=it->second;
+            if(inserted) {
+                s.id=slot*1000000+offset;s.file=name;
+                s.start=base_offset+offset;s.end=s.start+1;
+                auto start=position(offset),end=position(offset+1);
+                s.line=start.first;s.column=start.second;s.endLine=end.first;s.endColumn=end.second;
+                s.text=rune(text[offset]);s.kind="token";
+            }
+            return s;
+        }
     };
     std::map<std::string,File> files;
     std::unordered_map<int,File*> slots;
@@ -43,23 +65,24 @@ public:
         }
         current=&it->second;
         auto next=unicode(source);
+        if(next.size()>=1000000) throw std::runtime_error("Source file/block exceeds one million characters");
         size_t prefix=0;
         while(prefix<next.size() && prefix<current->text.size() && next[prefix]==current->text[prefix]) ++prefix;
-        auto previous=std::move(current->spans);
-        current->text=std::move(next);current->spans.clear();
-        if(current->text.size()>=1000000) throw std::runtime_error("Source file/block exceeds one million characters");
-        int line=base_line,column=base_column;
+        // Only rendered origins need rich Span objects. Keep verified command
+        // ranges in the unchanged prefix; materialize other spans on demand.
+        if(current->name!=file || current->base_offset!=base_offset ||
+           current->base_line!=base_line || current->base_column!=base_column) current->spans.clear();
+        for(auto p=current->spans.begin();p!=current->spans.end();) {
+            if(p->second.end>base_offset+int(prefix)) p=current->spans.erase(p);
+            else ++p;
+        }
+        current->text=std::move(next);current->name=file;
+        current->base_offset=base_offset;current->base_line=base_line;current->base_column=base_column;
+        current->lines={0};current->supplementary.clear();
         for(size_t n=0;n<current->text.size();++n) {
-            Span s;s.id=current->slot*1000000+int(n);s.file=file;
-            s.start=base_offset+int(n);s.end=s.start+1;s.line=line;s.column=column;
             auto c=current->text[n];
-            if(c=='\n'){++line;column=0;}else column+=c>0xffff?2:1;
-            s.endLine=line;s.endColumn=column;s.text=rune(c);s.kind="token";
-            // Earlier pages remain available when resuming inside this file.
-            // Preserve engine-reported command spans in the unchanged prefix.
-            if(n<previous.size() && previous[n].start==s.start && previous[n].file==file &&
-               previous[n].end<=base_offset+int(prefix)) s=std::move(previous[n]);
-            current->spans.push_back(std::move(s));
+            if(c=='\n')current->lines.push_back(int(n)+1);
+            if(c>0xffff)current->supplementary.push_back(int(n));
         }
         return source;
     }
@@ -68,10 +91,9 @@ public:
         while(in>>id>>length) {
             auto found=slots.find(id/1000000);if(found==slots.end())continue;
             auto &f=*found->second;int offset=id%1000000;
-            if(length<=0||offset<0||size_t(offset+length)>f.spans.size())continue;
-            auto &s=f.spans[offset];const auto &last=f.spans[offset+length-1];
-            s.end=s.start+length;s.endLine=last.line;s.endColumn=last.column+(f.text[offset+length-1]>0xffff?2:1);
-            if(f.text[offset+length-1]=='\n'){++s.endLine;s.endColumn=0;}
+            if(length<=0||offset<0||size_t(offset)+size_t(length)>f.text.size())continue;
+            auto &s=f.span(offset);auto end=f.position(offset+length);
+            s.end=s.start+length;s.endLine=end.first;s.endColumn=end.second;
             s.text=utf8(f.text.substr(offset,length));
             s.kind=(length>1&&f.text[offset]=='\\')?"macro-origin":"token";
         }
@@ -84,7 +106,7 @@ public:
     const Span *find(int id) const {
         auto f=slots.find(id/1000000);if(f==slots.end())return nullptr;
         int offset=id%1000000;
-        return offset>=0&&offset<int(f->second->spans.size())?&f->second->spans[offset]:nullptr;
+        return offset>=0&&offset<int(f->second->text.size())?&f->second->span(offset):nullptr;
     }
     Json warnings() const{return Json::array();}
 };

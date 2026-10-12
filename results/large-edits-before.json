@@ -1,0 +1,152 @@
+{
+  "characters": 757947,
+  "pages": 100,
+  "samples": [
+    {
+      "wallMs": 260.2822999760974,
+      "compileMs": 10.8444,
+      "compilerStagesMs": {
+        "fork": 3.232,
+        "replaceChild": 0.007,
+        "restore": 0.296,
+        "shipoutAndPublish": 0.47,
+        "typeset": 6.626
+      },
+      "fontRefreshMs": 12.996,
+      "outputMode": "page-stream",
+      "pipelineMs": 143.325902,
+      "prepareMs": 0.757501,
+      "renderMs": 6.6447,
+      "renderStagesMs": {
+        "displayList": 0.4965,
+        "origins": 0.0996,
+        "png": 5.6053,
+        "raster": 0.3991,
+        "text": 0.0194
+      },
+      "resumedFrom": 90
+    },
+    {
+      "wallMs": 257.2749999817461,
+      "compileMs": 11.3648,
+      "compilerStagesMs": {
+        "fork": 3.502,
+        "replaceChild": 0.015,
+        "restore": 0.351,
+        "shipoutAndPublish": 0.515,
+        "typeset": 6.685
+      },
+      "fontRefreshMs": 12.9138,
+      "outputMode": "page-stream",
+      "pipelineMs": 140.345301,
+      "prepareMs": 0.714,
+      "renderMs": 6.6024,
+      "renderStagesMs": {
+        "displayList": 0.5164,
+        "origins": 0.0965,
+        "png": 5.526,
+        "raster": 0.4111,
+        "text": 0.0178
+      },
+      "resumedFrom": 90
+    },
+    {
+      "wallMs": 259.08040002104826,
+      "compileMs": 10.451001,
+      "compilerStagesMs": {
+        "fork": 3.317,
+        "replaceChild": 0.005,
+        "restore": 0.327,
+        "shipoutAndPublish": 0.452,
+        "typeset": 6.094
+      },
+      "fontRefreshMs": 12.8783,
+      "outputMode": "page-stream",
+      "pipelineMs": 141.690502,
+      "prepareMs": 0.7285,
+      "renderMs": 6.9417,
+      "renderStagesMs": {
+        "displayList": 0.5078,
+        "origins": 0.111,
+        "png": 5.7764,
+        "raster": 0.5015,
+        "text": 0.0225
+      },
+      "resumedFrom": 90
+    },
+    {
+      "wallMs": 262.229899992235,
+      "compileMs": 10.8063,
+      "compilerStagesMs": {
+        "fork": 3.245,
+        "replaceChild": 0.004,
+        "restore": 0.325,
+        "shipoutAndPublish": 0.489,
+        "typeset": 6.516
+      },
+      "fontRefreshMs": 12.8194,
+      "outputMode": "page-stream",
+      "pipelineMs": 138.245001,
+      "prepareMs": 0.7484,
+      "renderMs": 6.4984,
+      "renderStagesMs": {
+        "displayList": 0.4795,
+        "origins": 0.1038,
+        "png": 5.4938,
+        "raster": 0.3776,
+        "text": 0.0207
+      },
+      "resumedFrom": 90
+    },
+    {
+      "wallMs": 256.4901000005193,
+      "compileMs": 10.652601,
+      "compilerStagesMs": {
+        "fork": 3.192,
+        "replaceChild": 0.005,
+        "restore": 0.304,
+        "shipoutAndPublish": 0.462,
+        "typeset": 6.367
+      },
+      "fontRefreshMs": 12.5304,
+      "outputMode": "page-stream",
+      "pipelineMs": 139.197902,
+      "prepareMs": 0.7589,
+      "renderMs": 6.6019,
+      "renderStagesMs": {
+        "displayList": 0.4926,
+        "origins": 0.0986,
+        "png": 5.5442,
+        "raster": 0.4272,
+        "text": 0.0194
+      },
+      "resumedFrom": 90
+    },
+    {
+      "wallMs": 255.3782000031788,
+      "compileMs": 11.2775,
+      "compilerStagesMs": {
+        "fork": 3.731,
+        "replaceChild": 0.007,
+        "restore": 0.331,
+        "shipoutAndPublish": 0.474,
+        "typeset": 6.513
+      },
+      "fontRefreshMs": 12.8946,
+      "outputMode": "page-stream",
+      "pipelineMs": 139.929301,
+      "prepareMs": 0.8704,
+      "renderMs": 6.5436,
+      "renderStagesMs": {
+        "displayList": 0.4888,
+        "origins": 0.0995,
+        "png": 5.4981,
+        "raster": 0.4186,
+        "text": 0.0177
+      },
+      "resumedFrom": 90
+    }
+  ],
+  "medianMs": 258.17770000139717,
+  "passes150ms": false
+}

@@ -200,10 +200,13 @@ async function receive(message){
   await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
   const paintedAt=performance.now();
   const paintStale=stale||message.isStale||message.revisionId<latestRequest||message.clientId<latestClient||message.generation!==generation||own!==item.sequence;
+  // Slow edits can consume the entire input-time quiet interval. Start a new
+  // interval at the fresh paint so neighbor replay cannot delay the next key.
+  if(!query&&message.purpose==='edit'&&!paintStale)prefetchAfter=Math.max(prefetchAfter,paintedAt+200);
   const inputAt=inputTimes.get(message.clientId);
   const visibleMs=message.sentAt&&!paintStale?(inputAt!==undefined?paintedAt-inputAt:Date.now()-message.sentAt):null;
   if(!query)$('timing').textContent=`${Math.round(message.pipelineMs)} ms pipeline${visibleMs?` · ${visibleMs} ms to display`:''}`;
-  const stages=Object.fromEntries(['compileMs','prepareMs','compilerStagesMs','snapshot','mapMs','renderMs','renderStagesMs','resourceRefreshMs','fontRefreshMs','fontResourceBytes','queueMs','requestToPayloadMs','resumedFrom','outputMode','compilationMode','cacheReused'].filter(k=>message[k]!==undefined).map(k=>[k,message[k]]));
+  const stages=Object.fromEntries(['compileMs','prepareMs','checkpointMs','sourceUpdateMs','compilerStagesMs','snapshot','mapMs','renderMs','renderStagesMs','resourceRefreshMs','fontRefreshMs','fontResourceBytes','queueMs','requestToPayloadMs','resumedFrom','outputMode','compilationMode','cacheReused'].filter(k=>message[k]!==undefined).map(k=>[k,message[k]]));
   const browserStagesMs={prepare:decodeAt-receivedAt,decode:decodedAt-decodeAt,install:installedAt-decodedAt,paintWait:paintedAt-installedAt};
   const deliveryMs=visibleMs===null||message.requestToPayloadMs===undefined?null:visibleMs-(paintedAt-receivedAt)-message.requestToPayloadMs;
   const measured={type:'paint',revision:message.revisionId,clientId:message.clientId,page:message.page+1,generation:message.generation,purpose:message.purpose,phase:message.phase||'preview',pipelineMs:message.pipelineMs,visibleMs,stale:paintStale,at:Date.now(),browserStagesMs,deliveryMs,...stages};

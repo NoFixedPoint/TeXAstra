@@ -2,6 +2,7 @@
 #define _GNU_SOURCE
 #endif
 #include "compiler.hpp"
+#include "edits.hpp"
 #include <deque>
 #include <functional>
 
@@ -21,6 +22,7 @@ class Preview {
     std::atomic<unsigned> generation{0};
     std::unique_ptr<Engine> engine, candidate;
     std::map<std::string, std::string> overlays, candidate_sources;
+    std::map<std::string,int> source_versions;
     std::thread builder;
     bool building = false;
     Json previous;
@@ -186,6 +188,7 @@ class Preview {
                 bool reload = false;
                 for (auto &r : requests) {
                     if (r.at("type") == "reload") { overlays.clear(); edits.clear(); reload = true; }
+                    if (r.at("type") == "reload" || r.at("type") == "start") source_versions.clear();
                     if ((r.at("type") == "start" || r.at("type") == "reload") && r.contains("overlays")) {
                         for (const auto &[file, source] : r.at("overlays").items()) {
                             inside(project, file);
@@ -196,7 +199,7 @@ class Preview {
                     if (r.at("type") == "edit") {
                         auto file = r.at("file").get<std::string>();
                         inside(project, file);
-                        overlays[file] = r.at("source").get<std::string>();
+                        apply_source_edit(overlays,source_versions,r);
                         edits.insert(file);
                     }
                 }
@@ -328,6 +331,7 @@ int main(int argc, char **argv) {
         if (args.count("--sync")) {
             std::unique_ptr<Engine> engine;
             std::map<std::string, std::string> overlays;
+            std::map<std::string,int> source_versions;
             std::string line;
             while (std::getline(std::cin, line)) {
                 try {
@@ -339,6 +343,7 @@ int main(int argc, char **argv) {
                     int page = request.value("page", 0);
                     Json result;
                     if (kind == "start" || kind == "reload") {
+                        source_versions.clear();
                         if (kind == "reload") overlays.clear();
                         if (request.contains("overlays")) for (const auto &[file, source] : request.at("overlays").items()) {
                             inside(project, file);
@@ -352,7 +357,7 @@ int main(int argc, char **argv) {
                     } else if (kind == "edit") {
                         auto file = request.at("file").get<std::string>();
                         inside(project, file);
-                        overlays[file] = request.at("source").get<std::string>();
+                        apply_source_edit(overlays,source_versions,request);
                         result = engine->edit(file, overlays.at(file), page);
                     } else if (kind == "sync-forward") {
                         result = {{"ok",true},{"location",engine->forward(request.at("file"),request.at("line"),request.at("column"),page)}};

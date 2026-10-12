@@ -1,3 +1,33 @@
+/* Identify ordinary file-backed raster images used by the current page.
+ * Names alone are unsafe after rollback: /Im1 can denote a different file.
+ * Custom dictionaries, forms and non-raster resources retain the fallback.
+ */
+int bako_page_image_resources(lua_State *L)
+{
+    PDF pdf = static_pdf;
+    pdf_object_list *ol;
+    lua_newtable(L);
+    if (pdf_page_resources != null) return 1;
+    for (ol = get_page_resources_list(pdf, obj_type_ximage); ol; ol = ol->link) {
+        image_dict *image = idict_array[obj_data_ptr(pdf, ol->info)];
+        if ((img_type(image) != IMG_TYPE_PNG && img_type(image) != IMG_TYPE_JPG) ||
+            !img_filepath(image) || img_colorspace(image) != 0 ||
+            (img_attr(image) && *img_attr(image))) continue;
+        lua_pushfstring(L, "Im%d%s", obj_info(pdf, ol->info), pdf->resname_prefix ? pdf->resname_prefix : "");
+        lua_newtable(L);
+        lua_pushstring(L, img_filepath(image)); lua_setfield(L, -2, "path");
+        lua_pushfstring(L, "%d|%d|%d|%d|%d|%d|%d|%d", (int)img_type(image),
+            img_xsize(image), img_ysize(image), img_colordepth(image),
+            img_xres(image), img_yres(image), img_orientation(image), img_transform(image));
+        lua_setfield(L, -2, "properties");
+        lua_pushfstring(L, "%d|%d|%d|%d|%d|%d", pdf->gamma, pdf->image_gamma,
+            pdf->image_apply_gamma, pdf->image_hicolor, pdf->major_version, pdf->minor_version);
+        lua_setfield(L, -2, "settings");
+        lua_settable(L, -3);
+    }
+    return 1;
+}
+
 /* Font-only resource export, included by pdfgen.c (LuaHBTeX 1.14).
  * Called ONLY in a disposable fork. No page finishing or further typesetting.
  * The caller owns the fresh output FILE and discards the child afterwards.

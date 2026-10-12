@@ -1,0 +1,9 @@
+{
+  "version": "0.0.22",
+  "sha256": "eb5f58256b36ba0d05b8219c054a48a114ec3bead559cb7825bdbc188c559777",
+  "target": "wsl",
+  "defaultRuntimeMode": "wsl",
+  "verifiedPackagedFiles": 155,
+  "runtimeSha256": "5ac186a8e5c22d40881143180e06729a98e385a4732e0ed9a2683e7712ceaae5",
+  "compilerSha256": "d818aa7f3fdab0c6344e3fd6e3bc92300965115fc0cf6cddd5469d74a49ba7d7"
+}

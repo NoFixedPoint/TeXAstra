@@ -13,6 +13,10 @@
       "ok": true
     },
     {
+      "name": "slow edit gets a new quiet interval after paint",
+      "ok": true
+    },
+    {
       "name": "explicit navigation bypasses the quiet interval",
       "ok": true
     },

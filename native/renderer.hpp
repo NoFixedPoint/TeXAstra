@@ -137,6 +137,7 @@ class Renderer {
     libdeflate_compressor *compressor = nullptr;
     std::set<std::string> coverage;
     std::map<int, std::set<std::string>> page_coverage;
+    std::map<int,Json> image_resources;
     static void integer(std::string &s, uint32_t n) {
         for (int shift : {24, 16, 8, 0}) {
             s += char(n >> shift);
@@ -222,7 +223,7 @@ class Renderer {
         fz_catch(ctx) { throw std::runtime_error(fz_caught_message(ctx)); }
         return result;
     }
-    void seed(const fs::path &path, std::set<std::string> resources) {
+    void seed(const fs::path &path, std::set<std::string> resources, std::map<int,Json> images = {}) {
         pdf_document *replacement = nullptr;
         fz_buffer *bytes = nullptr;
         fz_stream *stream = nullptr;
@@ -244,6 +245,7 @@ class Renderer {
         doc = replacement;
         coverage = std::move(resources);
         page_coverage.clear();
+        image_resources=std::move(images);
     }
     static std::set<std::string> font_names(const PageBuffer &buffer) {
         static const std::regex names(R"(/([^\s/]+)\s+[-+.\d]+\s+Tf\b)");
@@ -301,9 +303,18 @@ class Renderer {
         if (page >= pages()) {
             throw ResourceMiss("New physical page requires a resource refresh");
         }
-        static const std::regex external(R"(/[^\s/]+\s+(Do|gs|sh|CS|cs)\b|\b(SCN|scn)\b)");
+        static const std::regex external(R"(/[^\s/]+\s+(gs|sh|CS|cs)\b|\b(SCN|scn)\b)");
         if (std::regex_search(buffer.commands, external)) {
             throw ResourceMiss("External graphics resource requires a refresh");
+        }
+        static const std::regex drawing(R"(/([^\s/]+)\s+Do\b)");
+        const auto incoming=buffer.metadata.value("images",Json::object());
+        for(auto it=std::sregex_iterator(buffer.commands.begin(),buffer.commands.end(),drawing);
+            it!=std::sregex_iterator();++it) {
+            const auto name=(*it)[1].str();
+            if(!image_resources.count(page) || !incoming.contains(name) ||
+               !image_resources.at(page).contains(name) || incoming.at(name)!=image_resources.at(page).at(name))
+                throw ResourceMiss("New or changed graphics resource requires a refresh");
         }
         const auto &known = page_coverage.count(page) ? page_coverage.at(page) : coverage;
         for (const auto &value : buffer.metadata.at("coverage")) {
@@ -311,6 +322,7 @@ class Renderer {
                 throw FontResourceMiss("New font or glyph requires a resource refresh");
         }
         bool missing = false, bad_size = false, bad_stream = false;
+        fz_var(missing); fz_var(bad_size); fz_var(bad_stream);
         fz_try(ctx) {
             auto object = pdf_lookup_page_obj(ctx, doc, page);
             fz_rect bounds;

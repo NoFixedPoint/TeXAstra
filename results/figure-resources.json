@@ -1,0 +1,184 @@
+{
+  "checks": [
+    {
+      "name": "unchanged PNG note exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unchanged PNG note exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "unchanged PNG note output path",
+      "ok": true
+    },
+    {
+      "name": "unchanged PNG note source spans",
+      "ok": true
+    },
+    {
+      "name": "PNG note insertion exact pixels",
+      "ok": true
+    },
+    {
+      "name": "PNG note insertion exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "PNG note insertion output path",
+      "ok": true
+    },
+    {
+      "name": "PNG note insertion source spans",
+      "ok": true
+    },
+    {
+      "name": "resize retained PNG exact pixels",
+      "ok": true
+    },
+    {
+      "name": "resize retained PNG exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "resize retained PNG output path",
+      "ok": true
+    },
+    {
+      "name": "resize retained PNG source spans",
+      "ok": true
+    },
+    {
+      "name": "font change beside PNG exact pixels",
+      "ok": true
+    },
+    {
+      "name": "font change beside PNG exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "font change beside PNG output path",
+      "ok": true
+    },
+    {
+      "name": "font change beside PNG source spans",
+      "ok": true
+    },
+    {
+      "name": "different image with reused Im name exact pixels",
+      "ok": true
+    },
+    {
+      "name": "different image with reused Im name exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "different image with reused Im name output path",
+      "ok": true
+    },
+    {
+      "name": "different image with reused Im name source spans",
+      "ok": true
+    },
+    {
+      "name": "note after image replacement exact pixels",
+      "ok": true
+    },
+    {
+      "name": "note after image replacement exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "note after image replacement output path",
+      "ok": true
+    },
+    {
+      "name": "note after image replacement source spans",
+      "ok": true
+    },
+    {
+      "name": "switch to JPEG exact pixels",
+      "ok": true
+    },
+    {
+      "name": "switch to JPEG exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "switch to JPEG output path",
+      "ok": true
+    },
+    {
+      "name": "switch to JPEG source spans",
+      "ok": true
+    },
+    {
+      "name": "unchanged JPEG note exact pixels",
+      "ok": true
+    },
+    {
+      "name": "unchanged JPEG note exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "unchanged JPEG note output path",
+      "ok": true
+    },
+    {
+      "name": "unchanged JPEG note source spans",
+      "ok": true
+    },
+    {
+      "name": "PDF figure fallback exact pixels",
+      "ok": true
+    },
+    {
+      "name": "PDF figure fallback exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "PDF figure fallback output path",
+      "ok": true
+    },
+    {
+      "name": "PDF figure fallback source spans",
+      "ok": true
+    },
+    {
+      "name": "PDF note remains conservative exact pixels",
+      "ok": true
+    },
+    {
+      "name": "PDF note remains conservative exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "PDF note remains conservative output path",
+      "ok": true
+    },
+    {
+      "name": "PDF note remains conservative source spans",
+      "ok": true
+    },
+    {
+      "name": "coalesced Unicode multi-cursor deltas exact pixels",
+      "ok": true
+    },
+    {
+      "name": "coalesced deltas keep current revision",
+      "ok": true
+    },
+    {
+      "name": "coalesced note stays on page stream",
+      "ok": true
+    },
+    {
+      "name": "coalesced deltas exact selection layer",
+      "ok": true
+    },
+    {
+      "name": "original fixture unchanged",
+      "ok": true
+    }
+  ]
+}
