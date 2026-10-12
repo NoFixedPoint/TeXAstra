@@ -2,8 +2,8 @@
 
 The macOS port builds native VS Code extensions for Apple Silicon (`darwin-arm64`)
 and Intel (`darwin-x64`). The initial deployment target is **macOS 15 or later**.
-The release workflow compiles and validates on both architectures. Until it passes,
-these are development build instructions, not a claim of a tested binary release.
+The release workflow compiles and validates on both architectures. Publication
+is gated on both native jobs passing.
 
 ## Install a prebuilt preview
 

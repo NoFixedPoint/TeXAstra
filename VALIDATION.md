@@ -66,3 +66,10 @@ a truncated SHA-256 literal in the Mac MuPDF recipe; it is corrected against the
 GitHub release metadata and the existing verified source archive. The recursive
 engine make stages now use the configured job count. Python syntax and pinned
 digest-length checks pass.
+
+The ARM controller, checkpoint module, dependency audit, TeX installation and
+VSIX packaging now pass. The extracted package exposed upstream TeX Live's
+executable-relative TEXMFROOT; the POSIX backend now preserves the selected
+distribution root. All 31 Linux distribution checks and the POSIX checkpoint
+fixture pass after the fix. Workflow YAML validation confirms publication
+depends on both native jobs succeeding.

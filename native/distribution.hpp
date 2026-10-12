@@ -96,11 +96,16 @@ class Distribution {
         if(config.empty())throw std::runtime_error("Selected kpsewhich returned an empty TEXMFCNF search path.");
         setenv("TEXMFCNF",config.c_str(),1);
         report["texmfcnf"]=config;
-        report["texmfRoot"]=kpse({"--var-value=TEXMFROOT"});
+        auto texmf_root=kpse({"--var-value=TEXMFROOT"});
+        if(texmf_root.empty())throw std::runtime_error("Selected kpsewhich returned an empty TEXMFROOT.");
+        // Upstream TeX Live derives this from the executable location. Our
+        // bundled engine lives outside that tree, so preserve the selected root.
+        setenv("TEXMFROOT",texmf_root.c_str(),1);
+        report["texmfRoot"]=texmf_root;
         auto version=kpse({"--version"});report["kpathseaVersion"]=version.substr(0,version.find('\n'));
         if(report["kpathseaVersion"].get<std::string>().find("MiKTeX")!=std::string::npos)
             throw std::runtime_error("MiKTeX integration is not supported by this document runtime. Select TeX Live.");
-        Json identity={{"schema",1},{"bin",bin.string()},{"config",config},{"overrides",report["lookupOverrides"]},{"compiler",compiler}};
+        Json identity={{"schema",1},{"bin",bin.string()},{"config",config},{"texmfRoot",texmf_root},{"overrides",report["lookupOverrides"]},{"compiler",compiler}};
         // Recorder output starts after configuration lookup. Fingerprint these
         // separately, including newly added config files and filename databases.
         Json lookup=Json::object();std::string file;
