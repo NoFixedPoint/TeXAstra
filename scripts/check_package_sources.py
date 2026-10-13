@@ -6,6 +6,7 @@ import unittest
 import zipfile
 
 from package_sources import prepare_sources, verify_sources
+from collect_compatible_release import combine_sources, rebind
 
 
 class SourcePackagingTests(unittest.TestCase):
@@ -42,6 +43,16 @@ class SourcePackagingTests(unittest.TestCase):
                         if path.is_file():
                             archive.write(path, 'extension/'+path.relative_to(stage).as_posix())
                 self.assertEqual(verify_sources(vsix), metadata)
+                combined = root/'texastra-sources.zip'
+                combine_sources([(target, vsix)], combined)
+                rebound = root/'release.vsix'
+                collected = rebind(vsix, rebound, combined, target+'/')
+                self.assertTrue(collected['onlySourceReferencesChanged'])
+                self.assertEqual(verify_sources(rebound)['prefix'], target+'/')
+                with zipfile.ZipFile(rebound) as archive:
+                    self.assertEqual(archive.read('extension/'+(runtime/'backend').relative_to(stage).as_posix()), payload)
+                with zipfile.ZipFile(combined) as archive:
+                    self.assertEqual(archive.read(target+'/upstream/upstream.tar.xz'), b'complete upstream archive')
                 # A collector must never silently pair a rebuilt source kit with
                 # binaries that refer to the previous source kit's checksum.
                 (root/metadata['file']).write_bytes(b'replaced source kit')

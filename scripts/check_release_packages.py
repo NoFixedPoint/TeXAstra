@@ -56,8 +56,9 @@ def main():
             assert (runtime/'sources/AGPL-3.0.txt').stat().st_size > 30000
             with zipfile.ZipFile(artifact.parent/source_archive['file']) as sources:
                 assert sources.testzip() is None
-                assert 'upstream/pymupdf-1.26.7.tar.gz' in sources.namelist()
-                assert 'texastra/engine/patch.py' in sources.namelist()
+                prefix = source_archive.get('prefix', '')
+                assert prefix+'upstream/pymupdf-1.26.7.tar.gz' in sources.namelist()
+                assert prefix+'texastra/engine/patch.py' in sources.namelist()
             project = location/'project'
             shutil.copytree(ROOT/'examples/demo', project)
             # The CV crash was caused by indexing an unrelated legacy-encoded

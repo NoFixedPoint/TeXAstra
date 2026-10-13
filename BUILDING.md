@@ -170,6 +170,27 @@ Release collectors verify and reuse this exact source ZIP; they do not regenerat
 it from a potentially changed checkout. No source download is needed to run the
 extension. Package JSON reports include both download sizes and checksums.
 
+To replace 0.1.5 downloads while preserving its existing asset names and release
+text, collect the four validated packages into a separate directory:
+
+```sh
+python scripts/collect_compatible_release.py \
+  --wsl artifacts/texastra-0.1.5.vsix \
+  --win32-x64 artifacts/texastra-0.1.5-win32-x64.vsix \
+  --darwin-arm64 artifacts/darwin-arm64/texastra-macos-arm64.vsix \
+  --darwin-x64 artifacts/darwin-x64/texastra-macos-x64.vsix \
+  --output .work/release-downloads
+```
+
+Keep the companion source ZIP beside each input VSIX. The collector retains the
+three existing source filenames: `texastra-sources.zip` contains separate `wsl/`
+and `win32-x64/` source trees, and each Mac has its own source ZIP. It updates only
+the packaged source references, verifies every other file and its permissions
+against the tested VSIX, and regenerates all three checksum manifests. The
+`collection.json` report connects the final download hashes to the tested inputs.
+Publish the seven VSIX/source assets and three checksum manifests; keep the
+collection report as validation evidence.
+
 ## Browser demo and release materials
 
 For Linux or macOS:
