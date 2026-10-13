@@ -191,6 +191,12 @@ against the tested VSIX, and regenerates all three checksum manifests. The
 Publish the seven VSIX/source assets and three checksum manifests; keep the
 collection report as validation evidence.
 
+For packaging-only changes, `repackage-macos.yml` can restore the published
+macOS runtimes using explicit VSIX SHA-256 inputs instead of recompiling them.
+It still runs native architecture/signature audits and all extracted-package
+checks on both Macs. Use it only when runtime and engine sources are unchanged;
+the full build workflow remains the path for binary changes.
+
 ## Browser demo and release materials
 
 For Linux or macOS:
