@@ -1,9 +1,18 @@
 {
   "version": "0.1.5",
-  "sha256": "cb389a6f31eb683b7224dd4d21ecfc45756013f6f59b2b00d263c2840b5f78aa",
+  "sha256": "2f1e5f8177243cfb2acc7af5010d7afc1213728a4ad9cb796fe98c0024410884",
+  "sizeBytes": 17958102,
+  "sourceArchive": {
+    "version": "0.1.5",
+    "target": "win32-x64",
+    "file": "texastra-0.1.5-win32-x64-sources.zip",
+    "sha256": "2c29f0b4be10a7525243ec34b29dea7b1006b7d57835535341b497b0b84295fa",
+    "sizeBytes": 180039246,
+    "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-win32-x64-sources.zip"
+  },
   "target": "win32-x64",
   "defaultRuntimeMode": "native",
-  "verifiedPackagedFiles": 165,
+  "verifiedPackagedFiles": 163,
   "runtimeSha256": "f8ce8edc92b0f032dbaa87140913f22aeb7e97144f710e3d22b50e2ecab19058",
   "nativeBinaries": [
     "extension/native/runtime/windows-x64/texastra-backend.exe"

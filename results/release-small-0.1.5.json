@@ -1,0 +1,172 @@
+{
+  "tag": "v0.1.5",
+  "url": "https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.5",
+  "releaseTextUnchanged": true,
+  "allTenUploadedAssetsVerified": true,
+  "macosCi": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/38329557732",
+  "macosBuildCommit": "80cfba4005fc50ea45c86ea026b4e54e93592c08",
+  "releaseAssetBytesBefore": 1898976272,
+  "releaseAssetBytesAfter": 980361512,
+  "deletedActionsPackages": [
+    {
+      "id": 11780010817,
+      "name": "texastra-darwin-x64",
+      "size_in_bytes": 567130874
+    },
+    {
+      "id": 11778973913,
+      "name": "texastra-darwin-arm64",
+      "size_in_bytes": 566318648
+    },
+    {
+      "id": 11737432290,
+      "name": "texastra-darwin-x64",
+      "size_in_bytes": 567027003
+    },
+    {
+      "id": 11736229459,
+      "name": "texastra-darwin-arm64",
+      "size_in_bytes": 566217299
+    },
+    {
+      "id": 11729420943,
+      "name": "texastra-darwin-arm64",
+      "size_in_bytes": 567414131
+    },
+    {
+      "id": 11728619418,
+      "name": "texastra-darwin-x64",
+      "size_in_bytes": 568223400
+    }
+  ],
+  "deletedActionsPackageBytes": 3402331355,
+  "assets": [
+    {
+      "name": "SHA256SUMS",
+      "size": 650,
+      "digest": "sha256:727ab4b8a2d0a997a84dff7dcff9d97a117c3ea3cc127d7a8876c7af8598db63",
+      "state": "uploaded"
+    },
+    {
+      "name": "SHA256SUMS-darwin-arm64",
+      "size": 194,
+      "digest": "sha256:472796d71b36612f11a5fae446c88eaf47d1204d3064d206734d655440c0eec3",
+      "state": "uploaded"
+    },
+    {
+      "name": "SHA256SUMS-darwin-x64",
+      "size": 190,
+      "digest": "sha256:006a281cd339a5f9b543a7ef076b17e68498a5da8161a622627030dd3f474136",
+      "state": "uploaded"
+    },
+    {
+      "name": "texastra-darwin-arm64-sources.zip",
+      "size": 267065552,
+      "digest": "sha256:5d81bf2d0baaf8b5ac43cffeea5289a11809f4679ac18ac1ef99f28f8fc23d60",
+      "state": "uploaded"
+    },
+    {
+      "name": "texastra-darwin-x64-sources.zip",
+      "size": 267065555,
+      "digest": "sha256:3719a3ad82fef7f56b3b4b387710244c88f122d06e1e4140921169678d003983",
+      "state": "uploaded"
+    },
+    {
+      "name": "texastra-macos-arm64.vsix",
+      "size": 21978900,
+      "digest": "sha256:9ebf982591b6c163483c70079e1b863005972b2d96b29b27f667ae47e10c6fdd",
+      "state": "uploaded"
+    },
+    {
+      "name": "texastra-macos-x64.vsix",
+      "size": 22912642,
+      "digest": "sha256:da06e32d357d2de2dd0a4c0cb00948973032a30845be356326c80cc79594b9af",
+      "state": "uploaded"
+    },
+    {
+      "name": "texastra-sources.zip",
+      "size": 355703082,
+      "digest": "sha256:b89807b2d23a220178bacdd65d286f9fdbb9f4e91e275d1bd1fd095d9e63c674",
+      "state": "uploaded"
+    },
+    {
+      "name": "texastra-windows-x64.vsix",
+      "size": 17946593,
+      "digest": "sha256:0c2e3fd72e5bafc2ece49dcfa9f420e35a76e0b20f399361b527acb4f40d6390",
+      "state": "uploaded"
+    },
+    {
+      "name": "texastra-wsl.vsix",
+      "size": 27688154,
+      "digest": "sha256:fd9dc1ca9fc0e47b93695882efd9287544ded12accb30075884efdb38d0b219f",
+      "state": "uploaded"
+    }
+  ],
+  "packages": [
+    {
+      "file": "texastra-wsl.vsix",
+      "sizeBytes": 27688154,
+      "sha256": "fd9dc1ca9fc0e47b93695882efd9287544ded12accb30075884efdb38d0b219f",
+      "testedVsixSha256": "958bfa11211c9208021cb57f1bfea83af926f8dc7201003f3a3c936a72bbe4ab",
+      "onlySourceReferencesChanged": true,
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "wsl",
+        "file": "texastra-sources.zip",
+        "sha256": "b89807b2d23a220178bacdd65d286f9fdbb9f4e91e275d1bd1fd095d9e63c674",
+        "sizeBytes": 355703082,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-sources.zip",
+        "prefix": "wsl/"
+      }
+    },
+    {
+      "file": "texastra-windows-x64.vsix",
+      "sizeBytes": 17946593,
+      "sha256": "0c2e3fd72e5bafc2ece49dcfa9f420e35a76e0b20f399361b527acb4f40d6390",
+      "testedVsixSha256": "2f1e5f8177243cfb2acc7af5010d7afc1213728a4ad9cb796fe98c0024410884",
+      "onlySourceReferencesChanged": true,
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "win32-x64",
+        "file": "texastra-sources.zip",
+        "sha256": "b89807b2d23a220178bacdd65d286f9fdbb9f4e91e275d1bd1fd095d9e63c674",
+        "sizeBytes": 355703082,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-sources.zip",
+        "prefix": "win32-x64/"
+      }
+    },
+    {
+      "file": "texastra-macos-arm64.vsix",
+      "sizeBytes": 21978900,
+      "sha256": "9ebf982591b6c163483c70079e1b863005972b2d96b29b27f667ae47e10c6fdd",
+      "testedVsixSha256": "7d158c04f4e1399edff9d974d2040330e2710e3f646c4925f4b29849b345ad08",
+      "onlySourceReferencesChanged": true,
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "darwin-arm64",
+        "file": "texastra-darwin-arm64-sources.zip",
+        "sha256": "5d81bf2d0baaf8b5ac43cffeea5289a11809f4679ac18ac1ef99f28f8fc23d60",
+        "sizeBytes": 267065552,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-darwin-arm64-sources.zip",
+        "prefix": ""
+      }
+    },
+    {
+      "file": "texastra-macos-x64.vsix",
+      "sizeBytes": 22912642,
+      "sha256": "da06e32d357d2de2dd0a4c0cb00948973032a30845be356326c80cc79594b9af",
+      "testedVsixSha256": "a534782c79f00d53f384c763daafeea6a49c4906021e07ffc3f40485188cbf5f",
+      "onlySourceReferencesChanged": true,
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "darwin-x64",
+        "file": "texastra-darwin-x64-sources.zip",
+        "sha256": "3719a3ad82fef7f56b3b4b387710244c88f122d06e1e4140921169678d003983",
+        "sizeBytes": 267065555,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-darwin-x64-sources.zip",
+        "prefix": ""
+      }
+    }
+  ],
+  "validationLimitations": "No interactive VS Code GUI or broad OS compatibility matrix."
+}

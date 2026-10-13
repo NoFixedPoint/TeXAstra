@@ -1,4 +1,4 @@
-"""Restore an unchanged macOS runtime from a SHA-256-pinned published VSIX."""
+"""Restore a Mac runtime from a pinned legacy VSIX containing its source kit."""
 import argparse
 from pathlib import Path
 import zipfile
@@ -27,6 +27,7 @@ def restore(vsix, digest, destination):
                 path.chmod(0o755)
     assert (destination/'macos-build.json').is_file()
     assert (destination/'texastra-backend').is_file()
+    assert (destination/'sources/pymupdf-1.26.7.tar.gz').is_file(), 'Use the original full-source VSIX'
 
 
 if __name__ == '__main__':

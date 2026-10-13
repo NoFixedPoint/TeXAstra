@@ -16,7 +16,44 @@ Each VSIX is extracted into a path containing spaces. Package checks exercise:
 Windows/WSL checks run locally. Both macOS architectures build and run checks on
 native GitHub Actions runners. macOS checks also audit architecture, ad-hoc
 signatures, dependencies, long paths, included-file checkpoints, and syntax-error
-recovery. Matching macOS source archives include package validation reports.
+recovery. macOS release directories include package validation reports under
+`validation/` beside the matching source archives.
+
+### Smaller republished 0.1.5 packages
+
+Separating build-source archives reduces the published VSIX downloads as follows
+(decimal MB):
+
+| Package | Original | Replacement | Reduction |
+| --- | ---: | ---: | ---: |
+| WSL | 221.5 MB | 27.7 MB | 87.5% |
+| Windows x64 | 193.1 MB | 17.9 MB | 90.7% |
+| macOS Apple Silicon | 303.6 MB | 22.0 MB | 92.8% |
+| macOS Intel | 304.4 MB | 22.9 MB | 92.5% |
+
+Runtime binaries, retained runtime files, and executable permissions match the
+original published packages byte-for-byte. Removed archives are preserved in
+the companion source ZIPs. The release text and all ten asset names are unchanged.
+The collector changes only source-reference file contents in the tested VSIXs
+and regenerates checksums; its report records both tested and published hashes.
+
+`python scripts/check_package_sources.py` checks all five target layouts,
+unchanged executable/license contents, preservation of source/build recipes,
+and rejection of missing, altered, or mismatched source kits. This check also
+runs in CI. `node scripts/check_unit.js` and Python syntax checks pass.
+`python scripts/check_release_packages.py` validates both smaller Windows/WSL
+packages, their source ZIP integrity, source mappings, project preservation, and
+text/TikZ/figure/table edits against complete compilation. Release collection
+checks the source ZIP hashes before writing checksums.
+
+Both smaller Mac packages passed native architecture/signature checks and the
+full extracted-package suite in [the repackaging workflow](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38329557732).
+They reuse the SHA-256-pinned original released binaries; no compiler rebuild was
+needed. [Runtime preservation](results/repackage-runtime-preservation.json) and
+[publication verification](results/release-small-0.1.5.json) record package sizes,
+source preservation, uploaded asset hashes, unchanged release text, and removal
+of superseded Actions package artifacts. Interactive VS Code GUI testing and a
+broad OS compatibility matrix remain outside this validation.
 
 ### Compiler and navigation coverage
 
@@ -52,7 +89,7 @@ Private project sources and rendered documents are excluded from release materia
 
 ### Release evidence
 
-Both native macOS jobs passed in [GitHub Actions](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38321363874).
+The original full-size native macOS builds passed in [GitHub Actions](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38321363874).
 [Release preflight](results/release-preflight-0.1.5.json),
 [Windows/WSL package checks](results/release-packages.json),
 [Apple Silicon checks](results/release-packages-darwin-arm64.json), and

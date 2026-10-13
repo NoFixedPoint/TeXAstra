@@ -3,7 +3,16 @@
   "packages": [
     {
       "platform": "darwin-x64",
-      "sha256": "5b23429a0588b39ad9db31851e7b991d6c01fa4031cfafe50dd17ed550e5f965",
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "darwin-x64",
+        "file": "texastra-0.1.5-darwin-x64-sources.zip",
+        "sha256": "3719a3ad82fef7f56b3b4b387710244c88f122d06e1e4140921169678d003983",
+        "sizeBytes": 267065555,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-darwin-x64-sources.zip"
+      },
+      "sizeBytes": 23221277,
+      "sha256": "a534782c79f00d53f384c763daafeea6a49c4906021e07ffc3f40485188cbf5f",
       "checks": [
         {
           "unrelatedLegacyEncoding": true,

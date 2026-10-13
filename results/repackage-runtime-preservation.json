@@ -1,0 +1,38 @@
+[
+  {
+    "file": "texastra-wsl.vsix",
+    "beforeBytes": 221482166,
+    "afterBytes": 27688154,
+    "reductionPercent": 87.5,
+    "unchangedRuntimeFiles": 16,
+    "runtimePermissionsPreserved": true,
+    "removedArchivesPreservedInSourceZip": 6
+  },
+  {
+    "file": "texastra-windows-x64.vsix",
+    "beforeBytes": 193103891,
+    "afterBytes": 17946593,
+    "reductionPercent": 90.71,
+    "unchangedRuntimeFiles": 16,
+    "runtimePermissionsPreserved": true,
+    "removedArchivesPreservedInSourceZip": 6
+  },
+  {
+    "file": "texastra-macos-arm64.vsix",
+    "beforeBytes": 303557331,
+    "afterBytes": 21978900,
+    "reductionPercent": 92.76,
+    "unchangedRuntimeFiles": 13,
+    "runtimePermissionsPreserved": true,
+    "removedArchivesPreservedInSourceZip": 8
+  },
+  {
+    "file": "texastra-macos-x64.vsix",
+    "beforeBytes": 304367810,
+    "afterBytes": 22912642,
+    "reductionPercent": 92.47,
+    "unchangedRuntimeFiles": 13,
+    "runtimePermissionsPreserved": true,
+    "removedArchivesPreservedInSourceZip": 8
+  }
+]

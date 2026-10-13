@@ -50,7 +50,7 @@ def rebind(vsix, output, source, prefix=''):
 
 def combine_sources(packages, destination):
     with zipfile.ZipFile(destination, 'w') as result:
-        result.writestr('README.txt', 'Use wsl/ or win32-x64/ for the corresponding platform.\n'
+        result.writestr(zipfile.ZipInfo('README.txt'), 'Use wsl/ or win32-x64/ for the corresponding platform.\n'
                         'Each directory includes texastra/ project sources and upstream/ dependencies.\n')
         for target, vsix in packages:
             metadata = verify_sources(vsix)
