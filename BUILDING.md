@@ -75,7 +75,7 @@ The package check runs the runtime extracted from the VSIX. It covers text,
 TikZ, figure and table edits against fresh compilation, the legacy-encoding
 regression, long paths, included-file checkpoints, error recovery, and unchanged
 source files. `artifacts/darwin-arm64/` (or `artifacts/darwin-x64/`) contains the
-VSIX, matching source ZIP with validation reports, and SHA-256 checksums.
+VSIX, matching source ZIP, a `validation/` directory of reports, and SHA-256 checksums.
 
 The GitHub Actions matrix builds natively on `macos-15` (ARM64) and
 `macos-15-intel` (Intel), with release preparation gated on both jobs passing. The minimum
@@ -156,9 +156,19 @@ and license materials for both packages; run it after both platform builds and
 The package checks extract both VSIX files and exercise the legacy-encoding
 regression, mapped text/TikZ/figure/table edits, and source preservation.
 `release_artifacts.py` produces `texastra-windows-x64.vsix`, `texastra-wsl.vsix`,
-`texastra-sources.zip`, and their `SHA256SUMS` under `artifacts/`. When combining
+the matching `texastra-<version>-wsl-sources.zip` and
+`texastra-<version>-win32-x64-sources.zip`, and their `SHA256SUMS` under `artifacts/`. When combining
 them with macOS downloads, extend the release checksum manifest to cover those
 assets too. Windows binaries are unsigned.
+
+Packaging creates each source ZIP at the same time as its VSIX. Large upstream
+archives (including duplicate TeX Live archives) are omitted from the VSIX;
+runtime binaries, project source, setup scripts, licenses, and notices remain.
+The installed `SOURCE.md` links to the versioned source asset and `SOURCE.json`
+pins its checksum. Publish both files together using the generated source filename.
+Release collectors verify and reuse this exact source ZIP; they do not regenerate
+it from a potentially changed checkout. No source download is needed to run the
+extension. Package JSON reports include both download sizes and checksums.
 
 ## Browser demo and release materials
 
@@ -174,7 +184,8 @@ Open <http://127.0.0.1:8765>. Browser-session edits stay in memory. The GitHub G
 is recorded using `python scripts/record_demo.py` and FFmpeg at real edit/compile
 speed; editing happens in the source editor.
 
-Release collectors use tracked project files. Run them from the public release
-checkout with the corresponding source kits prepared. Binaries are not claimed
+Packaging snapshots the staged project files and prepared source kits. Run it
+from the public release checkout; collectors reuse the matching source ZIPs.
+Binaries are not claimed
 to be bit-for-bit reproducible: toolchain versions and platform differences can
 change output bytes. See [validation](VALIDATION.md) and [licensing](LICENSING.md).

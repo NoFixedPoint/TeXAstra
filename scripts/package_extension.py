@@ -1,6 +1,7 @@
 """Package a tested runtime without interrupting document sessions using another runtime."""
 import argparse, hashlib, json, shutil, subprocess, tempfile, zipfile
 from pathlib import Path
+from package_sources import prepare_sources, verify_sources
 
 ROOT=Path(__file__).resolve().parents[1]
 for directory in ('.work','results','artifacts'):(ROOT/directory).mkdir(exist_ok=True)
@@ -42,6 +43,7 @@ runtime_setting=manifest['contributes']['configuration']['properties']['texastra
 runtime_setting['default']='native' if windows or mac else 'wsl'
 if windows:runtime_setting['description']='Windows: use the bundled native Windows backend by default. WSL requires a separately installed Linux runtime. Reopen the document after changing.'
 (stage/'package.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
+prepare_sources(stage,destination,ROOT/'artifacts',version,args.target)
 suffix='' if args.target=='wsl' else '-'+args.target
 artifact=ROOT/'artifacts'/f'texastra-{version}{suffix}.vsix'
 target_args=[] if args.target=='wsl' else ['--target',args.target]
@@ -71,6 +73,7 @@ with zipfile.ZipFile(artifact) as archive:
         assert 'extension/native/runtime/texastra-luahbtex' in archive.namelist()
         assert not any(name.endswith(('.exe','.dll')) for name in archive.namelist())
 report={'version':version,'sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),
+    'sizeBytes':artifact.stat().st_size,'sourceArchive':verify_sources(artifact),
     'target':args.target,'defaultRuntimeMode':runtime_setting['default'],'verifiedPackagedFiles':checked,'runtimeSha256':hashlib.sha256((args.runtime/backend).read_bytes()).hexdigest()}
 if not windows:report['compilerSha256']=hashlib.sha256((args.runtime/'texastra-luahbtex').read_bytes()).hexdigest()
 if not windows and (args.runtime/'texastra-pdftex').exists():report['pdftexSha256']=hashlib.sha256((args.runtime/'texastra-pdftex').read_bytes()).hexdigest()

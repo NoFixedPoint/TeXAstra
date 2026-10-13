@@ -12,6 +12,7 @@ import zipfile
 
 import fitz
 from cpp_client import Client, ROOT
+from package_sources import verify_sources
 
 
 def pixels(frame):
@@ -31,6 +32,7 @@ def main():
         ('wsl', f'texastra-{version}.vsix'), ('windows-x64', f'texastra-{version}-win32-x64.vsix')]
     for platform, filename in packages:
         artifact = ROOT/'artifacts'/filename
+        source_archive = verify_sources(artifact)
         with tempfile.TemporaryDirectory(prefix='release check ', dir=ROOT/'.work') as folder:
             location = Path(folder)
             with zipfile.ZipFile(artifact) as archive:
@@ -52,7 +54,10 @@ def main():
             else:
                 os.environ.pop('BAKO_CHECKPOINT_MODE', None)
             assert (runtime/'sources/AGPL-3.0.txt').stat().st_size > 30000
-            assert (runtime/'sources/pymupdf-1.26.7.tar.gz').is_file()
+            with zipfile.ZipFile(artifact.parent/source_archive['file']) as sources:
+                assert sources.testzip() is None
+                assert 'upstream/pymupdf-1.26.7.tar.gz' in sources.namelist()
+                assert 'texastra/engine/patch.py' in sources.namelist()
             project = location/'project'
             shutil.copytree(ROOT/'examples/demo', project)
             # The CV crash was caused by indexing an unrelated legacy-encoded
@@ -96,6 +101,7 @@ def main():
                 from check_posix_runtime import check
                 checks.append(check(runtime, extension/'texastra'))
             report['packages'].append({'platform': platform,
+                'sourceArchive': source_archive, 'sizeBytes': artifact.stat().st_size,
                 'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest(), 'checks': checks})
     (ROOT/('results/release-packages-'+args.target+'.json' if args.target else 'results/release-packages.json')).write_text(json.dumps(report, indent=2)+'\n')
 

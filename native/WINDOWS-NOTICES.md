@@ -30,7 +30,9 @@ Components and source locations:
 
 `scripts/windows_sources.py` followed by `scripts/release_sources.py` assembles
 the complete source kit beside the bundle;
-`scripts/package_extension.py --target win32-x64` includes it in the VSIX.
+`scripts/package_extension.py --target win32-x64 --runtime native/windows-bundle`
+ships its archives in the matching source ZIP, with license notices and a
+`SOURCE.md` download link retained in the VSIX.
 The engine build recovers its library sources from pinned upstream commit
 `7652969578ab227a3ae1774f0530f175e4a5abe2`. To reconstruct that source tree offline,
 extract the Ubuntu archive, apply its declared `CVE-*` Debian patches, unpack
