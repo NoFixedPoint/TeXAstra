@@ -8,14 +8,8 @@ import tempfile
 
 import fitz
 from playwright.sync_api import sync_playwright
-from cpp_client import Client, ROOT, linux
+from cpp_client import Client, ROOT, linux, disk_path
 from check_beamer import next_frame, pixels
-
-
-def disk_path(path):
-    if os.name == 'nt' and path.startswith('/'):
-        return Path('//wsl.localhost/Ubuntu-22.04')/path.lstrip('/')
-    return Path(path)
 
 
 def independent_pdf(project, main, environment):

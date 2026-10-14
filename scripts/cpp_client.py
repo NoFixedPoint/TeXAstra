@@ -5,6 +5,12 @@ ROOT=Path(__file__).resolve().parents[1]
 def linux(path):
     path=path.resolve()
     return '/mnt/'+path.drive[0].lower()+path.as_posix()[2:] if os.name=='nt' else str(path)
+
+def disk_path(path):
+    if os.name == 'nt' and path.startswith('/'):
+        return Path('//wsl.localhost/Ubuntu-22.04')/path.lstrip('/')
+    return Path(path)
+
 class Client:
     def __init__(self,project=ROOT/'corpus',runtime=None,main='main.tex',preview_mode='auto',compiler='lualatex',sync=True,environment=None,tex_bin=None,assets=None):
         native_windows = os.name == 'nt' and os.environ.get('BAKO_CHECKPOINT_MODE') == 'windows'

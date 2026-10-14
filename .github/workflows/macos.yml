@@ -26,13 +26,25 @@ jobs:
         with:
           python-version: '3.11'
       - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        id: runtime-cache
+        with:
+          path: native/runtime
+          key: macos-runtime-v1-${{ matrix.target }}-${{ hashFiles('engine/**', 'native/**', 'texastra/**', 'scripts/build*.py', 'licenses/**') }}
+      - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
         id: engine-cache
+        if: steps.runtime-cache.outputs.cache-hit != 'true'
         with:
           path: ~/.cache/texastra-engine-*
           key: engine-${{ matrix.target }}-${{ hashFiles('scripts/build_engine.py', 'engine/**') }}
           restore-keys: engine-${{ matrix.target }}-
       - run: python3 scripts/build_macos.py
+        if: steps.runtime-cache.outputs.cache-hit != 'true'
       - run: python3 scripts/check_macos.py
+      - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        if: steps.runtime-cache.outputs.cache-hit != 'true'
+        with:
+          path: native/runtime
+          key: ${{ steps.runtime-cache.outputs.cache-primary-key }}
       - run: python3 scripts/install_test_texlive.py --destination "$HOME/texastra-texlive-2021"
       - run: echo "$HOME/texastra-texlive-2021/bin/universal-darwin" >> "$GITHUB_PATH"
       - run: python3 -m pip install pymupdf==1.26.7
@@ -57,7 +69,7 @@ jobs:
             ~/.cache/texastra-engine-*/build/*.log
             ~/.cache/texastra-pdftex-*/build/*.log
       - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
-        if: always() && steps.engine-cache.outputs.cache-hit != 'true'
+        if: always() && steps.runtime-cache.outputs.cache-hit != 'true' && steps.engine-cache.outputs.cache-hit != 'true'
         with:
           path: ~/.cache/texastra-engine-*
           key: ${{ steps.engine-cache.outputs.cache-primary-key }}

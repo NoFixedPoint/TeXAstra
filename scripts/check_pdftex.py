@@ -3,7 +3,7 @@ import argparse, json, os, subprocess, tempfile
 from pathlib import Path
 import fitz
 from cpp_client import Client, ROOT, linux
-from check_beamer import pixels
+from check_posix_runtime import pixels
 
 SOURCE = r'''\documentclass{article}
 \usepackage{amsmath,tikz}
