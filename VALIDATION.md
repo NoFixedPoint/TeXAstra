@@ -111,3 +111,8 @@ not establish interactive VS Code GUI coverage or broader OS compatibility.
 Publication uses the existing macOS VSIX/source asset names, verifies the tested
 package hashes and source kits, changes only source references during collection,
 and regenerates release checksums. Windows/WSL assets keep their existing hashes.
+
+[Publication verification](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38505106843)
+confirmed all ten uploaded asset identities and their SHA-256 digests. The
+published Apple Silicon VSIX is `6eb1d929696bf6b2b29141f6a870df0caf409b49f1f61843a60cf6120ca074e2`;
+the Intel VSIX is `0e32f582298c3fd64acb214f60e30cee5b09d095cce94550c1ced66f6c06506f`.
