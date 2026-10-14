@@ -36,14 +36,9 @@ and run **Open Document** again. Cancel stops the installer and its subprocesses
 **Show LaTeX Environment** reports the selected binary directory; use that tree's
 `tlmgr` to add packages required by a document.
 
-Validation for this change: `npm test` passes on Windows, including setup reuse,
-engine updates, explicit-path/platform bypass, failed-install cleanup and retry,
-cancellation, incomplete installations, checksum rejection, and subprocess error
-reporting, plus extension trust checks and waiting for setup before launch. The
-historical installer download was also checked against its pinned SHA-256.
-An optional WSL run was blocked by its Node 12 installation (build checks require
-Node 22+). Native download, format generation, and LuaLaTeX/PDFLaTeX compilation
-are covered by `node scripts/check_macos_setup.js --native`, wired into both macOS
-CI architectures. Those native checks have not been run from the Windows
-development host; the updated macOS VSIX packages still need to be built and
-validated before release.
+Automatic setup, format generation, LuaLaTeX/PDFLaTeX compilation, and reuse
+passed on both Apple Silicon and Intel in [native CI](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38503902074).
+The same jobs passed architecture/signature audits, extension tests, compiler
+checks, and extracted-VSIX rendering/navigation checks. The first Intel package
+check failed during a retained TikZ edit; rerunning the unchanged commit passed.
+Interactive VS Code GUI testing remains outside this validation.

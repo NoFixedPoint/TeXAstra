@@ -94,3 +94,20 @@ The original full-size native macOS builds passed in [GitHub Actions](https://gi
 [Windows/WSL package checks](results/release-packages.json),
 [Apple Silicon checks](results/release-packages-darwin-arm64.json), and
 [Intel checks](results/release-packages-darwin-x64.json) record the tested package identities.
+
+### Automatic macOS setup in the replacement 0.1.5 packages
+
+[Native validation](https://github.com/NoFixedPoint/TeXAstra/actions/runs/38503902074)
+passed on macOS 15 Apple Silicon and Intel at commit `48c2813`. Both jobs installed
+TeX Live through the extension's JavaScript setup code into paths containing
+spaces, generated matching formats, compiled LuaLaTeX and PDFLaTeX documents,
+and reused the completed installation. Extension tests cover cancellation,
+failed-install cleanup/retry, explicit settings, trust, and waiting before launch.
+Runtime audits, PDFLaTeX provenance/state/navigation checks, and extracted-package
+rendering and source-navigation checks also passed. The first Intel package run
+failed during a retained TikZ edit; the unchanged job passed on retry. This does
+not establish interactive VS Code GUI coverage or broader OS compatibility.
+
+Publication uses the existing macOS VSIX/source asset names, verifies the tested
+package hashes and source kits, changes only source references during collection,
+and regenerates release checksums. Windows/WSL assets keep their existing hashes.
