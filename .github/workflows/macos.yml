@@ -3,10 +3,18 @@ on:
   push:
     branches: [macos-distribution]
   workflow_dispatch:
+    inputs:
+      publish_run:
+        description: Optional successful native run to publish instead of building
+        required: false
+      publish_commit:
+        description: Full commit SHA of the successful native run
+        required: false
 permissions:
   contents: read
 jobs:
   build:
+    if: ${{ !inputs.publish_run }}
     strategy:
       fail-fast: false
       matrix:
@@ -80,3 +88,26 @@ jobs:
         with:
           path: ~/.cache/texastra-engine-*
           key: ${{ steps.engine-cache.outputs.cache-primary-key }}
+  publish:
+    if: ${{ inputs.publish_run != '' }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Publish validated macOS replacements
+        run: python3 scripts/publish_macos.py --run "$VALIDATED_RUN" --commit "$VALIDATED_COMMIT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VALIDATED_RUN: ${{ inputs.publish_run }}
+          VALIDATED_COMMIT: ${{ inputs.publish_commit }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: macos-publication
+          path: results/macos-publication.json
+          if-no-files-found: warn
