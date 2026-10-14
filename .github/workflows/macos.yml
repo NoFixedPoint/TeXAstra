@@ -40,13 +40,13 @@ jobs:
       - run: python3 scripts/build_macos.py
         if: steps.runtime-cache.outputs.cache-hit != 'true'
       - run: python3 scripts/check_macos.py
-      - name: Validate automatic TeX setup and compilation
-        run: node scripts/check_macos_setup.js --native
       - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
         if: steps.runtime-cache.outputs.cache-hit != 'true'
         with:
           path: native/runtime
           key: ${{ steps.runtime-cache.outputs.cache-primary-key }}
+      - name: Validate automatic TeX setup and compilation
+        run: node scripts/check_macos_setup.js --native
       - run: python3 scripts/install_test_texlive.py --destination "$HOME/texastra-texlive-2021" --pdftex-engine "$PWD/native/runtime/pdftex-baseline"
       - run: echo "$HOME/texastra-texlive-2021/bin/universal-darwin" >> "$GITHUB_PATH"
       - run: python3 -m pip install pymupdf==1.26.7

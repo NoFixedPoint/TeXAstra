@@ -76,10 +76,10 @@ async function install({extensionPath,destination,work,signal,log,report,execute
   env.TEXMFCNF=await execute(path.join(binary,'kpsewhich'),['--var-value=TEXMFCNF'],options);
   report('Preparing matching LuaLaTeX and PDFLaTeX formats…');
   for(const engine of ['luahbtex','pdftex'])await execute(path.join(binary,'fmtutil-sys'),['--byengine',engine],options);
-  for(const [engine,version] of [['lualatex','1.14.0'],['pdflatex','1.40.22']]){
+  for(const [engine,version,formatEngine] of [['lualatex','1.14.0','luahbtex'],['pdflatex','1.40.22','pdftex']]){
     const actual=await execute(path.join(binary,engine),['--version'],options);
     if(!actual.includes(version))throw new Error(`The installed ${engine} does not match the bundled engine (${version}).`);
-    const format=await execute(path.join(binary,'kpsewhich'),['--format=fmt',engine+'.fmt'],options);
+    const format=await execute(path.join(binary,'kpsewhich'),['--engine='+formatEngine,'--progname='+engine,'--format=fmt',engine+'.fmt'],options);
     if(!format)throw new Error(`The ${engine} format was not generated.`);
   }
   return binary;
