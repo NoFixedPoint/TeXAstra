@@ -2,7 +2,7 @@
 import argparse, json, os, subprocess, tempfile
 from pathlib import Path
 import fitz
-from cpp_client import Client, ROOT, linux
+from cpp_client import Client, ROOT, linux, disk_path
 from check_posix_runtime import pixels
 
 SOURCE = r'''\documentclass{article}
@@ -39,7 +39,12 @@ def main():
             with Client(project,runtime=args.runtime,compiler='pdflatex',preview_mode='full') as client:
                 frame=client.request(type='start',page=0)
                 (ROOT/'.work/pdftex-frame.json').write_text(json.dumps(frame,indent=2))
-                check('real pdfTeX provenance enabled',frame.get('sourceSync')=='token-and-macro-origin',error=frame.get('error'))
+                environment = json.loads(disk_path(frame['environmentReport']).read_text()) if frame.get('environmentReport') else {}
+                check('real pdfTeX provenance enabled',frame.get('sourceSync')=='token-and-macro-origin',
+                      error=frame.get('error'), sourceSync=frame.get('sourceSync'),
+                      binDirectory=environment.get('binDirectory'),
+                      compatible=environment.get('pdftexProvenanceCompatible'),
+                      bundledPdftex=environment.get('pdftexProvenanceEngine'))
                 rows=frame['regionRows']; fields=frame['regionFields']
                 regions=[dict(zip(fields,r)) for r in rows]
                 (ROOT/'.work/pdftex-regions.json').write_text(json.dumps(regions,indent=2))

@@ -49,6 +49,10 @@ jobs:
       - run: echo "$HOME/texastra-texlive-2021/bin/universal-darwin" >> "$GITHUB_PATH"
       - run: python3 -m pip install pymupdf==1.26.7
       - run: npm test
+      - name: Report pdfTeX versions
+        run: |
+          pdflatex --version
+          native/runtime/texastra-pdftex --version
       - run: python3 scripts/check_pdftex.py
       - run: python3 scripts/check_pdftex_state.py
       - run: python3 scripts/package_extension.py --target ${{ matrix.target }}
