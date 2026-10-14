@@ -7,6 +7,7 @@ namespace bako {
 // generated session. Source prefix checks are independent of rendered pages.
 class PdfTeXState {
     fs::path directory;
+    SocketDirectory socket_directory;
     std::set<pid_t> groups;
     std::map<fs::path,Json> dependencies;
     std::set<fs::path> outputs;
@@ -91,7 +92,8 @@ public:
             Fd dir(open(directory.c_str(),O_DIRECTORY|O_RDONLY|O_CLOEXEC));
             Fd socket(unix_socket(false));sockaddr_un address={};address.sun_family=AF_UNIX;
             auto name=it->first.filename();name.replace_extension(".sock");
-            auto path="/proc/self/fd/"+std::to_string(dir.value)+"/"+name.string();
+            if(dir.value<0)return -1;
+            auto path=socket_directory.path(directory,dir.value,name.string());
             if(path.size()>=sizeof(address.sun_path))return -1;
             strcpy(address.sun_path,path.c_str());
             if(connect(socket.value,reinterpret_cast<sockaddr*>(&address),sizeof(address)))continue;

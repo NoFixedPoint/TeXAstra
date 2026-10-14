@@ -33,15 +33,12 @@ Type in the source editor to update the document. Click rendered text to jump to
 
 Optional: set `texastra.mainFile` for a project with multiple roots, or run **TeXAstra: Show LaTeX Environment** to check your installation. TeX Live supplies packages and fonts; MiKTeX is not supported.
 
-`texastra.compiler` defaults to `auto`: it follows the root file's
-`% !TEX program = pdflatex` comment, then its saved `.log` compiler header,
-and otherwise uses LuaLaTeX. You can explicitly select `pdflatex`, `xelatex`,
-or `lualatex`; reopen the document after changing this setting. Linux/WSL uses the provenance-enabled pdfTeX when the selected installation
-matches its 1.40.22 version, providing character navigation and retained compiler
-updates. Other PDFLaTeX versions/platforms and XeLaTeX use full compilation with
-SyncTeX source-line navigation. LuaLaTeX provides incremental updates and
-token-level navigation. Rendering
-depends on the selected TeX distribution's packages and fonts.
+`texastra.compiler` defaults to `auto`, following the root's `% !TEX program`
+comment or saved `.log`, then falling back to LuaLaTeX. PDFLaTeX supports
+**character-level source sync and retained compiler updates** with matching
+pdfTeX 1.40.22; other versions and XeLaTeX use SyncTeX line navigation.
+LuaLaTeX provides incremental updates and token-level navigation. Reopen the
+document after changing the compiler setting.
 
 [Build & test](BUILDING.md) · [Release notes](https://github.com/NoFixedPoint/TeXAstra/releases) · [Security](SECURITY.md)
 

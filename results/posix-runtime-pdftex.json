@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "compiler": "pdflatex",
+  "checks": [
+    "long nested path",
+    "included file checkpoint",
+    "fresh compile equality",
+    "syntax error recovery",
+    "source preservation",
+    "forward character navigation",
+    "reverse character navigation",
+    "retained error recovery"
+  ]
+}

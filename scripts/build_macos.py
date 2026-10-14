@@ -43,6 +43,7 @@ def main():
     build.mkdir(parents=True, exist_ok=True)
     runtime.mkdir(parents=True, exist_ok=True)
     run([sys.executable, ROOT/'scripts/build_engine.py', '--runtime', runtime])
+    run([sys.executable, ROOT/'scripts/build_pdftex.py', '--runtime', runtime])
     header = fetch('https://cdn.jsdelivr.net/gh/nlohmann/json@v3.12.0/single_include/nlohmann/json.hpp',
                    build/'json.hpp', 'aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63')
     mupdf = fetch('https://www.mupdf.com/downloads/archive/mupdf-1.26.12-source.tar.gz',
@@ -80,7 +81,7 @@ def main():
     pymupdf = fetch('https://files.pythonhosted.org/packages/48/d6/09b28f027b510838559f7748807192149c419b30cb90e6d5f0cf916dc9dc/pymupdf-1.26.7.tar.gz',
                     build/'pymupdf-1.26.7.tar.gz', '71add8bdc8eb1aaa207c69a13400693f06ad9b927bea976f5d5ab9df0bb489c3')
     for source in [mupdf, pymupdf, deflate, header, *[runtime/n for n in ARCHIVES],
-                   runtime/'LuaHBTeX-COPYING', *sorted((ROOT/'licenses').glob('*.txt'))]:
+                   runtime/'LuaHBTeX-COPYING', runtime/'pdfTeX-COPYING', *sorted((ROOT/'licenses').glob('*.txt'))]:
         shutil.copyfile(source, sources/source.name)
     shutil.copyfile(ROOT/'licenses/AGPL-3.0.txt', sources/'MuPDF-COPYING')
     (sources/'pymupdf-macos.sha256').write_text(digest+'\n')

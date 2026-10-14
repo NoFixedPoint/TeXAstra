@@ -1,4 +1,4 @@
-/* Linux process snapshots of actual pdfTeX, including its PDF/zlib/font state.
+/* POSIX process snapshots of actual pdfTeX, including its PDF/zlib/font state.
  * Only generated session outputs are writable. Each snapshot owns immutable
  * copies of output prefixes; file descriptions are reopened in the resumed
  * process, and TeX input buffering is discarded at its saved logical offset.
@@ -17,6 +17,27 @@ static int ta_state_enabled, ta_serial, ta_last_page=-1, ta_last_line=-1, ta_las
 static pid_t ta_owner;
 static char ta_session[PATH_MAX], ta_main[PATH_MAX];
 static int ta_frontier[2147];
+
+static int ta_fd_path(int fd,char *path) {
+#ifdef __APPLE__
+    return fcntl(fd,F_GETPATH,path);
+#else
+    char link[64];snprintf(link,sizeof(link),"/proc/self/fd/%d",fd);
+    ssize_t n=readlink(link,path,PATH_MAX-1);if(n<0)return -1;
+    path[n]=0;return 0;
+#endif
+}
+static int ta_prefix_fd(void) {
+#ifdef __APPLE__
+    /* An unlinked session-local file has the same fork lifetime as a memfd. */
+    char name[]="pdftex-prefix-XXXXXX";
+    int fd=mkstemp(name);
+    if(fd>=0){unlink(name);fcntl(fd,F_SETFD,FD_CLOEXEC);}
+    return fd;
+#else
+    return memfd_create("texastra-pdftex-prefix",MFD_CLOEXEC);
+#endif
+}
 
 static uint64_t ta_hash(const unsigned char *p,size_t n) {
     uint64_t h=UINT64_C(14695981039346656037);
@@ -53,8 +74,7 @@ static void ta_read_frontiers(void) {
 }
 static void ta_read_register(int n) {
     if(!ta_state_enabled||n<0||n>=16||readopen[n]==2)return;
-    char link[64],path[PATH_MAX];snprintf(link,sizeof(link),"/proc/self/fd/%d",fileno(readfile[n]));
-    ssize_t length=readlink(link,path,sizeof(path)-1);if(length<0)return;path[length]=0;
+    char path[PATH_MAX];if(ta_fd_path(fileno(readfile[n]),path))return;
     /* \read streams have a separate input path. Conservatively invalidate on
      * any change to that file instead of pretending a scanner frontier exists. */
     for(int i=0;i<ta_count;++i)if(!strcmp(path,ta_files[i].path))ta_frontier[i]=ta_files[i].size;
@@ -85,29 +105,42 @@ static void ta_checkpoint(void) {
     off_t positions[1024];
     if(inopen>=1024)return;
     for(int i=1;i<=inopen;++i)positions[i]=fullsourcefilenamestack[i]&&inputfile[i]?ftello(inputfile[i]):-1;
+#ifdef __APPLE__
+    /* Include high-numbered descriptors; never silently omit compiler files. */
+    int limit=getdtablesize();
+    for(int fd=3;fd<limit;++fd){
+        struct stat st;
+        if(fstat(fd,&st)||!S_ISREG(st.st_mode))continue;
+#else
     DIR *dir=opendir("/proc/self/fd");if(!dir)return;
     struct dirent *entry;
     while((entry=readdir(dir))){
         int fd=atoi(entry->d_name);struct stat st;
         if(fd<3||fd==dirfd(dir)||fstat(fd,&st)||!S_ISREG(st.st_mode))continue;
+#endif
         /* Prefix memfds belong to this capture, not the engine. */
         int own=0;for(int i=0;i<n;++i)if(fds[i].copy==fd)own=1;if(own)continue;
         if(n==256){unsupported=1;break;}
         struct ta_fd *f=&fds[n];memset(f,0,sizeof(*f));f->copy=-1;
-        char link[64];snprintf(link,sizeof(link),"/proc/self/fd/%d",fd);
-        ssize_t len=readlink(link,f->path,sizeof(f->path)-1);if(len<0){unsupported=1;break;}
-        f->path[len]=0;f->fd=fd;f->flags=fcntl(fd,F_GETFL);f->pos=lseek(fd,0,SEEK_CUR);f->size=st.st_size;
-        if(f->pos<0){unsupported=1;break;}
+        if(ta_fd_path(fd,f->path)){unsupported=1;break;}
+        f->fd=fd;f->flags=fcntl(fd,F_GETFL);f->pos=lseek(fd,0,SEEK_CUR);f->size=st.st_size;
+        if(f->pos<0||f->flags<0){unsupported=1;break;}
         if((f->flags&O_ACCMODE)!=O_RDONLY){
             if(strncmp(f->path,ta_session,strlen(ta_session))||f->path[strlen(ta_session)]!='/'){unsupported=1;break;}
-            f->copy=memfd_create("texastra-pdftex-prefix",MFD_CLOEXEC);
-            int readable=open(link,O_RDONLY);
+            f->copy=ta_prefix_fd();
+            int readable=open(f->path,O_RDONLY);
+            struct stat reopened;
+            if(readable>=0&&(fstat(readable,&reopened)||reopened.st_dev!=st.st_dev||reopened.st_ino!=st.st_ino)){
+                close(readable);readable=-1;
+            }
             if(f->copy<0||readable<0||ta_copy(readable,f->copy,f->size))unsupported=1;
             if(readable>=0)close(readable);
         }
         ++n;if(unsupported)break;
     }
+#ifndef __APPLE__
     closedir(dir);
+#endif
     /* An output can have been closed before the checkpoint and overwritten
      * later (including an include-file .aux). Its checkpoint bytes also belong
      * to the retained state, even though it has no live descriptor. */
@@ -123,7 +156,7 @@ static void ta_checkpoint(void) {
             if(saved)continue;
             if(n==256||strncmp(path,ta_session,strlen(ta_session))||path[strlen(ta_session)]!='/'){unsupported=1;break;}
             struct ta_fd *f=&fds[n++];memset(f,0,sizeof(*f));f->fd=-1;f->flags=O_RDWR;strcpy(f->path,path);
-            f->copy=memfd_create("texastra-pdftex-prefix",MFD_CLOEXEC);
+            f->copy=ta_prefix_fd();
             int in=open(path,O_RDONLY);struct stat st;
             if(in<0||fstat(in,&st)||f->copy<0){unsupported=1;}
             else {f->size=st.st_size;if(ta_copy(in,f->copy,f->size))unsupported=1;}
@@ -137,7 +170,8 @@ static void ta_checkpoint(void) {
     snprintf(sock,sizeof(sock),"pdftex-cp-%06d.sock",serial);
     snprintf(meta,sizeof(meta),"pdftex-cp-%06d.json",serial);
     snprintf(temporary,sizeof(temporary),"%s.new",meta);
-    int server=socket(AF_UNIX,SOCK_STREAM|SOCK_CLOEXEC,0);
+    int server=socket(AF_UNIX,SOCK_STREAM,0);
+    if(server>=0)fcntl(server,F_SETFD,FD_CLOEXEC);
     struct sockaddr_un addr={.sun_family=AF_UNIX};strcpy(addr.sun_path,sock);unlink(sock);
     if(server<0||bind(server,(struct sockaddr*)&addr,sizeof(addr))||listen(server,2)){
         if(server>=0)close(server);ta_close_copies(fds,n);return;
@@ -165,7 +199,8 @@ static void ta_checkpoint(void) {
         if(kill(ta_owner,0)&&errno==ESRCH)_exit(0);
         struct pollfd poller={server,POLLIN,0};
         if(poll(&poller,1,1000)<=0)continue;
-        int client=accept4(server,NULL,NULL,SOCK_CLOEXEC);if(client<0)continue;
+        int client=accept(server,NULL,NULL);if(client<0)continue;
+        fcntl(client,F_SETFD,FD_CLOEXEC);
         char command; if(recv(client,&command,1,0)!=1||command!='R'){close(client);continue;}
         pid_t worker=fork();
         if(worker!=0){dprintf(client,"%d\n",worker);close(client);continue;}

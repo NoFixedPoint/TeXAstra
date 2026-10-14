@@ -37,6 +37,8 @@ jobs:
       - run: echo "$HOME/texastra-texlive-2021/bin/universal-darwin" >> "$GITHUB_PATH"
       - run: python3 -m pip install pymupdf==1.26.7
       - run: npm test
+      - run: python3 scripts/check_pdftex.py
+      - run: python3 scripts/check_pdftex_state.py
       - run: python3 scripts/package_extension.py --target ${{ matrix.target }}
       - run: python3 scripts/check_release_packages.py --target ${{ matrix.target }}
       - run: python3 scripts/release_macos.py
@@ -53,6 +55,7 @@ jobs:
           path: |
             results/*.json
             ~/.cache/texastra-engine-*/build/*.log
+            ~/.cache/texastra-pdftex-*/build/*.log
       - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
         if: always() && steps.engine-cache.outputs.cache-hit != 'true'
         with:

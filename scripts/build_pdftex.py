@@ -3,7 +3,7 @@
 Uses the same checksum-pinned, security-patched TeX Live source as build_engine.
 The separate build directory does not disturb the LuaHBTeX runtime.
 """
-import argparse, hashlib, json, os, shutil, subprocess, sys
+import argparse, hashlib, json, os, platform, shutil, subprocess, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -16,20 +16,37 @@ def main():
             return subprocess.check_output(['wsl','-d','Ubuntu-22.04','--exec','wslpath','-a',str(p.resolve())],text=True).strip()
         subprocess.run(['wsl','-d','Ubuntu-22.04','--exec','python3',linux(Path(__file__)),'--runtime',linux(args.runtime)],check=True)
         return
-    if sys.platform != 'linux':
-        raise SystemExit('This pdfTeX retained-state build currently requires Linux/WSL')
+    if sys.platform not in ('linux', 'darwin'):
+        raise SystemExit('This pdfTeX retained-state build requires Linux/WSL or macOS')
+    mac = sys.platform == 'darwin'
+    if mac:
+        os.environ.setdefault('MACOSX_DEPLOYMENT_TARGET', '15.0')
+        os.environ.setdefault('CFLAGS', '-O2 -Wno-error=implicit-function-declaration -Wno-error=incompatible-function-pointer-types')
+        os.environ.setdefault('CXXFLAGS', '-O2')
     subprocess.run([sys.executable,str(ROOT/'scripts/build_engine.py'),'--source-only'],check=True)
-    cache = Path.home()/'.cache/texastra-pdftex'
-    source = Path.home()/'.cache/texastra-engine/source'
+    suffix = '-'+platform.machine() if mac else ''
+    cache = Path.home()/('.cache/texastra-pdftex'+suffix)
+    source = Path.home()/('.cache/texastra-engine'+suffix)/'source'
     build = cache/'build'
     build.mkdir(parents=True,exist_ok=True)
     sys.path.insert(0,str(ROOT/'scripts'))
     from build_engine import FLAGS
     flags = [f for f in FLAGS if 'luahbtex' not in f and 'pdftex' not in f]
     flags += ['--disable-luahbtex','--enable-pdftex']
+    if mac:
+        flags = [f for f in flags if not f.startswith('--with-system-')]
+        flags += ['--without-x','--with-system-zlib','--disable-pmp','--disable-upmp','--disable-mflua','--disable-web-progs']
     signature = '\n'.join(flags)
+    if mac:
+        signature += '\n'+os.environ['MACOSX_DEPLOYMENT_TARGET']
+        signature += '\n'+os.environ['CFLAGS']+'\n'+os.environ['CXXFLAGS']
     marker = build/'.configure-flags'
     if not marker.exists() or marker.read_text()!=signature:
+        if mac and marker.exists():
+            if build.resolve().parent != cache.resolve():
+                raise RuntimeError('Unexpected pdfTeX build directory')
+            shutil.rmtree(build)
+            build.mkdir()
         with (build/'configure.log').open('w') as log:
             subprocess.run([str(source/'configure'),*flags],cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
         marker.write_text(signature)
@@ -39,10 +56,11 @@ def main():
         # Restore the generated baseline before make, including after a failed
         # patch build. The oracle must never accidentally contain our hooks.
         web=build/'texk/web2c';pristine=cache/'generated'
-        if (pristine/'pdftex0.c').exists():
+        if (pristine/'pdftex0.c').exists() and (web/'pdftex0.c').exists():
             for name in ['pdftex0.c','pdftexini.c']:
                 shutil.copyfile(pristine/name,web/name)
-        for target in [['all-local'],['-C','texk/kpathsea'],['-C','texk/ptexenc'],['-C','libs'],['-C','texk','all-local'],['-C','texk/web2c','pdftex']]:
+        subdirs = ['CONF_SUBDIRS=libpng xpdf','MAKE_SUBDIRS=libpng xpdf'] if mac else []
+        for target in [['all-local'],['-C','texk/kpathsea'],['-C','texk/ptexenc'],['-C','libs',*subdirs],['-C','texk','all-local'],['-C','texk/web2c','pdftex']]:
             subprocess.run(['make',jobs,*target],cwd=build,stdout=log,stderr=subprocess.STDOUT,check=True)
         web = build/'texk/web2c'
         pristine = cache/'generated'
@@ -62,11 +80,16 @@ def main():
         subprocess.run(['make',jobs,'pdftex'],cwd=web,stdout=log,stderr=subprocess.STDOUT,check=True)
     temporary=runtime/'texastra-pdftex.new'
     shutil.copyfile(web/'pdftex',temporary);temporary.chmod(0o755)
-    subprocess.run(['strip','--strip-debug',str(temporary)],check=True)
+    subprocess.run(['strip','-S' if mac else '--strip-debug',str(temporary)],check=True)
+    if mac:
+        subprocess.run(['codesign','--force','--sign','-',str(temporary)],check=True)
     os.replace(temporary,runtime/'texastra-pdftex')
     shutil.copyfile(source/'texk/web2c/pdftexdir/COPYINGv2',runtime/'pdfTeX-COPYING')
     from build_engine import ARCHIVES
-    report={'upstream':ARCHIVES,'patches':{},'engineSha256':hashlib.sha256((runtime/'texastra-pdftex').read_bytes()).hexdigest()}
+    report={'upstream':ARCHIVES,'platform':sys.platform,'architecture':platform.machine(),
+            'patches':{},'engineSha256':hashlib.sha256((runtime/'texastra-pdftex').read_bytes()).hexdigest()}
+    if mac:
+        report['minimumMacOS'] = os.environ['MACOSX_DEPLOYMENT_TARGET']
     for name in ['engine/pdftex_patch.py','engine/pdftex_provenance.c','engine/pdftex_state.c','scripts/build_pdftex.py']:
         report['patches'][name]=hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
     (runtime/'pdftex-build.json').write_text(json.dumps(report,indent=2)+'\n')

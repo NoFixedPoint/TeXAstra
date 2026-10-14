@@ -101,6 +101,14 @@ def main():
             if platform.startswith('darwin-'):
                 from check_posix_runtime import check
                 checks.append(check(runtime, extension/'texastra'))
+                assert (runtime/'texastra-pdftex').is_file(), 'Missing bundled pdfTeX'
+                assert (runtime/'pdfTeX-COPYING').is_file(), 'Missing pdfTeX license'
+                pdftex = json.loads((runtime/'pdftex-build.json').read_text())
+                assert pdftex['engineSha256'] == hashlib.sha256((runtime/'texastra-pdftex').read_bytes()).hexdigest()
+                with zipfile.ZipFile(artifact.parent/source_archive['file']) as sources:
+                    assert 'texastra/engine/pdftex_state.c' in sources.namelist()
+                    assert 'upstream/pdfTeX-COPYING' in sources.namelist()
+                checks.append(check(runtime, extension/'texastra', 'pdflatex'))
             report['packages'].append({'platform': platform,
                 'sourceArchive': source_archive, 'sizeBytes': artifact.stat().st_size,
                 'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest(), 'checks': checks})

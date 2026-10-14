@@ -32,7 +32,7 @@ python3 scripts/build_macos.py
 python3 scripts/check_macos.py
 ```
 
-The build compiles the engine, controller, renderer dependencies, and checkpoint
+The build compiles LuaHBTeX and pdfTeX, the controller, renderer dependencies, and checkpoint
 bridge, prepares the matching source kit, and ad-hoc signs the native binaries.
 `check_macos.py` audits architecture, signatures, and dynamic-library dependencies.
 
@@ -65,6 +65,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install pymupdf==1.26.7
 npm test
+python3 scripts/check_pdftex.py
+python3 scripts/check_pdftex_state.py
 # Apple Silicon; on Intel replace darwin-arm64 with darwin-x64.
 python3 scripts/package_extension.py --target darwin-arm64
 python3 scripts/check_release_packages.py --target darwin-arm64
@@ -76,6 +78,12 @@ TikZ, figure and table edits against fresh compilation, the legacy-encoding
 regression, long paths, included-file checkpoints, error recovery, and unchanged
 source files. `artifacts/darwin-arm64/` (or `artifacts/darwin-x64/`) contains the
 VSIX, matching source ZIP, a `validation/` directory of reports, and SHA-256 checksums.
+
+PDFLaTeX checks cover character navigation, retained edits, rollback and reference
+convergence against stock PDFLaTeX pixels. The extracted-package check also
+exercises PDFLaTeX navigation and retained included-file edits under long paths.
+The bundled pdfTeX 1.40.22 is enabled only when the selected distribution's
+pdfTeX version matches; other versions use the existing full-build SyncTeX path.
 
 The GitHub Actions matrix builds natively on `macos-15` (ARM64) and
 `macos-15-intel` (Intel), with release preparation gated on both jobs passing. The minimum

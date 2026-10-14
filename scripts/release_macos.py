@@ -26,7 +26,8 @@ def main():
     validation = output/'validation'
     validation.mkdir(exist_ok=True)
     shutil.copyfile(ROOT/'native/runtime/macos-build.json', validation/'macos-build.json')
-    for name in ['macos-runtime.json', f'release-packages-{target}.json', f'package-{version}-{target}.json']:
+    shutil.copyfile(ROOT/'native/runtime/pdftex-build.json', validation/'pdftex-build.json')
+    for name in ['macos-runtime.json', 'pdftex.json', 'pdftex-state.json', f'release-packages-{target}.json', f'package-{version}-{target}.json']:
         shutil.copyfile(ROOT/'results'/name, validation/name)
     sums = ''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in [vsix, source_zip])
     (output/('SHA256SUMS-'+target)).write_text(sums)
