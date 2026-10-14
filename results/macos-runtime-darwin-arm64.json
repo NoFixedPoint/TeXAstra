@@ -15,6 +15,11 @@
       "/usr/lib/libc++.1.dylib",
       "/usr/lib/libSystem.B.dylib"
     ],
+    "texastra-pdftex": [
+      "/usr/lib/libz.1.dylib",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib"
+    ],
     "bako_snapshot.so": [
       "/usr/lib/libSystem.B.dylib"
     ],
@@ -23,5 +28,6 @@
       "/usr/lib/libSystem.B.dylib",
       "/usr/lib/libc++.1.dylib"
     ]
-  }
+  },
+  "pdftexSha256": "827cad97ce89d1fdc3db3576390aeb51d0b2f57e5b2aeb999c2d404c6bf2364c"
 }

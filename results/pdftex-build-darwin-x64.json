@@ -1,0 +1,16 @@
+{
+  "upstream": {
+    "texlive-bin_2021.20210626.59705.orig.tar.xz": "d9f08f7c6c1d87b3bf664ef3adaed1518b772aaad803aac5fe16f753a897be78",
+    "texlive-bin_2021.20210626.59705-1ubuntu0.3.debian.tar.xz": "5f7c6849e9d6016c7d8932ae1a0dd37fcd91df942d90c01ee11e42f54b71616a"
+  },
+  "platform": "darwin",
+  "architecture": "x86_64",
+  "patches": {
+    "engine/pdftex_patch.py": "7ae073282603af8ae6b0674f36d186e3d8af11f5e1b75c964a1b218876f56637",
+    "engine/pdftex_provenance.c": "c4169a4f7d3b6b3188d80003e7a5ad26bdaca98f73e549164206e67dadfb59cc",
+    "engine/pdftex_state.c": "4c6e708f60e448df61600e9775099140016c538848d87a4d5664d20b4057e43d",
+    "scripts/build_pdftex.py": "732bd9c707df029029871895fb954bde0a0a7c970515097e07a85f22b8795b99"
+  },
+  "engineSha256": "2794e5d10303e17fb12607cef31783301b59f6088d6a0a0f832ba01d0535708f",
+  "minimumMacOS": "15.0"
+}

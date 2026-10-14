@@ -1,19 +1,19 @@
 {
   "version": "0.1.5",
-  "sha256": "958bfa11211c9208021cb57f1bfea83af926f8dc7201003f3a3c936a72bbe4ab",
-  "sizeBytes": 28195719,
+  "sha256": "47fbf8e8f2abf6c1a1c8d24b493dbdb7cc7444d603ba927c4aa19b9eaf876439",
+  "sizeBytes": 28209025,
   "sourceArchive": {
     "version": "0.1.5",
     "target": "wsl",
     "file": "texastra-0.1.5-wsl-sources.zip",
-    "sha256": "e289c32e8a6418dd6b5e33f0891a4719113cda31d35195ff7018a10acfb9e99d",
-    "sizeBytes": 175658689,
+    "sha256": "27ed6adfec7772adb9dcd44905ac19002ceb62f032669611c3c288a8a3c0bc81",
+    "sizeBytes": 175675524,
     "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-wsl-sources.zip"
   },
   "target": "wsl",
   "defaultRuntimeMode": "wsl",
-  "verifiedPackagedFiles": 163,
-  "runtimeSha256": "5b21d73cc9e0dc809d62a967985820fed396c1ee16106823324e61deaeab2be9",
+  "verifiedPackagedFiles": 167,
+  "runtimeSha256": "16d4234b4c600c13dae5e003878bfea476640cf87b322ceddeb5ab073676c9cb",
   "compilerSha256": "586685e9b759f08e01e0551c94d8c4b3c9d50143c5421047152d55749a22a464",
-  "pdftexSha256": "2ffc0ab67ed6ab2f799151f88690f5ac730dc0275ce2362bc17060c5994e98e2"
+  "pdftexSha256": "a3a96eca9a7069bcc2fb20b71acfa8cde9918a6e86fce4cb3fadc7476a84a262"
 }

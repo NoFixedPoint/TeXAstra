@@ -1,0 +1,150 @@
+{
+  "checks": [
+    {
+      "name": "cold state created",
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "closed-output edit resumes",
+      "ok": true,
+      "state": {
+        "checkpoint": 10,
+        "prefixPages": 1,
+        "restored": true
+      },
+      "error": null
+    },
+    {
+      "name": "closed output restored to checkpoint contents",
+      "ok": true
+    },
+    {
+      "name": "closed output rollback page count",
+      "ok": true
+    },
+    {
+      "name": "closed output rollback exact pixels 1",
+      "ok": true
+    },
+    {
+      "name": "closed output rollback exact pixels 2",
+      "ok": true
+    },
+    {
+      "name": "closed output rollback exact pixels 3",
+      "ok": true
+    },
+    {
+      "name": "compile error reported",
+      "ok": true
+    },
+    {
+      "name": "recover from failed retained update",
+      "ok": true,
+      "state": {
+        "checkpoint": 9,
+        "prefixPages": 0,
+        "restored": true
+      },
+      "error": null
+    },
+    {
+      "name": "error recovery page count",
+      "ok": true
+    },
+    {
+      "name": "error recovery exact pixels 1",
+      "ok": true
+    },
+    {
+      "name": "error recovery exact pixels 2",
+      "ok": true
+    },
+    {
+      "name": "error recovery exact pixels 3",
+      "ok": true
+    },
+    {
+      "name": "read-ahead definition invalidates later states",
+      "ok": true,
+      "state": {
+        "checkpoint": 7,
+        "prefixPages": 0,
+        "restored": true
+      }
+    },
+    {
+      "name": "captured definition updated",
+      "ok": true
+    },
+    {
+      "name": "read frontier page count",
+      "ok": true
+    },
+    {
+      "name": "read frontier exact pixels 1",
+      "ok": true
+    },
+    {
+      "name": "read frontier exact pixels 2",
+      "ok": true
+    },
+    {
+      "name": "read frontier exact pixels 3",
+      "ok": true
+    },
+    {
+      "name": "reference-changing edit converges",
+      "ok": true,
+      "passes": 2,
+      "pages": 4,
+      "state": {
+        "checkpoint": 10,
+        "prefixPages": 1,
+        "restored": true
+      },
+      "provisional": false,
+      "error": null,
+      "text": "First page. See page 4.1"
+    },
+    {
+      "name": "reference updated in retained prefix",
+      "ok": true
+    },
+    {
+      "name": "cross-reference convergence page count",
+      "ok": true
+    },
+    {
+      "name": "cross-reference convergence exact pixels 1",
+      "ok": true
+    },
+    {
+      "name": "cross-reference convergence exact pixels 2",
+      "ok": true
+    },
+    {
+      "name": "cross-reference convergence exact pixels 3",
+      "ok": true
+    },
+    {
+      "name": "cross-reference convergence exact pixels 4",
+      "ok": true
+    },
+    {
+      "name": "read-register fixture compiles",
+      "ok": true
+    },
+    {
+      "name": "read-register edits invalidate consumed input",
+      "ok": true,
+      "state": {
+        "checkpoint": 4,
+        "prefixPages": 0,
+        "restored": true
+      },
+      "error": null
+    }
+  ]
+}

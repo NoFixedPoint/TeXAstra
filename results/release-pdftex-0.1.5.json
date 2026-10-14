@@ -1,182 +1,166 @@
 {
-  "checks": [
+  "version": "0.1.5",
+  "releaseUrl": "https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.5",
+  "releaseTextUnchanged": true,
+  "releaseMetadataUnchanged": true,
+  "releaseBodySha256": "6d6dcdb31b9092812eb0065ef75923f7709a910935a5cc1eb3b887c61391d2be",
+  "assetNamesUnchanged": true,
+  "assets": [
     {
-      "name": "real pdfTeX provenance enabled",
-      "ok": true,
-      "error": null
+      "name": "SHA256SUMS",
+      "sha256": "0524f0ebcdb3f45275a55aa6b98c96505364d826a732d941f2ee0b3c71b95368",
+      "sizeBytes": 650
     },
     {
-      "name": "Zebra source characters",
-      "ok": true
+      "name": "SHA256SUMS-darwin-arm64",
+      "sha256": "78c38ae7ba1d2a2426802f8aff478cd2a163841c91aa17a2880e7c7977966f96",
+      "sizeBytes": 194
     },
     {
-      "name": "Quokka source characters",
-      "ok": true
+      "name": "SHA256SUMS-darwin-x64",
+      "sha256": "f20b39004c9855ce885f9449bcbea37330bd430ae105125019fff9ef05736203",
+      "sizeBytes": 190
     },
     {
-      "name": "Lion source characters",
-      "ok": true
+      "name": "texastra-darwin-arm64-sources.zip",
+      "sha256": "dea46c549380f3fab3cff6a602ffaf01ee9d806097a51bee103553fa1c9e2dfe",
+      "sizeBytes": 267078146
     },
     {
-      "name": "Tiger source characters",
-      "ok": true
+      "name": "texastra-darwin-x64-sources.zip",
+      "sha256": "2dd3c6170d4136e2a599efed349e774a79639953ead8a4f70389ac1b4ffc76fd",
+      "sizeBytes": 267078148
     },
     {
-      "name": "Walrus source characters",
-      "ok": true
+      "name": "texastra-macos-arm64.vsix",
+      "sha256": "257eed6e15639e314a3c1c6baa939802079f249dc550cbf9a453b8fbed7db029",
+      "sizeBytes": 23097980
     },
     {
-      "name": "Rabbit source characters",
-      "ok": true
+      "name": "texastra-macos-x64.vsix",
+      "sha256": "cda324b0354e57e5b73332f050c82e3d4f121ad589084b023a57b5d64b554882",
+      "sizeBytes": 24110233
     },
     {
-      "name": "Otter source characters",
-      "ok": true
+      "name": "texastra-sources.zip",
+      "sha256": "0a586d192c7214e92262a38344ea2257a032ce4964ab1c794c9e60e939159bbc",
+      "sizeBytes": 355729908
     },
     {
-      "name": "ligature carries complete source span",
-      "ok": true
+      "name": "texastra-windows-x64.vsix",
+      "sha256": "42f21998b68f828d48ca5e4ed45a828238d08b305e42ed5d63b3783812f0266a",
+      "sizeBytes": 17953903
     },
     {
-      "name": "included file has character origins",
-      "ok": true
-    },
-    {
-      "name": "explicit rule retains command origin",
-      "ok": true
-    },
-    {
-      "name": "forward selects the second repeated word character",
-      "ok": true
-    },
-    {
-      "name": "reverse returns that same character",
-      "ok": true
-    },
-    {
-      "name": "math x origin",
-      "ok": true
-    },
-    {
-      "name": "math y origin",
-      "ok": true
-    },
-    {
-      "name": "math a origin",
-      "ok": true
-    },
-    {
-      "name": "math b origin",
-      "ok": true
-    },
-    {
-      "name": "copied math field c origin",
-      "ok": true
-    },
-    {
-      "name": "copied math field d origin",
-      "ok": true
-    },
-    {
-      "name": "copied math field w origin",
-      "ok": true
-    },
-    {
-      "name": "copied math field v origin",
-      "ok": true
-    },
-    {
-      "name": "stock pdfTeX page count",
-      "ok": true
-    },
-    {
-      "name": "stock pdfTeX identical pixels page 1",
-      "ok": true
-    },
-    {
-      "name": "stock pdfTeX identical pixels page 2",
-      "ok": true
-    },
-    {
-      "name": "late edit succeeds",
-      "ok": true,
-      "error": null
-    },
-    {
-      "name": "late edit checkpoint decision",
-      "ok": true,
-      "state": {
-        "checkpoint": 17,
-        "prefixPages": 0,
-        "restored": true
-      },
-      "compileMs": 62.910895
-    },
-    {
-      "name": "late edit page count",
-      "ok": true
-    },
-    {
-      "name": "late edit identical pixels page 1",
-      "ok": true
-    },
-    {
-      "name": "late edit identical pixels page 2",
-      "ok": true
-    },
-    {
-      "name": "earlier edit after late edit succeeds",
-      "ok": true,
-      "error": null
-    },
-    {
-      "name": "earlier edit after late edit checkpoint decision",
-      "ok": true,
-      "state": {
-        "checkpoint": 7,
-        "prefixPages": 0,
-        "restored": true
-      },
-      "compileMs": 83.864893
-    },
-    {
-      "name": "earlier edit after late edit page count",
-      "ok": true
-    },
-    {
-      "name": "earlier edit after late edit identical pixels page 1",
-      "ok": true
-    },
-    {
-      "name": "earlier edit after late edit identical pixels page 2",
-      "ok": true
-    },
-    {
-      "name": "preamble edit succeeds",
-      "ok": true,
-      "error": null
-    },
-    {
-      "name": "preamble edit checkpoint decision",
-      "ok": true,
-      "state": {
-        "checkpoint": 0,
-        "prefixPages": 0,
-        "restored": false
-      },
-      "compileMs": 287.822478
-    },
-    {
-      "name": "preamble edit page count",
-      "ok": true
-    },
-    {
-      "name": "preamble edit identical pixels page 1",
-      "ok": true
-    },
-    {
-      "name": "preamble edit identical pixels page 2",
-      "ok": true
+      "name": "texastra-wsl.vsix",
+      "sha256": "c00b54cceeab6935c433a568c762a17471d6a5151de8a37ed297d4cd6dbdb2f8",
+      "sizeBytes": 27701329
     }
+  ],
+  "macOSValidationRun": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/38497107259",
+  "verifiedAt": "2026-10-14T02:14:51.692543+00:00",
+  "remoteChecksumFilesMatch": true,
+  "codeCommit": "0305f54de5cccc44eb93a7fdf17168110fc397ff",
+  "readmeBlob": "cb01ebf2ef6ad0cd0e32dd88057cb8cf4072df0a",
+  "mainBranchChecks": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/38498684779",
+  "collection": {
+    "version": "0.1.5",
+    "packages": [
+      {
+        "file": "texastra-wsl.vsix",
+        "sizeBytes": 27701329,
+        "sha256": "c00b54cceeab6935c433a568c762a17471d6a5151de8a37ed297d4cd6dbdb2f8",
+        "testedVsixSha256": "47fbf8e8f2abf6c1a1c8d24b493dbdb7cc7444d603ba927c4aa19b9eaf876439",
+        "onlySourceReferencesChanged": true,
+        "sourceArchive": {
+          "version": "0.1.5",
+          "target": "wsl",
+          "file": "texastra-sources.zip",
+          "sha256": "0a586d192c7214e92262a38344ea2257a032ce4964ab1c794c9e60e939159bbc",
+          "sizeBytes": 355729908,
+          "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-sources.zip",
+          "prefix": "wsl/"
+        }
+      },
+      {
+        "file": "texastra-windows-x64.vsix",
+        "sizeBytes": 17953903,
+        "sha256": "42f21998b68f828d48ca5e4ed45a828238d08b305e42ed5d63b3783812f0266a",
+        "testedVsixSha256": "5d9dc8d2eeea2bebfbc6b472dcbc5e2caaf48b4b408688be9f29467991f95954",
+        "onlySourceReferencesChanged": true,
+        "sourceArchive": {
+          "version": "0.1.5",
+          "target": "win32-x64",
+          "file": "texastra-sources.zip",
+          "sha256": "0a586d192c7214e92262a38344ea2257a032ce4964ab1c794c9e60e939159bbc",
+          "sizeBytes": 355729908,
+          "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-sources.zip",
+          "prefix": "win32-x64/"
+        }
+      },
+      {
+        "file": "texastra-macos-arm64.vsix",
+        "sizeBytes": 23097980,
+        "sha256": "257eed6e15639e314a3c1c6baa939802079f249dc550cbf9a453b8fbed7db029",
+        "testedVsixSha256": "9b84b2fcde0426f93fb3b695a9acb286fbc43a1060b2f097d02d15494bb28f3a",
+        "onlySourceReferencesChanged": true,
+        "sourceArchive": {
+          "version": "0.1.5",
+          "target": "darwin-arm64",
+          "file": "texastra-darwin-arm64-sources.zip",
+          "sha256": "dea46c549380f3fab3cff6a602ffaf01ee9d806097a51bee103553fa1c9e2dfe",
+          "sizeBytes": 267078146,
+          "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-darwin-arm64-sources.zip",
+          "prefix": ""
+        }
+      },
+      {
+        "file": "texastra-macos-x64.vsix",
+        "sizeBytes": 24110233,
+        "sha256": "cda324b0354e57e5b73332f050c82e3d4f121ad589084b023a57b5d64b554882",
+        "testedVsixSha256": "2a5d032cf99035868df632652b5bfc279f86490238911e657a1162d2b8239ba7",
+        "onlySourceReferencesChanged": true,
+        "sourceArchive": {
+          "version": "0.1.5",
+          "target": "darwin-x64",
+          "file": "texastra-darwin-x64-sources.zip",
+          "sha256": "2dd3c6170d4136e2a599efed349e774a79639953ead8a4f70389ac1b4ffc76fd",
+          "sizeBytes": 267078148,
+          "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-darwin-x64-sources.zip",
+          "prefix": ""
+        }
+      }
+    ]
+  },
+  "nativeDownloads": {
+    "ok": true,
+    "targets": [
+      {
+        "target": "darwin-arm64",
+        "testedPackageSha256": "9b84b2fcde0426f93fb3b695a9acb286fbc43a1060b2f097d02d15494bb28f3a",
+        "sourceArchiveVerified": true,
+        "compilerSourceHashesVerified": true,
+        "checks": {
+          "pdftex.json": 39,
+          "pdftex-state.json": 28
+        },
+        "testedMacOS": "15.7.9"
+      },
+      {
+        "target": "darwin-x64",
+        "testedPackageSha256": "2a5d032cf99035868df632652b5bfc279f86490238911e657a1162d2b8239ba7",
+        "sourceArchiveVerified": true,
+        "compilerSourceHashesVerified": true,
+        "checks": {
+          "pdftex.json": 39,
+          "pdftex-state.json": 28
+        },
+        "testedMacOS": "15.7.9"
+      }
+    ]
+  },
+  "validationLimitations": [
+    "No manual VS Code GUI test.",
+    "macOS tested on 15.7.9 for ARM64 and Intel; no broad OS matrix."
   ]
 }

@@ -7,12 +7,12 @@
         "version": "0.1.5",
         "target": "wsl",
         "file": "texastra-0.1.5-wsl-sources.zip",
-        "sha256": "e289c32e8a6418dd6b5e33f0891a4719113cda31d35195ff7018a10acfb9e99d",
-        "sizeBytes": 175658689,
+        "sha256": "27ed6adfec7772adb9dcd44905ac19002ceb62f032669611c3c288a8a3c0bc81",
+        "sizeBytes": 175675524,
         "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-wsl-sources.zip"
       },
-      "sizeBytes": 28195719,
-      "sha256": "958bfa11211c9208021cb57f1bfea83af926f8dc7201003f3a3c936a72bbe4ab",
+      "sizeBytes": 28209025,
+      "sha256": "47fbf8e8f2abf6c1a1c8d24b493dbdb7cc7444d603ba927c4aa19b9eaf876439",
       "checks": [
         {
           "unrelatedLegacyEncoding": true,
@@ -45,12 +45,12 @@
         "version": "0.1.5",
         "target": "win32-x64",
         "file": "texastra-0.1.5-win32-x64-sources.zip",
-        "sha256": "2c29f0b4be10a7525243ec34b29dea7b1006b7d57835535341b497b0b84295fa",
-        "sizeBytes": 180039246,
+        "sha256": "ecc549cbf64eedf90e8a42235d7f0a364b32450598f74dcae3135bad0c33aa9a",
+        "sizeBytes": 180049117,
         "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-win32-x64-sources.zip"
       },
-      "sizeBytes": 17958102,
-      "sha256": "2f1e5f8177243cfb2acc7af5010d7afc1213728a4ad9cb796fe98c0024410884",
+      "sizeBytes": 17965516,
+      "sha256": "5d9dc8d2eeea2bebfbc6b472dcbc5e2caaf48b4b408688be9f29467991f95954",
       "checks": [
         {
           "unrelatedLegacyEncoding": true,

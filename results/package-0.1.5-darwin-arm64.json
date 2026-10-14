@@ -1,18 +1,19 @@
 {
   "version": "0.1.5",
-  "sha256": "7d158c04f4e1399edff9d974d2040330e2710e3f646c4925f4b29849b345ad08",
-  "sizeBytes": 22410799,
+  "sha256": "9b84b2fcde0426f93fb3b695a9acb286fbc43a1060b2f097d02d15494bb28f3a",
+  "sizeBytes": 23563560,
   "sourceArchive": {
     "version": "0.1.5",
     "target": "darwin-arm64",
     "file": "texastra-0.1.5-darwin-arm64-sources.zip",
-    "sha256": "5d81bf2d0baaf8b5ac43cffeea5289a11809f4679ac18ac1ef99f28f8fc23d60",
-    "sizeBytes": 267065552,
+    "sha256": "dea46c549380f3fab3cff6a602ffaf01ee9d806097a51bee103553fa1c9e2dfe",
+    "sizeBytes": 267078146,
     "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-darwin-arm64-sources.zip"
   },
   "target": "darwin-arm64",
   "defaultRuntimeMode": "native",
-  "verifiedPackagedFiles": 162,
-  "runtimeSha256": "387f30082a60401129768cabe3cc13c11b53c7432b29a2d88162fcd820e70afc",
-  "compilerSha256": "a6520f929f9799b40a9a29f8392ab44d3e520509f932d48752dee56b4c8533fc"
+  "verifiedPackagedFiles": 167,
+  "runtimeSha256": "8164369fbec5dce2b47b40d03c377ec1bf7c62cf2da37779eeaf9e4c264a1652",
+  "compilerSha256": "a6520f929f9799b40a9a29f8392ab44d3e520509f932d48752dee56b4c8533fc",
+  "pdftexSha256": "827cad97ce89d1fdc3db3576390aeb51d0b2f57e5b2aeb999c2d404c6bf2364c"
 }

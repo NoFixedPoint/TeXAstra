@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "checks": [
+    "forward character sync without synctex",
+    "reverse character sync without synctex"
+  ]
+}

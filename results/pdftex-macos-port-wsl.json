@@ -3,7 +3,11 @@
     {
       "name": "real pdfTeX provenance enabled",
       "ok": true,
-      "error": null
+      "error": null,
+      "sourceSync": "token-and-macro-origin",
+      "binDirectory": "/usr/bin",
+      "compatible": true,
+      "bundledPdftex": "pdfTeX 3.141592653-2.6-1.40.22 (TeX Live 2022/dev)"
     },
     {
       "name": "Zebra source characters",
@@ -110,7 +114,7 @@
         "prefixPages": 0,
         "restored": true
       },
-      "compileMs": 61.770504
+      "compileMs": 72.60402599999999
     },
     {
       "name": "late edit page count",
@@ -137,7 +141,7 @@
         "prefixPages": 0,
         "restored": true
       },
-      "compileMs": 77.521953
+      "compileMs": 87.98871199999999
     },
     {
       "name": "earlier edit after late edit page count",
@@ -164,7 +168,7 @@
         "prefixPages": 0,
         "restored": false
       },
-      "compileMs": 260.46231900000004
+      "compileMs": 269.44477700000004
     },
     {
       "name": "preamble edit page count",

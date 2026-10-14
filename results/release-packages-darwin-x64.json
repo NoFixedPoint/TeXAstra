@@ -7,12 +7,12 @@
         "version": "0.1.5",
         "target": "darwin-x64",
         "file": "texastra-0.1.5-darwin-x64-sources.zip",
-        "sha256": "3719a3ad82fef7f56b3b4b387710244c88f122d06e1e4140921169678d003983",
-        "sizeBytes": 267065555,
+        "sha256": "2dd3c6170d4136e2a599efed349e774a79639953ead8a4f70389ac1b4ffc76fd",
+        "sizeBytes": 267078148,
         "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-darwin-x64-sources.zip"
       },
-      "sizeBytes": 23221277,
-      "sha256": "a534782c79f00d53f384c763daafeea6a49c4906021e07ffc3f40485188cbf5f",
+      "sizeBytes": 24439382,
+      "sha256": "2a5d032cf99035868df632652b5bfc279f86490238911e657a1162d2b8239ba7",
       "checks": [
         {
           "unrelatedLegacyEncoding": true,
@@ -39,12 +39,27 @@
         },
         {
           "ok": true,
+          "compiler": "lualatex",
           "checks": [
             "long nested path",
             "included file checkpoint",
             "fresh compile equality",
             "syntax error recovery",
             "source preservation"
+          ]
+        },
+        {
+          "ok": true,
+          "compiler": "pdflatex",
+          "checks": [
+            "long nested path",
+            "included file checkpoint",
+            "fresh compile equality",
+            "syntax error recovery",
+            "source preservation",
+            "forward character navigation",
+            "reverse character navigation",
+            "retained error recovery"
           ]
         }
       ]
