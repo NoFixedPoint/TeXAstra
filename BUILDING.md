@@ -43,6 +43,12 @@ Rosetta. Cross-compiling macOS binaries from Windows/Linux is not implemented.
 
 ### Compatible TeX tree
 
+End users of packages built from this checkout get automatic setup inside VS
+Code; the following manual procedure is for builds and validation. To exercise
+the automatic installer, including fresh LuaLaTeX and PDFLaTeX compilation, run
+`node scripts/check_macos_setup.js --native` on macOS after building the runtime.
+Both macOS CI architectures run this check.
+
 The bundled LuaHBTeX 1.14 and pdfTeX 1.40.22 need compatible packages and formats. Prepare an
 isolated TeX Live 2021 tree in a **new destination directory**:
 

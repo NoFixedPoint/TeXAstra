@@ -15,7 +15,7 @@ const panel={webview:web,onDidDispose:f=>{dispose=f;},reveal(){},dispose(){dispo
 const vscode={Uri:{file:fsPath=>({fsPath}),joinPath:(base,...parts)=>({fsPath:path.join(base.fsPath,...parts)})},ViewColumn:{Beside:2},
   RelativePattern:class {},commands:{registerCommand:(name,f)=>{if(name==='texastra.openDocument')command=f;}},
   workspace:{isTrusted:true,textDocuments:[document],workspaceFolders:[{uri:{fsPath:project}}],
-    getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(key,fallback)=>key==='mainFile'?'paper.tex':fallback}),
+    getWorkspaceFolder:()=>({uri:{fsPath:project}}),getConfiguration:()=>({get:(key,fallback)=>({mainFile:'paper.tex',texBinDirectory:'/selected/bin'})[key]??fallback}),
     onDidChangeTextDocument:f=>{change=f;},onDidSaveTextDocument:f=>{save=f;},
     createFileSystemWatcher:()=>({onDidChange:f=>{onChange=f;},onDidCreate:f=>{onCreate=f;},onDidDelete:f=>{onDelete=f;},dispose(){}})},
   window:{activeTextEditor:{document},createOutputChannel:()=>({append(){},appendLine(){}}),

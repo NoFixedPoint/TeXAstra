@@ -67,7 +67,7 @@
         "texastra.texBinDirectory": {
           "type": "string",
           "default": "",
-          "description": "Absolute TeX Live binary directory for the selected runtime, such as C:\\texlive\\2025\\bin\\windows on native Windows or /usr/bin in Linux/WSL. Empty discovers kpsewhich on PATH, then conventional TeX Live locations. Reopen the document after changing."
+          "description": "Absolute TeX Live binary directory for the selected runtime, such as C:\\texlive\\2025\\bin\\windows on native Windows or /usr/bin in Linux/WSL. Empty uses automatic compatible TeX Live setup on macOS; elsewhere discovers kpsewhich on PATH, then conventional TeX Live locations. An explicit path skips automatic setup. Reopen the document after changing."
         }
       }
     }

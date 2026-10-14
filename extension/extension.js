@@ -6,8 +6,11 @@ const crypto=require('crypto');
 const {performance}=require('perf_hooks');
 const {configuration}=require('./configuration');
 const {createFrameDelivery}=require('./frame-delivery');
+const {createMacTexSetup}=require('./macos-tex');
 const {contains,resolveMain,resolveProject,supportedFile,resolveCompiler}=require('./project');
 function activate(context){
+  const texSetup=createMacTexSetup({extensionPath:context.extensionPath,storagePath:context.globalStorageUri?.fsPath});
+  context.subscriptions.push(texSetup);
   let panel,backend,project,currentFrame,suppressSelection,visiblePage=0,serial=0,latestMutation=0,output=vscode.window.createOutputChannel('TeXAstra');
   let watcher,reloadTimer,frameDelivery,ready=false,selectedOptions={};
   const editBases=new Map();
@@ -42,7 +45,8 @@ function activate(context){
     if(!vscode.workspace.isTrusted)return;
     try{
       const config=configuration(vscode.workspace,vscode.window.activeTextEditor?.document.uri);
-      const report=await require('../native/launch').environment(context.extensionPath,panel?selectedOptions:distributionOptions(config));
+      const options=panel?selectedOptions:await texSetup.withProgress(vscode,output,distributionOptions(config));
+      const report=await require('../native/launch').environment(context.extensionPath,options);
       const document=await vscode.workspace.openTextDocument({language:'json',content:JSON.stringify(report,null,2)});
       await vscode.window.showTextDocument(document,{preview:false});
     }catch(error){output.appendLine(String(error));vscode.window.showErrorMessage(String(error));}
@@ -78,7 +82,8 @@ function activate(context){
     }
     const rootFolder=vscode.workspace.getWorkspaceFolder(vscode.Uri.file(root));
     config=configuration(vscode.workspace,vscode.Uri.file(root));
-    try{project=resolveProject({main:root,workspace:rootFolder?.uri.fsPath,configured:config.get('projectRoot','')});}
+    let resolvedProject;
+    try{resolvedProject=resolveProject({main:root,workspace:rootFolder?.uri.fsPath,configured:config.get('projectRoot','')});}
     catch(error){vscode.window.showErrorMessage(String(error));return;}
     let compilerLog='';
     try{
@@ -87,7 +92,18 @@ function activate(context){
       finally{fs.closeSync(descriptor);}
     }catch{/* A document without a previous build uses its setting or magic comment. */}
     const compiler=resolveCompiler(config.get('compiler','auto'),read(root),compilerLog);
-    selectedOptions=distributionOptions(config);
+    let preparedOptions;
+    try{preparedOptions=await texSetup.withProgress(vscode,output,distributionOptions(config));}
+    catch(error){
+      output.appendLine(String(error));
+      if(error.name!=='AbortError')vscode.window.showErrorMessage(`TeX setup failed. Run TeXAstra: Open Document to retry. ${error} See Output → TeXAstra.`);
+      return;
+    }
+    // Another invocation may have opened the preview while setup was running.
+    if(panel){panel.reveal(vscode.ViewColumn.Beside);return;}
+    if(!vscode.workspace.isTrusted)return;
+    project=resolvedProject;
+    selectedOptions=preparedOptions;
     const options={main:path.relative(project,root).replaceAll('\\','/'),mode:compiler==='lualatex'?'auto':'full',compiler,...selectedOptions};
     visiblePage=0;serial=0;latestMutation=0;currentFrame=null;
     output.appendLine(`Opening ${root} with ${compiler} and project root ${project}; resources and generated files stay in the user cache.`);

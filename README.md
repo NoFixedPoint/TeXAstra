@@ -16,9 +16,29 @@
 
 ### macOS
 
-1. On **macOS 15+**, install [VS Code](https://code.visualstudio.com/) and Python **3.11.8+** (needed only for the one-time TeX setup).
-2. Download **[Apple Silicon](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-macos-arm64.vsix)** or **[Intel](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-macos-x64.vsix)**. In VS Code, run **Extensions: Install from VSIX…** and choose the file. Install one variant.
-3. In Terminal, run the setup below, replacing `<extension-folder>` with the installed TeXAstra folder under `~/.vscode/extensions/`. In VS Code Settings, set `texastra.texBinDirectory` to the **absolute path printed by the script**.
+**Automatic setup is implemented for the next release; the published v0.1.5
+downloads below still use the legacy setup.** With a package built from this checkout:
+
+1. On **macOS 15+**, install [VS Code](https://code.visualstudio.com/).
+2. In VS Code, run **Extensions: Install from VSIX…** and choose the TeXAstra package for Apple Silicon or Intel.
+3. Open your trusted LaTeX project and run **TeXAstra: Open Document**. On first use, TeXAstra downloads and prepares its compatible TeX Live automatically, then opens the preview.
+
+No Python, Terminal commands, folder selection, or settings changes are needed.
+First-time setup needs internet access and can take several minutes; progress and
+a Cancel button appear in VS Code. Run **Open Document** again to retry a failed
+or cancelled setup. Later uses reuse the installation.
+
+TeXAstra manages an isolated **TeX Live 2021** tree in VS Code's extension storage;
+your existing MacTeX stays unchanged. An explicit `texastra.texBinDirectory`
+setting takes precedence and skips automatic setup. Additional document packages
+must be installed separately. See [setup details and troubleshooting](docs/macos.md).
+
+<details>
+<summary>Published v0.1.5: downloads and legacy setup</summary>
+
+1. Install Python **3.11.8+** for the one-time setup.
+2. Download **[Apple Silicon](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-macos-arm64.vsix)** or **[Intel](https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-macos-x64.vsix)** and install it with **Extensions: Install from VSIX…**. Install one variant.
+3. In Terminal, run the setup below, replacing `<extension-folder>` with the installed TeXAstra folder under `~/.vscode/extensions/`. Set `texastra.texBinDirectory` to the **absolute path printed by the script** in VS Code Settings.
 
    ```sh
    python3 "<extension-folder>/scripts/install_test_texlive.py" \
@@ -27,7 +47,10 @@
 
 4. Reload VS Code, open your trusted LaTeX project, and run **TeXAstra: Open Document**.
 
-The setup installs an isolated **TeX Live 2021** tree compatible with the bundled engine; your existing MacTeX stays unchanged. A newer MacTeX installation may be incompatible. Additional document packages must be installed separately.
+The legacy setup also installs an isolated compatible tree; a newer MacTeX may
+be incompatible with the bundled engine.
+
+</details>
 
 Type in the source editor to update the document. Click rendered text to jump to its source; move the source cursor to find its output. Compile errors appear behind the collapsible header.
 

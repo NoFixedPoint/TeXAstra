@@ -3,6 +3,9 @@ const assert=require('assert'),fs=require('fs'),path=require('path'),Module=requ
 const {EventEmitter}=require('events'),{PassThrough}=require('stream');
 const root=path.resolve(__dirname,'..'),project=path.join(root,'.work/extension-project'),main='paper/paper.tex';
 const pdfMode=process.argv.includes('--pdflatex');
+const managed=process.argv.includes('--managed-tex');
+let setupError,releaseSetup,setupCalls=0,launchCalls=0;
+const setupGate=new Promise(resolve=>{releaseSetup=resolve;});
 fs.mkdirSync(path.join(project,'paper'),{recursive:true});
 const log=path.join(project,'paper/paper.log');
 if(pdfMode)fs.writeFileSync(log,'This is pdfTeX, Version 3.141592653 (TeX Live)\n');
@@ -18,6 +21,7 @@ const panel={webview:web,onDidDispose:f=>{disposed=f;},reveal(){},dispose(){disp
 let diskChange,diskCreate,diskDelete,watchDisposed=false,watchPattern;
 const watcher={onDidChange:f=>{diskChange=f;},onDidCreate:f=>{diskCreate=f;},onDidDelete:f=>{diskDelete=f;},dispose:()=>{watchDisposed=true;}};
 const config={checkpointMode:'internal',mainFile:main,engine:'native',previewMode:'full',latexCompiler:'xelatex',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'};
+if(managed)delete config.texBinDirectory;
 const defaults=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).contributes.configuration.properties;
 const vscode={
   Uri:{file:fsPath=>({fsPath}),joinPath:(base,...s)=>({fsPath:path.join(base.fsPath,...s)})},ViewColumn:{Beside:2,One:1},
@@ -32,11 +36,28 @@ const vscode={
 const original=Module._load;
 Module._load=function(request,parent,...rest){
   if(request==='vscode')return vscode;
-  if(request==='../native/launch')return {launch:(...args)=>{launchArgs=args;return child;},environment:async(...args)=>{environmentArgs=args;return {ok:true,binDirectory:'/selected/bin'};}};
+  if(managed&&request==='./macos-tex')return {createMacTexSetup:()=>({dispose(){},withProgress:async(_vscode,_output,options)=>{
+    setupCalls++;if(setupError)throw setupError;await setupGate;return {...options,texBinDirectory:'/selected/bin'};
+  }})};
+  if(request==='../native/launch')return {launch:(...args)=>{launchCalls++;launchArgs=args;return child;},environment:async(...args)=>{environmentArgs=args;return {ok:true,binDirectory:'/selected/bin'};}};
   return original.call(this,request,parent,...rest);
 };
 (async()=>{
   require('../extension/extension').activate({subscriptions:[],extensionPath:root,extensionUri:{fsPath:root}});
+  if(managed){
+    vscode.workspace.isTrusted=false;await command();await environmentCommand();
+    assert.equal(setupCalls,0,'Untrusted workspaces never start setup');
+    vscode.workspace.isTrusted=true;
+    setupError=Error('download failed');await assert.rejects(command(),/TeX setup failed/);
+    assert.equal(launchCalls,0,'Setup failures do not launch the backend');
+    setupError=Object.assign(Error('cancelled'),{name:'AbortError'});await command();
+    assert.equal(launchCalls,0,'Cancelling setup does not open a preview');
+    setupError=null;
+    const opening=command(),duplicate=command();
+    assert.equal(launchCalls,0,'The backend waits until TeX setup finishes');
+    releaseSetup();await Promise.all([opening,duplicate]);
+    assert.equal(launchCalls,1,'Repeated Open Document during setup opens only one preview');
+  }
   await command();await receiver({type:'ready'});
   assert.deepStrictEqual(launchArgs.slice(1),[project,'auto',{main,mode:pdfMode?'full':'auto',compiler:pdfMode?'pdflatex':'lualatex',runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
   await environmentCommand();assert.deepStrictEqual(environmentArgs,[root,{runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
@@ -115,5 +136,5 @@ Module._load=function(request,parent,...rest){
   assert(watchDisposed);assert.equal(JSON.parse(input.trim().split('\n').at(-1)).type,'close');
   Module._load=original;
   if(pdfMode)fs.unlinkSync(log);
-  const result={checks:38,ok:true};fs.writeFileSync(path.join(root,`results/extension-${pdfMode?'pdflatex':'live'}.json`),JSON.stringify(result,null,2)+'\n');console.log(result);
+  const result={checks:managed?43:38,ok:true};fs.writeFileSync(path.join(root,`results/extension-${managed?'managed-tex':pdfMode?'pdflatex':'live'}.json`),JSON.stringify(result,null,2)+'\n');console.log(result);
 })().catch(e=>{Module._load=original;console.error(e);process.exitCode=1;});

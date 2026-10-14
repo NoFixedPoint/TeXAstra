@@ -27,6 +27,8 @@ const vscode={Uri:{file:fsPath=>({fsPath}),joinPath:(base,...parts)=>({fsPath:pa
 const original=Module._load;
 Module._load=function(name,parent,...rest){
   if(name==='vscode')return vscode;
+  // Benchmark the caller's already-provisioned TeX environment, without first-use UI.
+  if(name==='./macos-tex')return {createMacTexSetup:()=>({dispose(){},withProgress:async(_vscode,_output,options)=>options})};
   const value=original.call(this,name,parent,...rest);
   if(name==='../native/launch')return {...value,launch:(...args)=>{
     backend=value.launch(...args);const write=backend.stdin.write.bind(backend.stdin);
