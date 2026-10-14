@@ -19,6 +19,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--destination', type=Path, required=True)
     parser.add_argument('--engine', type=Path, help='Bundled texastra-luahbtex (defaults to this checkout or installed VSIX)')
+    parser.add_argument('--pdftex-engine', type=Path,
+                        help='Matching pdfTeX (defaults to texastra-pdftex beside the LuaHBTeX engine)')
     args = parser.parse_args()
     if sys.platform != 'darwin':
         raise SystemExit('This installer is for macOS build/test machines')
@@ -30,6 +32,10 @@ def main():
     if not engine.is_file():
         raise SystemExit('Build or install the macOS VSIX first, or supply --engine /absolute/path/to/texastra-luahbtex')
     engine = engine.resolve()
+    pdftex = args.pdftex_engine or engine.parent/'texastra-pdftex'
+    if not pdftex.is_file():
+        raise SystemExit('Build or install the pdfTeX runtime first, or supply --pdftex-engine /absolute/path/to/pdftex')
+    pdftex = pdftex.resolve()
     destination = args.destination.resolve()
     if destination.exists():
         raise SystemExit('Choose a new empty destination: '+str(destination))
@@ -57,9 +63,14 @@ def main():
     # The historical Mac distribution ships 1.13.2. This isolated installation
     # needs the bundled 1.14 engine and matching formats, including full builds.
     shutil.copy2(engine, binary/'luahbtex')
+    # The final historical Mac tree ships pdfTeX 1.40.23; provenance uses
+    # 1.40.22. Keep the isolated tree and its formats matched to our engine.
+    # CI supplies the unmodified build as an independent rendering oracle.
+    shutil.copy2(pdftex, binary/'pdftex')
     env = dict(os.environ, PATH=str(binary)+os.pathsep+os.environ.get('PATH', ''))
     env['TEXMFCNF'] = subprocess.check_output([str(binary/'kpsewhich'), '--var-value=TEXMFCNF'], text=True).strip()
     subprocess.run([str(binary/'fmtutil-sys'), '--byengine', 'luahbtex'], env=env, check=True)
+    subprocess.run([str(binary/'fmtutil-sys'), '--byengine', 'pdftex'], env=env, check=True)
     print('Set texastra.texBinDirectory to:', binary)
 
 

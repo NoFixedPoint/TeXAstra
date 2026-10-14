@@ -43,7 +43,7 @@ Rosetta. Cross-compiling macOS binaries from Windows/Linux is not implemented.
 
 ### Compatible TeX tree
 
-The bundled LuaHBTeX 1.14 needs compatible packages and formats. Prepare an
+The bundled LuaHBTeX 1.14 and pdfTeX 1.40.22 need compatible packages and formats. Prepare an
 isolated TeX Live 2021 tree in a **new destination directory**:
 
 ```sh
@@ -51,9 +51,12 @@ python3 scripts/install_test_texlive.py --destination "$HOME/texastra-texlive-20
 export PATH="$HOME/texastra-texlive-2021/bin/universal-darwin:$PATH"
 ```
 
-The setup downloads historical packages, installs the bundled engine in that
+The setup downloads historical packages, installs both bundled engines in that
 tree, and generates matching formats. It leaves system MacTeX unchanged. Use
-`--engine /absolute/path/to/texastra-luahbtex` to select another built engine.
+`--engine /absolute/path/to/texastra-luahbtex` to select another built engine,
+and `--pdftex-engine /absolute/path/to/pdftex` for a matching pdfTeX. Native CI
+uses the unmodified `native/runtime/pdftex-baseline` as its rendering reference;
+the final historical Mac TeX tree otherwise supplies incompatible pdfTeX 1.40.23.
 For VS Code, set `texastra.texBinDirectory` to the absolute path printed by the
 script. The setup installs a small package selection; add other document
 dependencies to the selected TeX installation as needed.

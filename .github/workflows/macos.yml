@@ -45,7 +45,7 @@ jobs:
         with:
           path: native/runtime
           key: ${{ steps.runtime-cache.outputs.cache-primary-key }}
-      - run: python3 scripts/install_test_texlive.py --destination "$HOME/texastra-texlive-2021"
+      - run: python3 scripts/install_test_texlive.py --destination "$HOME/texastra-texlive-2021" --pdftex-engine "$PWD/native/runtime/pdftex-baseline"
       - run: echo "$HOME/texastra-texlive-2021/bin/universal-darwin" >> "$GITHUB_PATH"
       - run: python3 -m pip install pymupdf==1.26.7
       - run: npm test
