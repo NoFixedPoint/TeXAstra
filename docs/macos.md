@@ -1,9 +1,8 @@
 # macOS setup
 
-For packages built from the current checkout, **TeXAstra: Open Document** prepares
+**TeXAstra: Open Document** prepares
 TeX Live 2021 automatically on first use in a trusted workspace. **Show LaTeX
-Environment** also prepares it when necessary. The published v0.1.5 packages
-predate this behavior; their manual instructions remain in the README.
+Environment** also prepares it when necessary.
 
 - [Install the prebuilt macOS package](../README.md#macos).
 - [Build, validate, and package on macOS](../BUILDING.md#macos-apple-silicon-and-intel).

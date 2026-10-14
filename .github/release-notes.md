@@ -10,7 +10,7 @@ TeXAstra brings live LaTeX typesetting and precise source and document navigatio
 
 ### Install
 
-Install VS Code and TeX Live in your chosen environment. Download **one** package:
+Install VS Code; Windows/WSL also need TeX Live. Download **one** package:
 
 | Asset | Use |
 | --- | --- |
@@ -21,7 +21,7 @@ Install VS Code and TeX Live in your chosen environment. Download **one** packag
 
 Run **Extensions: Install from VSIX...**, reload VS Code, open a trusted LaTeX project, and run **TeXAstra: Open Document**.
 
-For macOS, prepare the compatible isolated TeX Live 2021 tree using the bundled setup script. See the [installation instructions](https://github.com/NoFixedPoint/TeXAstra#install) and [build guide](https://github.com/NoFixedPoint/TeXAstra/blob/master/BUILDING.md).
+On macOS, first use automatically installs compatible TeX Live 2021 with progress and cancellation. No Python, Terminal commands, or settings changes are needed; existing MacTeX stays unchanged. See the [installation instructions](https://github.com/NoFixedPoint/TeXAstra#install) and [build guide](https://github.com/NoFixedPoint/TeXAstra/blob/master/BUILDING.md).
 
 Editing takes place in the source editor; rendered pages provide navigation and selection. The selected TeX installation supplies packages and fonts. Automatic dependency installation and MiKTeX integration are not supported.
 
