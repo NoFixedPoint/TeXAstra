@@ -57,7 +57,9 @@ def main():
                 check('explicit rule retains command origin',any(r['text']==r'\hrule' and r['kind']=='rule-origin' for r in regions))
                 second=SOURCE.index('Zebra',SOURCE.index('Zebra')+1)+2
                 line=SOURCE[:second].count('\n');column=second-SOURCE.rfind('\n',0,second)-1
-                location=client.request(type='sync-forward',file='main.tex',line=line,column=column,page=0)['location']
+                response=client.request(type='sync-forward',file='main.tex',line=line,column=column,page=0)
+                assert response.get('ok'), response
+                location=response['location']
                 check('forward selects the second repeated word character',location and location['start']==second and location['end']==second+1)
                 r=location['rect']
                 backward=client.request(type='sync-backward',page=0,x=(r[0]+r[2])/2,y=(r[1]+r[3])/2)['location']

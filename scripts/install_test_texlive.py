@@ -59,7 +59,7 @@ def main():
     ])+'\n')
     subprocess.run(['perl', str(installer), '-profile', str(profile), '-repository', REPOSITORY], check=True)
     binary = destination/'bin/universal-darwin'
-    subprocess.run([str(binary/'tlmgr'), 'install', 'pgf', 'booktabs', 'geometry', 'luaotfload', 'luatex', 'luahbtex', 'latex-bin'], check=True)
+    subprocess.run([str(binary/'tlmgr'), 'install', 'pgf', 'booktabs', 'geometry', 'luaotfload', 'luatex', 'luahbtex', 'latex-bin', 'synctex'], check=True)
     # The historical Mac distribution ships 1.13.2. This isolated installation
     # needs the bundled 1.14 engine and matching formats, including full builds.
     shutil.copy2(engine, binary/'luahbtex')

@@ -55,6 +55,7 @@ jobs:
           native/runtime/texastra-pdftex --version
       - run: python3 scripts/check_pdftex.py
       - run: python3 scripts/check_pdftex_state.py
+      - run: python3 scripts/check_pdftex_navigation.py
       - run: python3 scripts/package_extension.py --target ${{ matrix.target }}
       - run: python3 scripts/check_release_packages.py --target ${{ matrix.target }}
       - run: python3 scripts/release_macos.py

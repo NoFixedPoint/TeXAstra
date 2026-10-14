@@ -1076,8 +1076,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
     Json forward(const std::string &file, int line, int column, int preferred_page = 0) {
         if (full) {
             if(!full_ready)return nullptr;
-            auto fallback=sync().forward(file,line,column,preferred_page);
-            if(!pdftex_provenance)return fallback;
+            if(!pdftex_provenance)return sync().forward(file,line,column,preferred_page);
             std::vector<int> candidates;
             for(int i=0;i<renderer.pages();++i)candidates.push_back(i);
             std::stable_sort(candidates.begin(),candidates.end(),[&](int a,int b){return std::abs(a-preferred_page)<std::abs(b-preferred_page);});
@@ -1092,7 +1091,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
                     result["page"]=page;return result;
                 }
             }
-            return fallback;
+            return sync().forward(file,line,column,preferred_page);
         }
         std::vector<int> candidates;
         for (const auto &[page, ids] : page_ids) candidates.push_back(page);
