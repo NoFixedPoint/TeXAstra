@@ -205,7 +205,7 @@ async function receiveMessage(message){
   if(message.type==='forward'){forward(message);return;}
   if(message.type==='status'){
     latestRequest=Math.max(latestRequest,message.revision||0);latestClient=Math.max(latestClient,message.clientId||0);markStale();pendingPages.clear();
-    $('status').textContent=message.state==='error'?'Compile error · previous document is stale':'Updating document…';
+    $('status').textContent=message.state==='error'?'Compile error · previous document is stale':(message.message||'Updating document…');
     if(message.state==='error')showError(message.error||'Compilation failed. No error details were provided.');return;
   }
   if(message.type==='discard'||message.type==='query-error'){

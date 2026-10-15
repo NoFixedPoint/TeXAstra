@@ -68,9 +68,10 @@ inline fs::path tool_path(const fs::path &bin, const std::string &name) {
 #ifdef _WIN32
 inline std::string run_logged(const fs::path &program, const std::vector<std::string> &args,
                               const fs::path &directory, const fs::path &log,
-                              int seconds, std::atomic<bool> *cancel = nullptr) {
+                              int seconds, std::atomic<bool> *cancel = nullptr,
+                              std::map<std::wstring, std::wstring> overrides = {}) {
     windows::Child child;
-    child.start(program, args, directory, log);
+    child.start(program, args, directory, log, std::move(overrides));
     auto started = Clock::now();
     while (child.running()) {
         if ((cancel && cancel->load()) || elapsed(started) > seconds * 1000)

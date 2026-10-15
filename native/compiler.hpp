@@ -11,6 +11,7 @@ extern char **environ;
 namespace bako {
 struct RebuildRequired : std::runtime_error { using std::runtime_error::runtime_error; };
 struct ProjectOptions {
+    bool auto_install_packages = true;
     std::string main = "main.tex", mode = "auto", compiler = "lualatex";
     std::shared_ptr<Distribution> distribution;
 };
@@ -882,6 +883,7 @@ $x+\frac{a_{1}+b^{2}}{c+d}+\alpha+\sum_{j=1}^{n}j+\int_{0}^{1}t^{2}\,dt$
             close(log_fd);
         }
     }
+    void invalidate_packages() { if (cache) cache->invalidate(); }
     Json start(int page = 0, bool settle = true) {
         if (full) return full_start(page);
         auto started = Clock::now();

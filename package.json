@@ -34,6 +34,11 @@
     "configuration": {
       "title": "TeXAstra",
       "properties": {
+        "texastra.autoInstallPackages": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically install missing LaTeX packages using the selected TeX Live installation's tlmgr and rebuild the preview. Requires a writable upstream TeX Live installation and repository access. OS-managed installations must use their OS package manager. Reopen after changing."
+        },
         "texastra.compiler": {
           "type": "string",
           "enum": ["auto", "lualatex", "pdflatex", "xelatex"],

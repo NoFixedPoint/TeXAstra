@@ -21,6 +21,7 @@ const panel={webview:web,onDidDispose:f=>{disposed=f;},reveal(){},dispose(){disp
 let diskChange,diskCreate,diskDelete,watchDisposed=false,watchPattern;
 const watcher={onDidChange:f=>{diskChange=f;},onDidCreate:f=>{diskCreate=f;},onDidDelete:f=>{diskDelete=f;},dispose:()=>{watchDisposed=true;}};
 const config={checkpointMode:'internal',mainFile:main,engine:'native',previewMode:'full',latexCompiler:'xelatex',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'};
+config.autoInstallPackages=!pdfMode;
 if(managed)delete config.texBinDirectory;
 const defaults=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).contributes.configuration.properties;
 const vscode={
@@ -59,11 +60,14 @@ Module._load=function(request,parent,...rest){
     assert.equal(launchCalls,1,'Repeated Open Document during setup opens only one preview');
   }
   await command();await receiver({type:'ready'});
-  assert.deepStrictEqual(launchArgs.slice(1),[project,'auto',{main,mode:pdfMode?'full':'auto',compiler:pdfMode?'pdflatex':'lualatex',runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
-  await environmentCommand();assert.deepStrictEqual(environmentArgs,[root,{runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin'}]);
+  assert.deepStrictEqual(launchArgs.slice(1),[project,'auto',{main,mode:pdfMode?'full':'auto',compiler:pdfMode?'pdflatex':'lualatex',runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin',autoInstallPackages:!pdfMode}]);
+  await environmentCommand();assert.deepStrictEqual(environmentArgs,[root,{runtimeMode:'wsl',wslDistribution:'Test Linux',texBinDirectory:'/selected/bin',autoInstallPackages:!pdfMode}]);
   assert.equal(environmentDocument.language,'json');assert.equal(JSON.parse(environmentDocument.content).binDirectory,'/selected/bin');
   child.stdout.write(JSON.stringify({type:'environment',report:{ok:true,binDirectory:'/selected/bin'}})+'\n');
   await new Promise(r=>setImmediate(r));assert(outputLines.some(line=>line.includes('/selected/bin')));
+  child.stdout.write(JSON.stringify({type:'status',state:'building',message:'Installing TeX Live package example...'})+'\n');
+  await new Promise(r=>setImmediate(r));assert(outputLines.some(line=>line.includes('Installing TeX Live package example')));
+  assert.equal(webMessages.at(-1).message,'Installing TeX Live package example...');
   let sent=input.trim().split('\n').map(JSON.parse);
   assert.equal(sent[0].overlays[main],document.getText());
   assert.equal(sent[0].overlays['shared/body.tex'],sibling.getText());

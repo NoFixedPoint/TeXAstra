@@ -54,7 +54,8 @@ function launch(root,project,checkpoint=process.env.BAKO_CHECKPOINT_MODE||'auto'
   if(checkpoint!==selected)throw new Error(`The selected runtime requires ${selected} checkpoints.`);
   const convert=value=>chosen.nativeWindows?path.resolve(value):linuxPath(value,chosen.distribution);
   const args=[...chosen.prefix,...chosen.args,'--project',convert(project),'--assets',convert(path.join(root,'texastra')),'--checkpoint',checkpoint,
-    '--main',options.main||'main.tex','--preview-mode',options.mode||'auto','--compiler',options.compiler||'lualatex'];
+    '--main',options.main||'main.tex','--preview-mode',options.mode||'auto','--compiler',options.compiler||'lualatex',
+    '--auto-install-packages',String(options.autoInstallPackages!==false)];
   const child=spawn(chosen.program,args,{windowsHide:true});
   child.texastraEnvironment={platform:process.platform,wslDistribution:chosen.distribution,runtime:chosen.nativeWindows?'native':process.platform==='darwin'?'macos':'linux'};
   return child;

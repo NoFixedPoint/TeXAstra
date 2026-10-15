@@ -40,7 +40,7 @@ function activate(context){
     }catch{/* Missing or unreadable inputs must still invalidate the document. */}
     return false;
   };
-  const distributionOptions=config=>Object.fromEntries(['runtimeMode','wslDistribution','texBinDirectory'].map(name=>[name,config.get(name,'')]).filter(([,value])=>value));
+  const distributionOptions=config=>({...Object.fromEntries(['runtimeMode','wslDistribution','texBinDirectory'].map(name=>[name,config.get(name,'')]).filter(([,value])=>value)),autoInstallPackages:config.get('autoInstallPackages',true)});
   context.subscriptions.push(vscode.commands.registerCommand('texastra.showEnvironment',async()=>{
     if(!vscode.workspace.isTrusted)return;
     try{
@@ -144,7 +144,8 @@ function activate(context){
       const received=performance.now(),hostReceivedAt=Date.now();
       try{const message=JSON.parse(line),parseMs=performance.now()-received;if(message.type==='environment'){
         output.appendLine(JSON.stringify({...message.report,host:backend?.texastraEnvironment},null,2));return;
-      }if(message.type==='frame-transport'){output.appendLine(JSON.stringify(message));return;
+      }if(message.type==='status'&&message.message)output.appendLine(message.message);
+      if(message.type==='frame-transport'){output.appendLine(JSON.stringify(message));return;
       }if(message.error){editBases.clear();submittedBuffers.clear();savedContents.clear();output.appendLine(String(message.error));}if(message.type==='frame'){
         if(message.environmentReport)output.appendLine(`Build environment report: ${message.environmentReport}`);
         if(message.clientId<latestMutation)message.isStale=true;

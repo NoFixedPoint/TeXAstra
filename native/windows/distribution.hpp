@@ -31,7 +31,7 @@ class Distribution {
         }
         return true;
     }
-    void configure(const std::string &selected, const std::string &compiler) {
+    void configure(const std::string &selected, const std::string &compiler, bool refresh) {
         std::set<std::string> seen;
         auto add = [&](const fs::path &directory) {
             if (!fs::is_regular_file(tool_path(directory, "kpsewhich"))) return;
@@ -85,7 +85,7 @@ class Distribution {
         format_path = storage / "lualatex.fmt";
         auto manifest = storage / "dependencies.json";
         bool reused = false; Json format_inputs;
-        if (fs::is_regular_file(format_path) && fs::is_regular_file(manifest)) {
+        if (!refresh && fs::is_regular_file(format_path) && fs::is_regular_file(manifest)) {
             try { format_inputs = Json::parse(read(manifest)); reused = current(format_inputs); } catch (const std::exception &) {}
         }
         if (!reused) {
@@ -113,11 +113,11 @@ class Distribution {
   public:
     fs::path bin, format_path;
     Json report = {{"schema", 1}, {"ok", false}, {"platform", "win32-x64"}, {"candidates", Json::array()},
-                   {"packageMaintenance", "Use the selected distribution's package manager; TeXAstra does not install packages."}};
-    Distribution(fs::path bundled, std::string selected, const std::string &compiler = "live") : runtime(std::move(bundled)) {
+                   {"packageMaintenance", "Missing packages are installed on demand with the selected TeX Live tlmgr when automatic installation is enabled. No automatic upgrades."}};
+    Distribution(fs::path bundled, std::string selected, const std::string &compiler = "live", bool refresh = false) : runtime(std::move(bundled)) {
         try {
             work = windows::temporary_directory(windows::cache_root() / "environment-v1", "probe-");
-            report["mode"] = compiler; configure(selected, compiler);
+            report["mode"] = compiler; configure(selected, compiler, refresh);
         } catch (const std::exception &error) { report["error"] = error.what(); }
         if (!work.empty()) { std::error_code ignored; fs::remove_all(work, ignored); }
     }

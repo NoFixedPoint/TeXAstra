@@ -3,6 +3,7 @@
 #endif
 #include "compiler.hpp"
 #include "edits.hpp"
+#include "package_recovery.hpp"
 #include <deque>
 #include <functional>
 
@@ -226,26 +227,44 @@ class Preview {
                         rebuild = true;
                     }
                 }
-                Json result;
-                if (engine && engine->live_document() && edits.size() == 1) {
-                    try { result = engine->edit(*edits.begin(), overlays.at(*edits.begin()), page); }
-                    catch (const RebuildRequired &) {
+                auto result = recover_packages(options, runtime, [&]() {
+                    Json result;
+                    if (engine && engine->live_document() && edits.size() == 1) {
+                        try { result = engine->edit(*edits.begin(), overlays.at(*edits.begin()), page); }
+                        catch (const RebuildRequired &) {
+                            engine.reset();
+                            engine = std::make_unique<Engine>(project, assets, runtime, overlays, &stopping, options);
+                            result = engine->start(page);
+                        }
+                    } else if (engine && engine->full_build() && !edits.empty()) {
+                        result = engine->update_files(overlays, page);
+                    } else if (rebuild) {
                         engine.reset();
-                        engine = std::make_unique<Engine>(project, assets, runtime, overlays, &stopping, options);
-                        result = engine->start(page);
+                        engine =
+                            std::make_unique<Engine>(project, assets, runtime, overlays, &stopping, options);
+                        result = engine->start(page, request.at("type") != "start");
+                    } else if (!edits.empty()) {
+                        result = engine->edit(*edits.begin(), overlays.at(*edits.begin()), page);
+                    } else {
+                        result = engine->navigate(page);
                     }
-                } else if (engine && engine->full_build() && !edits.empty()) {
-                    result = engine->update_files(overlays, page);
-                } else if (rebuild) {
+                    return result;
+                }, [&] {
+                    cancel_build = true;
+                    if (builder.joinable()) builder.join();
+                    if (candidate) candidate->invalidate_packages();
+                    candidate.reset();
+                    if (engine) engine->invalidate_packages();
                     engine.reset();
-                    engine =
-                        std::make_unique<Engine>(project, assets, runtime, overlays, &stopping, options);
-                    result = engine->start(page, request.at("type") != "start");
-                } else if (!edits.empty()) {
-                    result = engine->edit(*edits.begin(), overlays.at(*edits.begin()), page);
-                } else {
-                    result = engine->navigate(page);
-                }
+                    needs_convergence = false;
+                }, [&] {
+                    engine.reset();
+                    engine = std::make_unique<Engine>(project, assets, runtime, overlays, &stopping, options);
+                    return engine->start(page);
+                }, [&](const std::string &message) {
+                    emit({{"type", "status"}, {"state", "building"}, {"message", message},
+                          {"revision", request.at("revision")}, {"clientId", request.value("clientId", 0)}});
+                }, &stopping);
                 result["requestToPayloadMs"] =
                     std::chrono::duration<double, std::milli>(Clock::now().time_since_epoch())
                         .count() -
@@ -331,6 +350,11 @@ int main(int argc, char **argv) {
         if (!args.count("--assets")) args["--assets"] = runtime.u8string();
 #endif
         ProjectOptions options;
+        if (args.count("--auto-install-packages")) {
+            auto value = args.at("--auto-install-packages");
+            if (value != "true" && value != "false") throw std::runtime_error("--auto-install-packages must be true or false");
+            options.auto_install_packages = value == "true";
+        }
         if (args.count("--main")) options.main = args.at("--main");
         if (args.count("--preview-mode")) options.mode = args.at("--preview-mode");
         if (args.count("--compiler")) options.compiler = args.at("--compiler");
@@ -357,31 +381,41 @@ int main(int argc, char **argv) {
                         break;
                     }
                     int page = request.value("page", 0);
-                    Json result;
-                    if (kind == "start" || kind == "reload") {
-                        source_versions.clear();
-                        if (kind == "reload") overlays.clear();
-                        if (request.contains("overlays")) for (const auto &[file, source] : request.at("overlays").items()) {
+                    auto result = recover_packages(options, runtime, [&]() {
+                        Json result;
+                        if (kind == "start" || kind == "reload") {
+                            source_versions.clear();
+                            if (kind == "reload") overlays.clear();
+                            if (request.contains("overlays")) for (const auto &[file, source] : request.at("overlays").items()) {
+                                inside(project, file);
+                                overlays[file] = source.get<std::string>();
+                            }
+                            engine.reset();
+                            engine = std::make_unique<Engine>(project, assets, runtime, overlays, nullptr, options);
+                            result = engine->start(page);
+                        } else if (!engine) {
+                            throw std::runtime_error("Start the engine first");
+                        } else if (kind == "edit") {
+                            auto file = request.at("file").get<std::string>();
                             inside(project, file);
-                            overlays[file] = source.get<std::string>();
+                            apply_source_edit(overlays,source_versions,request);
+                            result = engine->edit(file, overlays.at(file), page);
+                        } else if (kind == "sync-forward") {
+                            result = {{"ok",true},{"location",engine->forward(request.at("file"),request.at("line"),request.at("column"),page)}};
+                        } else if (kind == "sync-backward") {
+                            result = {{"ok",true},{"location",engine->backward(page,request.at("x"),request.at("y"))}};
+                        } else {
+                            result = engine->navigate(page);
                         }
+                        return result;
+                    }, [&] {
+                        if (engine) engine->invalidate_packages();
+                        engine.reset();
+                    }, [&] {
                         engine.reset();
                         engine = std::make_unique<Engine>(project, assets, runtime, overlays, nullptr, options);
-                        result = engine->start(page);
-                    } else if (!engine) {
-                        throw std::runtime_error("Start the engine first");
-                    } else if (kind == "edit") {
-                        auto file = request.at("file").get<std::string>();
-                        inside(project, file);
-                        apply_source_edit(overlays,source_versions,request);
-                        result = engine->edit(file, overlays.at(file), page);
-                    } else if (kind == "sync-forward") {
-                        result = {{"ok",true},{"location",engine->forward(request.at("file"),request.at("line"),request.at("column"),page)}};
-                    } else if (kind == "sync-backward") {
-                        result = {{"ok",true},{"location",engine->backward(page,request.at("x"),request.at("y"))}};
-                    } else {
-                        result = engine->navigate(page);
-                    }
+                        return engine->start(page);
+                    }, [](const std::string &) {});
                     std::cout << result.dump() << '\n' << std::flush;
                 } catch (const std::exception &e) {
                     std::cout << Json({{"ok", false}, {"error", e.what()}}).dump() << '\n'

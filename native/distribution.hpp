@@ -78,7 +78,7 @@ class Distribution {
             if(!executable(fs::path(requested)/"kpsewhich"))throw std::runtime_error("Selected TeX binary directory has no executable kpsewhich: "+requested+". Select an installed TeX Live binary directory.");
             bin=fs::canonical(requested);add(bin);
         } else {
-            if(report["candidates"].empty())throw std::runtime_error("No TeX Live installation found. Install compatible TeX Live (or MacTeX on macOS) in the selected environment, or set texastra.texBinDirectory to its binary directory. TeXAstra does not install packages.");
+            if(report["candidates"].empty())throw std::runtime_error("No TeX Live installation found. Install compatible TeX Live (or MacTeX on macOS) in the selected environment, or set texastra.texBinDirectory to its binary directory.");
             bin=report["candidates"][0].get<std::string>();
         }
         report["binDirectory"]=bin.string();
@@ -86,7 +86,7 @@ class Distribution {
         setenv("PATH",path.c_str(),1);
     }
     std::string kpse(std::vector<std::string> args) { return run(bin/"kpsewhich",std::move(args)); }
-    void configure(const std::string &compiler) {
+    void configure(const std::string &compiler, bool refresh) {
         discover();
         report["lookupOverrides"]=Json::object();
         for(const auto *name:{"TEXMFCNF","TEXMF","TEXMFROOT","TEXMFDIST","TEXMFHOME","TEXMFVAR","TEXMFCONFIG","TEXFORMATS","TEXINPUTS","BIBINPUTS","BSTINPUTS","OSFONTDIR"})
@@ -148,7 +148,7 @@ class Distribution {
         auto state_path=work.parent_path()/("preflight-"+digest(identity.dump())+".json");
         Json dependencies;
         bool reused=false;
-        if(fs::is_regular_file(state_path))try {
+        if(!refresh && fs::is_regular_file(state_path))try {
             dependencies=Json::parse(read(state_path)).at("dependencies");
             reused=dependencies.is_object()&&!dependencies.empty();
             for(const auto &[file,stamp]:dependencies.items()) if(file_stamp(file)!=stamp)reused=false;
@@ -182,8 +182,8 @@ class Distribution {
   public:
     fs::path bin, format_path;
     Json report={{"schema",1},{"ok",false},{"candidates",Json::array()},
-                 {"packageMaintenance","Use the selected distribution's package manager; TeXAstra never installs or updates packages."}};
-    Distribution(fs::path bundled, std::string selected, const std::string &compiler="live")
+                 {"packageMaintenance","Missing packages are installed on demand with the selected TeX Live tlmgr when automatic installation is enabled. No automatic upgrades; OS-managed installations require their OS package manager."}};
+    Distribution(fs::path bundled, std::string selected, const std::string &compiler="live", bool refresh=false)
         :runtime(std::move(bundled)),requested(std::move(selected)) {
         try {
             const char *cache=getenv("XDG_CACHE_HOME"),*home=getenv("HOME");
@@ -191,7 +191,7 @@ class Distribution {
             fs::create_directories(root);
             std::string pattern=(root/"probe-XXXXXX").string();std::vector<char> name(pattern.begin(),pattern.end());name.push_back(0);
             auto created=mkdtemp(name.data());if(!created)throw std::runtime_error("Cannot create isolated compatibility probe directory");
-            work=created;report["mode"]=compiler;configure(compiler);
+            work=created;report["mode"]=compiler;configure(compiler,refresh);
         }catch(const std::exception &e){report["error"]=e.what();}
         if(!work.empty()){std::error_code ignored;fs::remove_all(work,ignored);}
     }
