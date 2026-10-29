@@ -1,0 +1,236 @@
+{
+  "version": "0.1.5",
+  "sourceCommit": "acde10c7c80f4aae965edef68ebc94d09f3f4d8b",
+  "implementationCommit": "10a423b",
+  "macosCi": "https://github.com/NoFixedPoint/TeXAstra/actions/runs/40897427678",
+  "url": "https://github.com/NoFixedPoint/TeXAstra/releases/tag/v0.1.5",
+  "packages": [
+    {
+      "file": "texastra-wsl.vsix",
+      "sizeBytes": 27858587,
+      "sha256": "1332bec6544e01c4b12100590630772c4356d4c1e29590afb95d6822f9adb2e2",
+      "testedVsixSha256": "42e7a930f0fff6445c2ee4d8808077a53e2accb828cf236f2e808672482f9e35",
+      "onlySourceReferencesChanged": true,
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "wsl",
+        "file": "texastra-sources.zip",
+        "sha256": "25256c82a8f39fbed3508f5a13ca1105c403cae7095c0d193d551b1e2b1caa51",
+        "sizeBytes": 355779426,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-sources.zip",
+        "prefix": "wsl/"
+      }
+    },
+    {
+      "file": "texastra-windows-x64.vsix",
+      "sizeBytes": 17994142,
+      "sha256": "b9496eabfff0696c61983406e5d5df63c8cf3fa7496ec99b7e9b0666ba5578e0",
+      "testedVsixSha256": "a6577106a2cb7d615154fb2af20635db3b58143574f308e5d6f8b05a08969a5c",
+      "onlySourceReferencesChanged": true,
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "win32-x64",
+        "file": "texastra-sources.zip",
+        "sha256": "25256c82a8f39fbed3508f5a13ca1105c403cae7095c0d193d551b1e2b1caa51",
+        "sizeBytes": 355779426,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-sources.zip",
+        "prefix": "win32-x64/"
+      }
+    },
+    {
+      "file": "texastra-macos-arm64.vsix",
+      "sizeBytes": 23137129,
+      "sha256": "a93d1367a1e1fea2200cb96bf928940de2eef60244d8d5a2afe36bc0aae64f2b",
+      "testedVsixSha256": "72c5cadd8a57dcebc4158aebb2b2a9b657583ec9110746bb7e4976c8bf57e60c",
+      "onlySourceReferencesChanged": true,
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "darwin-arm64",
+        "file": "texastra-darwin-arm64-sources.zip",
+        "sha256": "b7e5423aad348e6a7c72a431e53640e5b97e20e33596e379e00ddabfeea32ea5",
+        "sizeBytes": 267102869,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-darwin-arm64-sources.zip",
+        "prefix": ""
+      }
+    },
+    {
+      "file": "texastra-macos-x64.vsix",
+      "sizeBytes": 24152722,
+      "sha256": "34c019769580e73e1b3354fcaf61459de30424c41c2cd3ee062ae1b2ec70b288",
+      "testedVsixSha256": "008c1b6ab1db379becdc513564f9e7b2c925a057f6424bfca7814f7ed98a11a2",
+      "onlySourceReferencesChanged": true,
+      "sourceArchive": {
+        "version": "0.1.5",
+        "target": "darwin-x64",
+        "file": "texastra-darwin-x64-sources.zip",
+        "sha256": "567ea816d8558f54b8af18545f39767219532ea7e6c8d169f9dd18ba3f6a583b",
+        "sizeBytes": 267102872,
+        "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-darwin-x64-sources.zip",
+        "prefix": ""
+      }
+    }
+  ],
+  "nativeValidation": {
+    "darwin-arm64": {
+      "pdftex": 39,
+      "pdftex-hyphenation": 33,
+      "pdftex-state": 28
+    },
+    "darwin-x64": {
+      "pdftex": 39,
+      "pdftex-hyphenation": 33,
+      "pdftex-state": 28
+    }
+  },
+  "localPackageChecks": {
+    "version": "0.1.5",
+    "packages": [
+      {
+        "platform": "wsl",
+        "sourceArchive": {
+          "version": "0.1.5",
+          "target": "wsl",
+          "file": "texastra-0.1.5-wsl-sources.zip",
+          "sha256": "0581e5b310dafff381e44d6c2c0ac000769aed28ac2d552f082ef90f24d35826",
+          "sizeBytes": 175700174,
+          "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-wsl-sources.zip"
+        },
+        "sizeBytes": 28368722,
+        "sha256": "42e7a930f0fff6445c2ee4d8808077a53e2accb828cf236f2e808672482f9e35",
+        "checks": [
+          {
+            "unrelatedLegacyEncoding": true,
+            "rootSourceMapped": true
+          },
+          {
+            "edit": "text",
+            "matchesFullBuild": true
+          },
+          {
+            "edit": "tikz",
+            "matchesFullBuild": true
+          },
+          {
+            "edit": "figure",
+            "matchesFullBuild": true
+          },
+          {
+            "edit": "table",
+            "matchesFullBuild": true
+          },
+          {
+            "projectFilesUnchanged": true
+          }
+        ]
+      },
+      {
+        "platform": "windows-x64",
+        "sourceArchive": {
+          "version": "0.1.5",
+          "target": "win32-x64",
+          "file": "texastra-0.1.5-win32-x64-sources.zip",
+          "sha256": "38a2467e4ea74584e071cb6620df623738f431cc071801c388d28296a9279d5c",
+          "sizeBytes": 180073761,
+          "url": "https://github.com/NoFixedPoint/TeXAstra/releases/download/v0.1.5/texastra-0.1.5-win32-x64-sources.zip"
+        },
+        "sizeBytes": 18005467,
+        "sha256": "a6577106a2cb7d615154fb2af20635db3b58143574f308e5d6f8b05a08969a5c",
+        "checks": [
+          {
+            "unrelatedLegacyEncoding": true,
+            "rootSourceMapped": true
+          },
+          {
+            "edit": "text",
+            "matchesFullBuild": true
+          },
+          {
+            "edit": "tikz",
+            "matchesFullBuild": true
+          },
+          {
+            "edit": "figure",
+            "matchesFullBuild": true
+          },
+          {
+            "edit": "table",
+            "matchesFullBuild": true
+          },
+          {
+            "projectFilesUnchanged": true
+          }
+        ]
+      }
+    ]
+  },
+  "packagedWslHyphenationChecks": 53,
+  "localTexFilesUnchanged": true,
+  "archivedTexFilesUnchanged": true,
+  "preparedAssetDigests": {
+    "SHA256SUMS": "sha256:cadb4433f84969e2f6e3c10a3d02e1e1bdf000f0c5f361e7f51b1360d92c1d52",
+    "SHA256SUMS-darwin-arm64": "sha256:63ec919415440fb23389ea66c87d04e043abc9fff0cd715e7ddddf3b071709e2",
+    "SHA256SUMS-darwin-x64": "sha256:823ad94feaab41bfe71ae36847c77b21203257ee48141f6c22b61b10a2f31feb",
+    "texastra-darwin-arm64-sources.zip": "sha256:b7e5423aad348e6a7c72a431e53640e5b97e20e33596e379e00ddabfeea32ea5",
+    "texastra-darwin-x64-sources.zip": "sha256:567ea816d8558f54b8af18545f39767219532ea7e6c8d169f9dd18ba3f6a583b",
+    "texastra-macos-arm64.vsix": "sha256:a93d1367a1e1fea2200cb96bf928940de2eef60244d8d5a2afe36bc0aae64f2b",
+    "texastra-macos-x64.vsix": "sha256:34c019769580e73e1b3354fcaf61459de30424c41c2cd3ee062ae1b2ec70b288",
+    "texastra-sources.zip": "sha256:25256c82a8f39fbed3508f5a13ca1105c403cae7095c0d193d551b1e2b1caa51",
+    "texastra-windows-x64.vsix": "sha256:b9496eabfff0696c61983406e5d5df63c8cf3fa7496ec99b7e9b0666ba5578e0",
+    "texastra-wsl.vsix": "sha256:1332bec6544e01c4b12100590630772c4356d4c1e29590afb95d6822f9adb2e2"
+  },
+  "releaseTextUnchanged": true,
+  "releaseMetadataUnchanged": true,
+  "allTenAssetHashesVerified": true,
+  "assets": [
+    {
+      "name": "SHA256SUMS",
+      "digest": "sha256:cadb4433f84969e2f6e3c10a3d02e1e1bdf000f0c5f361e7f51b1360d92c1d52",
+      "size": 650
+    },
+    {
+      "name": "SHA256SUMS-darwin-arm64",
+      "digest": "sha256:63ec919415440fb23389ea66c87d04e043abc9fff0cd715e7ddddf3b071709e2",
+      "size": 194
+    },
+    {
+      "name": "SHA256SUMS-darwin-x64",
+      "digest": "sha256:823ad94feaab41bfe71ae36847c77b21203257ee48141f6c22b61b10a2f31feb",
+      "size": 190
+    },
+    {
+      "name": "texastra-darwin-arm64-sources.zip",
+      "digest": "sha256:b7e5423aad348e6a7c72a431e53640e5b97e20e33596e379e00ddabfeea32ea5",
+      "size": 267102869
+    },
+    {
+      "name": "texastra-darwin-x64-sources.zip",
+      "digest": "sha256:567ea816d8558f54b8af18545f39767219532ea7e6c8d169f9dd18ba3f6a583b",
+      "size": 267102872
+    },
+    {
+      "name": "texastra-macos-arm64.vsix",
+      "digest": "sha256:a93d1367a1e1fea2200cb96bf928940de2eef60244d8d5a2afe36bc0aae64f2b",
+      "size": 23137129
+    },
+    {
+      "name": "texastra-macos-x64.vsix",
+      "digest": "sha256:34c019769580e73e1b3354fcaf61459de30424c41c2cd3ee062ae1b2ec70b288",
+      "size": 24152722
+    },
+    {
+      "name": "texastra-sources.zip",
+      "digest": "sha256:25256c82a8f39fbed3508f5a13ca1105c403cae7095c0d193d551b1e2b1caa51",
+      "size": 355779426
+    },
+    {
+      "name": "texastra-windows-x64.vsix",
+      "digest": "sha256:b9496eabfff0696c61983406e5d5df63c8cf3fa7496ec99b7e9b0666ba5578e0",
+      "size": 17994142
+    },
+    {
+      "name": "texastra-wsl.vsix",
+      "digest": "sha256:1332bec6544e01c4b12100590630772c4356d4c1e29590afb95d6822f9adb2e2",
+      "size": 27858587
+    }
+  ]
+}
