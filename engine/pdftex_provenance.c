@@ -15,6 +15,8 @@ static int ta_start;
 static strnumber ta_last_name=-1;
 static ta_file *ta_last_file;
 static ta_span ta_origin, ta_drawing, *ta_nodes, *ta_call;
+/* Parallel to hu[64]; linebreak lives in the separate pdftexini.c unit. */
+static ta_span ta_hyphen_origins[64];
 static size_t ta_capacity;
 static void ta_state_init(void);
 static void ta_checkpoint(void);
@@ -59,6 +61,9 @@ static void ta_init(void) {
 }
 static ta_span ta_get(int p) {
     ta_span empty={0,0};return p>=0&&(size_t)p<ta_capacity?ta_nodes[p]:empty;
+}
+void ta_hyphen_letter(int i,int p) {
+    ta_hyphen_origins[i]=ta_get(p);
 }
 static void ta_store(int p,ta_span span) {
     ta_init();if(!ta_enabled||p<0||p>memmax)return;

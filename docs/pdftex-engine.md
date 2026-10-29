@@ -108,3 +108,45 @@ execution could not be tested on this Windows host; the ARM64 and Intel CI jobs
 must pass before shipping Mac binaries. No macOS performance claim is made.
 
 Descriptor-path handling follows Apple's [`F_GETPATH` definition](https://github.com/apple/darwin-xnu/blob/main/bsd/sys/fcntl.h).
+
+## Hyphenation provenance regression (2026-10-29)
+
+Line breaking can reconstruct every hyphenatable word even when the final output
+does not split that word. The node allocator previously attached the current
+scanner origin, which by then was at the end of the paragraph. A minimal
+reproduction is `a information` with `\pretolerance=-1`: all 11 letters of
+`information` pointed to the following `\par`.
+
+The patch now saves original letter spans alongside `hu[]` when `linebreak`
+collects characters, including individual ligature components. `reconstitute`
+uses those spans for its character allocations and preserves initial-list
+origins. Existing ligature merging then combines the component spans.
+`hyphenate` restores its entry origin on both early returns and normal exit;
+the early-return replacements are braced to preserve their conditional behavior.
+
+Run the standalone regression after building the engine:
+
+```sh
+python scripts/build_pdftex.py
+python scripts/check_pdftex_hyphenation.py
+```
+
+It creates its own documents and checks the minimal case, a narrow paragraph
+with repeated words and ligatures, explicit hyphenation exceptions, a language
+without patterns, and a word without break points. It verifies letter origins,
+ligature spans, character navigation, and actual automatic line-end hyphens.
+Every case also compares page count, extracted text, pixels, and decompressed PDF
+content streams against the matching unmodified `pdftex-baseline`. Only the
+provenance scopes and their inserted TJ delimiters are stripped from streams.
+An optional `--original-engine PATH` additionally compares a saved pre-fix
+patched engine. The macOS build workflow runs the regression on both architectures.
+
+Local Linux/WSL validation reduced wrong origins in the narrow paragraph from
+75 of 89 glyphs to **0 of 89**, and the minimal case from 11 of 12 to **0 of 12**.
+All 53 [hyphenation checks](../results/pdftex-hyphenation.json) passed, including
+byte-identical stripped streams against both stock and pre-fix patched engines.
+The existing 39 provenance/navigation/layout checks and 28 retained-state checks
+also passed. Python syntax and Git whitespace validation passed.
+The original user's document was unavailable; these results cover generated
+fixtures. Native macOS execution remains for CI, and no extension release or
+installed-user runtime replacement is part of this change.

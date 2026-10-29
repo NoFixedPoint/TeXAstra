@@ -56,6 +56,33 @@ def apply(web, pristine):
     edit('  mem [ligstack ].hh.b0 = mainf ;','  ta_store(ligstack, ta_origin);\n  mem [ligstack ].hh.b0 = mainf ;',2)
     function('copynodelist',lambda x:x.replace('    mem [q ].hh .v.RH = r ;','    ta_store(r, ta_get(p));\n    mem [q ].hh .v.RH = r ;'))
     function('newligature',lambda x:x.replace('  Result = p ;','  ta_store(p, ta_ligature(q));\n  Result = p ;'))
+    # Hyphenation rebuilds words after scanning has reached the paragraph end.
+    # Seed each new character from its original letter, including ligature
+    # components and the initial list used by boundary ligatures.
+    def reconstitute_origins(x):
+        for old,new in [
+            ('\tmem [t ].hh .v.RH = getavail () ;',
+             '\tta_origin = ta_get(p);\n\tmem [t ].hh .v.RH = getavail () ;'),
+            ('    mem [t ].hh .v.RH = getavail () ;',
+             '    ta_origin = ta_hyphen_origins[j];\n    mem [t ].hh .v.RH = getavail () ;'),
+            ('\t\t    p = getavail () ;',
+             '\t\t    ta_origin = ta_hyphen_origins[j + 1];\n\t\t    p = getavail () ;'),
+            ('\t\t    mem [t ].hh .v.RH = getavail () ;',
+             '\t\t    ta_origin = ta_hyphen_origins[j + 1];\n\t\t    mem [t ].hh .v.RH = getavail () ;'),
+        ]:
+            # Anchor indentation: the two appended-letter sites share a suffix.
+            old='\n'+old;new='\n'+new
+            assert x.count(old)==1,(old,x.count(old))
+            x=x.replace(old,new)
+        return x
+    function('reconstitute',reconstitute_origins)
+    def hyphenate_origins(x):
+        assert x.count('return ;')==2
+        return x.replace('hyphenate_regmem ',
+            'hyphenate_regmem \n  ta_span ta_saved_origin = ta_origin;').replace(
+            'return ;','{ ta_origin = ta_saved_origin; return ; }').replace(
+            '\n} ','\n  ta_origin = ta_saved_origin;\n} ')
+    function('hyphenate',hyphenate_origins)
     # The output routine synthesizes a character node for a ligature.
     edit('mem [memtop - 12 ]= mem [p + 1 ];','ta_store(memtop - 12, ta_get(p));\n\tmem [memtop - 12 ]= mem [p + 1 ];',4)
     # Do not reset pdfTeX's text matrix, TJ accumulator, or width rounding.
@@ -83,3 +110,11 @@ def apply(web, pristine):
     for name in ['pdftex_provenance.c','pdftex_state.c']:
         if (own/name).exists():shutil.copyfile(own/name,web/('texastra_pdftex.c' if name=='pdftex_provenance.c' else name))
     (web/'pdftex0.c').write_text(s)
+    # Record letters before hyphenate frees their nodes. Ligatures contribute
+    # the spans of their component list, not the whole ligature's merged span.
+    s=(pristine/'pdftexini.c').read_text()
+    edit('#include "pdftexd.h"',
+         '#include "pdftexd.h"\nextern void ta_hyphen_letter(int, int);')
+    edit('hu [hn ]= c ;','hu [hn ]= c ; ta_hyphen_letter(hn, s);')
+    edit('hu [j ]= c ;','hu [j ]= c ; ta_hyphen_letter(j, q);')
+    (web/'pdftexini.c').write_text(s)

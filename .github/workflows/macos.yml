@@ -64,6 +64,7 @@ jobs:
           pdflatex --version
           native/runtime/texastra-pdftex --version
       - run: python3 scripts/check_pdftex.py
+      - run: python3 scripts/check_pdftex_hyphenation.py
       - run: python3 scripts/check_pdftex_state.py
       - run: python3 scripts/check_pdftex_navigation.py
       - run: python3 scripts/package_extension.py --target ${{ matrix.target }}

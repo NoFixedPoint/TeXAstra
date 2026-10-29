@@ -1,0 +1,231 @@
+{
+  "checks": [
+    {
+      "name": "minimal letter origins",
+      "ok": true,
+      "glyphs": 12,
+      "wrongOrigins": 0,
+      "missingLetters": 0
+    },
+    {
+      "name": "minimal automatic hyphenation exercised",
+      "ok": true
+    },
+    {
+      "name": "minimal stock page count",
+      "ok": true
+    },
+    {
+      "name": "minimal stock text 1",
+      "ok": true
+    },
+    {
+      "name": "minimal stock pixels 1",
+      "ok": true
+    },
+    {
+      "name": "minimal stock content stream 1",
+      "ok": true
+    },
+    {
+      "name": "minimal original patched page count",
+      "ok": true
+    },
+    {
+      "name": "minimal original patched text 1",
+      "ok": true
+    },
+    {
+      "name": "minimal original patched pixels 1",
+      "ok": true
+    },
+    {
+      "name": "minimal original patched content stream 1",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph letter origins",
+      "ok": true,
+      "glyphs": 89,
+      "wrongOrigins": 0,
+      "missingLetters": 0
+    },
+    {
+      "name": "rebuilt ligature span",
+      "ok": true
+    },
+    {
+      "name": "rebuilt character forward navigation",
+      "ok": true
+    },
+    {
+      "name": "rebuilt character reverse navigation",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph automatic hyphenation exercised",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph stock page count",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph stock text 1",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph stock pixels 1",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph stock content stream 1",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph original patched page count",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph original patched text 1",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph original patched pixels 1",
+      "ok": true
+    },
+    {
+      "name": "narrow paragraph original patched content stream 1",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions letter origins",
+      "ok": true,
+      "glyphs": 48,
+      "wrongOrigins": 0,
+      "missingLetters": 0
+    },
+    {
+      "name": "hyphenation exceptions automatic hyphenation exercised",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions stock page count",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions stock text 1",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions stock pixels 1",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions stock content stream 1",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions original patched page count",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions original patched text 1",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions original patched pixels 1",
+      "ok": true
+    },
+    {
+      "name": "hyphenation exceptions original patched content stream 1",
+      "ok": true
+    },
+    {
+      "name": "no patterns letter origins",
+      "ok": true,
+      "glyphs": 17,
+      "wrongOrigins": 0,
+      "missingLetters": 0
+    },
+    {
+      "name": "no patterns automatic hyphenation exercised",
+      "ok": true
+    },
+    {
+      "name": "no patterns stock page count",
+      "ok": true
+    },
+    {
+      "name": "no patterns stock text 1",
+      "ok": true
+    },
+    {
+      "name": "no patterns stock pixels 1",
+      "ok": true
+    },
+    {
+      "name": "no patterns stock content stream 1",
+      "ok": true
+    },
+    {
+      "name": "no patterns original patched page count",
+      "ok": true
+    },
+    {
+      "name": "no patterns original patched text 1",
+      "ok": true
+    },
+    {
+      "name": "no patterns original patched pixels 1",
+      "ok": true
+    },
+    {
+      "name": "no patterns original patched content stream 1",
+      "ok": true
+    },
+    {
+      "name": "no break points letter origins",
+      "ok": true,
+      "glyphs": 6,
+      "wrongOrigins": 0,
+      "missingLetters": 0
+    },
+    {
+      "name": "no break points automatic hyphenation exercised",
+      "ok": true
+    },
+    {
+      "name": "no break points stock page count",
+      "ok": true
+    },
+    {
+      "name": "no break points stock text 1",
+      "ok": true
+    },
+    {
+      "name": "no break points stock pixels 1",
+      "ok": true
+    },
+    {
+      "name": "no break points stock content stream 1",
+      "ok": true
+    },
+    {
+      "name": "no break points original patched page count",
+      "ok": true
+    },
+    {
+      "name": "no break points original patched text 1",
+      "ok": true
+    },
+    {
+      "name": "no break points original patched pixels 1",
+      "ok": true
+    },
+    {
+      "name": "no break points original patched content stream 1",
+      "ok": true
+    }
+  ]
+}
