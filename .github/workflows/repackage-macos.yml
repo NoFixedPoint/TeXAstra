@@ -54,13 +54,13 @@ jobs:
       - run: python3 scripts/package_extension.py --target ${{ matrix.target }}
       - run: python3 scripts/check_release_packages.py --target ${{ matrix.target }}
       - run: python3 scripts/release_macos.py
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: texastra-${{ matrix.target }}
           path: artifacts/${{ matrix.target }}/
           if-no-files-found: error
           retention-days: 3
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: diagnostics-${{ matrix.target }}
